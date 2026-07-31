@@ -1,0 +1,15 @@
+{
+ "schema_version": 2,
+ "tissue": "brain",
+ "model_label": "co_expression_baseline",
+ "rung": "degree_only_no_selfpartial",
+ "observed_rho": 0.0027597497150060124,
+ "pM": 0.019,
+ "pD": 0.014,
+ "zM": 2.4864818176851546,
+ "zD": 2.9190629576329354,
+ "n_perm": 999,
+ "mantel_seed": 2026073101,
+ "degree_seed": 2026073102,
+ "seed_contract": "explicit_integer_v1"
+}

@@ -1,0 +1,11 @@
+{
+ "tissue": "pbmc",
+ "model_label": "co_expression_baseline",
+ "rung": "degree_only_no_selfpartial",
+ "observed_rho": 0.006974391790800994,
+ "pM": 0.001,
+ "pD": 0.001,
+ "zM": 5.925439478466686,
+ "zD": 5.300378025207256,
+ "n_perm": 999
+}

@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs"
+message: "If you use this audit capsule, please cite it as below."
+type: software
+authors:
+  - family-names: Fu
+    given-names: Zeyu
+    orcid: "https://orcid.org/0009-0001-8329-0108"
+    affiliation: "Army Medical University"
+    email: "fuzeyu99@126.com"
+license: "MIT"
+notes: "Manuscript, figures, tables, and derived public results are CC BY 4.0; see LICENSING.md."
+keywords:
+  - single-cell RNA-seq
+  - foundation models
+  - gene regulatory networks
+  - co-expression confounding
+  - randomization inference
+doi: "10.5281/zenodo.21724337"
+url: "https://github.com/PeterPonyu/scfm-reg-audit"
+version: "0.2.0"
+date-released: "2026-07-31"

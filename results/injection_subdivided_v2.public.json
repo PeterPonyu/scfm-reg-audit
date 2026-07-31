@@ -1,0 +1,1571 @@
+{
+ "brain": {
+  "tissue": "brain",
+  "regulatory_potential_proxy_basis": "results/v2/G_ATAC_v2_GSE174367.npz",
+  "regulatory_potential_proxy_basis_sha256": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c",
+  "control_coexp_source": "fmgraphs_pooled_v2.npz:co",
+  "confound_spec": "full",
+  "alphas": [
+   0.002,
+   0.005,
+   0.01
+  ],
+  "replicates_per_alpha": 30,
+  "design": "axis_aligned_pipeline_sensitivity; alpha is fraction of regulatory_potential_proxy residual injected; fresh N(0,1) noise per (tissue,alpha,replicate). NOT a power analysis, no exclusion, no coverage, no MDE, no CI, no implied-alpha.",
+  "rows": [
+   {
+    "alpha": 0.002,
+    "replicate_runs": [
+     {
+      "alpha": 0.002,
+      "replicate": 0,
+      "seed": 15225312557098373733,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002158,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 1,
+      "seed": 3184245392544172590,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00202,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 2,
+      "seed": 7959823001759163736,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001738,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 3,
+      "seed": 15823918026546780114,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002478,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 4,
+      "seed": 6438823458107145316,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002515,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 5,
+      "seed": 1630772955193376379,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001432,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 6,
+      "seed": 5711156605159600745,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.000554,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 7,
+      "seed": 12079364976940778388,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 6.6e-05,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 8,
+      "seed": 18115045233765212292,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001524,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 9,
+      "seed": 7924465277533943525,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00068,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 10,
+      "seed": 9024502632344375125,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004584,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 11,
+      "seed": 6249024109442881900,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.000858,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 12,
+      "seed": 5334537235065214374,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002254,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 13,
+      "seed": 7651248277905489816,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001128,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 14,
+      "seed": 12860937318379024673,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.000249,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 15,
+      "seed": 12090229770068114042,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.000896,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 16,
+      "seed": 8667502080744904074,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002019,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 17,
+      "seed": 1449896585644735311,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002583,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 18,
+      "seed": 10545723821573338835,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": -0.000188,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 19,
+      "seed": 5275824202576482785,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002792,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 20,
+      "seed": 13751620697421764453,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002488,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 21,
+      "seed": 3225633978830651447,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.0038,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 22,
+      "seed": 82558213314073049,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003608,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 23,
+      "seed": 2105772158055667404,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002033,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 24,
+      "seed": 12103724749005807383,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002186,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 25,
+      "seed": 13560477305735053724,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00262,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 26,
+      "seed": 1670268498605510270,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001547,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 27,
+      "seed": 1886206940495284938,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001228,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 28,
+      "seed": 1153162105476631044,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00357,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 29,
+      "seed": 8529362782045858166,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003578,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   },
+   {
+    "alpha": 0.005,
+    "replicate_runs": [
+     {
+      "alpha": 0.005,
+      "replicate": 0,
+      "seed": 13636929036338527089,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005001,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 1,
+      "seed": 8723212659266636562,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005432,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 2,
+      "seed": 2326591381486567042,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.006282,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 3,
+      "seed": 2302075846520225085,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003377,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 4,
+      "seed": 15867876390392526526,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.006515,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 5,
+      "seed": 16017160875755885726,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005513,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 6,
+      "seed": 17262907324135457405,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00461,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 7,
+      "seed": 5125245420721444791,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004449,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 8,
+      "seed": 4642378103241303708,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004459,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 9,
+      "seed": 8154917775196090633,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005545,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 10,
+      "seed": 16992398684937558582,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003643,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 11,
+      "seed": 18183404940190798280,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004189,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 12,
+      "seed": 438622367659881904,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005478,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 13,
+      "seed": 12989159180685362263,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004135,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 14,
+      "seed": 16772737127388137302,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004264,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 15,
+      "seed": 7161462515090414020,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004205,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 16,
+      "seed": 12569651269219931166,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005034,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 17,
+      "seed": 16584249588853435889,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003056,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 18,
+      "seed": 12804238627385559307,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004409,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 19,
+      "seed": 11740459004546047343,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005951,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 20,
+      "seed": 10679632904461972349,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.001299,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 21,
+      "seed": 5165660071273139694,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004217,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 22,
+      "seed": 9152262734747812322,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003764,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 23,
+      "seed": 4667844744271709278,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00364,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 24,
+      "seed": 6297658698490448810,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004768,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 25,
+      "seed": 17098067565430904081,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.005741,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 26,
+      "seed": 7618445590412156315,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.003225,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 27,
+      "seed": 6481730032124993707,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002909,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 28,
+      "seed": 12158738081135794966,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.004113,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 29,
+      "seed": 15549906724346820889,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.002742,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   },
+   {
+    "alpha": 0.01,
+    "replicate_runs": [
+     {
+      "alpha": 0.01,
+      "replicate": 0,
+      "seed": 13688767886916045046,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.008885,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 1,
+      "seed": 17449769166865825786,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010051,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 2,
+      "seed": 11600077765913630502,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010716,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 3,
+      "seed": 4763178209147086424,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00972,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 4,
+      "seed": 5631415276892211768,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.011169,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 5,
+      "seed": 1445170128608433182,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009272,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 6,
+      "seed": 14216594782165292093,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.00957,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 7,
+      "seed": 7581157663906123434,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009964,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 8,
+      "seed": 547001879983125395,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.012226,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 9,
+      "seed": 7274378291360516101,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010598,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 10,
+      "seed": 9861153678551683298,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009534,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 11,
+      "seed": 5631250136991395650,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009069,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 12,
+      "seed": 11612858399019494056,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.007995,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 13,
+      "seed": 9938626785225193353,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.008798,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 14,
+      "seed": 8722472769559284595,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.008386,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 15,
+      "seed": 9370782389540754942,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009515,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 16,
+      "seed": 10648598003335252755,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010282,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 17,
+      "seed": 15474975867939903636,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010867,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 18,
+      "seed": 9203633806069353245,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.007866,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 19,
+      "seed": 884413818874418147,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.008153,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 20,
+      "seed": 6797046259400213020,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010616,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 21,
+      "seed": 18281979946624629863,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009916,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 22,
+      "seed": 2784964209093249695,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009064,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 23,
+      "seed": 15969397797645474066,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010791,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 24,
+      "seed": 1140760991833127974,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.01016,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 25,
+      "seed": 2295698109043971030,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009716,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 26,
+      "seed": 10950990387192398906,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.008474,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 27,
+      "seed": 2783642016974022789,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.012028,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 28,
+      "seed": 402241432744748400,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.010249,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 29,
+      "seed": 9745808692119608649,
+      "n_pairs": 534308,
+      "observed_partial_rho_axis_aligned": 0.009286,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   }
+  ]
+ },
+ "pbmc": {
+  "tissue": "pbmc",
+  "regulatory_potential_proxy_basis": "results/v2/G_ATAC_v2_PBMC10k.npz",
+  "regulatory_potential_proxy_basis_sha256": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c",
+  "control_coexp_source": "pbmc_fmgraphs_pooled.npz:co",
+  "confound_spec": "full",
+  "alphas": [
+   0.002,
+   0.005,
+   0.01
+  ],
+  "replicates_per_alpha": 30,
+  "design": "axis_aligned_pipeline_sensitivity; alpha is fraction of regulatory_potential_proxy residual injected; fresh N(0,1) noise per (tissue,alpha,replicate). NOT a power analysis, no exclusion, no coverage, no MDE, no CI, no implied-alpha.",
+  "rows": [
+   {
+    "alpha": 0.002,
+    "replicate_runs": [
+     {
+      "alpha": 0.002,
+      "replicate": 0,
+      "seed": 10825979658143912438,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001803,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 1,
+      "seed": 1553170941652998794,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001118,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 2,
+      "seed": 18381020179619011042,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": -0.000326,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 3,
+      "seed": 6390209863952930273,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00108,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 4,
+      "seed": 9007078126138821482,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.000815,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 5,
+      "seed": 4227839904918102384,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.000715,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 6,
+      "seed": 16396215147430018435,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002525,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 7,
+      "seed": 5049913520216785577,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001876,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 8,
+      "seed": 1590637756812222494,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001799,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 9,
+      "seed": 17760603564480369831,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002131,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 10,
+      "seed": 13930914478375309817,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004414,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 11,
+      "seed": 18213398213626964174,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001696,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 12,
+      "seed": 7468438132302529924,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003217,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 13,
+      "seed": 4720156190544171350,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001338,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 14,
+      "seed": 13472276626872832080,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002761,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 15,
+      "seed": 11876210726559854888,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001127,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 16,
+      "seed": 1411497959218237243,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003158,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 17,
+      "seed": 3883220988263127946,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003918,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 18,
+      "seed": 13100316901366292531,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001436,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 19,
+      "seed": 10405328555881519957,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 20,
+      "seed": 4182510359170209406,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002421,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 21,
+      "seed": 16227973495067401418,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 8.5e-05,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 22,
+      "seed": 15821954369297908231,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002909,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 23,
+      "seed": 5036683466257521166,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00179,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 24,
+      "seed": 289759087312677263,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001232,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 25,
+      "seed": 15006690425326056632,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.001641,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 26,
+      "seed": 1321146692741232476,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004495,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 27,
+      "seed": 10214969909483854074,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.000413,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 28,
+      "seed": 6351881889177580311,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00204,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.002,
+      "replicate": 29,
+      "seed": 10426503853636977132,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": -0.001933,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   },
+   {
+    "alpha": 0.005,
+    "replicate_runs": [
+     {
+      "alpha": 0.005,
+      "replicate": 0,
+      "seed": 2606713119193184149,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004888,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 1,
+      "seed": 12999047470211420344,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00601,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 2,
+      "seed": 14347396656257872653,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004985,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 3,
+      "seed": 5702934819492651420,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005614,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 4,
+      "seed": 1480652329732064598,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004604,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 5,
+      "seed": 13524217394337256543,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.006435,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 6,
+      "seed": 6846492721602892970,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005837,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 7,
+      "seed": 7341310042782547497,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004655,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 8,
+      "seed": 17621422752274770692,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004297,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 9,
+      "seed": 6319227592970455471,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007616,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 10,
+      "seed": 11024524184829333571,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005513,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 11,
+      "seed": 1643728432755443261,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005452,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 12,
+      "seed": 9905331805360166709,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003939,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 13,
+      "seed": 7154285486969946594,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005968,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 14,
+      "seed": 12740615215035017323,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003715,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 15,
+      "seed": 1923794010263112511,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005821,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 16,
+      "seed": 10596708676735224594,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002517,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 17,
+      "seed": 3805227767090730647,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005817,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 18,
+      "seed": 754096308091090759,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.002642,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 19,
+      "seed": 10999183266107898170,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004494,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 20,
+      "seed": 9966923412814360653,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005867,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 21,
+      "seed": 13638469420501315712,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.006228,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 22,
+      "seed": 4574098241740057768,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00507,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 23,
+      "seed": 5843048369154721194,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003353,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 24,
+      "seed": 5804050873201885597,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003463,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 25,
+      "seed": 3947182760779714230,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.006484,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 26,
+      "seed": 16974060591014086942,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007864,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 27,
+      "seed": 724643786566232935,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.004214,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 28,
+      "seed": 7333201763454616190,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.005245,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.005,
+      "replicate": 29,
+      "seed": 17078999017331067297,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.003569,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   },
+   {
+    "alpha": 0.01,
+    "replicate_runs": [
+     {
+      "alpha": 0.01,
+      "replicate": 0,
+      "seed": 246296359662304636,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007695,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 1,
+      "seed": 425266097250211045,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010906,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 2,
+      "seed": 12189738044240132098,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.008952,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 3,
+      "seed": 2702634046997299196,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010692,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 4,
+      "seed": 16894633865409912562,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010301,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 5,
+      "seed": 13699502257170168460,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.00911,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 6,
+      "seed": 11335678920172334289,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007561,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 7,
+      "seed": 10375443115334461862,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.0099,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 8,
+      "seed": 113794470427242971,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.008289,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 9,
+      "seed": 11933407473276660910,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010901,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 10,
+      "seed": 14431868329538770555,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.008621,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 11,
+      "seed": 2485587700099341457,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010977,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 12,
+      "seed": 17863514040767437279,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.008851,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 13,
+      "seed": 5041300257835387518,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010972,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 14,
+      "seed": 13317699683671809507,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007854,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 15,
+      "seed": 4205292532583680056,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.011249,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 16,
+      "seed": 17997486672142801945,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007768,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 17,
+      "seed": 2568552379962689898,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010069,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 18,
+      "seed": 1125794981179244990,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010205,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 19,
+      "seed": 11749455699676076525,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010319,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 20,
+      "seed": 2479038872964090420,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007509,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 21,
+      "seed": 16185797096910165811,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010086,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 22,
+      "seed": 16490960197807555567,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.009519,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 23,
+      "seed": 15544210305556279893,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010434,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 24,
+      "seed": 4901736200075586601,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.011759,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 25,
+      "seed": 16098339923146744828,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.009667,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 26,
+      "seed": 5901779943872713576,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.007203,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 27,
+      "seed": 8288842076183079632,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.010406,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 28,
+      "seed": 17825052309288069871,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.011049,
+      "design": "axis_aligned_pipeline_sensitivity"
+     },
+     {
+      "alpha": 0.01,
+      "replicate": 29,
+      "seed": 3795873345718519895,
+      "n_pairs": 534754,
+      "observed_partial_rho_axis_aligned": 0.008821,
+      "design": "axis_aligned_pipeline_sensitivity"
+     }
+    ]
+   }
+  ]
+ },
+ "observed_effects": [
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_embed",
+   "observed_rho": 0.00442
+  },
+  {
+   "tissue": "brain",
+   "model_label": "scFoundation_encoder",
+   "observed_rho": 0.000619
+  },
+  {
+   "tissue": "brain",
+   "model_label": "UCE_encoder",
+   "observed_rho": 0.004612
+  },
+  {
+   "tissue": "brain",
+   "model_label": "scGPT_encoder",
+   "observed_rho": 0.012407
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_attn",
+   "observed_rho": -0.003616
+  },
+  {
+   "tissue": "brain",
+   "model_label": "random_init_floor",
+   "observed_rho": 0.001873
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_ko_raw",
+   "observed_rho": -0.000933
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_ko_posctrl",
+   "observed_rho": -0.001887
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "geneformer_embed",
+   "observed_rho": 0.004254
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "geneformer_attn",
+   "observed_rho": -0.000176
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "scFoundation_encoder",
+   "observed_rho": 0.001115
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "scGPT_encoder",
+   "observed_rho": 0.010981
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "UCE_encoder",
+   "observed_rho": 0.00588
+  }
+ ]
+}

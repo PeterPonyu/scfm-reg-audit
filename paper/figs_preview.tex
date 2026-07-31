@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{figs/}}
+\usepackage{caption}
+\usepackage{helvet}
+\usepackage{booktabs}
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{empty}
+\begin{document}
+
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig1_truth_construct.tex}}
+\caption*{Fig.~1 --- Regulatory-potential proxy and observed cross-tissue reproducibility.}
+\end{figure}
+
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig2_decisive_result.tex}}
+\caption*{Fig.~2 --- Primary full-confound fixed-panel effects with BH-adjusted results from both randomization nulls.}
+\end{figure}
+
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig3_spec_sensitivity.tex}}
+\caption*{Fig.~3 --- Full-confound primary estimates and non-degree sensitivity estimates.}
+\end{figure}
+
+\begin{figure}[p]\centering
+\resizebox{0.85\textwidth}{!}{\input{figs/fig4_pipeline_sensitivity.tex}}
+\caption*{Fig.~4 --- Axis-aligned pipeline-sensitivity diagnostic; not a power or exclusion analysis.}
+\end{figure}
+
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig5_pertype_descriptive.tex}}
+\caption*{Fig.~5 --- Descriptive per-cell-type full-confound estimates.}
+\end{figure}
+
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig6_tf_probe.tex}}
+\caption*{Fig.~6 --- TF-disjoint supervised probe: adjusted test correlations and confound-subset sensitivity.}
+\end{figure}
+
+\begin{table}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/table1_primary_fixed_panel.tex}}
+\caption*{Table~1 --- Primary fixed-panel results under both nulls.}
+\end{table}
+
+\begin{table}[p]\centering
+\resizebox{0.78\textwidth}{!}{\input{figs/table2_cross_tissue_observed.tex}}
+\caption*{Table~2 --- Observed-only cross-tissue reproducibility.}
+\end{table}
+
+\end{document}
