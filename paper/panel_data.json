@@ -1,0 +1,116 @@
+{
+ "usability_fm_vs_coexp": {
+  "brain": {
+   "geneformer_embed": -0.1846,
+   "scFoundation_encoder": 0.0822,
+   "UCE_encoder": -0.0215,
+   "scGPT_encoder": -0.1553,
+   "geneformer_attn": 0.1801,
+   "random_init_floor": -0.0007718207381611572,
+   "geneformer_ko_raw": -0.0314,
+   "geneformer_ko_posctrl": -0.050274184525744454
+  },
+  "pbmc": {
+   "geneformer_embed": -0.1,
+   "geneformer_attn": 0.3974,
+   "scFoundation_encoder": 0.0645,
+   "scGPT_encoder": 0.01156923954654306,
+   "UCE_encoder": -0.02447710055566448
+  }
+ },
+ "usability_provenance": {
+  "json": [
+   "crossmodal_v2",
+   "crossmodal_scf_v2",
+   "crossmodal_uce_v2",
+   "readout_attention_v2",
+   "insilico_ko_v2",
+   "pbmc_eval_v2",
+   "pbmc_eval_scf_v2"
+  ],
+  "recomputed_on_audit_edge_set": [
+   "brain_random_init_floor",
+   "brain_geneformer_ko_posctrl",
+   "pbmc_scGPT_encoder",
+   "pbmc_UCE_encoder"
+  ]
+ },
+ "panel_composition": {
+  "brain": {
+   "n_tf": 446,
+   "n_identical_profile": 30,
+   "n_partner_cosine_gt_0.8": 128,
+   "definition": "binary (>0) profiles of the per-type-averaged consensus proxy"
+  },
+  "pbmc": {
+   "n_tf": 446,
+   "n_identical_profile": 31,
+   "n_partner_cosine_gt_0.8": 140,
+   "definition": "binary (>0) profiles of the per-type-averaged consensus proxy"
+  }
+ },
+ "motif_evidence": {
+  "Brain": {
+   "relevant_peaks": 8823,
+   "peak_motif_hits": 180578,
+   "hits_per_peak": 20.466734670746913,
+   "expected_random_per_peak": 5.5,
+   "motif_p": 1e-05
+  },
+  "PBMC": {
+   "relevant_peaks": 6609,
+   "peak_motif_hits": 153207,
+   "hits_per_peak": 23.18157058556514,
+   "expected_random_per_peak": 5.5,
+   "motif_p": 1e-05
+  },
+  "Fibroblast mix": {
+   "relevant_peaks": 11614,
+   "peak_motif_hits": 252128,
+   "hits_per_peak": 21.708971930428792,
+   "expected_random_per_peak": 5.5,
+   "motif_p": 1e-05
+  }
+ },
+ "pertype_n_cells": {
+  "brain": {
+   "ODC": 2205,
+   "ASC": 357,
+   "MG": 3513,
+   "INH": 2581,
+   "PER.END": 429
+  },
+  "pbmc": {
+   "MonoCD14": 1134,
+   "CD4T": 1085,
+   "CD8T": 868,
+   "NK": 778,
+   "B": 626,
+   "DC": 613,
+   "MonoCD16": 442
+  }
+ },
+ "readout_qc": {
+  "cells_per_readout": {
+   "brain Geneformer attention (capped)": 4000,
+   "brain Geneformer KO": 300,
+   "brain UCE": 2000,
+   "brain scFoundation": 1500,
+   "PBMC pool (all readouts)": 4000
+  },
+  "manifest_gene_coverage": {
+   "brain UCE": 1195,
+   "brain scFoundation": 1199,
+   "PBMC scFoundation": 1168,
+   "PBMC UCE": 1159,
+   "all other readouts": 1200
+  },
+  "edge_accounting": {
+   "tf_x_gene": 535200,
+   "minus_self_pairs": 446,
+   "pbmc_edges": 534754,
+   "brain_marker_mask_edges": 446,
+   "brain_edges": 534308
+  }
+ }
+}

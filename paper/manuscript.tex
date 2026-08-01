@@ -235,6 +235,20 @@ and repeat the observed statistic 30 times. This axis-aligned diagnostic checks 
 response; it is not a power analysis and does not define an MDE, confidence interval, or exclusion
 bound.
 
+The fixed panel, model/readout availability, inference cell counts, and edge-accounting
+steps are audited explicitly in Fig.~\ref{fig:coverage}; blank coverage cells denote missing
+validated graphs, not negative results. The full audit therefore comprises 13 pooled FM/readout
+rows rather than a balanced model-by-tissue factorial design.
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig10_coverage_qc.tex}}
+\caption{Coverage and fixed-panel quality control. (A) Manifest-gene coverage for encoder
+readouts. (B) Validated graph availability by tissue and analysis level; coverage is intentionally
+reported rather than assumed balanced. (C) Cell counts used by representative pooled inference
+runs. (D) Edge accounting from the $446\times1{,}200$ Cartesian panel through self-pair and brain
+marker-mask exclusions.}\label{fig:coverage}
+\end{figure}
+
 \section{Results}\label{sec:results}
 \subsection{The proxy is reproducible, but remains a proxy}
 The accessibility/motif construct shows moderate observed agreement across tissue consensus graphs:
@@ -244,9 +258,10 @@ chemical-reprogramming experiment whose accessibility track pools day-0 fibrobla
 induced neuron-like cells, so it does not represent any resting tissue. These are descriptive
 fixed-panel correlations without new randomization inference. They show the construct is stable
 across ATAC inputs of very different provenance, not a causal ceiling or
-proof of TF--target truth. Most of that stability is marginal structure: an additive
+proof of TF--target truth. Figure~\ref{fig:proxy} also makes the proxy's motif-noise and panel-
+composition limits explicit. Most of that stability is marginal structure: an additive
 TF-row-plus-gene-column model fit on one tissue's proxy predicts the other tissue's edges at
-$\rho=0.32$--$0.41$ (69--78\% of the observed agreement), and after removing each tissue's own
+$\rho=0.32$--$0.41$ (69--78\% of the observed agreement; Fig.~\ref{fig:decomp}), and after removing each tissue's own
 additive structure the residual agreement is $\rho=0.41$--$0.55$. One pair deviates from that
 monotone reading: for brain--fibroblast-mix the additive fit is net-subtractive (residual
 $\rho=0.55$ above the observed $0.52$), so its additive-prediction fraction quantifies similarity
@@ -256,9 +271,22 @@ which are tissue-independent by design, rather than by tissue-specific regulator
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig1_truth_construct.tex}}
-\caption{Regulatory-potential proxy and observed reproducibility. (A) The proxy combines accessible
-peaks, motif matches, and TF--target linkage on a fixed panel; it is not causal ground truth.
-(B) Observed consensus-graph correlations across three tissue datasets.}\label{fig:proxy}
+\caption{Regulatory-potential proxy, evidence, and panel composition. (A) Construction from
+accessible peaks, motif matches, and TF--target linkage to the fixed panel; this remains a proxy,
+not causal ground truth. (B) Observed consensus-graph correlations across three tissue datasets.
+(C) Motif hits per accessible peak relative to the expected 5.5 random hits at the $10^{-5}$
+motif threshold. (D) TF target-profile redundancy: counts with an identical binary profile or a
+partner at cosine similarity $>0.8$, out of 446 TFs.}\label{fig:proxy}
+\end{figure}
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig2_cross_tissue_decomp.tex}}
+\caption{Cross-tissue structure of the regulatory-potential proxy. (A) Observed agreement,
+TF-row-plus-gene-column additive prediction, and agreement after removing each tissue's own
+additive fit. (B) Fraction of observed agreement predicted by additive marginals. (C) Difference
+between residual and observed correlation; brain--fibroblast mix is net-subtractive. (D) Range and
+mean of pairwise cell-type proxy correlations within brain and PBMC. These are descriptive
+fixed-panel quantities without new randomization inference.}\label{fig:decomp}
 \end{figure}
 
 \begin{table}[!tbp]\centering
@@ -279,11 +307,13 @@ $\rho=0.00425$ ($q_M=0.002$, $q_D=0.003$), scGPT encoder has $\rho=0.01098$ ($q_
 $q_D=0.003$), and UCE encoder has $\rho=0.00593$ ($q_M=0.002$, $q_D=0.003$).
 
 \begin{figure}[!tbp]\centering
-\fitfig{\input{figs/fig2_decisive_result.tex}}
-\caption{Primary full-confound fixed-panel audit. Points are observed partial Spearman correlations;
-labels give BH-adjusted gene-label ($q_M$) and row-shuffle ($q_D$) values within prespecified
-families. Green rows are supported by both nulls at $q<0.05$. Crosses mark the co-expression
-baseline, tested outside the FM families with uncorrected $p$-values.}\label{fig:primary}
+\fitfig{\input{figs/fig3_primary_audit.tex}}
+\caption{Primary fixed-panel audit under both prespecified confound specifications. (A) Full-
+confound pooled rows and the same-edge co-expression baseline; labels give BH-adjusted $q_M$
+and $q_D$ for FM rows and uncorrected $p_M,p_D$ for the baseline. (B) Non-degree co-primary
+rows; no row is supported by both nulls. (C) Full-confound $q_M$ versus $q_D$; support requires
+both coordinates below 0.05. (D) Each supported positive row compared with its own-tissue
+co-expression baseline.}\label{fig:primary}
 \end{figure}
 
 \begin{table}[!tbp]\centering
@@ -321,7 +351,25 @@ negative; PBMC scGPT is $+0.01$). The readouts
 that pass it (scFoundation $+0.08$, PBMC Geneformer attention $+0.40$) are null. Embedding-cosine
 anisotropy interacting with degree conditioning is a more parsimonious account of that inversion
 than regulatory encoding, so we report the six positives as readout-specific geometry rather than
-as regulatory signal.
+as regulatory signal (Fig.~\ref{fig:usability}).
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig4_usability_check.tex}}
+\caption{Readout usability and internal consistency. (A) FM--co-expression correlation for all 13
+pooled readouts, colored by full-confound support. (B) Positive joint-null support and positive usability shown as
+separate binary checks. (C) Marginal and partial behavior of the Geneformer knockout readout and
+its position-shift artifact correction. (D) Geneformer embedding and attention effects within each
+tissue; the brain effects have opposite signs.}\label{fig:usability}
+\end{figure}
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig5_null_diagnostics.tex}}
+\caption{Randomization and readout diagnostics. (A) Observed statistics against the row-shuffle
+null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and
+co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout against
+their Mantel nulls. (D) Independent recomputation of all eight brain rows, colored by joint-null
+support.}\label{fig:nulls}
+\end{figure}
 
 \subsection{The alignments depend on conditioning on proxy-derived degree covariates}
 Removing the two degree covariates changes both effect direction and randomization behavior
@@ -335,11 +383,11 @@ the row-shuffle null alone supports several non-degree rows while the gene-label
 none, so degree adjustment and null choice define different finite-panel questions.
 
 \begin{figure}[!tbp]\centering
-\fitfig{\input{figs/fig3_spec_sensitivity.tex}}
-\caption{Confound-specification sensitivity. Full and non-degree estimates are joined within each
-model/readout and tissue. The non-degree specification is reported co-primary and shows
-null-dependent support.}
-\label{fig:spec}
+\fitfig{\input{figs/fig6_spec_sensitivity.tex}}
+\caption{Dependence on the confound specification. (A) Full and non-degree estimates joined within
+each row. (B) Effect-sign map across specifications. (C) Full-confound versus non-degree
+randomization $p$-values for both nulls. (D) Nested covariate ladder from marginal correlation to
+the primary rung; lines are descriptive and are not a model-selection exercise.}\label{fig:spec}
 \end{figure}
 
 \subsection{Per-cell-type patterns are descriptive}
@@ -354,9 +402,12 @@ rows have no randomization $p$-values or BH correction. They neither promote
 cell-type discoveries nor provide population uncertainty.
 
 \begin{figure}[!tbp]\centering
-\fitfig{\input{figs/fig5_pertype_descriptive.tex}}
-\caption{Per-cell-type full-confound estimates. These observed effects are descriptive exploratory
-robustness checks without randomization $p$-values or multiplicity claims.}\label{fig:pertype}
+\fitfig{\input{figs/fig7_pertype_descriptive.tex}}
+\caption{Per-cell-type descriptive robustness summaries. (A) Brain full-confound rows by readout.
+(B) PBMC full-confound rows by readout. (C) Earlier brain per-type co-expression, Geneformer-
+embedding, and Geneformer-attention summaries on the same fixed panel. (D) Cell counts underlying
+the per-type rows. These observed effects have no randomization $p$-values or multiplicity
+claims.}\label{fig:pertype}
 \end{figure}
 
 \subsection{The implementation responds monotonically to aligned injection, and the observed
@@ -371,10 +422,13 @@ response; it is not a power analysis and does not define an MDE, confidence inte
 bound.
 
 \begin{figure}[!tbp]\centering
-\fitfig{\input{figs/fig4_pipeline_sensitivity.tex}}
-\caption{Axis-aligned pipeline-sensitivity diagnostic. Lines show the mean across 30 independent
-noise replicates and ribbons show the replicate range. This is not a confidence interval, power
-curve, MDE, or exclusion analysis.}\label{fig:sensitivity}
+\fitfig{\input{figs/fig8_injection_ladder.tex}}
+\caption{Axis-aligned pipeline-sensitivity diagnostic and observed-effect scale. (A--B) Brain and
+PBMC ladders; lines show the mean across 30 independent noise replicates, ribbons the replicate
+range, and diamonds the subdivided low-$\alpha$ points. (C) Observed effects located on the
+injection curves. (D) $\alpha$-equivalents of supported rows relative to the smallest probed
+nonzero fraction. This is not a confidence interval, power curve, MDE, or exclusion analysis.}
+\label{fig:sensitivity}
 \end{figure}
 
 \subsection{A supervised TF-disjoint probe gives mixed family-level results}
@@ -399,15 +453,13 @@ as model-specific regulatory recovery, while the UCE result prevents a blanket c
 is indistinguishable from co-expression.
 
 \begin{figure}[!tbp]\centering
-\fitfig{\input{figs/fig6_tf_probe.tex}}
+\fitfig{\input{figs/fig9_tf_probe.tex}}
 \caption{TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135
-held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, the paired
-sign-flip $q_{\mathrm{flip}}$ against the co-expression baseline. Green rows are supported against
-the baseline at $q_{\mathrm{flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$), and the
-supported floor contrast prevents a model-specific reading of UCE. (B) The same readout across
-confound subsets; recovery
-collapses once the proxy's construction covariates (peak count, gene length, GC) are conditioned
-on, and random-init stays at zero throughout.}\label{fig:probe}
+held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, paired
+sign-flip $q_{\mathrm{flip}}$ against co-expression. Green rows are supported against the baseline
+at $q_{\mathrm{flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$). (B) Recovery across
+confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TF
+mean, median, and one standard deviation of adjusted recovery.}\label{fig:probe}
 \end{figure}
 
 \section{Discussion}
