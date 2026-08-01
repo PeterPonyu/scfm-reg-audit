@@ -50,8 +50,9 @@ headline. First, all seven supported rows appear only in the specification that 
 degree covariates computed from the proxy itself; under the non-degree specification, which
 carries no such outcome-derived covariates, no row is supported by both nulls, and three of the
 six positives change sign. Second, the six positive readouts fail the protocol's own preregistered
-usability check---their FM-versus-co-expression Spearman correlations are negative ($-0.02$ to
-$-0.18$)---so their support is read as readout-specific geometry, not as regulatory recovery. The
+usability check---their FM-versus-co-expression Spearman correlations are negative or near zero
+($-0.18$ to $+0.01$)---so their support is read as readout-specific geometry, not as regulatory
+recovery. The
 co-expression baseline, tested on the same edge set, is itself supported in both tissues, and the
 PBMC Geneformer-embedding alignment ($\rho=0.0043$) is smaller than its own baseline
 ($\rho=0.0070$). A supervised TF-disjoint probe on paired PBMC data gives mixed family-level
@@ -152,7 +153,8 @@ encoder (4-layer variant, checkpoint SHA-256 pinned by the pipeline); and scGPT 
 random-init Geneformer floor. Coverage differs by tissue because
 only precomputed, validated graphs are included: brain has eight FM/readout rows and PBMC has five.
 Co-expression is reported as a baseline on the same edge set and nulls, but is not included as an
-FM row or in FM multiplicity families. Its design matrix is the full specification minus the
+FM row or in FM multiplicity families. Co-expression enters its own test only as the signal,
+never as a covariate: its design matrix is the full specification minus the
 co-expression column---an intercept plus the six structural covariates (target peak count, gene
 length, RNA detection rate, GC content, TF out-degree, target in-degree)---because partialling
 co-expression out of itself is degenerate by construction. CellPLM is outside scope because its
@@ -284,7 +286,8 @@ with the proxy less than the confound it is adjusted against.
 A further observation restrains the same table. Our protocol pre-registers a readout usability
 check in which a usable readout should correlate with co-expression (attention $\approx$
 co-expression is well established). The six supported positive rows come from readouts that fail
-that check: their FM--co-expression Spearman correlations are $-0.02$ to $-0.18$. The readouts
+that check: their FM--co-expression Spearman correlations are $-0.18$ to $+0.01$ (all but one
+negative; PBMC scGPT is $+0.01$). The readouts
 that pass it (scFoundation $+0.08$, PBMC Geneformer attention $+0.40$) are null. Embedding-cosine
 anisotropy interacting with degree conditioning is a more parsimonious account of that inversion
 than regulatory encoding, so we report the six positives as readout-specific geometry rather than
@@ -305,7 +308,8 @@ none, so degree adjustment and null choice define different finite-panel questio
 The proxy itself is near cell-type-invariant on this panel (pairwise consensus $\rho\approx0.99$),
 so per-cell-type rows score readouts against a reference with essentially no cell-type contrast;
 we report them only as descriptive robustness summaries. The full-confound cell-type analysis
-contains 15 brain and 14 PBMC FM rows per specification
+contains 15 brain (3 readouts $\times$ 5 cell types) and 14 PBMC (2 readouts $\times$ 7 cell
+types) FM rows per specification
 (Fig.~\ref{fig:pertype}). Brain full-confound estimates range from $-0.00396$ to $0.00445$ with
 median $0.00258$; PBMC estimates range from $0.00222$ to $0.00682$ with median $0.00413$. These
 rows have no randomization $p$-values or BH correction. They neither promote
@@ -368,7 +372,7 @@ this audit they cannot be distinguished from residual confound structure. A furt
 points the same way: our own protocol pre-registers a readout sanity check in which a usable
 readout should correlate with co-expression (attention $\approx$ co-expression is well
 established). The supported positives come from readouts that fail that check (FM--co-expression
-Spearman $-0.02$ to $-0.18$), while the readouts that pass it (scFoundation $+0.08$, PBMC
+Spearman $-0.18$ to $+0.01$), while the readouts that pass it (scFoundation $+0.08$, PBMC
 Geneformer attention $+0.40$) are null. Embedding-cosine anisotropy interacting with degree
 conditioning is a more parsimonious account of that inversion than regulatory encoding. This is
 compatible with
