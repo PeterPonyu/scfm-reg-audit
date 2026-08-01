@@ -1,11 +1,11 @@
 {
- "capsule": "scfm-reg-audit-audit-capsule-v0.2.2",
- "version": "v0.2.2",
+ "capsule": "scfm-reg-audit-audit-capsule-v0.2.3",
+ "version": "v0.2.3",
  "files": [
   {
    "path": "CITATION.cff",
    "bytes": 842,
-   "sha256": "52bacb1b8ed07b28ee8d6392bd28976dd0c8b82f34396d3f34b13201f863d2ee"
+   "sha256": "f708c20af9b14798de33d78373dc64f092b809e290423db68e65df7d5462f891"
   },
   {
    "path": "ENVIRONMENT.example",
@@ -30,7 +30,7 @@
   {
    "path": "README.md",
    "bytes": 2133,
-   "sha256": "05648fe816c15f4159800b723395dfb81e4da3ed8cebe9064a08562725f59201"
+   "sha256": "83e288cfc519e36b672e4de55babdde765208e66d6f6a331038b7b76a40738ee"
   },
   {
    "path": "README_PROJECT.md",
@@ -129,13 +129,13 @@
   },
   {
    "path": "paper/manuscript.pdf",
-   "bytes": 213705,
-   "sha256": "40ac431ab35614727454324c26307a59155d2b69e84fa67d9788a1f9d24743ae"
+   "bytes": 200094,
+   "sha256": "823a5b033d84f9e73c1997f704df7881b5254d05c7e7c161ed92f9f31201a5ba"
   },
   {
    "path": "paper/manuscript.tex",
-   "bytes": 37958,
-   "sha256": "e2800468911c03af196474bc11f13a14d8910ef47553dd2e05eda6941be72dbb"
+   "bytes": 39388,
+   "sha256": "f27ea22a01191708427a9635adef41ed5cb0141e72e9f07321e0be18598290a8"
   },
   {
    "path": "paper/references.bib",

@@ -2,63 +2,73 @@
 % results/v2/fixed_panel_audit_v2.json and fixed_panel_signal_injection_v2.json.
 % Build from paper/: Rscript make_figs.R; pdflatex manuscript; bibtex manuscript;
 % pdflatex manuscript; pdflatex manuscript.
-\documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
+\documentclass[fleqn,10pt,lineno]{wlpeerj}
 \usepackage{tikz}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
 \graphicspath{{figs/}}
-\usepackage{caption}
-\usepackage{helvet}
-\usepackage{booktabs}
 \usepackage{mdframed}
 \usepackage{placeins}
-\usepackage[hidelinks]{hyperref}
-\usepackage[numbers,sort&compress]{natbib}
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage[breaklinks=true]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=color1,citecolor=color1,urlcolor=color1}
+\usepackage{orcidlink}
+\setcitestyle{numbers,square,comma,sort&compress}
 \captionsetup{font=small,labelfont=bf}
 \setlength{\emergencystretch}{2em}
+% PeerJ's text column is narrower than the article column these TikZ figures were
+% sized for; \fitfig shrinks a float only when it is wider than the column.
+\newcommand{\fitfig}[1]{\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{#1}}
 
-\title{\textbf{scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs}}
-\author{Zeyu Fu\\Army Medical University\\\texttt{fuzeyu99@126.com}\\\href{https://orcid.org/0009-0001-8329-0108}{ORCID 0009-0001-8329-0108}}
-\date{}
+\title{scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs}
+
+\author[1]{Zeyu Fu\,\orcidlink{0009-0001-8329-0108}}
+\affil[1]{State Key Laboratory of Trauma and Chemical Poisoning, Institute of Combined Injury, Chongqing Engineering Research Center for Nanomedicine, College of Preventive Medicine, Army Medical University, Chongqing, China}
+\affil[1]{Corresponding author: \href{mailto:fuzeyu99@126.com}{fuzeyu99@126.com}}
+
+\keywords{single-cell RNA-seq, foundation models, gene regulatory networks, co-expression confounding, randomization inference, benchmark audit}
+
+\begin{abstract}
+\noindent\textbf{Background.} Claims that single-cell RNA foundation models encode gene regulation
+are difficult to audit because many reference networks share co-expression structure with the
+models' training data.
+
+\noindent\textbf{Methods.} We introduce \textbf{scReg-Eval}, a fixed-panel protocol that compares
+frozen pairwise foundation-model gene graphs with a sequence- and accessibility-derived
+regulatory-potential proxy while controlling co-expression, target peak count, gene length, GC
+content, RNA detection rate, transcription-factor out-degree, and target in-degree. The
+preregistered panel contains 1,200 genes, including 446 in-range transcription factors. We evaluate
+thirteen pooled model/readout combinations across brain and paired PBMC multiome data using two
+plus-one Monte Carlo randomization tests ($N=999$ each): a gene-label permutation and a
+within-TF-row, degree-preserving target shuffle. Benjamini--Hochberg correction is applied within
+eight prespecified tissue-by-confound-specification-by-null families.
+
+\noindent\textbf{Results.} Under the primary full confound specification, seven of thirteen rows
+are supported by both nulls: six small positive alignments (Geneformer embedding in brain and
+PBMC, UCE encoder in brain and PBMC, scGPT encoder in brain and PBMC; $\rho$ from $0.0043$ to
+$0.0124$) and one negative alignment (Geneformer attention in brain, $\rho=-0.0036$) from the same
+model whose embedding readout is positive in the same tissue. Two qualifications bound that
+headline. First, all seven supported rows appear only in the specification that conditions on
+degree covariates computed from the proxy itself; under the non-degree specification, which
+carries no such outcome-derived covariates, no row is supported by both nulls, and three of the
+six positives change sign. Second, the six positive readouts fail the protocol's own preregistered
+usability check---their FM-versus-co-expression Spearman correlations are negative ($-0.02$ to
+$-0.18$)---so their support is read as readout-specific geometry, not as regulatory recovery. The
+co-expression baseline, tested on the same edge set, is itself supported in both tissues, and the
+PBMC Geneformer-embedding alignment ($\rho=0.0043$) is smaller than its own baseline
+($\rho=0.0070$). A supervised TF-disjoint probe on paired PBMC data gives mixed family-level
+results: UCE versus co-expression is supported by paired sign-flip testing ($q=0.0325$), as is the
+random-init floor ($q=0.0300$), whereas Geneformer embedding ($q=0.5125$), Geneformer attention
+($q=0.65$), and scGPT ($q=0.255$) are not. The probe therefore must not be summarized as showing
+that all models are indistinguishable from co-expression.
+
+\noindent\textbf{Conclusions.} The audit finds weak, readout-specific, specification-dependent
+alignment concentrated in embedding-geometry readouts, and does not support a global
+regulatory-capability claim.
+\end{abstract}
 
 \begin{document}
 \maketitle
 
-\begin{abstract}
-\noindent
-Claims that single-cell RNA foundation models encode gene regulation are difficult to audit because
-many reference networks share co-expression structure with the models' training data. We introduce
-\textbf{scReg-Eval}, a fixed-panel protocol that compares frozen pairwise foundation-model gene graphs with a
-sequence- and accessibility-derived regulatory-potential proxy while controlling co-expression,
-target peak count, gene length, GC content, RNA detection rate, transcription-factor out-degree,
-and target in-degree. The preregistered panel contains 1,200 genes, including 446 in-range
-transcription factors. We evaluate thirteen pooled model/readout combinations across brain and
-paired PBMC multiome data using two plus-one Monte Carlo randomization tests ($N=999$ each): a
-gene-label permutation and a within-TF-row, degree-preserving target shuffle. Benjamini--Hochberg
-correction is applied within eight prespecified tissue-by-confound-specification-by-null families.
-Under the primary full confound specification, seven of thirteen rows are supported by both nulls:
-six small positive alignments (Geneformer embedding in brain and PBMC, UCE encoder in brain and
-PBMC, scGPT encoder in brain and PBMC; $\rho$ from $0.0043$ to $0.0124$) and one negative alignment
-(Geneformer attention in brain, $\rho=-0.0036$) from the same model whose embedding readout is
-positive in the same tissue. Two qualifications bound that headline. First, all seven supported
-rows appear only in the specification that conditions on degree covariates computed from the proxy
-itself; under the non-degree specification, which carries no such outcome-derived covariates, no
-row is supported by both nulls, and three of the six positives change sign. Second, the six
-positive readouts fail the protocol's own preregistered usability check---their FM-versus-
-co-expression Spearman correlations are negative ($-0.02$ to $-0.18$)---so their support is read
-as readout-specific geometry, not as regulatory recovery. The co-expression baseline, tested on the
-same edge set, is itself supported in both tissues, and the PBMC Geneformer-embedding alignment
-($\rho=0.0043$) is smaller than its own baseline ($\rho=0.0070$). A supervised TF-disjoint probe on
-paired PBMC data gives mixed
-family-level results: UCE versus co-expression is supported by paired sign-flip testing
-($q=0.0325$), as is the random-init floor ($q=0.0300$), whereas Geneformer embedding
-($q=0.5125$), Geneformer attention ($q=0.65$), and scGPT ($q=0.255$) are not. The probe therefore
-must not be summarized as showing that all models are indistinguishable from co-expression.
-The audit finds weak, readout-specific, specification-dependent alignment concentrated in
-embedding-geometry readouts, and does not support a global regulatory-capability claim.
-\end{abstract}
+
 
 \section{Introduction}
 Single-cell RNA foundation models (scFMs) are increasingly used as frozen representations for
@@ -432,19 +442,21 @@ regulation.
 
 % ==================== FIGURES ====================
 \begin{figure}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/fig1_truth_construct.tex}}
+\fitfig{\input{figs/fig1_truth_construct.tex}}
 \caption{Regulatory-potential proxy and observed reproducibility. (A) The proxy combines accessible
 peaks, motif matches, and TF--target linkage on a fixed panel; it is not causal ground truth.
 (B) Observed consensus-graph correlations across three tissue datasets.}\label{fig:proxy}
-\vspace{0.8em}
-\resizebox{0.72\textwidth}{!}{\input{figs/table2_cross_tissue_observed.tex}}
-\captionof{table}{Observed cross-tissue reproducibility of the regulatory-potential proxy. No
-confidence interval or new randomization inference is attached to these descriptive comparisons.}
-\label{tab:cross}
 \end{figure}
 
+\begin{table}[t]\centering
+\fitfig{\input{figs/table2_cross_tissue_observed.tex}}
+\caption{Observed cross-tissue reproducibility of the regulatory-potential proxy. No
+confidence interval or new randomization inference is attached to these descriptive comparisons.}
+\label{tab:cross}
+\end{table}
+
 \begin{figure}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/fig2_decisive_result.tex}}
+\fitfig{\input{figs/fig2_decisive_result.tex}}
 \caption{Primary full-confound fixed-panel audit. Points are observed partial Spearman correlations;
 labels give BH-adjusted gene-label ($q_M$) and row-shuffle ($q_D$) values within prespecified
 families. Green rows are supported by both nulls at $q<0.05$. Crosses mark the co-expression
@@ -452,7 +464,7 @@ baseline, tested outside the FM families with uncorrected $p$-values.}\label{fig
 \end{figure}
 
 \begin{figure}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/fig3_spec_sensitivity.tex}}
+\fitfig{\input{figs/fig3_spec_sensitivity.tex}}
 \caption{Confound-specification sensitivity. Full and non-degree estimates are joined within each
 model/readout and tissue. The non-degree specification is reported co-primary and shows
 null-dependent support.}
@@ -460,20 +472,20 @@ null-dependent support.}
 \end{figure}
 
 \begin{figure}[t]\centering
-\resizebox{0.85\textwidth}{!}{\input{figs/fig4_pipeline_sensitivity.tex}}
+\fitfig{\input{figs/fig4_pipeline_sensitivity.tex}}
 \caption{Axis-aligned pipeline-sensitivity diagnostic. Lines show the mean across 30 independent
 noise replicates and ribbons show the replicate range. This is not a confidence interval, power
 curve, MDE, or exclusion analysis.}\label{fig:sensitivity}
 \end{figure}
 
 \begin{figure}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/fig5_pertype_descriptive.tex}}
+\fitfig{\input{figs/fig5_pertype_descriptive.tex}}
 \caption{Per-cell-type full-confound estimates. These observed effects are descriptive exploratory
 robustness checks without randomization $p$-values or multiplicity claims.}\label{fig:pertype}
 \end{figure}
 
 \begin{figure}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/fig6_tf_probe.tex}}
+\fitfig{\input{figs/fig6_tf_probe.tex}}
 \caption{TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135
 held-out TFs, with gene-label permutation $q$-values. Paired sign-flip tests against the
 co-expression baseline are supported for UCE ($q=0.0325$) and the random-init floor ($q=0.0300$)
@@ -485,7 +497,7 @@ on, and random-init stays at zero throughout.}\label{fig:probe}
 
 % ==================== TABLES ====================
 \begin{table}[t]\centering
-\resizebox{\textwidth}{!}{\input{figs/table1_primary_fixed_panel.tex}}
+\fitfig{\input{figs/table1_primary_fixed_panel.tex}}
 \caption{Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row
 degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null
 family. The co-expression baseline is tested on the same edge set outside the FM families; its
@@ -497,7 +509,7 @@ entries are uncorrected $p$-values (dashes mark where no family correction appli
 The fixed manifest, graph-construction and statistical code, deterministic seed metadata, complete
 model/readout coverage table, authoritative JSON outputs, and figure generator are provided in the
 project repository at \url{https://github.com/PeterPonyu/scfm-reg-audit} and archived at
-\url{https://doi.org/10.5281/zenodo.21724337}. Reproducibility is offered at three explicit
+\url{https://doi.org/10.5281/zenodo.21724336}. Reproducibility is offered at three explicit
 layers: (i) artifact validation (the audit capsule's \texttt{validate\_artifacts.py} verifies every
 published number and hash without downloads); (ii) statistical reruns of the fixed-panel audit
 against the released JSONs; and (iii) a full-pipeline recipe with dataset accessions, checkpoint
@@ -524,6 +536,17 @@ This work received no dedicated or external funding.
 Formal analysis, Investigation, Data curation, Visualization, Writing---original draft, Writing---review
 and editing, and Project administration.
 
-\bibliographystyle{plainnat}
+\section*{Declaration of generative AI use}
+Anthropic Claude models (accessed through Claude Code with the oh-my-claudecode agent
+orchestration layer) were used to assist engineering and refactoring of the analysis code,
+hardening of the statistical pipeline, copy-editing of the manuscript, and generation of the
+figure-generation and packaging scripts, including an internal simulated-review process used for
+quality control. No AI system generated the scientific data, the randomization outputs, or any
+reported number; every artifact was recomputed by the deterministic pipelines described in the
+Methods. The author reviewed and edited all AI-assisted outputs and takes full responsibility for
+the accuracy and integrity of the manuscript and the accompanying code. No AI tool is listed as an
+author. A disclosure package with representative before/after code and the prompts used is
+provided with the submission.
+
 \bibliography{references}
 \end{document}
