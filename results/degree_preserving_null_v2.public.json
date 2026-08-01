@@ -1,0 +1,38 @@
+[
+  {
+    "label": "brain_geneformer_embed",
+    "observed": 0.0044,
+    "n_shuffles": 500,
+    "null_mean": 0.0003,
+    "null_sd": 0.0013,
+    "z": 3.25,
+    "p_perm": 0.004
+  },
+  {
+    "label": "brain_scfoundation",
+    "observed": 0.0006,
+    "n_shuffles": 500,
+    "null_mean": 0.0005,
+    "null_sd": 0.0011,
+    "z": 0.04,
+    "p_perm": 0.6547
+  },
+  {
+    "label": "brain_uce",
+    "observed": 0.0046,
+    "n_shuffles": 500,
+    "null_mean": 0.0003,
+    "null_sd": 0.0013,
+    "z": 3.5,
+    "p_perm": 0.002
+  },
+  {
+    "label": "brain_coexp_self",
+    "observed": 0.0028,
+    "n_shuffles": 500,
+    "null_mean": -0.0004,
+    "null_sd": 0.001,
+    "z": 3.07,
+    "p_perm": 0.008
+  }
+]

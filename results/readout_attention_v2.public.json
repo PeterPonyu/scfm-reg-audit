@@ -1,0 +1,22 @@
+{
+  "readout": "geneformer_attention_lastlayer",
+  "n_cells": 4000,
+  "n_pairs": 534754,
+  "observed": {
+    "attn_sym_vs_atac": -0.0272,
+    "attn_sym_partial_given_coexp": -0.0347,
+    "attn_sym_vs_coexp": 0.1801,
+    "attn_tf2target_vs_atac": -0.0426,
+    "attn_tf2target_partial_given_coexp": -0.0475,
+    "attn_target2tf_vs_atac": -0.0087,
+    "coexp_vs_atac": 0.0383
+  },
+  "mantel_attn_sym_partial": {
+    "observed": -0.0347,
+    "null_mean": -0.0001,
+    "null_sd": 0.0151,
+    "z": -2.28,
+    "p_perm": 0.02
+  },
+  "manifest_sha": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848"
+}
