@@ -21,7 +21,7 @@ from scipy.stats import rankdata, spearmanr
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fixed_panel_audit as fpa
 import pbmc_cache
-DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", "${SCFM_DATA_ROOT}")
+DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 
 
 # ----------------------------- defaults --------------------------------------
@@ -1016,7 +1016,7 @@ def build_inference_status(audit_hashes: dict, legacy_actual: dict,
         "scope_verification": {
             "scgpt_pooled_brain_recompute_command": (
                 "python3 -c \"import numpy as np; from scipy.stats import rankdata; "
-                "ROOT='${SCFM_PROJECT_ROOT}'; "
+                "ROOT='" + os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")) + "'; "
                 "Z=np.load(ROOT+'/results/v2/G_ATAC_v2_GSE174367.npz', allow_pickle=True); "
                 "F=np.load(ROOT+'/results/v2/fmgraphs_pooled_v2.npz'); "
                 "types=[str(t) for t in Z['types']]; tf=np.array(Z['tf_rows']); "

@@ -12,7 +12,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fixed_panel_audit as fpa
 import run_fixed_panel_audit as drv
-DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", "${SCFM_DATA_ROOT}")
+DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 
 
 def log(*a, flush=True):

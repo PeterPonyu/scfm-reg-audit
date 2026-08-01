@@ -1,0 +1,43 @@
+{
+ "analysis": "cross_tissue_additive_decomp",
+ "design": "TF-row + gene-column additive fit by alternating centering over the fixed non-self TF-target edge set; descriptive only, no randomization.",
+ "n_iter_max": 50,
+ "rows": [
+  {
+   "pair": [
+    "GSE174367",
+    "PBMC10k"
+   ],
+   "n_tf_common": 446,
+   "observed_spearman": 0.524858,
+   "additive_pred_spearman": 0.3959,
+   "residual_spearman_after_own_additive_fits": 0.507341,
+   "binary_support_phi": 0.506992,
+   "fraction_explained_by_additive_marginals": 0.7543
+  },
+  {
+   "pair": [
+    "GSE174367",
+    "GSE206767"
+   ],
+   "n_tf_common": 446,
+   "observed_spearman": 0.524496,
+   "additive_pred_spearman": 0.407609,
+   "residual_spearman_after_own_additive_fits": 0.550213,
+   "binary_support_phi": 0.500422,
+   "fraction_explained_by_additive_marginals": 0.7771
+  },
+  {
+   "pair": [
+    "PBMC10k",
+    "GSE206767"
+   ],
+   "n_tf_common": 446,
+   "observed_spearman": 0.462325,
+   "additive_pred_spearman": 0.318763,
+   "residual_spearman_after_own_additive_fits": 0.411683,
+   "binary_support_phi": 0.446097,
+   "fraction_explained_by_additive_marginals": 0.6895
+  }
+ ]
+}

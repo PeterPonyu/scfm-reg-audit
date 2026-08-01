@@ -57,7 +57,22 @@ from scipy.stats import rankdata
 
 
 # ----------------------------- paths / constants -----------------------------
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+def _project_root():
+    """Resolve the project/capsule root: env override, then the nearest ancestor of
+    this file that contains data/manifest/shared_genes.v2.json (works from both the
+    development layout src/v2/ and the release capsule layout src/)."""
+    env = os.environ.get("SCREG_PROJECT_ROOT")
+    if env:
+        return os.path.abspath(env)
+    here = os.path.abspath(os.path.dirname(__file__))
+    for level in range(1, 6):
+        candidate = os.path.abspath(os.path.join(here, *[".."] * level))
+        if os.path.exists(os.path.join(candidate, "data", "manifest", "shared_genes.v2.json")):
+            return candidate
+    return os.path.abspath(os.path.join(here, "..", ".."))
+
+
+ROOT = _project_root()
 OUT = f"{ROOT}/results/v2"
 DATA = f"{ROOT}/data"
 MANI = f"{DATA}/manifest/shared_genes.v2.json"

@@ -51,7 +51,7 @@ model_label <- c(
   geneformer_embed = "Geneformer embed",
   geneformer_attn = "Geneformer attention",
   geneformer_ko_raw = "Geneformer KO",
-  geneformer_ko_posctrl = "Geneformer KO control",
+  geneformer_ko_posctrl = "Artifact-corrected KO",
   scFoundation_encoder = "scFoundation encoder",
   UCE_encoder = "UCE encoder",
   scGPT_encoder = "scGPT encoder",
@@ -105,7 +105,7 @@ f1a <- ggplot(flow, aes(x, y)) +
   theme_void(base_size = 8) + theme(plot.title = element_text(size = 8.5, hjust = 0))
 
 cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, function(x) {
-  names <- c(GSE174367 = "Brain", PBMC10k = "PBMC", GSE206767 = "Fibroblast")
+  names <- c(GSE174367 = "Brain", PBMC10k = "PBMC", GSE206767 = "Fibroblast mix")
   data.frame(pair = paste(names[[x$pair[[1]]]], names[[x$pair[[2]]]], sep = "--"),
              rho = x$observed_spearman)
 }))
@@ -236,15 +236,16 @@ emit("fig5_pertype_descriptive", f5, 7.2, 5.0)
 # Table 1: primary full-confound fixed-panel results (baseline rows carry raw p,
 # not BH q — they sit outside the FM null families).
 fmt <- function(x, digits = 4) sprintf(paste0("%.", digits, "f"), x)
+pfmt <- function(p) ifelse(p <= 0.001, "$<0.001$", sprintf("$%.3f$", p))
 table_rows <- vapply(seq_len(nrow(primary)), function(i) {
   if (primary$is_baseline[i]) {
-    sprintf("%s & %s & $%s$ & $%.3f$ & -- & $%.3f$ & -- \\\\",
+    sprintf("%s & %s & $%s$ & %s & -- & %s & -- \\\\",
             primary$tissue[i], primary$model[i], fmt(primary$rho[i]),
-            primary$mantel_p[i], primary$degree_p[i])
+            pfmt(primary$mantel_p[i]), pfmt(primary$degree_p[i]))
   } else {
-    sprintf("%s & %s & $%s$ & $%.3f$ & $%.3f$ & $%.3f$ & $%.3f$ \\\\",
-            primary$tissue[i], primary$model[i], fmt(primary$rho[i]), primary$mantel_p[i],
-            primary$mantel_q[i], primary$degree_p[i], primary$degree_q[i])
+    sprintf("%s & %s & $%s$ & %s & $%.3f$ & %s & $%.3f$ \\\\",
+            primary$tissue[i], primary$model[i], fmt(primary$rho[i]), pfmt(primary$mantel_p[i]),
+            primary$mantel_q[i], pfmt(primary$degree_p[i]), primary$degree_q[i])
   }
 }, character(1))
 writeLines(c(

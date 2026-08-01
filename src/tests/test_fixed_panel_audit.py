@@ -37,13 +37,18 @@ OUT = f"{PROJECT_ROOT}/results/v2"
 # Integration tests that read real cached graphs cannot run on a fresh checkout
 # (caches are deliberately gitignored). They run in the development checkout and
 # skip cleanly elsewhere, matching the Layer-3 real-data benchmark contract.
+BRAIN_ATAC = os.environ.get(
+    "SCFM_BRAIN_ATAC",
+    os.path.join(os.environ.get(
+        "SCREG_DATA_ROOT", os.path.join(PROJECT_ROOT, "data")),
+        "datasets", "ATAC_data", "GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"))
 REAL_CACHES_PRESENT = all(os.path.exists(os.path.join(OUT, name)) for name in (
     "G_ATAC_v2_GSE174367.npz",
     "G_ATAC_v2_PBMC10k.npz",
     "fmgraphs_pooled_v2.npz",
     "pbmc_fmgraphs_pooled.npz",
     "pertype_fm_v2.json",
-))
+)) and os.path.exists(BRAIN_ATAC)
 sys.path.insert(0, V2)
 import fixed_panel_audit as fpa  # noqa: E402
 
@@ -148,6 +153,11 @@ def _pmc_floor_check(doc):
 
 
 # ============================== LAYER 1 ==============================
+LEGACY_FILES_PRESENT = all(os.path.exists(os.path.join(OUT, fn)) for fn in LEGACY_HASHES)
+
+
+@unittest.skipUnless(LEGACY_FILES_PRESENT,
+                     "retired legacy JSONs not present (excluded from the public capsule)")
 class TestLegacyHashes(unittest.TestCase):
     def test_legacy_hashes_unchanged(self):
         for fn, expected in LEGACY_HASHES.items():
@@ -802,6 +812,10 @@ class TestProductionHardening(unittest.TestCase):
             self.assertEqual(list(Path(tmp).glob(".*.tmp")), [])
 
 
+@unittest.skipUnless(
+    os.path.exists(os.path.join(OUT, "model_scope_decision_v2.json")),
+    "model_scope_decision_v2.json is a historical scope record superseded by "
+    "model_coverage_table in fixed_panel_audit_v2.json (not shipped in the capsule)")
 class TestScopeDecision(unittest.TestCase):
     def test_scope_decision_present_and_valid(self):
         from pathlib import Path
@@ -846,7 +860,7 @@ class TestDescriptivePerTypeSchema(unittest.TestCase):
         type_models_b, _, _ = drv.load_brain_pertype_models()
         ncells_b = json.loads(Path(f"{OUT}/pertype_fm_v2.json").read_text())["per_type"]
         ncells_b = {r["cell_type"]: r["n"] for r in ncells_b}
-        ATAC_B = "${SCFM_BRAIN_ATAC}"
+        ATAC_B = BRAIN_ATAC
         out = drv.run_pertype_family(
             ss.spawn(1)[0], ATAC_B, "brain", G_atac, co,
             type_models_b, tf, "full", ncells_b,
@@ -879,7 +893,7 @@ class TestDescriptivePerTypeSchema(unittest.TestCase):
         type_models_b, _, _ = drv.load_brain_pertype_models()
         ncells_b = json.loads(Path(f"{OUT}/pertype_fm_v2.json").read_text())["per_type"]
         ncells_b = {r["cell_type"]: r["n"] for r in ncells_b}
-        ATAC_B = "${SCFM_BRAIN_ATAC}"
+        ATAC_B = BRAIN_ATAC
         out = drv.run_pertype_family(
             ss.spawn(1)[0], ATAC_B, "brain", G_atac, co,
             type_models_b, tf, "full", ncells_b,
@@ -936,7 +950,7 @@ class TestEightPooledFamilyIds(unittest.TestCase):
         ss = np.random.SeedSequence(0)
         G_atac, co, models, tf, _ = drv.load_pooled_brain()
         ko_models, _ = drv.load_geneformer_ko()
-        ATAC_B = "${SCFM_BRAIN_ATAC}"
+        ATAC_B = BRAIN_ATAC
         out = drv.run_pooled_family(ss.spawn(1)[0], ATAC_B, "brain", G_atac, co, models, tf,
                                      ko_models, n_perm_mantel=9, n_perm_deg=9)
         for fam in self.EIGHT:

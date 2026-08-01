@@ -61,10 +61,13 @@ def main():
     sensitivity = load("tf_probe_pair_sensitivity_v2.public.json")
     invariance = load("proxy_celltype_invariance_v2.public.json")
     subdivided = load("injection_subdivided_v2.public.json")
+    decomp = load("cross_tissue_additive_decomp_v2.public.json")
 
-    docs = [audit, injection, status, brain_base, pbmc_base, probe, sensitivity, invariance, subdivided]
+    docs = [audit, injection, status, brain_base, pbmc_base, probe, sensitivity, invariance,
+            subdivided, decomp]
     assert all(math.isfinite(float(x)) for doc in docs for x in walk_numbers(doc))
     assert audit["panel"]["n_tf"] == 446 and audit["panel"]["n_genes"] == 1200
+    assert len(decomp["rows"]) == 3
 
     rows = []
     for tissue in ("brain", "pbmc"):
@@ -135,7 +138,8 @@ def main():
         assert hashlib.sha256(path.read_bytes()).hexdigest() == record["sha256"]
 
     check_no_private_paths()
-    print("PASS: scReg-Eval audit capsule v0.2.0 artifacts, families, manifest, and privacy are consistent")
+    version = manifest.get("version", "unknown")
+    print(f"PASS: scReg-Eval audit capsule {version} artifacts, families, manifest, and privacy are consistent")
 
 
 if __name__ == "__main__":

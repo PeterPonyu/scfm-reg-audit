@@ -1,0 +1,24 @@
+# scReg-Eval environment template — copy to your shell profile or `.env` and adjust.
+# No variable is required for artifact validation (validate_artifacts.py).
+# Required only for rerunning production pipelines on real data.
+
+# External data lake containing model weights and ATAC datasets.
+# Development machine example (replace with your own):
+export SCREG_DATA_ROOT=/path/to/data
+
+# Optional: model weights root (defaults to $SCREG_DATA_ROOT/models).
+# export SCREG_MODEL_ROOT=/path/to/models
+
+# Brain snATAC H5AD used for the brain proxy and confounds.
+# Defaults to $SCREG_DATA_ROOT/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad
+# export SCFM_BRAIN_ATAC=/path/to/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad
+
+# Figure generator base (project root) — defaults to the paper/ parent.
+# export SCFM_BASE=/path/to/projects/scfm-reg-audit
+
+# Notes for reviewers:
+# - src/v2/validate_capsule.py intentionally contains the strings "/home/zeyufu"
+#   and "zeyufu/Desktop" as forbidden needles in its privacy scan; that is the
+#   validator's own rule list, not a path dependency.
+# - src/v2/build_release_capsule.py contains the same strings in its
+#   PATH_REPLACEMENTS scrub table, for the same reason.
