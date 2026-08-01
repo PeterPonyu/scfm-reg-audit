@@ -17,7 +17,7 @@ export SCREG_DATA_ROOT=/path/to/data
 # export SCFM_BASE=/path/to/projects/scfm-reg-audit
 
 # Notes for reviewers:
-# - src/v2/validate_capsule.py intentionally contains the strings "/home/zeyufu"
+# - the release validator (validate_artifacts.py, built from src/v2/validate_capsule.py) intentionally contains the strings "/home/zeyufu"
 #   and "zeyufu/Desktop" as forbidden needles in its privacy scan; that is the
 #   validator's own rule list, not a path dependency.
 # - src/v2/build_release_capsule.py contains the same strings in its

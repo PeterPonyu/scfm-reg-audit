@@ -254,6 +254,20 @@ in the marginals rather than decomposing the edge-level agreement. The dominant 
 apparent reproducibility is therefore fixed by the motif library and the proximity rule, both of
 which are tissue-independent by design, rather than by tissue-specific regulatory biology.
 
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig1_truth_construct.tex}}
+\caption{Regulatory-potential proxy and observed reproducibility. (A) The proxy combines accessible
+peaks, motif matches, and TF--target linkage on a fixed panel; it is not causal ground truth.
+(B) Observed consensus-graph correlations across three tissue datasets.}\label{fig:proxy}
+\end{figure}
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{figs/table2_cross_tissue_observed.tex}}
+\caption{Observed cross-tissue reproducibility of the regulatory-potential proxy. No
+confidence interval or new randomization inference is attached to these descriptive comparisons.}
+\label{tab:cross}
+\end{table}
+
 \subsection{Primary full-confound audit: six weak positives, one negative, and a baseline that
 matches them}
 Table~\ref{tab:primary} and Fig.~\ref{fig:primary} report all thirteen pooled FM/readout rows plus
@@ -263,6 +277,22 @@ after within-family BH correction. In brain, Geneformer embedding has $\rho=0.00
 encoder has $\rho=0.01241$ ($q_M=0.004$, $q_D=0.003$). In paired PBMC, Geneformer embedding has
 $\rho=0.00425$ ($q_M=0.002$, $q_D=0.003$), scGPT encoder has $\rho=0.01098$ ($q_M=0.002$,
 $q_D=0.003$), and UCE encoder has $\rho=0.00593$ ($q_M=0.002$, $q_D=0.003$).
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig2_decisive_result.tex}}
+\caption{Primary full-confound fixed-panel audit. Points are observed partial Spearman correlations;
+labels give BH-adjusted gene-label ($q_M$) and row-shuffle ($q_D$) values within prespecified
+families. Green rows are supported by both nulls at $q<0.05$. Crosses mark the co-expression
+baseline, tested outside the FM families with uncorrected $p$-values.}\label{fig:primary}
+\end{figure}
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{figs/table1_primary_fixed_panel.tex}}
+\caption{Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row
+degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null
+family. The co-expression baseline is tested on the same edge set outside the FM families; its
+entries are uncorrected $p$-values (dashes mark where no family correction applies).}\label{tab:primary}
+\end{table}
 
 One further row is supported by both nulls with the opposite sign: brain Geneformer attention,
 $\rho=-0.00362$ ($q_M=0.005$, $q_D=0.016$), from the same model whose embedding readout is positive
@@ -304,6 +334,14 @@ specification as co-primary and treat the divergence as a substantive finding, n
 the row-shuffle null alone supports several non-degree rows while the gene-label null supports
 none, so degree adjustment and null choice define different finite-panel questions.
 
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig3_spec_sensitivity.tex}}
+\caption{Confound-specification sensitivity. Full and non-degree estimates are joined within each
+model/readout and tissue. The non-degree specification is reported co-primary and shows
+null-dependent support.}
+\label{fig:spec}
+\end{figure}
+
 \subsection{Per-cell-type patterns are descriptive}
 The proxy itself is near cell-type-invariant on this panel (pairwise consensus $\rho\approx0.99$),
 so per-cell-type rows score readouts against a reference with essentially no cell-type contrast;
@@ -315,6 +353,12 @@ median $0.00258$; PBMC estimates range from $0.00222$ to $0.00682$ with median $
 rows have no randomization $p$-values or BH correction. They neither promote
 cell-type discoveries nor provide population uncertainty.
 
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig5_pertype_descriptive.tex}}
+\caption{Per-cell-type full-confound estimates. These observed effects are descriptive exploratory
+robustness checks without randomization $p$-values or multiplicity claims.}\label{fig:pertype}
+\end{figure}
+
 \subsection{The implementation responds monotonically to aligned injection, and the observed
 effects sit at the bottom of that ladder}
 The axis-aligned diagnostic rises monotonically from approximately zero at $\alpha=0$ to mean
@@ -325,6 +369,13 @@ $\approx0.010$ at those fractions, so the supported rows are equivalent to injec
 $0.004$--$0.013$ of the proxy's own residual structure. This diagnostic checks implementation
 response; it is not a power analysis and does not define an MDE, confidence interval, or exclusion
 bound.
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig4_pipeline_sensitivity.tex}}
+\caption{Axis-aligned pipeline-sensitivity diagnostic. Lines show the mean across 30 independent
+noise replicates and ribbons show the replicate range. This is not a confidence interval, power
+curve, MDE, or exclusion analysis.}\label{fig:sensitivity}
+\end{figure}
 
 \subsection{A supervised TF-disjoint probe gives mixed family-level results}
 A linear probe trained to predict each TF's proxy targets from graph features on 311 held-in TFs
@@ -346,6 +397,18 @@ different question (supervised recoverability, not raw-readout alignment) and ne
 refutes the pooled rows. In particular, the random-init result prevents interpreting the UCE contrast
 as model-specific regulatory recovery, while the UCE result prevents a blanket claim that every FM
 is indistinguishable from co-expression.
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig6_tf_probe.tex}}
+\caption{TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135
+held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, the paired
+sign-flip $q_{\mathrm{flip}}$ against the co-expression baseline. Green rows are supported against
+the baseline at $q_{\mathrm{flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$), and the
+supported floor contrast prevents a model-specific reading of UCE. (B) The same readout across
+confound subsets; recovery
+collapses once the proxy's construction covariates (peak count, gene length, GC) are conditioned
+on, and random-init stays at zero throughout.}\label{fig:probe}
+\end{figure}
 
 \section{Discussion}
 The audit finds six small positive fixed-panel alignments and one negative one, all supported by
@@ -443,70 +506,6 @@ family-level contrasts, with the UCE and random-init floors distinguishing from 
 but no model-specific regulatory recovery. The result motivates readout-specific, null-explicit,
 baseline-reported accounting rather than broad claims that scFMs either do or do not encode gene
 regulation.
-
-% ==================== FIGURES ====================
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig1_truth_construct.tex}}
-\caption{Regulatory-potential proxy and observed reproducibility. (A) The proxy combines accessible
-peaks, motif matches, and TF--target linkage on a fixed panel; it is not causal ground truth.
-(B) Observed consensus-graph correlations across three tissue datasets.}\label{fig:proxy}
-\end{figure}
-
-\begin{table}[t]\centering
-\fitfig{\input{figs/table2_cross_tissue_observed.tex}}
-\caption{Observed cross-tissue reproducibility of the regulatory-potential proxy. No
-confidence interval or new randomization inference is attached to these descriptive comparisons.}
-\label{tab:cross}
-\end{table}
-
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig2_decisive_result.tex}}
-\caption{Primary full-confound fixed-panel audit. Points are observed partial Spearman correlations;
-labels give BH-adjusted gene-label ($q_M$) and row-shuffle ($q_D$) values within prespecified
-families. Green rows are supported by both nulls at $q<0.05$. Crosses mark the co-expression
-baseline, tested outside the FM families with uncorrected $p$-values.}\label{fig:primary}
-\end{figure}
-
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig3_spec_sensitivity.tex}}
-\caption{Confound-specification sensitivity. Full and non-degree estimates are joined within each
-model/readout and tissue. The non-degree specification is reported co-primary and shows
-null-dependent support.}
-\label{fig:spec}
-\end{figure}
-
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig4_pipeline_sensitivity.tex}}
-\caption{Axis-aligned pipeline-sensitivity diagnostic. Lines show the mean across 30 independent
-noise replicates and ribbons show the replicate range. This is not a confidence interval, power
-curve, MDE, or exclusion analysis.}\label{fig:sensitivity}
-\end{figure}
-
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig5_pertype_descriptive.tex}}
-\caption{Per-cell-type full-confound estimates. These observed effects are descriptive exploratory
-robustness checks without randomization $p$-values or multiplicity claims.}\label{fig:pertype}
-\end{figure}
-
-\begin{figure}[t]\centering
-\fitfig{\input{figs/fig6_tf_probe.tex}}
-\caption{TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135
-held-out TFs, with gene-label permutation $q$-values. Paired sign-flip tests against the
-co-expression baseline are supported for UCE ($q=0.0325$) and the random-init floor ($q=0.0300$)
-but not for Geneformer embedding, attention, or scGPT; the supported floor contrast prevents a
-model-specific reading of UCE. (B) The same readout across confound subsets; recovery
-collapses once the proxy's construction covariates (peak count, gene length, GC) are conditioned
-on, and random-init stays at zero throughout.}\label{fig:probe}
-\end{figure}
-
-% ==================== TABLES ====================
-\begin{table}[t]\centering
-\fitfig{\input{figs/table1_primary_fixed_panel.tex}}
-\caption{Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row
-degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null
-family. The co-expression baseline is tested on the same edge set outside the FM families; its
-entries are uncorrected $p$-values (dashes mark where no family correction applies).}\label{tab:primary}
-\end{table}
 
 \FloatBarrier
 \section*{Data and code availability}

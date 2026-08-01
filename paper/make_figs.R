@@ -32,12 +32,15 @@ probe_sens <- fromJSON(file.path(res, "tf_probe_pair_sensitivity_v2.json"), simp
 BLUE <- "#2a78d6"; AQUA <- "#1b8f75"; YELLOW <- "#d99a00"
 VIOLET <- "#5946b2"; RED <- "#d84a4a"; MUTED <- "grey45"; LIGHT <- "#d9e8f8"
 
-theme_set(theme_bw(base_size = 8) + theme(
+# Figure text must survive the \fitfig downscale to the ~6.5in PeerJ text block:
+# design near that width with an 11pt base so the smallest rendered text stays
+# within ~1pt of the 10pt body font instead of dropping to 6-7pt.
+theme_set(theme_bw(base_size = 11) + theme(
   panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
-  plot.title = element_text(size = 8.5, face = "plain", hjust = 0, margin = margin(b = 3)),
-  strip.text = element_text(size = 7.5), legend.title = element_text(size = 7),
-  legend.text = element_text(size = 7), axis.title = element_text(size = 7.5),
-  axis.text = element_text(size = 6.8), plot.margin = margin(4, 6, 3, 4)))
+  plot.title = element_text(size = 11, face = "plain", hjust = 0, margin = margin(b = 3)),
+  strip.text = element_text(size = 10), legend.title = element_text(size = 9.5),
+  legend.text = element_text(size = 9.5), axis.title = element_text(size = 10),
+  axis.text = element_text(size = 9.5), plot.margin = margin(4, 6, 3, 4)))
 
 emit <- function(name, plot, width, height) {
   tikz(file.path(figs, paste0(name, ".tex")), width = width, height = height,
@@ -93,16 +96,24 @@ pooled$status <- ifelse(pooled$mantel_q < 0.05 & pooled$degree_q < 0.05,
                                "supported by one null", "not supported"))
 
 # Figure 1: construct schematic and observed cross-tissue reproducibility.
-flow <- data.frame(x = 1:4, y = 1, label = c("accessible peak", "motif match", "TF-target weight", "fixed panel"))
+# The flow is laid out as an S (two boxes per row) so the labels stay large
+# enough to read after \fitfig scaling; a single row of four boxes at this
+# font size is wider than the half-page panel.
+flow <- data.frame(x = c(1, 3, 3, 1), y = c(2, 2, 1, 1),
+                   label = c("accessible peak", "motif match", "TF-target weight", "fixed panel"))
 f1a <- ggplot(flow, aes(x, y)) +
-  geom_label(aes(label = label), size = 2.6, linewidth = 0.25, fill = "white") +
-  geom_segment(data = data.frame(x = 1:3), aes(x = x + 0.24, xend = x + 0.76, y = 1, yend = 1),
-               inherit.aes = FALSE, arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
-  annotate("text", x = 2.5, y = 0.68,
-           label = "regulatory-potential proxy; not causal ground truth", size = 2.3, color = RED) +
-  coord_cartesian(xlim = c(0.7, 4.3), ylim = c(0.5, 1.25), clip = "off") +
+  geom_label(aes(label = label), size = 3.6, linewidth = 0.3, fill = "white") +
+  geom_segment(aes(x = 1.62, xend = 2.38, y = 2, yend = 2),
+               arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  geom_segment(aes(x = 3, xend = 3, y = 1.74, yend = 1.26),
+               arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  geom_segment(aes(x = 2.38, xend = 1.62, y = 1, yend = 1),
+               arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  annotate("text", x = 2, y = 0.52,
+           label = "regulatory-potential proxy; not causal ground truth", size = 3.2, color = RED) +
+  coord_cartesian(xlim = c(0.3, 3.7), ylim = c(0.35, 2.35), clip = "off") +
   labs(title = "Accessibility and motif evidence define the audited proxy") +
-  theme_void(base_size = 8) + theme(plot.title = element_text(size = 8.5, hjust = 0))
+  theme_void(base_size = 11) + theme(plot.title = element_text(size = 11, hjust = 0))
 
 cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, function(x) {
   names <- c(GSE174367 = "Brain", PBMC10k = "PBMC", GSE206767 = "Fibroblast mix")
@@ -111,11 +122,11 @@ cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, fun
 }))
 f1b <- ggplot(cross, aes(reorder(pair, rho), rho)) +
   geom_col(fill = BLUE, width = 0.62) +
-  geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 2.4) +
+  geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.58)) +
   labs(x = NULL, y = "observed Spearman $\\rho$", title = "Proxy structure is reproducible across tissues") +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
-emit("fig1_truth_construct", (f1a | f1b) + plot_annotation(tag_levels = "A"), 7.0, 2.8)
+emit("fig1_truth_construct", (f1a | f1b) + plot_annotation(tag_levels = "A"), 6.8, 2.8)
 
 # Figure 2: primary full-confound fixed-panel effects and both randomization decisions.
 primary <- pooled %>% filter(spec == "full")
@@ -128,23 +139,28 @@ tissue_order <- unique(primary$tissue)
 primary <- primary[order(match(primary$tissue, tissue_order), primary$is_baseline), ]
 primary$display <- paste(primary$model, primary$tissue, sep = " -- ")
 primary$display <- factor(primary$display, levels = rev(primary$display))
+# Forest-plot layout: the q/p labels live in a fixed right-hand margin column
+# (clip = "off"), so no label ever collides with the zero line, the y-axis row
+# labels, or the panel border.
 f2 <- ggplot(primary, aes(rho, display, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(aes(shape = is_baseline), size = 2.5) +
-  geom_text(aes(label = ifelse(is_baseline,
+  geom_text(aes(x = 0.0165,
+                label = ifelse(is_baseline,
                                sprintf("$p_M=%.3f;\\ p_D=%.3f$", mantel_p, degree_p),
                                sprintf("$q_M=%.3f;\\ q_D=%.3f$", mantel_q, degree_q))),
-            hjust = -0.08, size = 2.65, color = "black") +
+            hjust = 0, size = 3.3, color = "black") +
   scale_color_manual(values = c("supported by both nulls" = AQUA,
                                 "supported by one null" = YELLOW,
                                 "not supported" = MUTED,
                                 "co-expression baseline" = "black")) +
   scale_shape_manual(values = c(`TRUE` = 4, `FALSE` = 16), guide = "none") +
-  scale_x_continuous(expand = expansion(mult = c(0.08, 0.55))) +
+  coord_cartesian(xlim = c(-0.006, 0.0145), clip = "off") +
   labs(x = "partial Spearman $\\rho$", y = NULL, color = NULL,
        title = "Primary fixed-panel audit: small, readout-specific alignments") +
-  theme(legend.position = "top", axis.ticks.y = element_blank())
-emit("fig2_decisive_result", f2, 7.0, 4.6)
+  theme(legend.position = "top", axis.ticks.y = element_blank(),
+        plot.margin = margin(4, 118, 3, 4))
+emit("fig2_decisive_result", f2, 6.8, 5.2)
 
 # Figure 3: full versus non-degree confound specifications.
 spec <- pooled %>% select(tissue, model, model_key, spec, rho, status)
@@ -159,7 +175,7 @@ f3 <- ggplot(spec, aes(rho, display, group = display)) +
   labs(x = "partial Spearman $\\rho$", y = NULL, fill = NULL,
        title = "Effect direction and support depend on the confound specification") +
   theme(legend.position = "top", axis.ticks.y = element_blank())
-emit("fig3_spec_sensitivity", f3, 7.0, 3.8)
+emit("fig3_spec_sensitivity", f3, 6.8, 4.0)
 
 # Figure 4: axis-aligned pipeline sensitivity diagnostic, explicitly non-inferential.
 injection_rows <- function(tissue) {
@@ -196,7 +212,7 @@ f4 <- ggplot(dose, aes(alpha, mean, color = tissue, fill = tissue)) +
        color = NULL, fill = NULL,
        title = "Pipeline sensitivity diagnostic (not a power or exclusion analysis)") +
   theme(legend.position = "top")
-emit("fig4_pipeline_sensitivity", f4, 6.2, 3.0)
+emit("fig4_pipeline_sensitivity", f4, 6.5, 3.2)
 
 # Figure 5: descriptive per-cell-type full-confound effects.
 pertype_rows <- function(tissue) {
@@ -219,19 +235,20 @@ pertype_panel <- function(data, tissue_name, color) {
     # expand: keep points off the panel border, which clips them at the axis
     # limits. n.breaks caps the tick count so adjacent free_x panels do not
     # collide into runs like "0.0000.000" at their shared edge.
-    scale_x_continuous(expand = expansion(mult = 0.10), n.breaks = 4) +
+    scale_x_continuous(expand = expansion(mult = 0.10), n.breaks = 3) +
     labs(x = NULL, y = NULL, title = tissue_name) +
-    theme(strip.text = element_text(size = 7.6), axis.text.y = element_text(size = 7.2),
-          plot.title = element_text(size = 8.2, face = "bold"),
+    theme(strip.text = element_text(size = 10), axis.text.y = element_text(size = 9.5),
+          axis.text.x = element_text(size = 8.5),
+          plot.title = element_text(size = 11, face = "bold"),
           panel.spacing.x = unit(9, "pt"))
 }
 f5 <- pertype_panel(pt_brain, "Brain", BLUE) /
       pertype_panel(pt_pbmc, "PBMC", AQUA) +
       plot_annotation(
         title = "Per-cell-type estimates are descriptive robustness checks",
-        theme = theme(plot.title = element_text(size = 9, hjust = 0))) &
+        theme = theme(plot.title = element_text(size = 11.5, hjust = 0))) &
       labs(x = "full-confound partial $\\rho$ (descriptive)")
-emit("fig5_pertype_descriptive", f5, 7.2, 5.0)
+emit("fig5_pertype_descriptive", f5, 6.8, 5.2)
 
 # Table 1: primary full-confound fixed-panel results (baseline rows carry raw p,
 # not BH q — they sit outside the FM null families).
@@ -264,9 +281,11 @@ writeLines(c(
 ), file.path(figs, "table2_cross_tissue_observed.tex"))
 
 # Figure 6: TF-disjoint supervised probe. Panel A: confound-adjusted test rho per
-# family with permutation q; co-expression is the baseline, random_floor the floor.
-# Panel B: adjusted rho across confound subsets, showing the collapse happens at
-# the ATAC-construction covariates, not at detv.
+# family with BOTH q values that gate the paper's conclusions -- the gene-label
+# permutation q_M (is the family's own recovery nonzero) and the paired sign-flip
+# q_flip against the co-expression baseline (the headline contrast). Colour
+# follows the headline decision (supported against the baseline), so the panel
+# cannot be read as rewarding the co-expression baseline's own nonzero q_M.
 probe_fam_label <- c(
   co_expression = "Co-expression",
   geneformer_embed = "Geneformer embed",
@@ -275,21 +294,34 @@ probe_fam_label <- c(
   UCE_encoder = "UCE encoder",
   random_floor = "Random-init floor"
 )
+contr <- probe_stats$contrasts_vs_baseline
 pa <- bind_rows(lapply(names(probe_stats$families), function(fam) {
   f <- probe_stats$families[[fam]]
+  is_base <- fam == "co_expression"
   data.frame(family = unname(probe_fam_label[[fam]]), key = fam,
              rho = f$adjusted_rho_mean, q = f$mantel_q,
-             significant = isTRUE(f$significant_q05))
+             flip_q = if (is_base) NA_real_ else contr[[fam]]$signflip_q,
+             status = if (is_base) "co-expression baseline"
+                      else if (isTRUE(contr[[fam]]$significant_q05)) "supported vs baseline"
+                      else "not supported",
+             stringsAsFactors = FALSE)
 }))
 pa$family <- factor(pa$family, levels = rev(unname(probe_fam_label)))
-f6a <- ggplot(pa, aes(rho, family, color = significant)) +
+f6a <- ggplot(pa, aes(rho, family, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(size = 2.4) +
-  geom_text(aes(label = sprintf("$q=%.3f$", q)), hjust = -0.15, size = 2.5, color = "black") +
-  scale_color_manual(values = c(`TRUE` = AQUA, `FALSE` = MUTED), guide = "none") +
-  scale_x_continuous(expand = expansion(mult = c(0.10, 0.40))) +
-  labs(x = "adjusted test Spearman $\\rho$", y = NULL,
-       title = "A. Supervised probe on held-out TFs (edge features only)")
+  geom_text(aes(x = 0.0068,
+                label = ifelse(status == "co-expression baseline",
+                               sprintf("$q_M=%.3f$", q),
+                               sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", q, flip_q))),
+            hjust = 0, size = 3.0, color = "black") +
+  scale_color_manual(values = c("supported vs baseline" = AQUA,
+                                "not supported" = MUTED,
+                                "co-expression baseline" = "black")) +
+  coord_cartesian(xlim = c(-0.021, 0.0055), clip = "off") +
+  labs(x = "adjusted test Spearman $\\rho$", y = NULL, color = NULL,
+       title = "A. Supervised probe on held-out TFs (edge features only)") +
+  theme(legend.position = "top", plot.margin = margin(4, 132, 3, 4))
 pb <- bind_rows(lapply(names(probe_sens$grid), function(fam) {
   g <- probe_sens$grid[[fam]]
   bind_rows(lapply(names(g), function(sub) {
@@ -308,7 +340,10 @@ f6b <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
                                 "UCE encoder" = YELLOW, "Random-init floor" = MUTED)) +
   labs(x = NULL, y = "adjusted test Spearman $\\rho$", color = NULL,
        title = "B. Effect of confound subset on probe recovery") +
-  theme(legend.position = "right", axis.text.x = element_text(angle = 28, hjust = 1, size = 6.2))
-emit("fig6_tf_probe", (f6a | f6b) + plot_annotation(tag_levels = "A"), 8.2, 3.4)
+  theme(legend.position = "right", axis.text.x = element_text(angle = 28, hjust = 1, size = 9),
+        legend.text = element_text(size = 9))
+# stacked, not side-by-side: at 11pt base the two panel titles overlap when the
+# panels share a 6.8in row
+emit("fig6_tf_probe", f6a / f6b, 6.8, 5.6)
 
 cat("all authoritative figures and tables written to", figs, "\n")
