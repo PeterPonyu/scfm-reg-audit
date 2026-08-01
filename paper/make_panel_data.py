@@ -192,8 +192,121 @@ out["readout_qc"] = {
     },
 }
 
+# ---------- PBMC scGPT/UCE covariate ladder (rows absent from marginal_vs_adjusted_v2) ----------
+# Recomputed with the audit's own method: rank-transform graph weights, residualize
+# on [intercept + ranked co-expression + standardized covariates], Pearson of residuals.
+# Method is validated in-line against the authoritative audit JSON (binary proxy
+# degrees; full and non-degree rungs must match to 1e-4) before any value is emitted.
+from scipy.stats import rankdata
+
+_gz = np.load(os.path.join(res, "G_ATAC_v2_PBMC10k.npz"))
+_tf_rows = _gz["tf_rows"]
+_types = [k for k in _gz.keys() if k.startswith("G_")]
+_proxy_full = np.mean([_gz[k] for k in _types], axis=0)[_tf_rows]
+_n_tf, _n_g = _proxy_full.shape
+_self = np.ones((_n_tf, _n_g), bool)
+for _i, _t in enumerate(_tf_rows):
+    _self[_i, _t] = False
+_proxy = _proxy_full[_self]
+_co4 = np.load(os.path.join(res, "pbmc_confounds_v2.npz"))
+_gene_covs = {k: _co4[k] for k in ("peakcount", "genelen", "detv", "gc")}
+_deg_tf = (_proxy_full > 0).sum(1)
+_deg_tg = (_proxy_full > 0).sum(0)
+
+
+def _vec(x, kind):
+    if kind == "tf":
+        return np.repeat(x, _n_g)[_self.ravel()]
+    return np.tile(x, (_n_tf, 1))[_self]
+
+
+def _z(x):
+    return (x - x.mean()) / x.std()
+
+
+def _partial(fmv, cols):
+    fv = rankdata(fmv)
+    pv = rankdata(_proxy)
+    X = np.column_stack([np.ones_like(fv)] + cols)
+    bf = np.linalg.lstsq(X, fv, rcond=None)[0]
+    bp = np.linalg.lstsq(X, pv, rcond=None)[0]
+    rf = fv - X @ bf
+    rp = pv - X @ bp
+    return float(np.corrcoef(rf, rp)[0, 1])
+
+
+def _ladder(fm_vec, co_vec):
+    cols_nondeg = [_z(_vec(_gene_covs[k], "tg")) for k in ("peakcount", "genelen", "detv", "gc")]
+    cols_deg = [_z(_vec(_deg_tf, "tf")), _z(_vec(_deg_tg, "tg"))]
+    co = rankdata(co_vec)
+    return {
+        "marginal": float(spearmanr(fm_vec, _proxy).statistic),
+        "coexp_only": _partial(fm_vec, [co]),
+        "nondegree_only": _partial(fm_vec, cols_nondeg),
+        "degree_only": _partial(fm_vec, cols_deg),
+        "coexp_plus_nondegree": _partial(fm_vec, [co] + cols_nondeg),
+        "coexp_plus_full": _partial(fm_vec, [co] + cols_nondeg + cols_deg),
+    }
+
+
+_psg = np.load(os.path.join(res, "pbmc_scgpt_pooled_v2.npz"))
+_puc = np.load(os.path.join(res, "pbmc_uce_pooled_v2.npz"))
+lad_sg = _ladder(_psg["sg"][_tf_rows][_self], _psg["co"][_tf_rows][_self])
+lad_uc = _ladder(_puc["uce"][_tf_rows][_self], _puc["co"][_tf_rows][_self])
+
+_audit = j("fixed_panel_audit_v2.json")
+_want = {}
+for _x in _audit["pooled"]["pbmc"]["rows"]:
+    if _x["row_type"] == "pooled_fm" and _x["model_label"] in ("scGPT_encoder", "UCE_encoder"):
+        _want[(_x["model_label"], _x["confound_spec"])] = _x["observed_partial_rho"]
+for _lad, _ml in ((lad_sg, "scGPT_encoder"), (lad_uc, "UCE_encoder")):
+    assert abs(_lad["coexp_plus_full"] - _want[(_ml, "full")]) < 1e-4, (_ml, "full", _lad)
+    assert abs(_lad["coexp_plus_nondegree"] - _want[(_ml, "non_degree")]) < 1e-4, (_ml, "nondeg", _lad)
+out["ladder_pbmc_extra"] = {
+    "definition": "same method as marginal_vs_adjusted_v2 (binary proxy degrees); "
+                  "validated in-line against fixed_panel_audit_v2 full and non-degree rows",
+    "scGPT_encoder": lad_sg,
+    "UCE_encoder": lad_uc,
+}
+
+# ---------- alpha-equivalents for PBMC scGPT/UCE (absent from effect_vs_injection_scale_v2) ----------
+# Same linear interpolation on the injection curve (main + subdivided points). Method
+# validated in-line against every stored INTERPOLATED alpha_equivalent before use.
+_es = j("effect_vs_injection_scale_v2.json")
+_sub = j("injection_subdivided_v2.json")
+
+
+def _curve(tn):
+    pts = [(p["alpha"], p["mean_rho"]) for p in _es["alpha_to_rho_curves"][tn]["points"]]
+    for r in _sub[tn]["rows"]:
+        m = float(np.mean([z["observed_partial_rho_axis_aligned"] for z in r["replicate_runs"]]))
+        pts.append((r["alpha"], m))
+    pts = sorted(set(pts))
+    return np.array([p[0] for p in pts]), np.array([p[1] for p in pts])
+
+
+def _alpha_of(rho, tn):
+    a, y = _curve(tn)
+    return float(np.interp(rho, y, a))
+
+
+_errs = []
+for _r in _es["observed_effects_as_alpha"]:
+    if _r["alpha_equivalent"] is not None:
+        _errs.append(abs(_alpha_of(_r["observed_rho"], _r["tissue"]) - _r["alpha_equivalent"]))
+assert max(_errs) < 2e-3, _errs
+out["alpha_equiv_extra"] = {
+    "method": "linear interpolation on injection curve incl. subdivided points; "
+              "validated against all stored INTERPOLATED values (max err %.4f)" % max(_errs),
+    "pbmc_scGPT_encoder": _alpha_of(_want[("scGPT_encoder", "full")], "pbmc"),
+    "pbmc_UCE_encoder": _alpha_of(_want[("UCE_encoder", "full")], "pbmc"),
+}
+
 with open(os.path.join("panel_data.json"), "w") as fh:
     json.dump(out, fh, indent=1)
 print(json.dumps(out["usability_fm_vs_coexp"], indent=1))
 print(json.dumps(out["panel_composition"], indent=1))
+print("ladder scGPT:", {k: round(v, 5) for k, v in lad_sg.items()})
+print("ladder UCE:  ", {k: round(v, 5) for k, v in lad_uc.items()})
+print("alpha equiv extra:", out["alpha_equiv_extra"])
 print("panel_data.json written")

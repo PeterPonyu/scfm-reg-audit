@@ -1,4 +1,4 @@
-# scReg-Eval fixed-panel audit capsule v0.2.7
+# scReg-Eval fixed-panel audit capsule v0.2.8
 
 This is a sanitized **audit capsule** for the scReg-Eval manuscript. It validates the published
 numerical artifacts and carries the audited statistical code; it is not a raw-data reproduction

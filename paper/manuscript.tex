@@ -164,7 +164,8 @@ are reported rather than harmonized: PBMC readouts use a deterministic 4,000-cel
 model; brain Geneformer embedding and scGPT use all available cells, brain Geneformer attention is
 capped at 4,000 cells, brain UCE uses 2,000 cells, and brain scFoundation uses 1,500 cells with a
 512-token context cap. Manifest gene coverage is 1,159/1,200 for PBMC UCE, 1,195/1,200 for brain
-UCE, 1,199/1,200 for scFoundation, and 1,200/1,200 otherwise.
+UCE, 1,199/1,200 for brain scFoundation, 1,168/1,200 for PBMC scFoundation, and 1,200/1,200
+otherwise.
 
 \subsection{Observed statistic and confound specifications}\label{sec:statistic}
 For each retained TF--target pair, all graph weights are rank transformed. The primary statistic is
@@ -366,9 +367,11 @@ tissue; the brain effects have opposite signs.}\label{fig:usability}
 \fitfig{\input{figs/fig5_null_diagnostics.tex}}
 \caption{Randomization and readout diagnostics. (A) Observed statistics against the row-shuffle
 null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and
-co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout against
-their Mantel nulls. (D) Independent recomputation of all eight brain rows, colored by joint-null
-support.}\label{fig:nulls}
+co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout both
+align with the proxy after partialling co-expression alone ($p=0.001$ and $p=0.004$); the audit's
+full confound specification removes that alignment (Table~\ref{tab:primary}). (D) Joint-null
+support decisions are identical between the authoritative audit and the attention-omission
+guard.}\label{fig:nulls}
 \end{figure}
 
 \subsection{The alignments depend on conditioning on proxy-derived degree covariates}
@@ -426,8 +429,9 @@ bound.
 \caption{Axis-aligned pipeline-sensitivity diagnostic and observed-effect scale. (A--B) Brain and
 PBMC ladders; lines show the mean across 30 independent noise replicates, ribbons the replicate
 range, and diamonds the subdivided low-$\alpha$ points. (C) Observed effects located on the
-injection curves. (D) $\alpha$-equivalents of supported rows relative to the smallest probed
-nonzero fraction. This is not a confidence interval, power curve, MDE, or exclusion analysis.}
+injection curves. (D) $\alpha$-equivalents of the six supported positive rows relative to the
+smallest probed nonzero fraction; the negative brain attention row has no positive
+$\alpha$-equivalent. This is not a confidence interval, power curve, MDE, or exclusion analysis.}
 \label{fig:sensitivity}
 \end{figure}
 
@@ -458,8 +462,7 @@ is indistinguishable from co-expression.
 held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, paired
 sign-flip $q_{\mathrm{flip}}$ against co-expression. Green rows are supported against the baseline
 at $q_{\mathrm{flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$). (B) Recovery across
-confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TF
-mean, median, and one standard deviation of adjusted recovery.}\label{fig:probe}
+confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TFmean, median, and one standard deviation of adjusted recovery.}\label{fig:probe}
 \end{figure}
 
 \section{Discussion}

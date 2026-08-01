@@ -112,5 +112,29 @@
    "brain_marker_mask_edges": 446,
    "brain_edges": 534308
   }
+ },
+ "ladder_pbmc_extra": {
+  "definition": "same method as marginal_vs_adjusted_v2 (binary proxy degrees); validated in-line against fixed_panel_audit_v2 full and non-degree rows",
+  "scGPT_encoder": {
+   "marginal": -0.026676345521851635,
+   "coexp_only": -0.02763610113263756,
+   "nondegree_only": -0.0002129520620352999,
+   "degree_only": 0.01068577771131422,
+   "coexp_plus_nondegree": -0.0017851558048043795,
+   "coexp_plus_full": 0.010981275622944969
+  },
+  "UCE_encoder": {
+   "marginal": 0.01506246695929368,
+   "coexp_only": 0.017214096949348008,
+   "nondegree_only": 0.010933523363990708,
+   "degree_only": 0.00566747720615427,
+   "coexp_plus_nondegree": 0.011490115222469597,
+   "coexp_plus_full": 0.005926657217452905
+  }
+ },
+ "alpha_equiv_extra": {
+  "method": "linear interpolation on injection curve incl. subdivided points; validated against all stored INTERPOLATED values (max err 0.0007)",
+  "pbmc_scGPT_encoder": 0.011335350927091788,
+  "pbmc_UCE_encoder": 0.00594612051465649
  }
 }
