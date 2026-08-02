@@ -1,11 +1,11 @@
 {
- "capsule": "scfm-reg-audit-audit-capsule-v0.2.8",
- "version": "v0.2.8",
+ "capsule": "scfm-reg-audit-audit-capsule-v0.2.9",
+ "version": "v0.2.9",
  "files": [
   {
    "path": "CITATION.cff",
    "bytes": 842,
-   "sha256": "0711390e89d3485d4b7ab83bab556992718945747aac969aaca3b77c5b6a55f5"
+   "sha256": "e9b164c9678f5a8e0908a5799e51ef81378969701550612ff4864f0ead4c87d0"
   },
   {
    "path": "ENVIRONMENT.example",
@@ -30,7 +30,7 @@
   {
    "path": "README.md",
    "bytes": 2133,
-   "sha256": "ec35041a459c14afac6973116888344e43c3c61ea52158b9a94a4384aea579a0"
+   "sha256": "f42ddf0f8f7f080cbd1653734af00640b3588f5a9c5dda65594518b704a708b8"
   },
   {
    "path": "README_PROJECT.md",
@@ -93,24 +93,9 @@
    "sha256": "9593a546638a421d492a0646932a93c5e875418974d57829fccc77cf9d519dcf"
   },
   {
-   "path": "paper/figs/fig2_decisive_result.tex",
-   "bytes": 10902,
-   "sha256": "3b73ac663281dffb73fe92dbcc1de3301fdd8ce50744fdb4e4cc2e54dda25dfc"
-  },
-  {
    "path": "paper/figs/fig3_primary_audit.tex",
    "bytes": 35658,
    "sha256": "58022546b7fc1aa4afecf1a1b8056596c51531c984c6cf66b59709a13fa40bf4"
-  },
-  {
-   "path": "paper/figs/fig3_spec_sensitivity.tex",
-   "bytes": 11772,
-   "sha256": "99071b4dc897c54419ceb9700b0c642361814b36abda3ace1625ff20c3f83d92"
-  },
-  {
-   "path": "paper/figs/fig4_pipeline_sensitivity.tex",
-   "bytes": 13361,
-   "sha256": "1171a5175c13bfa6fbbee234542966c70c5a38c8508af7a35800788953383222"
   },
   {
    "path": "paper/figs/fig4_usability_check.tex",
@@ -123,19 +108,9 @@
    "sha256": "52eec96d87049c7b19715c8d201c1f9745d29646704b46b24932926f2efd589b"
   },
   {
-   "path": "paper/figs/fig5_pertype_descriptive.tex",
-   "bytes": 18809,
-   "sha256": "4c2f919c13393d9e69096f69c94935dc6d9947be6f4fe302b58e1387c3a80b0f"
-  },
-  {
    "path": "paper/figs/fig6_spec_sensitivity.tex",
    "bytes": 54696,
    "sha256": "3a98275f2fd7213917960c4fba38b50a3150f763e6e84790a34e5bcdc92f510e"
-  },
-  {
-   "path": "paper/figs/fig6_tf_probe.tex",
-   "bytes": 21596,
-   "sha256": "ae274fb8291754ea24cafd9eb4332f002455e3ac13ee773f966dc059fe4324e0"
   },
   {
    "path": "paper/figs/fig7_pertype_descriptive.tex",
@@ -164,8 +139,8 @@
   },
   {
    "path": "paper/figs_preview.tex",
-   "bytes": 1917,
-   "sha256": "a38496dc5d26f65f458455549552d95df659d342b66eb158c66997853238935b"
+   "bytes": 2492,
+   "sha256": "4949dcc9b2269c01755ff33cd0d4463009ce67a4fb5184afae8f5380bd0ff157"
   },
   {
    "path": "paper/make_figs.R",
@@ -349,8 +324,8 @@
   },
   {
    "path": "validate_artifacts.py",
-   "bytes": 6433,
-   "sha256": "38f94efea84009cb33bd3003c7426c205a14de50fdb558caecaff4033486d417"
+   "bytes": 7798,
+   "sha256": "c15ade55cfeb3ece2b62faa9fa1c2001a9420d02cc0f85b3a288f695c4293787"
   }
  ]
 }

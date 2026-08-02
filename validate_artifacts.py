@@ -3,12 +3,32 @@
 import hashlib
 import json
 import math
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
+
+CURRENT_FIGURES = (
+    "fig10_coverage_qc.tex",
+    "fig1_truth_construct.tex",
+    "fig2_cross_tissue_decomp.tex",
+    "fig3_primary_audit.tex",
+    "fig4_usability_check.tex",
+    "fig5_null_diagnostics.tex",
+    "fig6_spec_sensitivity.tex",
+    "fig7_pertype_descriptive.tex",
+    "fig8_injection_ladder.tex",
+    "fig9_tf_probe.tex",
+)
+CURRENT_TABLES = (
+    "table2_cross_tissue_observed.tex",
+    "table1_primary_fixed_panel.tex",
+)
+CURRENT_FRAGMENTS = CURRENT_FIGURES + CURRENT_TABLES
+FIGURE_INPUT_RE = re.compile(r"\\input\{figs/([^}]+\.tex)\}")
 
 
 def load(name):
@@ -49,6 +69,24 @@ def check_no_private_paths():
             text = path.read_text(errors="replace")
             for needle in forbidden:
                 assert needle not in text, f"private path {needle} in {path.relative_to(ROOT)}"
+
+
+def figure_inputs(path):
+    return tuple(FIGURE_INPUT_RE.findall(path.read_text()))
+
+
+def check_figure_contract():
+    manuscript_inputs = figure_inputs(ROOT / "paper/manuscript.tex")
+    manuscript_figures = tuple(name for name in manuscript_inputs if name.startswith("fig"))
+    manuscript_tables = tuple(name for name in manuscript_inputs if name.startswith("table"))
+    preview_inputs = figure_inputs(ROOT / "paper/figs_preview.tex")
+    bundled = {path.name for path in (ROOT / "paper/figs").glob("*.tex")}
+
+    assert manuscript_figures == CURRENT_FIGURES
+    assert manuscript_tables == CURRENT_TABLES
+    assert preview_inputs == CURRENT_FRAGMENTS
+    assert bundled == set(CURRENT_FRAGMENTS), (
+        f"active figure allowlist mismatch: {sorted(bundled)}")
 
 
 def main():
@@ -137,9 +175,10 @@ def main():
         assert record["bytes"] == path.stat().st_size
         assert hashlib.sha256(path.read_bytes()).hexdigest() == record["sha256"]
 
+    check_figure_contract()
     check_no_private_paths()
     version = manifest.get("version", "unknown")
-    print(f"PASS: scReg-Eval audit capsule {version} artifacts, families, manifest, and privacy are consistent")
+    print(f"PASS: scReg-Eval audit capsule {version} artifacts, figures, manifest, and privacy are consistent")
 
 
 if __name__ == "__main__":
