@@ -22,6 +22,7 @@ CURRENT_FIGURES = (
     "fig7_pertype_descriptive.tex",
     "fig8_injection_ladder.tex",
     "fig9_tf_probe.tex",
+    "fig11_third_tissue_transfer.tex",
 )
 CURRENT_TABLES = (
     "table2_cross_tissue_observed.tex",

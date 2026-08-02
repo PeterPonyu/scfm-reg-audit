@@ -41,7 +41,7 @@ datasets portal ("10k PBMC from a healthy donor, multiome"). Download dates: 202
 | model | source | checkpoint | SHA-256 | license note |
 |---|---|---|---|---|
 | Geneformer V2-104M | HuggingFace `ctheodoris/Geneformer-V2-104M` | `model.safetensors` | `fff5cba29ddd8792991fa77b4872246fbe548a178cebda3775cdc72b67780e7f` | Apache-2.0 |
-| Geneformer dicts | same repo (`geneformer/` pkl dicts) | token/median/name-id dicts | `67c445f4…` / `a51c53f6…` / `fabfa0c2…` | Apache-2.0 |
+| Geneformer dicts | same repo (`geneformer/` pkl dicts) | token/median/name-id dicts | `67c445f4385127adfc48dcc072320cd65d6822829bf27dd38070e6e787bc597f` / `a51c53f6a771d64508dfaf61529df70e394c53bd20856926117ae5d641a24bf5` / `fabfa0c2f49c598c59ae432a32c3499a5908c033756c663b5e0cddf58deea8e1` | Apache-2.0 |
 | scGPT-human | scGPT authors (`bowanglab/scGPT`, whole-human checkpoint) | `best_model.pt` | `6cb5d451ab5c4b33eb673adbe4fddc61d2389df1b89b7651a9fe2e557572b922` | MIT |
 | scGPT vocab | same | `vocab.json` | `acca93d114ca62c3f0f50debbd23e8c87f0714f4737764454f6b2b13f2e8580f` | MIT |
 | scFoundation | BioMap (`biomap-research/scFoundation`) encoder checkpoint | `model.pt` | `2446c2fb99a0e183cdc9872b7e9e55ac74f7ec82db7ba0799c83be75cde66dc6` | see upstream |

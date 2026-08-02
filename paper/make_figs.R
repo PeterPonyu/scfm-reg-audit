@@ -869,6 +869,69 @@ f10d <- ggplot(edges, aes(step, n)) +
 emit("fig10_coverage_qc", (f10a | f10b) / (f10c | f10d) + plot_annotation(tag_levels = "A"),
      6.8, 6.0)
 
+# ============ Figure 11: third-tissue transfer of the construct ============
+# Disclosure figure: extends the PBMC-only linkage coverage (5.91%, reviewer 2)
+# to all three ATAC datasets and makes the marginal structure behind Fig. 2's
+# additive decomposition visible. No new experiments; all values derive from
+# pinned npz graphs and published JSONs (panel_data.json third_tissue key).
+tt <- panel$third_tissue
+TISSUE_COL <- c(Brain = BLUE, PBMC = YELLOW, `Fibroblast mix` = VIOLET)
+
+cov11 <- bind_rows(lapply(tt$coverage, function(c) {
+  data.frame(tissue = c$tissue,
+             frac = c$relevant_peaks / c$total_peaks,
+             label = sprintf("%s / %s", format(c$relevant_peaks, big.mark = ","),
+                             format(c$total_peaks, big.mark = ",")))
+}))
+f11a <- ggplot(cov11, aes(reorder(tissue, frac), frac, fill = tissue)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f\\%%", 100 * frac)), hjust = -0.1, size = 3.3) +
+  coord_flip(ylim = c(0, 0.075)) +
+  scale_fill_manual(values = TISSUE_COL) +
+  labs(x = NULL, y = "fraction of all peaks linked",
+       title = "$\\pm$2 kb linkage admits 4--6\\% of peaks")
+
+ov <- bind_rows(lapply(tt$edge_overlap$regions, function(r) {
+  data.frame(region = paste(unlist(r$combo), collapse = " + "), n = r$n)
+}))
+ov$region[ov$region == "Brain + PBMC + Fibroblast mix"] <- "all three"
+ov$shared <- ov$region == "all three"
+f11b <- ggplot(ov, aes(reorder(region, n), n, fill = shared)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = format(n, big.mark = ",")), hjust = -0.1, size = 3.1) +
+  coord_flip(ylim = c(0, 47000)) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey70")) +
+  labs(x = NULL, y = "non-self TF--gene edges",
+       title = "A shared 38k-edge core")
+
+deg <- bind_rows(lapply(names(tt$degree_tf_out), function(tn) {
+  data.frame(tissue = tn, degree = unlist(tt$degree_tf_out[[tn]]))
+}))
+f11c <- ggplot(deg, aes(degree, color = tissue)) +
+  stat_ecdf(geom = "step", linewidth = 0.7) +
+  scale_color_manual(values = TISSUE_COL) +
+  labs(x = "supported targets per TF", y = "ECDF", color = NULL,
+       title = "TF out-degree marginals are similar") +
+  theme(legend.position = "top")
+
+rp <- bind_rows(lapply(tt$rho_phi, function(r) {
+  data.frame(pair = r$pair, observed = r$observed, phi = r$phi)
+}))
+f11d <- ggplot(rp, aes(y = reorder(pair, observed))) +
+  geom_segment(aes(x = phi, xend = observed, yend = pair), color = "grey60",
+               linewidth = 0.7) +
+  geom_point(aes(x = phi, color = "binary $\\varphi$"), size = 2.4) +
+  geom_point(aes(x = observed, color = "observed $\\rho$"), size = 2.4) +
+  scale_color_manual(values = c(`binary $\\varphi$` = MUTED,
+                                `observed $\\rho$` = BLUE)) +
+  coord_cartesian(xlim = c(0.42, 0.56)) +
+  labs(x = "cross-tissue agreement", y = NULL, color = NULL,
+       title = "Rank agreement tracks support") +
+  theme(legend.position = "top")
+
+emit("fig11_third_tissue_transfer", (f11a | f11b) / (f11c | f11d) +
+       plot_annotation(tag_levels = "A"), 6.8, 5.8)
+
 # ==================== tables (unchanged) ====================
 fmt <- function(x, digits = 4) sprintf(paste0("%.", digits, "f"), x)
 pfmt <- function(p) ifelse(p <= 0.001, "$<0.001$", sprintf("$%.3f$", p))

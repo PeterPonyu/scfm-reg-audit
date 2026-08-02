@@ -465,6 +465,32 @@ at $q_{\mathrm{flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$). (B) Reco
 confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TFmean, median, and one standard deviation of adjusted recovery.}\label{fig:probe}
 \end{figure}
 
+\subsection{The construct transfers across three independent ATAC datasets}\label{sec:third_tissue}
+The proxy was built independently in three datasets (brain GSE174367, PBMC 10x multiome, and the
+GSE206767 fibroblast reprogramming pool), and Fig.~\ref{fig:third_tissue} quantifies how much of
+each dataset the construct actually uses and shares. The $\pm$2 kb linkage admits only a small
+fraction of each dataset's peaks: 8,823 of 219,070 in brain (4.03\%), 6,609 of 111,743 in PBMC
+(5.91\%), and 11,614 of 275,448 in the fibroblast pool (4.22\%)---the proximity-linkage limitation
+is therefore a three-tissue property, not a PBMC-specific one. On the shared non-self TF--gene
+edge set (534,754 edges), 38,082 edges carry nonzero weight in all three consensus proxies (24\%
+of the 158,838-edge union), and the TF out-degree marginals are similar across tissues (median
+129--171 supported targets per TF)---which is exactly the structure the additive decomposition of
+Fig.~\ref{fig:decomp} attributes most cross-tissue agreement to. Cross-tissue rank agreement also
+tracks binary-support agreement (observed $\rho$ 0.462--0.525 versus support $\varphi$
+0.446--0.507), so the construct transfers chiefly at the level of which edges exist, not of their
+continuous weights. The fibroblast arm carries no foundation-model readouts and enters none of the
+audit's supported rows; it is a construct-level check, not evidence about model capability.
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig11_third_tissue_transfer.tex}}
+\caption{Third-tissue transfer of the proxy construct. (A) Fraction of each dataset's peaks
+admitted by the $\pm$2 kb linkage window (relevant over total peaks). (B) Overlap of supported
+(nonzero) non-self TF--gene edges across the three consensus proxies; the green bar is the
+38,082-edge core present in all three. (C) Empirical CDF of TF out-degree (supported targets per
+TF) per tissue. (D) Observed cross-tissue Spearman $\rho$ versus binary-support $\varphi$ for the
+three tissue pairs.}\label{fig:third_tissue}
+\end{figure}
+
 \section{Discussion}
 The audit finds six small positive fixed-panel alignments and one negative one, all supported by
 both randomization nulls under the full confound specification. Three features of that result

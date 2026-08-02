@@ -302,6 +302,75 @@ out["alpha_equiv_extra"] = {
     "pbmc_UCE_encoder": _alpha_of(_want[("UCE_encoder", "full")], "pbmc"),
 }
 
+# ---------- third-tissue transfer (fig11) ----------
+# Consensus proxy per tissue = mean over per-cell-type graphs, the exact
+# reduction used by src/v2/cross_tissue_additive_decomp.py (load_consensus).
+# Edge set = 446 TF rows x 1200 genes minus self pairs (534,308 edges),
+# matching the decomposition's "fixed non-self TF-target edge set".
+_tt_meta = {"brain": "G_ATAC_v2_meta.json",
+            "pbmc": "G_ATAC_v2_PBMC10k_meta.json",
+            "fibro": "G_ATAC_v2_GSE206767_meta.json"}
+_tt_npz = {"brain": "G_ATAC_v2_GSE174367.npz",
+           "pbmc": "G_ATAC_v2_PBMC10k.npz",
+           "fibro": "G_ATAC_v2_GSE206767.npz"}
+_tt_names = {"brain": "Brain", "pbmc": "PBMC", "fibro": "Fibroblast mix"}
+# total_peaks = n_vars of the pinned source h5ad (SHA-256 in docs/FULL_RERUN.md);
+# PBMC total 111,743 is the value independently recomputed by reviewer 2.
+_tt_total_peaks = {"brain": 219070, "pbmc": 111743, "fibro": 275448}
+
+
+def _consensus_support(npz_name):
+    z = np.load(os.path.join(res, npz_name), allow_pickle=False)
+    types = [str(t) for t in z["types"]]
+    G = np.mean([z[f"G_{t}"] for t in types], axis=0).astype(np.float64)
+    tr = np.asarray(z["tf_rows"])
+    sub = G[tr, :].copy()
+    jidx = np.arange(G.shape[1])
+    sub[jidx[tr[:, None]] == jidx[None, :]] = 0.0  # self pairs
+    return sub != 0
+
+
+_tt_sup = {k: _consensus_support(v) for k, v in _tt_npz.items()}
+_tt_keys = ["brain", "pbmc", "fibro"]
+_regions = []
+for _r in range(1, 4):
+    for _combo in __import__("itertools").combinations(_tt_keys, _r):
+        _m = np.logical_and.reduce([_tt_sup[c] for c in _combo])
+        for c in _tt_keys:
+            if c not in _combo:
+                _m &= ~_tt_sup[c]
+        _regions.append({"combo": [_tt_names[c] for c in _combo], "n": int(_m.sum())})
+
+_dec = j("cross_tissue_additive_decomp_v2.json")
+_pairs = {"GSE174367": "Brain", "PBMC10k": "PBMC", "GSE206767": "Fibroblast mix"}
+out["third_tissue"] = {
+    "provenance": "consensus = mean over per-cell-type graphs (same as "
+                  "cross_tissue_additive_decomp.py); meta from G_ATAC_v2*_meta.json; "
+                  "total_peaks = n_vars of pinned h5ad (FULL_RERUN.md hashes)",
+    "coverage": [{"tissue": _tt_names[k],
+                  "tag": {"brain": "GSE174367", "pbmc": "PBMC10k", "fibro": "GSE206767"}[k],
+                  "relevant_peaks": j(_tt_meta[k])["relevant_peaks"],
+                  "total_peaks": _tt_total_peaks[k],
+                  "motif_hits": j(_tt_meta[k])["peak_motif_hits"]}
+                 for k in _tt_keys],
+    "edge_overlap": {
+        "regions": _regions,
+        "supported": {_tt_names[k]: int(_tt_sup[k].sum()) for k in _tt_keys},
+        "union": int(sum(r["n"] for r in _regions)),
+        "panel_edges_nonself": int(_tt_sup["brain"].size - 446),
+    },
+    "degree_tf_out": {_tt_names[k]: [int(x) for x in np.sort(_tt_sup[k].sum(1))]
+                      for k in _tt_keys},
+    "degree_gene_in": {_tt_names[k]: [int(x) for x in np.sort(_tt_sup[k].sum(0))]
+                       for k in _tt_keys},
+    "rho_phi": [{"pair": "--".join(_pairs[t] for t in row["pair"]),
+                 "observed": row["observed_spearman"],
+                 "phi": row["binary_support_phi"]}
+                for row in _dec["rows"]],
+}
+assert out["third_tissue"]["edge_overlap"]["panel_edges_nonself"] == 534754
+assert abs(sum(r["n"] for r in _regions) - out["third_tissue"]["edge_overlap"]["union"]) < 1e-9
+
 with open(os.path.join("panel_data.json"), "w") as fh:
     json.dump(out, fh, indent=1)
 print(json.dumps(out["usability_fm_vs_coexp"], indent=1))

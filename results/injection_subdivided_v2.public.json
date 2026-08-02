@@ -1565,7 +1565,7 @@
   {
    "tissue": "pbmc",
    "model_label": "UCE_encoder",
-   "observed_rho": 0.00588
+   "observed_rho": 0.005927
   }
  ]
 }
