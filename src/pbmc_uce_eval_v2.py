@@ -34,6 +34,12 @@ RESULT_PATH = Path(os.environ.get(
 EXPECTED_CHECKPOINT_SHA256 = "acb28f3f0a1d803e4a4ffe891b9bab38bf93c84762dc06b2452f0d515da91560"
 EXPECTED_ESM2_SHA256 = "a210e1cc7901513999b2bca3836ba9e2f203cd008be4e9a9d6412a2267de9748"
 CO_NORMALIZATION_VERSION = "cp10k_log1p_v1"
+CO_NORMALIZATION_KEY = "co_normalization_version"
+# Arrays a pre-contract cache must still carry for its UCE embedding to be migrated.
+LEGACY_CACHE_KEYS = frozenset({
+    "uce", "covered", "cell_ids", "genes", "manifest_sha", "selection_seed",
+    "pool_cap", "rna_sha256", "checkpoint_sha256", "esm2_sha256",
+})
 
 
 def normalized_log_counts(matrix):
@@ -86,6 +92,25 @@ def load_legacy_uce_cache(path, cell_ids, genes, manifest_sha, pool_cap, rna_sha
     if uce.shape != shape or not np.isfinite(uce).all():
         raise ValueError("PBMC UCE legacy cache graph shape mismatch")
     return uce, covered
+
+
+def cache_lacks_normalization_metadata(path):
+    """True only for a well-formed pre-contract cache, i.e. one whose sole missing
+    array is the co-expression normalization version.
+
+    Deciding this from the archive's key list keeps an unrelated missing or corrupt
+    array from being mistaken for the legacy schema and silently migrated.
+    """
+    with np.load(path, allow_pickle=False) as cache:
+        keys = set(cache.files)
+    if CO_NORMALIZATION_KEY in keys:
+        return False
+    missing = LEGACY_CACHE_KEYS - keys
+    if missing:
+        raise ValueError(
+            f"PBMC UCE cache {path} is not a readable legacy cache; missing arrays: "
+            f"{sorted(missing)}")
+    return True
 
 
 def load_uce_cache(path, cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
@@ -171,19 +196,22 @@ def main():
     rna_sha = pbmc_cache.sha256_file(RNA)
     adata = ad.read_h5ad(RNA)
     cell_ids = pbmc_cache.select_pool_cell_ids(adata.n_obs, POOL_CAP, SELECTION_SEED)
-    try:
-        cached = load_uce_cache(
-            CACHE_PATH, cell_ids, genes, manifest_sha, POOL_CAP, rna_sha,
-            checkpoint_sha, esm2_sha,
-        )
+    if not CACHE_PATH.exists():
+        cached = None
         legacy = None
-    except KeyError:
+    elif cache_lacks_normalization_metadata(CACHE_PATH):
         cached = None
         legacy = load_legacy_uce_cache(
             CACHE_PATH, cell_ids, genes, manifest_sha, POOL_CAP, rna_sha,
             checkpoint_sha, esm2_sha,
         )
         log("legacy PBMC UCE cache lacks normalization metadata; migrating UCE embedding only")
+    else:
+        cached = load_uce_cache(
+            CACHE_PATH, cell_ids, genes, manifest_sha, POOL_CAP, rna_sha,
+            checkpoint_sha, esm2_sha,
+        )
+        legacy = None
 
     if cached is None:
         matrix = adata.X.tocsr() if sp.issparse(adata.X) else sp.csr_matrix(adata.X)

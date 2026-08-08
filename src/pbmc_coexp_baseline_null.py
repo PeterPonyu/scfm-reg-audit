@@ -7,7 +7,6 @@ co-expression out of co-expression is degenerate by construction. Same edge set,
 confounds, and null machinery as the pooled audit rows. Explicit integer seeds
 make both Monte Carlo tests reproducible across Python processes.
 """
-import json
 import os
 import sys
 import time
@@ -91,14 +90,15 @@ def main():
                                      seed=PBMC_DEGREE_SEED)
     print(f"pbmc baseline: rho={obs:+.6f} pM={man['p_mc']} pD={deg['p_mc']} "
           f"zM={man['z']:.2f} zD={deg['z']:.2f}  ({time.time()-t:.0f}s)", flush=True)
-    json.dump({
+    document = {
         "schema_version": 2,
         "tissue": "pbmc", "model_label": "co_expression_baseline",
         "rung": "degree_only_no_selfpartial", "observed_rho": float(obs),
         "pM": man["p_mc"], "pD": deg["p_mc"], "zM": man["z"], "zD": deg["z"],
         "n_perm": 999, "mantel_seed": PBMC_MANTEL_SEED,
         "degree_seed": PBMC_DEGREE_SEED, "seed_contract": "explicit_integer_v1",
-    }, open(f"{OUT}/pbmc_coexp_baseline_null_v2.json", "w"), indent=1)
+    }
+    fpa.write_json_atomic(f"{OUT}/pbmc_coexp_baseline_null_v2.json", document)
     print("wrote pbmc_coexp_baseline_null_v2.json", flush=True)
 
 

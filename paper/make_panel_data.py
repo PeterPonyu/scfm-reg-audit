@@ -15,6 +15,12 @@ res = os.path.join(base, "results", "v2")
 out = {}
 
 
+def require(condition, message):
+    """Contract gate for the derived values; unlike assert it survives `python -O`."""
+    if not condition:
+        raise ValueError(message)
+
+
 def j(name):
     with open(os.path.join(res, name)) as fh:
         return json.load(fh)
@@ -260,8 +266,10 @@ for _x in _audit["pooled"]["pbmc"]["rows"]:
     if _x["row_type"] == "pooled_fm" and _x["model_label"] in ("scGPT_encoder", "UCE_encoder"):
         _want[(_x["model_label"], _x["confound_spec"])] = _x["observed_partial_rho"]
 for _lad, _ml in ((lad_sg, "scGPT_encoder"), (lad_uc, "UCE_encoder")):
-    assert abs(_lad["coexp_plus_full"] - _want[(_ml, "full")]) < 1e-4, (_ml, "full", _lad)
-    assert abs(_lad["coexp_plus_nondegree"] - _want[(_ml, "non_degree")]) < 1e-4, (_ml, "nondeg", _lad)
+    require(abs(_lad["coexp_plus_full"] - _want[(_ml, "full")]) < 1e-4,
+            f"{_ml} full-spec ladder disagrees with fixed_panel_audit_v2: {_lad}")
+    require(abs(_lad["coexp_plus_nondegree"] - _want[(_ml, "non_degree")]) < 1e-4,
+            f"{_ml} non-degree ladder disagrees with fixed_panel_audit_v2: {_lad}")
 out["ladder_pbmc_extra"] = {
     "definition": "same method as marginal_vs_adjusted_v2 (binary proxy degrees); "
                   "validated in-line against fixed_panel_audit_v2 full and non-degree rows",
@@ -294,7 +302,9 @@ _errs = []
 for _r in _es["observed_effects_as_alpha"]:
     if _r["alpha_equivalent"] is not None:
         _errs.append(abs(_alpha_of(_r["observed_rho"], _r["tissue"]) - _r["alpha_equivalent"]))
-assert max(_errs) < 2e-3, _errs
+require(_errs, "no stored INTERPOLATED alpha_equivalent to validate the curve against")
+require(max(_errs) < 2e-3,
+        f"alpha-equivalent interpolation disagrees with stored values: max err {max(_errs)}")
 out["alpha_equiv_extra"] = {
     "method": "linear interpolation on injection curve incl. subdivided points; "
               "validated against all stored INTERPOLATED values (max err %.4f)" % max(_errs),
@@ -368,11 +378,14 @@ out["third_tissue"] = {
                  "phi": row["binary_support_phi"]}
                 for row in _dec["rows"]],
 }
-assert out["third_tissue"]["edge_overlap"]["panel_edges_nonself"] == 534754
-assert abs(sum(r["n"] for r in _regions) - out["third_tissue"]["edge_overlap"]["union"]) < 1e-9
+require(out["third_tissue"]["edge_overlap"]["panel_edges_nonself"] == 534754,
+        f"non-self panel edge count changed: "
+        f"{out['third_tissue']['edge_overlap']['panel_edges_nonself']}")
+require(abs(sum(r["n"] for r in _regions) - out["third_tissue"]["edge_overlap"]["union"]) < 1e-9,
+        "Venn region counts do not sum to the edge-overlap union")
 
 with open(os.path.join("panel_data.json"), "w") as fh:
-    json.dump(out, fh, indent=1)
+    json.dump(out, fh, indent=1, allow_nan=False)
 print(json.dumps(out["usability_fm_vs_coexp"], indent=1))
 print(json.dumps(out["panel_composition"], indent=1))
 print("ladder scGPT:", {k: round(v, 5) for k, v in lad_sg.items()})
