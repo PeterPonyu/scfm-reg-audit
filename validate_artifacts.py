@@ -8,8 +8,13 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+if not __debug__:
+    sys.exit("validate_artifacts.py must not run under -O: its checks are assertions")
+
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
+EXCLUDED_PARTS = {"__pycache__", ".omc", ".pytest_cache", ".git"}
+EXCLUDED_NAMES = {"MANIFEST.json", ".gitignore"}
 
 CURRENT_FIGURES = (
     "fig10_coverage_qc.tex",
@@ -65,6 +70,8 @@ def check_no_private_paths():
     forbidden = ["/home/zeyufu", "zeyufu/Desktop", ".omc/", "__pycache__"]
     for path in ROOT.rglob("*"):
         if path.name == "validate_artifacts.py":
+            continue
+        if EXCLUDED_PARTS.intersection(path.parts):
             continue
         if path.is_file() and path.suffix in {".json", ".md", ".tex", ".py", ".R", ".bib", ".cff", ".txt"}:
             text = path.read_text(errors="replace")
@@ -165,9 +172,8 @@ def main():
     actual = {
         path.relative_to(ROOT).as_posix()
         for path in ROOT.rglob("*")
-        if path.is_file() and path.name != "MANIFEST.json"
-        and "__pycache__" not in path.parts and ".omc" not in path.parts
-        and ".pytest_cache" not in path.parts and path.suffix != ".pyc"
+        if path.is_file() and path.name not in EXCLUDED_NAMES
+        and not EXCLUDED_PARTS.intersection(path.parts) and path.suffix != ".pyc"
     }
     assert listed == actual, (f"manifest coverage mismatch: "
                               f"missing={sorted(actual - listed)}, extra={sorted(listed - actual)}")

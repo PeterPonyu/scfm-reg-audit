@@ -222,7 +222,7 @@ def main():
         co, uce, covered = cached
         log(f"validated and reused cache {CACHE_PATH}")
 
-    with np.load(G_ATAC, allow_pickle=True) as atac_cache:
+    with np.load(G_ATAC, allow_pickle=False) as atac_cache:
         types = [str(value) for value in atac_cache["types"]]
         tf_rows = atac_cache["tf_rows"].copy()
         atac = np.mean([atac_cache[f"G_{cell_type}"] for cell_type in types], axis=0)
