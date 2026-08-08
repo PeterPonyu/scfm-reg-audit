@@ -29,8 +29,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2133,
-      "sha256": "7ac0128b53f11e08b7bcda9ca0046ee9d9630f28957e86f77296a114f0561289"
+      "bytes": 2561,
+      "sha256": "4d1a7edd438130fa8c5b783064f0d2655659e80589cc97c9648ad7438ee9f1b9"
     },
     {
       "path": "README_PROJECT.md",
@@ -328,9 +328,29 @@
       "sha256": "66495a5c148d097cfde43884fe489ed814fc36ab25fb850dc7cce706ef9d04b6"
     },
     {
+      "path": "src/tests/test_coexp_baseline_null.py",
+      "bytes": 7834,
+      "sha256": "bb82a3b1ab14ba48fc41484370f8572f32aa255e9a4346fe6764d0192bdcac2a"
+    },
+    {
       "path": "src/tests/test_fixed_panel_audit.py",
       "bytes": 62780,
       "sha256": "66991a81cae7badb5df8bfa4ee38647237080a5839415898c3b91c083f24abed"
+    },
+    {
+      "path": "src/tests/test_pair_probe.py",
+      "bytes": 13357,
+      "sha256": "52756009a0f312ed9da1daf13b308e5e790f3f303525cab9af4cef3b1940aa76"
+    },
+    {
+      "path": "src/tests/test_pbmc_cache.py",
+      "bytes": 10967,
+      "sha256": "591766dd203308a750860d4d794cad5de8feb75e51fa8212e8e8aaf7d20c7f75"
+    },
+    {
+      "path": "src/tests/test_validate_artifacts.py",
+      "bytes": 8960,
+      "sha256": "97b210baf2a35f2ad04285031576e76a66747cea5cc3ca2859dea4c34e0e340d"
     },
     {
       "path": "validate_artifacts.py",

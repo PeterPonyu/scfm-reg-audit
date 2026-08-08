@@ -30,12 +30,17 @@ python validate_artifacts.py
 
 ```bash
 pip install numpy scipy anndata pyfaidx  # test dependencies
+pip install scikit-learn                 # optional: pair-probe statistics tests
 python -m unittest discover -s src/tests
 ```
 
-The bundled suite is the statistical-contract suite (`test_fixed_panel_audit.py`). Legacy-hash,
-model-scope, and real-cache integration cases skip automatically when their retired or
-machine-local inputs are absent; the development repository runs the full suite including
+The bundled suite covers the statistical contract (`test_fixed_panel_audit.py`), the PBMC cache
+provenance helpers (`test_pbmc_cache.py`), the TF-disjoint pair-probe statistics
+(`test_pair_probe.py`), the co-expression baseline peak-count confound and seed contract
+(`test_coexp_baseline_null.py`), and the capsule validator itself
+(`test_validate_artifacts.py`). Legacy-hash, model-scope, and real-cache integration cases skip
+automatically when their retired or machine-local inputs are absent, and the pair-probe cases skip
+when scikit-learn is not installed; the development repository runs the full suite including
 model/cache contract tests. The release builder runs this command after every rebuild and fails
 on any error.
 
