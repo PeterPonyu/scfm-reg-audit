@@ -1,0 +1,178 @@
+\begin{thebibliography}{}
+
+\bibitem[{10x Genomics}, 2021]{tenx_pbmc_multiome}
+{10x Genomics} (2021).
+\newblock {PBMC} from a healthy donor, single cell multiome {ATAC} + gene
+  expression (10k cells).
+\newblock Cell Ranger ARC reference dataset.
+
+\bibitem[Ahlmann-Eltze et~al., 2025]{ahlmanneltze2025linear}
+Ahlmann-Eltze, C., Huber, W., and Anders, S. (2025).
+\newblock Deep-learning-based gene perturbation effect prediction does not yet
+  outperform simple linear baselines.
+\newblock {\em Nature Methods}.
+
+\bibitem[Aibar et~al., 2017]{aibar2017scenic}
+Aibar, S., Gonz{\'a}lez-Blas, C.~B., Moerman, T., Huynh-Thu, V.~A., Imrichova,
+  H., et~al. (2017).
+\newblock {SCENIC}: single-cell regulatory network inference and clustering.
+\newblock {\em Nature Methods}, 14(11):1083--1086.
+
+\bibitem[Benjamini and Hochberg, 1995]{benjamini1995fdr}
+Benjamini, Y. and Hochberg, Y. (1995).
+\newblock Controlling the false discovery rate: a practical and powerful
+  approach to multiple testing.
+\newblock {\em Journal of the Royal Statistical Society: Series B},
+  57(1):289--300.
+
+\bibitem[Benjamini and Yekutieli, 2001]{benjamini2001control}
+Benjamini, Y. and Yekutieli, D. (2001).
+\newblock The control of the false discovery rate in multiple testing under
+  dependency.
+\newblock {\em The Annals of Statistics}, 29(4):1165--1188.
+
+\bibitem[Boiarsky et~al., 2023]{boiarsky2023deepdive}
+Boiarsky, R., Singh, N.~M., Buenrostro, J.~D., Getz, G., and Sontag, D. (2023).
+\newblock A deep dive into single-cell {RNA} sequencing foundation models.
+\newblock {\em bioRxiv}.
+\newblock Preprint.
+
+\bibitem[Cui et~al., 2024]{cui2024scgpt}
+Cui, H., Wang, C., Maan, H., Pang, K., Luo, F., Duan, N., and Wang, B. (2024).
+\newblock {scGPT}: toward building a foundation model for single-cell
+  multi-omics using generative {AI}.
+\newblock {\em Nature Methods}, 21:1470--1480.
+
+\bibitem[Efron and Tibshirani, 1993]{efron1993bootstrap}
+Efron, B. and Tibshirani, R.~J. (1993).
+\newblock {\em An Introduction to the Bootstrap}.
+\newblock Chapman \& Hall/CRC.
+
+\bibitem[Fulco et~al., 2019]{fulco2019activity}
+Fulco, C.~P., Nasser, J., Martin, T.~R., Munson, G., Bergman, D.~T., et~al.
+  (2019).
+\newblock Activity-by-contact model of enhancer--promoter regulation from
+  thousands of {CRISPR} perturbations.
+\newblock {\em Nature Genetics}, 51(12):1664--1669.
+
+\bibitem[{Gene Expression Omnibus}, 2023]{gse206767}
+{Gene Expression Omnibus} (2023).
+\newblock Chemical-based external stimulation reprograms bjs into fins
+  (scatac-seq).
+\newblock \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE206767}.
+\newblock Accession GSE206767; day-0 BJ fibroblasts and day-3 induced
+  neuron-like cells, accessed 2026-07.
+
+\bibitem[Hao et~al., 2024]{hao2024scfoundation}
+Hao, M., Gong, J., Zeng, X., Liu, C., Guo, Y., Cheng, X., et~al. (2024).
+\newblock Large-scale foundation model on single-cell transcriptomics.
+\newblock {\em Nature Methods}, 21:1481--1491.
+
+\bibitem[Kedzierska et~al., 2023]{kedzierska2023assessing}
+Kedzierska, K.~Z., Crawford, L., Amini, A.~P., and Lu, A.~X. (2023).
+\newblock Assessing the limits of zero-shot foundation models in single-cell
+  biology.
+\newblock {\em bioRxiv}.
+\newblock Preprint.
+
+\bibitem[Kendiukhov, 2026]{kendiukhov2026scfm}
+Kendiukhov, I. (2026).
+\newblock Systematic evaluation of single-cell foundation model
+  interpretability reveals attention captures co-expression rather than unique
+  regulatory signal.
+\newblock {\em arXiv preprint arXiv:2602.17532}.
+\newblock preprint.
+
+\bibitem[Korhonen et~al., 2009]{korhonen2009moods}
+Korhonen, J., Martinm{\"a}ki, P., Pizzi, C., Rastas, P., and Ukkonen, E.
+  (2009).
+\newblock {MOODS}: fast search for position weight matrix matches in {DNA}
+  sequences.
+\newblock {\em Bioinformatics}, 25(23):3181--3182.
+
+\bibitem[Mantel, 1967]{mantel1967}
+Mantel, N. (1967).
+\newblock The detection of disease clustering and a generalized regression
+  approach.
+\newblock {\em Cancer Research}, 27(2):209--220.
+
+\bibitem[Marbach et~al., 2012]{marbach2012wisdom}
+Marbach, D., Costello, J.~C., K{\"u}ffner, R., Vega, N.~M., Prill, R.~J.,
+  et~al. (2012).
+\newblock Wisdom of crowds for robust gene network inference.
+\newblock {\em Nature Methods}, 9(8):796--804.
+
+\bibitem[Morabito et~al., 2021]{morabito2021gse174367}
+Morabito, S., Miyoshi, E., Michael, N., Shahin, S., Martini, A.~C., et~al.
+  (2021).
+\newblock Single-nucleus chromatin accessibility and transcriptomic
+  characterization of {A}lzheimer's disease.
+\newblock {\em Nature Genetics}, 53:1143--1155.
+
+\bibitem[Phipson and Smyth, 2010]{phipson2010permutation}
+Phipson, B. and Smyth, G.~K. (2010).
+\newblock Permutation {P}-values should never be zero: calculating exact
+  {P}-values when permutations are randomly drawn.
+\newblock {\em Statistical Applications in Genetics and Molecular Biology},
+  9(1):Article 39.
+
+\bibitem[Pliner et~al., 2018]{pliner2018cicero}
+Pliner, H.~A., Packer, J.~S., McFaline-Figueroa, J.~L., Cusanovich, D.~A.,
+  Daza, R.~M., Aghamirzaie, D., Srivatsan, S., Qiu, X., Jackson, D., Minkina,
+  A., Adey, A.~C., Steemers, F.~J., Shendure, J., and Trapnell, C. (2018).
+\newblock Cicero predicts cis-regulatory dna interactions from single-cell
+  chromatin accessibility data.
+\newblock {\em Molecular Cell}, 71(5):858--871.e8.
+
+\bibitem[Pratapa et~al., 2020]{pratapa2020benchmarking}
+Pratapa, A., Jalihal, A.~P., Law, J.~N., Bharadwaj, A., and Murali, T.~M.
+  (2020).
+\newblock Benchmarking algorithms for gene regulatory network inference from
+  single-cell transcriptomic data.
+\newblock {\em Nature Methods}, 17(2):147--154.
+
+\bibitem[Rauluseviciute et~al., 2024]{rauluseviciute2024jaspar}
+Rauluseviciute, I., Riudavets-Puig, R., Blanc-Mathieu, R., et~al. (2024).
+\newblock {JASPAR} 2024: 20th anniversary of the open-access database of
+  transcription factor binding profiles.
+\newblock {\em Nucleic Acids Research}, 52(D1):D174--D182.
+
+\bibitem[Rosen et~al., 2024]{rosen2023uce}
+Rosen, Y., Roohani, Y., Agarwal, A., Samotorcan, L., {Tabula Sapiens
+  Consortium}, Quake, S.~R., and Leskovec, J. (2024).
+\newblock Universal cell embeddings: A foundation model for cell biology.
+\newblock {\em Cell}.
+
+\bibitem[Stormo, 2000]{stormo2000dna}
+Stormo, G.~D. (2000).
+\newblock {DNA} binding sites: representation and discovery.
+\newblock {\em Bioinformatics}, 16(1):16--23.
+
+\bibitem[Theodoris et~al., 2023]{theodoris2023geneformer}
+Theodoris, C.~V., Xiao, L., Chopra, A., Chaffin, M.~D., et~al. (2023).
+\newblock Transfer learning enables predictions in network biology.
+\newblock {\em Nature}, 618:616--624.
+
+\bibitem[Thurman et~al., 2012]{thurman2012accessible}
+Thurman, R.~E., Rynes, E., Humbert, R., Vierstra, J., Maurano, M.~T., et~al.
+  (2012).
+\newblock The accessible chromatin landscape of the human genome.
+\newblock {\em Nature}, 489(7414):75--82.
+
+\bibitem[Wasserman and Sandelin, 2004]{wasserman2004applied}
+Wasserman, W.~W. and Sandelin, A. (2004).
+\newblock Applied bioinformatics for the identification of regulatory elements.
+\newblock {\em Nature Reviews Genetics}, 5(4):276--287.
+
+\bibitem[Wen et~al., 2024]{wen2024cellplm}
+Wen, H., Tang, W., Dai, X., Ding, J., Jin, W., Xie, Y., and Tang, J. (2024).
+\newblock {CellPLM}: Pre-training of cell language model beyond single cells.
+\newblock In {\em International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Yang et~al., 2022]{yang2022scbert}
+Yang, F., Wang, W., Wang, F., Fang, Y., Tang, D., et~al. (2022).
+\newblock {scBERT} as a large-scale pretrained deep language model for cell
+  type annotation of single-cell {RNA}-seq data.
+\newblock {\em Nature Machine Intelligence}, 4:1228--1237.
+
+\end{thebibliography}
