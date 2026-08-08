@@ -87,6 +87,10 @@ def partial_rho(y_true, y_pred, y_ctrl, n_tf, n_genes):
 def summarise(name, rhos):
     """Mean/std/median of a per-TF rho vector, ignoring degenerate TFs."""
     ok = rhos[np.isfinite(rhos)]
+    if ok.size == 0:
+        raise ValueError(
+            f"{name}: all {rhos.size} per-TF correlations are non-finite, so no summary "
+            "statistic exists; the probe predictions or targets are degenerate")
     return {
         f"{name}_mean": float(np.mean(ok)),
         f"{name}_std": float(np.std(ok)),
@@ -163,7 +167,7 @@ def main():
         "confounds": ["peakcount", "genelen", "gc", "detv"],
         "results": results,
     }
-    OUT.write_text(json.dumps(evaluation, indent=2, sort_keys=True) + "\n")
+    OUT.write_text(json.dumps(evaluation, indent=2, sort_keys=True, allow_nan=False) + "\n")
     log(f"wrote {OUT.relative_to(ROOT)}")
 
     log(f"primary arm ({PRIMARY_ARM}) ranked by confound-adjusted rho")

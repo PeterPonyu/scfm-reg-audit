@@ -159,8 +159,8 @@
     },
     {
       "path": "paper/make_panel_data.py",
-      "bytes": 16201,
-      "sha256": "c7155bafea4b70df09be6285d8fe2b3d05a80b4e3079ba65daeedf05adce7dff"
+      "bytes": 16891,
+      "sha256": "a06e36159e69034ad5262a9ef9ae6ebb701c2c9df00df02d48ad70bb3bada05d"
     },
     {
       "path": "paper/manuscript.pdf",
@@ -289,18 +289,18 @@
     },
     {
       "path": "src/brain_coexp_baseline_null.py",
-      "bytes": 4045,
-      "sha256": "d0a33b457d5dd4ebfece5a77cc02ef9f8c71248620196ba777995220077c8ba0"
+      "bytes": 4048,
+      "sha256": "b7d854b086ed5377ccb800096e827de9e26d721b59f23b6a073d6e1d4cb5b2fb"
     },
     {
       "path": "src/fixed_panel_audit.py",
-      "bytes": 34056,
-      "sha256": "e0aa46f8af02f60dc4c028f368132ae7ea065658f83c53b57675e45ad2cc26d8"
+      "bytes": 37482,
+      "sha256": "02425e48eda49d6873c2318acfcc7998b955c0f6a14fd87aa10d6d41bd6a614d"
     },
     {
       "path": "src/pair_probe_stats.py",
-      "bytes": 6677,
-      "sha256": "135d523d2df25e104518bc8b00d2efbd5c33abfbc0179f1a57031191b3e73b91"
+      "bytes": 7478,
+      "sha256": "0cafa5d1f731112137f5f4c5b2e8fe7677c80d559f30ac99c9562c214b7b41b2"
     },
     {
       "path": "src/pbmc_cache.py",
@@ -309,23 +309,23 @@
     },
     {
       "path": "src/pbmc_coexp_baseline_null.py",
-      "bytes": 4348,
-      "sha256": "c27aafb7843b1009365b2df8d4591207acd3e5b22ab58d7a3a4649c0a9d8db0e"
+      "bytes": 4351,
+      "sha256": "095e8d2045901a667c9b9ee0d46ceeb255b1ea7d26ba80e196c4e36308ff36b7"
     },
     {
       "path": "src/pbmc_uce_eval_v2.py",
-      "bytes": 11354,
-      "sha256": "c121debf6cc629b6bfe74df354758db392be45847b917c35a96562b651a497a4"
+      "bytes": 12493,
+      "sha256": "8bc3dd6c25de53065953caf16d23f64ce83a9e5cfb92d8fda633c80daca12ee7"
     },
     {
       "path": "src/run_fixed_panel_audit.py",
-      "bytes": 59427,
-      "sha256": "88e35be3ccd379f70289658370e327254dc75d4f9c8e0ef8166533580baa3bcd"
+      "bytes": 60466,
+      "sha256": "91974a36b5233a99195ec9923201f768e0e218fd245f0a014c4f91c0f00d1dde"
     },
     {
       "path": "src/run_pair_probe.py",
-      "bytes": 6781,
-      "sha256": "66495a5c148d097cfde43884fe489ed814fc36ab25fb850dc7cce706ef9d04b6"
+      "bytes": 7016,
+      "sha256": "651bfa68f490f0813ee1006231b8325aebc81572580b3b93aa2c85d384fa393d"
     },
     {
       "path": "src/tests/test_coexp_baseline_null.py",
@@ -334,8 +334,8 @@
     },
     {
       "path": "src/tests/test_fixed_panel_audit.py",
-      "bytes": 62780,
-      "sha256": "66991a81cae7badb5df8bfa4ee38647237080a5839415898c3b91c083f24abed"
+      "bytes": 70367,
+      "sha256": "18f38af8bd68abde51bb8f695083f47d7739ad536277214beb757eeb49d03f06"
     },
     {
       "path": "src/tests/test_pair_probe.py",
@@ -354,8 +354,8 @@
     },
     {
       "path": "validate_artifacts.py",
-      "bytes": 8071,
-      "sha256": "5e118e135472bbef51e5c96b1d2af65e34dd1ec4911f716be4eea8218607e76a"
+      "bytes": 10474,
+      "sha256": "47bc8da101f3b1bae41a6f47e6d0eb908f0f089ff8899fd0132c21ba871d43a7"
     }
   ]
 }

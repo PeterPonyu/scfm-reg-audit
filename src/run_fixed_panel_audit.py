@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import time
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -165,14 +166,30 @@ def load_geneformer_ko():
     }, np.array(K["tf_rows"])
 
 
+def _report_absent_pertype_caches(tissue: str, missing: list, label: str) -> None:
+    """Report cell types whose cached graph is absent.
+
+    Skipping them silently shrinks the per-type readout set without any trace in the
+    logs or the artifact, so the omission is announced on both channels.
+    """
+    if not missing:
+        return
+    message = (f"{tissue}: {len(missing)} cell types have no {label} cache and are excluded "
+               f"from the per-type readouts: {sorted(missing)}")
+    log(f"WARNING {message}")
+    warnings.warn(message, RuntimeWarning, stacklevel=2)
+
+
 def load_brain_pertype_models():
     Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Z["types"]]
     tf_b = np.array(Z["tf_rows"])
     out: dict = {}
+    missing_fm, missing_scf = [], []
     for t in types_b:
         fpath = f"{fpa.OUT}/brain_fmgraphs_{t}.npz"
         if not os.path.exists(fpath):
+            missing_fm.append(t)
             continue
         F = np.load(fpath)
         spath = f"{fpa.OUT}/brain_scfgraphs_{t}.npz"
@@ -182,8 +199,12 @@ def load_brain_pertype_models():
             "geneformer_attn": F["at"],
             "coexp": F["co"],
         }
-        if scf is not None:
+        if scf is None:
+            missing_scf.append(t)
+        else:
             out[t]["scFoundation_encoder"] = scf
+    _report_absent_pertype_caches("brain", missing_fm, "brain_fmgraphs")
+    _report_absent_pertype_caches("brain", missing_scf, "brain_scfgraphs")
     return out, tf_b, types_b
 
 
@@ -192,9 +213,11 @@ def load_pbmc_pertype_models():
     types_p = [str(t) for t in Z["types"]]
     tf_p = np.array(Z["tf_rows"])
     out: dict = {}
+    missing_fm = []
     for t in types_p:
         fpath = f"{fpa.OUT}/pbmc_fmgraphs_{t}.npz"
         if not os.path.exists(fpath):
+            missing_fm.append(t)
             continue
         F = np.load(fpath)
         out[t] = {
@@ -202,6 +225,7 @@ def load_pbmc_pertype_models():
             "geneformer_attn": F["at"],
             "coexp": F["co"],
         }
+    _report_absent_pertype_caches("pbmc", missing_fm, "pbmc_fmgraphs")
     return out, tf_p, types_p
 
 
@@ -915,10 +939,9 @@ def _stage_json(path: str, document: dict) -> str:
             raise RuntimeError(f"staged JSON validation mismatch for {destination.name}")
         return temp_path
     except BaseException:
-        try:
+        # Cleanup only; the staging failure itself is re-raised unchanged.
+        if os.path.exists(temp_path):
             os.unlink(temp_path)
-        except FileNotFoundError:
-            pass
         raise
 
 

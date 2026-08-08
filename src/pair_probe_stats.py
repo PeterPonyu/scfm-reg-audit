@@ -64,6 +64,18 @@ def make_residualiser(design):
     return f
 
 
+def mean_over_valid(values, context):
+    """Mean of the finite entries, refusing to report an all-degenerate vector.
+
+    np.nanmean would return NaN with only a RuntimeWarning here, which then travels
+    into the published statistic; an empty aggregate is a data failure instead.
+    """
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        raise ValueError(f"{context}: all {values.size} per-TF correlations are non-finite")
+    return float(finite.mean())
+
+
 def adjusted_per_tf(y_true, y_pred, resid):
     """Confound-adjusted Spearman per TF for (n_tf, n_gene) blocks."""
     out = np.full(y_true.shape[0], np.nan)
@@ -104,14 +116,15 @@ def main():
         model.fit((xtr - mu) / sd, y_train)
         pred = model.predict((xte - mu) / sd).reshape(n_tf, n_genes)
         per_tf[fam] = adjusted_per_tf(y_test, pred, resid)
-        obs[fam] = float(np.nanmean(per_tf[fam]))
+        obs[fam] = mean_over_valid(per_tf[fam], f"{fam} observed adjusted rho")
 
         fam_seed = SEED_ROOT * 1000 + fam_index
         rng = np.random.default_rng(fam_seed)
         null = np.empty(N_PERM)
         for b in range(N_PERM):
             shuffled = np.stack([rng.permutation(pred[i]) for i in range(n_tf)])
-            null[b] = np.nanmean(adjusted_per_tf(y_test, shuffled, resid))
+            null[b] = mean_over_valid(adjusted_per_tf(y_test, shuffled, resid),
+                                      f"{fam} permutation {b}")
         # Two-sided: the claim is "differs from chance", in either direction.
         p = (1 + np.sum(np.abs(null) >= abs(obs[fam]))) / (1 + N_PERM)
         obs[fam] = {
@@ -136,6 +149,10 @@ def main():
             continue
         diff = per_tf[fam] - per_tf[BASELINE]
         diff = diff[np.isfinite(diff)]
+        if diff.size == 0:
+            raise ValueError(
+                f"{fam} vs {BASELINE}: no TF has finite adjusted rho in both families, "
+                "so the paired contrast is undefined")
         rng = np.random.default_rng(SEED_ROOT + 1)
         signs = rng.choice([-1.0, 1.0], size=(N_PERM, diff.size))
         null = (signs * diff).mean(axis=1)
@@ -168,7 +185,7 @@ def main():
         "families": obs,
         "contrasts_vs_baseline": contrasts,
     }
-    OUT.write_text(json.dumps(stats, indent=2, sort_keys=True) + "\n")
+    OUT.write_text(json.dumps(stats, indent=2, sort_keys=True, allow_nan=False) + "\n")
     log(f"wrote {OUT.relative_to(ROOT)}")
 
 

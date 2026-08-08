@@ -48,6 +48,7 @@ Pure numpy/scipy on cached graphs (results/v2/*.npz). No GPU. No FM re-embedding
 import hashlib
 import json
 import os
+import warnings
 from typing import Dict, List, Optional, Tuple
 
 import anndata as ad
@@ -97,7 +98,7 @@ def load_manifest() -> Tuple[List[str], Dict[str, float], str]:
     genes = man["genes"]
     sha = hashlib.sha256(("\n".join(genes)).encode()).hexdigest()
     if sha != man["sha256"]:
-        raise ValueError(f"manifest sha mismatch: {sha} vs {man['sha256']}")
+        raise ValueError(f"manifest sha mismatch for {MANI}: {sha} vs {man['sha256']}")
     return genes, man["detection"], sha
 
 
@@ -133,27 +134,68 @@ def build_confounds(atac_file: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
         by[c] = np.array(by[c])
     fa = pyfaidx.Fasta(HG38, sequence_always_upper=True)
     peakcount = np.zeros(Ng); genelen = np.zeros(Ng); gc = np.zeros(Ng)
+    without_coords: List[str] = []
+    without_peak_chromosome: List[str] = []
+    without_genome_chromosome: List[str] = []
     for g, i in gidx.items():
         if g not in gco:
+            without_coords.append(g)
             continue
         c, lo, hi, ln_ = gco[g]
         genelen[i] = ln_
         pis = by.get(c)
         if pis is None:
+            without_peak_chromosome.append(g)
             continue
         sel = pis[(pmid[pis] >= lo) & (pmid[pis] <= hi)]
         peakcount[i] = len(sel)
-        if len(sel) and c in fa.keys():
-            ks = []
-            for p in sel[:40]:
-                s = str(fa[c][max(0, int(pmid[p]) - W // 2): int(pmid[p]) + W // 2])
-                ks.append((s.count("G") + s.count("C")) / W)
-            gc[i] = float(np.mean(ks)) if ks else 0.5
+        if not len(sel):
+            continue
+        if c not in fa.keys():
+            without_genome_chromosome.append(g)
+            continue
+        ks = []
+        for p in sel[:40]:
+            s = str(fa[c][max(0, int(pmid[p]) - W // 2): int(pmid[p]) + W // 2])
+            ks.append((s.count("G") + s.count("C")) / W)
+        gc[i] = float(np.mean(ks))
+    _warn_zero_filled_confounds(atac_file, without_coords, without_peak_chromosome,
+                               without_genome_chromosome)
+    missing_detection = [g for g in genes if g not in det]
+    if missing_detection:
+        warnings.warn(
+            f"{len(missing_detection)} manifest genes have no detection rate in {MANI} and are "
+            f"zero-filled (first: {missing_detection[:5]})",
+            RuntimeWarning, stacklevel=2,
+        )
     detv = np.array([det.get(g, 0.0) for g in genes])
     out = (peakcount.astype(np.float32), genelen.astype(np.float32),
            gc.astype(np.float32), detv.astype(np.float32))
     _CONF_CACHE[atac_file] = out
     return out
+
+
+def _warn_zero_filled_confounds(atac_file: str, without_coords: List[str],
+                                without_peak_chromosome: List[str],
+                                without_genome_chromosome: List[str]) -> None:
+    """Surface silently zero-filled confound columns.
+
+    A gene with no coordinate record, no peak on its chromosome, or no genome
+    contig keeps a zero peakcount/genelen/GC entry. That degradation is a data
+    problem, not a statistic, so report it instead of letting the design matrix
+    absorb it unnoticed.
+    """
+    for genes_missing, reason in (
+        (without_coords, f"no coordinate record in {COORDS}"),
+        (without_peak_chromosome, f"no ATAC peak on their chromosome in {atac_file}"),
+        (without_genome_chromosome, f"no matching contig in {HG38}"),
+    ):
+        if genes_missing:
+            warnings.warn(
+                f"{len(genes_missing)} manifest genes have {reason}; their confound columns "
+                f"are zero-filled (first: {sorted(genes_missing)[:5]})",
+                RuntimeWarning, stacklevel=3,
+            )
 
 
 # ----------------------------- core statistics -------------------------------
@@ -203,6 +245,21 @@ def _column_space_basis(X: np.ndarray) -> np.ndarray:
     return U[:, singular_values > tolerance]
 
 
+def _rho_from_moments(num: float, den: float, context: str) -> float:
+    """Correlation from precomputed cross- and self-moments of centred residuals.
+
+    ``den == 0`` means a genuinely constant residual, for which zero correlation is
+    the defined answer. A non-finite moment instead means NaN/inf entered the inputs;
+    reporting that as a zero effect would silently bias every downstream p_mc, so it
+    is raised.
+    """
+    if not np.isfinite(num) or not np.isfinite(den):
+        raise ValueError(
+            f"non-finite partial-correlation moments in {context}: num={num}, den={den}; "
+            "check the input graphs and confounds for NaN/inf")
+    return num / den if den > 0 else 0.0
+
+
 def _pcorr_full_design(x: np.ndarray, y: np.ndarray, design: np.ndarray) -> float:
     """Low-level partial correlation for a design containing exactly one intercept."""
     bx = _stable_solve(design, x)
@@ -213,7 +270,7 @@ def _pcorr_full_design(x: np.ndarray, y: np.ndarray, design: np.ndarray) -> floa
     ryn = ry - ry.mean()
     num = float(rxn @ ryn)
     den = float(np.sqrt((rxn @ rxn) * (ryn @ ryn)))
-    return num / den if den > 0 else 0.0
+    return _rho_from_moments(num, den, "pcorr")
 
 
 def pcorr_inplace(x: np.ndarray, y: np.ndarray, C_full: np.ndarray) -> float:
@@ -243,11 +300,17 @@ def pcorr_fwl(x_r: np.ndarray, y_r: np.ndarray, X_fixed_resid_x: np.ndarray,
     ryn = ry - ry.mean()
     num = float(rxn @ ryn)
     den = float(np.sqrt((rxn @ rxn) * (ryn @ ryn)))
-    return num / den if den > 0 else 0.0
+    return _rho_from_moments(num, den, "pcorr_fwl")
 
 
 def spearman_paired(x: np.ndarray, y: np.ndarray) -> float:
-    return float(np.corrcoef(rankdata(x), rankdata(y))[0, 1])
+    rx, ry = rankdata(x), rankdata(y)
+    if rx.std() == 0 or ry.std() == 0:
+        raise ValueError("spearman_paired needs varying ranks on both sides; got a constant input")
+    rho = float(np.corrcoef(rx, ry)[0, 1])
+    if not np.isfinite(rho):
+        raise ValueError(f"spearman_paired produced a non-finite rho ({rho}); inputs carry NaN/inf")
+    return rho
 
 
 # ----------------------------- mask helpers ----------------------------------
@@ -346,17 +409,7 @@ def mantel_randomization(
             indeg_perm = atac_indeg_full[perm]
             C_full[:, n_fixed] = zscore(outdeg_perm[ii])
             C_full[:, n_fixed + 1] = zscore(indeg_perm[jj])
-        try:
-            null[k] = pcorr_inplace(fm_r, ap_r, C_full)
-        except np.linalg.LinAlgError:
-            if confound_spec == "full":
-                C_perm = np.column_stack([pc_z, gl_z, dv_z, gc_z,
-                                          zscore(tf_outdeg_full[perm][ii]),
-                                          zscore(atac_indeg_full[perm][jj])])
-            else:
-                C_perm = np.column_stack([pc_z, gl_z, dv_z, gc_z])
-            null[k] = pcorr(fm_r, ap_r,
-                             np.column_stack([co_r, C_perm]) if use_coexp else C_perm)
+        null[k] = pcorr_inplace(fm_r, ap_r, C_full)
     abs_null = np.abs(null)
     p_mc = (int(np.sum(abs_null >= abs(observed))) + 1) / (n_perm + 1)
     return {
@@ -419,10 +472,7 @@ def degree_preserving_null(
             C_perm = np.column_stack([C_full, zscore(indeg_p[jj])])
         else:
             C_perm = C_full
-        try:
-            null[k] = pcorr_inplace(fm_r, ap_r, C_perm)
-        except np.linalg.LinAlgError:
-            null[k] = pcorr(fm_r, ap_r, C_perm[:, 1:])
+        null[k] = pcorr_inplace(fm_r, ap_r, C_perm)
     abs_null = np.abs(null)
     p_mc = (int(np.sum(abs_null >= abs(observed))) + 1) / (n_perm + 1)
     return {
@@ -539,7 +589,7 @@ def batched_mantel_null(
             fm_norm_sq = float(fm_centered @ fm_centered)
             num = float(fm_centered @ atac_centered)
             den = float(np.sqrt(fm_norm_sq * atac_norm_sq))
-            nulls[r][k] = num / den if den > 0 else 0.0
+            nulls[r][k] = _rho_from_moments(num, den, f"batched_mantel_null row {r} perm {k}")
 
     meta = {
         "shared_seed": int(seed) if seed is not None else None,
@@ -673,7 +723,8 @@ def batched_degree_preserving_null(
             fm_norm_sq = float(fm_centered @ fm_centered)
             num = float(fm_centered @ atac_centered)
             den = float(np.sqrt(fm_norm_sq * atac_norm_sq))
-            nulls[r][k] = num / den if den > 0 else 0.0
+            nulls[r][k] = _rho_from_moments(
+                num, den, f"batched_degree_preserving_null row {r} perm {k}")
 
     meta = {
         "shared_seed": int(seed) if seed is not None else None,
@@ -740,6 +791,32 @@ def bh_qvalues(pvals: List[float]) -> List[float]:
     out = np.empty(n)
     out[order] = np.clip(q, 0, 1)
     return [round(float(x), 6) for x in out]
+
+
+# ----------------------------- output writing --------------------------------
+def write_json_atomic(path: str, document: dict, indent: int = 1) -> None:
+    """Write an artifact JSON via a staged temp file.
+
+    Serialising into a temp file first means a failure part-way through (non-finite
+    value, full disk, interrupt) leaves the previous artifact intact instead of a
+    truncated file that later steps would read as authoritative.
+    """
+    import tempfile
+    from pathlib import Path
+    destination = Path(path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_path = tempfile.mkstemp(prefix=f".{destination.name}.", suffix=".tmp",
+                                     dir=destination.parent)
+    try:
+        with os.fdopen(fd, "w") as handle:
+            json.dump(document, handle, indent=indent, allow_nan=False)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temp_path, destination)
+    except Exception:
+        if os.path.exists(temp_path):
+            os.unlink(temp_path)
+        raise
 
 
 # ----------------------------- file hashing ---------------------------------

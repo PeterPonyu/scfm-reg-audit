@@ -812,6 +812,184 @@ class TestProductionHardening(unittest.TestCase):
             self.assertEqual(list(Path(tmp).glob(".*.tmp")), [])
 
 
+class TestErrorPropagation(unittest.TestCase):
+    """Failures must surface instead of being reported as null effects, migrated as a
+    legacy cache, or written into an artifact as NaN."""
+
+    def test_zero_variance_residual_still_reports_zero_rho(self):
+        self.assertEqual(fpa._rho_from_moments(0.0, 0.0, "unit"), 0.0)
+
+    def test_non_finite_moments_raise(self):
+        import numpy as np
+        with self.assertRaisesRegex(ValueError, "non-finite partial-correlation moments"):
+            fpa._rho_from_moments(float("nan"), 1.0, "unit")
+        with self.assertRaisesRegex(ValueError, "non-finite partial-correlation moments"):
+            fpa._rho_from_moments(1.0, np.inf, "unit")
+
+    def test_pcorr_with_non_finite_input_raises(self):
+        import numpy as np
+        rng = np.random.default_rng(11)
+        x = rng.standard_normal(50)
+        y = rng.standard_normal(50)
+        y[3] = np.nan
+        controls = rng.standard_normal((50, 2))
+        with self.assertRaisesRegex(ValueError, "non-finite partial-correlation moments"):
+            fpa.pcorr(x, y, controls)
+
+    def test_batched_mantel_null_with_non_finite_graph_raises(self):
+        import numpy as np
+        rng = np.random.default_rng(12)
+        Ng, n_tf = 12, 4
+        ii = np.repeat(np.arange(n_tf), Ng)
+        jj = np.tile(np.arange(Ng), n_tf)
+        keep = ii != jj
+        ii, jj = ii[keep], jj[keep]
+        G = rng.standard_normal((Ng, Ng))
+        G[0, 1] = np.nan
+        constant = np.ones(Ng)
+        with self.assertRaisesRegex(ValueError, "batched_mantel_null"):
+            fpa.batched_mantel_null(
+                fm_vecs=[rng.standard_normal(len(ii))], co_v=np.ones(len(ii)),
+                jj=jj, ii=ii, peakcount=constant, genelen=constant,
+                detv=constant, gc=constant,
+                tf_outdeg_full=(G > 0).sum(1).astype(np.float64),
+                atac_indeg_full=(G > 0).sum(0).astype(np.float64),
+                G_atac_full=G, use_coexp=True, confound_spec="non_degree",
+                n_perm=3, seed=5,
+            )
+
+    def test_spearman_paired_rejects_constant_input(self):
+        import numpy as np
+        with self.assertRaisesRegex(ValueError, "constant input"):
+            fpa.spearman_paired(np.ones(20), np.arange(20.0))
+
+    def test_write_json_atomic_rejects_nan_and_keeps_previous_file(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "artifact.json")
+            path.write_text("original")
+            with self.assertRaises(ValueError):
+                fpa.write_json_atomic(str(path), {"rho": float("nan")})
+            self.assertEqual(path.read_text(), "original")
+            self.assertEqual(list(Path(tmp).glob(".*.tmp")), [])
+
+    def test_write_json_atomic_replaces_content(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "artifact.json")
+            fpa.write_json_atomic(str(path), {"rho": 0.5})
+            self.assertEqual(json.loads(path.read_text()), {"rho": 0.5})
+
+    def test_absent_pertype_cache_is_reported(self):
+        import warnings
+        import run_fixed_panel_audit as drv
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            drv._report_absent_pertype_caches("brain", ["ASC", "MG"], "brain_fmgraphs")
+        self.assertEqual(len(caught), 1)
+        self.assertIn("ASC", str(caught[0].message))
+
+    def test_pair_probe_summary_rejects_all_degenerate_tfs(self):
+        import numpy as np
+        import run_pair_probe as probe
+        with self.assertRaisesRegex(ValueError, "non-finite"):
+            probe.summarise("adjusted_rho", np.full(4, np.nan))
+
+    def test_pair_probe_stats_mean_rejects_all_degenerate_tfs(self):
+        import numpy as np
+        import pair_probe_stats as stats
+        self.assertAlmostEqual(stats.mean_over_valid(np.array([np.nan, 0.4]), "unit"), 0.4)
+        with self.assertRaisesRegex(ValueError, "non-finite"):
+            stats.mean_over_valid(np.full(3, np.nan), "unit")
+
+
+class TestUceCacheSchemaDetection(unittest.TestCase):
+    """A missing normalization key means 'legacy schema'; any other missing array is a
+    corrupt cache and must not be migrated silently."""
+
+    CACHE_ARRAYS = {
+        "co": None, "uce": None, "covered": 1, "cell_ids": [0, 1], "genes": ["A"],
+        "manifest_sha": "sha", "selection_seed": 20260713, "pool_cap": 4000,
+        "rna_sha256": "rna", "checkpoint_sha256": "ckpt", "esm2_sha256": "esm2",
+        "co_normalization_version": "cp10k_log1p_v1",
+    }
+
+    @staticmethod
+    def _module():
+        """Import the UCE driver with the unshipped embedding modules stubbed out."""
+        import types
+        import importlib
+        for name in ("fm_readout", "fm_readout_uce"):
+            sys.modules.setdefault(name, types.ModuleType(name))
+        return importlib.import_module("pbmc_uce_eval_v2")
+
+    def _write_cache(self, path, drop=()):
+        import numpy as np
+        arrays = {}
+        for key, value in self.CACHE_ARRAYS.items():
+            if key in drop:
+                continue
+            arrays[key] = np.zeros((1, 1)) if value is None else np.asarray(value)
+        np.savez(path, **arrays)
+
+    def test_complete_cache_is_not_legacy(self):
+        import tempfile
+        from pathlib import Path
+        module = self._module()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "cache.npz")
+            self._write_cache(path)
+            self.assertFalse(module.cache_lacks_normalization_metadata(path))
+
+    def test_missing_only_normalization_key_is_legacy(self):
+        import tempfile
+        from pathlib import Path
+        module = self._module()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "cache.npz")
+            self._write_cache(path, drop=("co_normalization_version", "co"))
+            self.assertTrue(module.cache_lacks_normalization_metadata(path))
+
+    def test_other_missing_array_is_not_treated_as_legacy(self):
+        import tempfile
+        from pathlib import Path
+        module = self._module()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "cache.npz")
+            self._write_cache(path, drop=("co_normalization_version", "checkpoint_sha256"))
+            with self.assertRaisesRegex(ValueError, "not a readable legacy cache"):
+                module.cache_lacks_normalization_metadata(path)
+
+
+class TestValidatorContractGate(unittest.TestCase):
+    """validate_artifacts must fail through exceptions that survive `python -O`."""
+
+    VALIDATOR = os.path.join(fpa.ROOT, "validate_artifacts.py")
+
+    @classmethod
+    def _validator(cls):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("validate_artifacts", cls.VALIDATOR)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def test_require_raises_validation_error(self):
+        module = self._validator()
+        with self.assertRaisesRegex(module.ValidationError, "boom"):
+            module.require(False, "boom")
+        module.require(True, "unreachable")
+
+    def test_no_bare_asserts_remain(self):
+        from pathlib import Path
+        source = Path(self.VALIDATOR).read_text()
+        offenders = [line.strip() for line in source.splitlines()
+                     if line.strip().startswith("assert ")]
+        self.assertEqual(offenders, [])
+
+
 @unittest.skipUnless(
     os.path.exists(os.path.join(OUT, "model_scope_decision_v2.json")),
     "model_scope_decision_v2.json is a historical scope record superseded by "
