@@ -349,8 +349,8 @@
     },
     {
       "path": "src/tests/test_validate_artifacts.py",
-      "bytes": 8960,
-      "sha256": "97b210baf2a35f2ad04285031576e76a66747cea5cc3ca2859dea4c34e0e340d"
+      "bytes": 9236,
+      "sha256": "b7800a598680179898505d59fc09689f83428d26068d8d6414609ca9166094d1"
     },
     {
       "path": "validate_artifacts.py",
