@@ -1,0 +1,72 @@
+{
+ "package": "scReg-Eval AI-in-Code disclosure package",
+ "scope": "representative curated set; covers AI-assisted engineering/refactoring of analysis code only",
+ "ai_tools": "Anthropic Claude models accessed through an agentic coding assistant",
+ "author_responsibility": "The author reviewed and edited all AI-assisted outputs and takes full responsibility for the manuscript and code.",
+ "records": [
+  {
+   "path": "before/pbmc_uce_eval_v2.py",
+   "role": "before",
+   "source_commit": "81f2e23",
+   "description": "pre-repair PBMC UCE graph generator",
+   "bytes": 8915,
+   "sha256": "0ab5e2cd70a36a10db9d82fb3a5b4145409cd5f800f034c5e14a74a387ad3baa"
+  },
+  {
+   "path": "before/pair_probe_stats.py",
+   "role": "before",
+   "source_commit": "6ac7252",
+   "description": "salted-hash probe statistics",
+   "bytes": 6162,
+   "sha256": "e83eec5692b0e4a1daf11fe760aa0941067786b31b471f368471500a624a5fa2"
+  },
+  {
+   "path": "before/fixed_panel_audit.py",
+   "role": "before",
+   "source_commit": "2c2876b",
+   "description": "first v2 fixed-panel module",
+   "bytes": 33387,
+   "sha256": "cc09f2d9184a72690ad501f5bd179fab0a30acdee357882f53624b734ff2cac4"
+  },
+  {
+   "path": "after/pbmc_uce_eval_v2.py",
+   "role": "after",
+   "source_commit": "current",
+   "description": "normalization-repaired PBMC UCE generator",
+   "bytes": 11353,
+   "sha256": "0c14183e47bf1702c33ed332b6ab2318c662c3dca753a4babdb11d5f67f959f9"
+  },
+  {
+   "path": "after/pair_probe_stats.py",
+   "role": "after",
+   "source_commit": "current",
+   "description": "deterministic-seed probe statistics",
+   "bytes": 6359,
+   "sha256": "791751ac74a6b681b661ce64b8fbaf197fae63cd3fddb5e991267f64ed66ddf7"
+  },
+  {
+   "path": "after/fixed_panel_audit.py",
+   "role": "after",
+   "source_commit": "current",
+   "description": "layout-independent fixed-panel module",
+   "bytes": 34033,
+   "sha256": "88321cd11e908181c710dbdc5400bb7ebb8dcc7997415c3b0cb19060da008ab4"
+  },
+  {
+   "path": "README.md",
+   "role": "doc",
+   "source_commit": "current",
+   "description": "disclosure scope and usage",
+   "bytes": 2319,
+   "sha256": "7d4eee120f1a311bc3c46df2f8e345077b1a745eecaea816c56446d18bf40823"
+  },
+  {
+   "path": "prompts/00_INDEX.md",
+   "role": "doc",
+   "source_commit": "current",
+   "description": "prompt log (session-log reconstruction)",
+   "bytes": 2783,
+   "sha256": "0ec3efcbf12e93d1840a7f30a53395977354876c7ec0086d44bcbed0b0907da0"
+  }
+ ]
+}

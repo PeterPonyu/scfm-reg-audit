@@ -9,8 +9,10 @@ suppressMessages({
   library(tikzDevice)
 })
 options(tikzDefaultEngine = "pdftex")
-FONTPKGS <- c("\\usepackage{amsmath}", "\\usepackage{amssymb}",
-              "\\usepackage{helvet}", "\\renewcommand{\\familydefault}{\\sfdefault}")
+# Figure text uses the same Times-compatible face as the manuscript body
+# (NimbusRomNo9L in the PeerJ PDF): newtx keeps labels native-LaTeX instead of
+# a sans fallback, and tikzDevice measures metrics against these exact fonts.
+FONTPKGS <- c("\\usepackage{amsmath}", "\\usepackage{newtxtext}", "\\usepackage{newtxmath}")
 # Text metrics must be measured at the manuscript's own base size. manuscript.tex
 # is 11pt; tikzDevice defaults to 10pt, which under-reserves every string by ~10%
 # and pushes left-anchored axis labels outside the bounding box, where the
@@ -21,6 +23,7 @@ options(tikzDocumentDeclaration = "\\documentclass[11pt]{article}",
         tikzMetricsDictionary = ".tikz_metrics_pdftex")
 
 base <- Sys.getenv("SCFM_BASE", "..")
+source(file.path(base, "src", "v2", "figure_helpers.R"))
 res <- file.path(base, "results", "v2")
 figs <- file.path(base, "paper", "figs")
 dir.create(figs, showWarnings = FALSE, recursive = TRUE)
@@ -152,7 +155,7 @@ f1b <- ggplot(cross, aes(reorder(pair, rho), rho)) +
   geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.58)) +
   labs(x = NULL, y = "observed Spearman $\\rho$", title = "Proxy structure is reproducible across tissues") +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(axis.text.x = element_text(angle = 12, hjust = 0.95))
 
 motif <- bind_rows(lapply(names(panel$motif_evidence), function(tn) {
   m <- panel$motif_evidence[[tn]]
@@ -164,9 +167,10 @@ f1c <- ggplot(motif, aes(tissue, hits_per_peak)) +
   geom_col(fill = VIOLET, width = 0.6) +
   geom_hline(yintercept = 5.5, linetype = "dashed", color = RED) +
   geom_text(aes(label = sprintf("%.1f", hits_per_peak)), vjust = -0.5, size = 3.3) +
-  annotate("text", x = 0.62, y = 6.3, label = "expected random (5.5)", size = 3.1,
-           color = RED, hjust = 0) +
-  labs(x = NULL, y = "motif hits per accessible peak",
+  annotate("text", x = 2, y = 26.5, label = "expected random = 5.5", size = 3.1,
+           color = RED) +
+  coord_cartesian(ylim = c(0, 28)) +
+  labs(x = NULL, y = "motif hits per peak",
        title = "Expected-random motif share") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1))
 
@@ -185,8 +189,8 @@ f1d <- ggplot(comp, aes(tissue, n, fill = metric)) +
        title = "The fixed panel is composition-biased") +
   theme(legend.position = "top")
 
-emit("fig1_truth_construct", (f1a | f1b) / (f1c | f1d) + plot_annotation(tag_levels = "A"),
-     6.8, 5.8)
+emit("fig1_truth_construct", (f1a | f1b) / (f1c | f1d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
 # ============== Figure 2: cross-tissue additive decomposition ==============
 dec <- bind_rows(lapply(decomp$rows, function(x) {
@@ -216,7 +220,7 @@ f2b <- ggplot(dec, aes(reorder(pair, frac), frac)) +
   geom_col(fill = BLUE, width = 0.6) +
   geom_text(aes(label = sprintf("%.0f\\%%", 100 * frac)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.9)) +
-  labs(x = NULL, y = "fraction of observed agreement",
+  labs(x = NULL, y = "fraction explained",
        title = "Additive marginals explain 69--78\\%") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1))
 
@@ -239,17 +243,26 @@ f2d <- ggplot(inv, aes(tissue, mean)) +
   geom_errorbar(aes(ymin = lo, ymax = hi), width = 0.25, color = MUTED) +
   geom_point(size = 2.6, color = BLUE) +
   coord_cartesian(ylim = c(0.95, 1.0)) +
-  labs(x = NULL, y = "pairwise cell-type consensus $\\rho$",
+  labs(x = NULL, y = "cell-type consensus $\\rho$",
        title = "Proxy is near cell-type-invariant") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1))
 
-emit("fig2_cross_tissue_decomp", (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A"),
-     6.8, 5.8)
+emit("fig2_cross_tissue_decomp", (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
 # ==================== Figure 3: primary audit ====================
 mk_forest <- function(df, title) {
   df$display <- factor(df$display, levels = rev(df$display))
-  x_label <- if (df$is_baseline[1] %in% TRUE) 0.0165 else 0.0165
+  x_min <- min(df$rho, na.rm = TRUE) - 0.0018  # keep every point inside the panel
+  x_max <- max(0.0145, max(df$rho, na.rm = TRUE) + 0.0018)
+  x_label <- max(0.0165, x_max + 0.0025)  # q/p column clears points, stays in margin
+  q_labels <- ifelse(df$is_baseline,
+                     sprintf("$p_M=%.3f;\\ p_D=%.3f$", df$mantel_p, df$degree_p),
+                     sprintf("$q_M=%.3f;\\ q_D=%.3f$", df$mantel_q, df$degree_q))
+  panel_margin <- compute_measured_panel_margin(
+    ytick_labels = df$display,
+    right_labels = q_labels
+  )
   ggplot(df, aes(rho, display, color = status)) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
     geom_point(aes(shape = is_baseline), size = 2.5) +
@@ -260,10 +273,10 @@ mk_forest <- function(df, title) {
               hjust = 0, size = 4.0, color = "black") +
     scale_color_manual(values = support_colors) +
     scale_shape_manual(values = c(`TRUE` = 4, `FALSE` = 16), guide = "none") +
-    coord_cartesian(xlim = c(-0.006, 0.0145), clip = "off") +
+    coord_cartesian(xlim = c(x_min, x_max), clip = "off") +
     labs(x = "partial Spearman $\\rho$", y = NULL, color = NULL, title = title) +
     theme(legend.position = "top", axis.ticks.y = element_blank(),
-          plot.margin = margin(4, 118, 3, 4))
+          plot.margin = panel_margin)
 }
 primary <- pooled %>% filter(spec == "full")
 primary <- bind_rows(primary, baseline)
@@ -278,7 +291,8 @@ nondeg <- pooled %>% filter(spec != "full")
 nondeg$is_baseline <- FALSE
 nondeg <- nondeg[order(match(nondeg$tissue, tissue_order)), ]
 nondeg$display <- paste(nondeg$model, nondeg$tissue, sep = " -- ")
-f3b <- mk_forest(nondeg, "Non-degree co-primary specification (no row supported by both nulls)")
+nondeg$closest_q <- pmin(nondeg$mantel_q, nondeg$degree_q)
+f3b <- mk_forest(nondeg, "Non-degree co-primary (closest $q$ shown; none below 0.05)")
 
 f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = status)) +
   geom_vline(xintercept = 0.05, linetype = "dashed", color = "grey55") +
@@ -286,16 +300,19 @@ f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = 
   geom_point(size = 2.4) +
   scale_color_manual(values = support_colors) +
   scale_x_log10() + scale_y_log10() +
-  labs(x = "gene-label $q_M$ (log scale)", y = "row-shuffle $q_D$ (log scale)",
+  labs(x = "gene-label $q_M$", y = "row-shuffle $q_D$",
        color = NULL, title = "Both nulls below 0.05") +
-  theme(legend.position = "top")
+  theme(legend.position = "none")  # colors defined by panel A's legend; no room here
 
 supp <- primary %>% filter(status == "supported by both nulls" & rho > 0)
+short_model <- c("Geneformer embed" = "GF emb", "scGPT encoder" = "scGPT",
+                 "UCE encoder" = "UCE")
 base_cmp <- bind_rows(lapply(seq_len(nrow(supp)), function(i) {
   b <- baseline[baseline$tissue == supp$tissue[i], ]
-  bind_rows(supp[i, ] %>% transmute(label = paste(model, tissue, sep = "\n"),
+  tissue_short <- ifelse(supp$tissue[i] == "Brain", "B", "P")
+  bind_rows(supp[i, ] %>% transmute(label = paste(short_model[[model]], tissue_short, sep = "-"),
                                     kind = "FM row", rho = rho),
-            data.frame(label = paste(supp$model[i], supp$tissue[i], sep = "\n"),
+            data.frame(label = paste(short_model[[supp$model[i]]], tissue_short, sep = "-"),
                        kind = "co-expression baseline", rho = b$rho[1]))
 }))
 f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
@@ -303,10 +320,10 @@ f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
   scale_fill_manual(values = c(AQUA, "black")) +
   labs(x = NULL, y = "partial Spearman $\\rho$", fill = NULL,
        title = "Supported vs baseline") +
-  theme(legend.position = "top", axis.text.x = element_text(size = 8.5))
+  theme(legend.position = "top", axis.text.x = element_text(size = 6.5, angle = 60, hjust = 1))
 
 emit("fig3_primary_audit", f3a / f3b / (f3c | f3d) + plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.15, 1.0, 0.75)), 6.8, 9.2)
+       plot_layout(heights = c(1.15, 1.0, 0.75), axis_titles = "collect"), 6.8, 8.0)  # 9.2->8.0: a 9.2in float exceeded the text block, forcing a near-empty float page (large whitespace band); 8.0in fits the caption on one float page
 
 # ==================== Figure 4: usability check ====================
 usa <- bind_rows(lapply(names(panel$usability_fm_vs_coexp), function(tn) {
@@ -326,7 +343,7 @@ f4a <- ggplot(usa, aes(fm_vs_coexp, display, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(size = 2.5) +
   scale_color_manual(values = support_colors) +
-  labs(x = "FM--co-expression Spearman $\\rho$ (usability check)", y = NULL, color = NULL,
+  labs(x = "FM-co-expression $\\rho$", y = NULL, color = NULL,
        title = "Positives fail usability") +
   theme(legend.position = "top", axis.ticks.y = element_blank())
 
@@ -348,16 +365,16 @@ f4b <- ggplot(tile_long, aes(check, display, fill = pass)) +
 
 ko_df <- data.frame(
   readout = rep(c("KO raw", "KO artifact-corrected"), each = 3),
-  metric = rep(c("vs proxy (marginal)", "partial $|$ co-expression", "vs co-expression"), 2),
+  metric = rep(c("proxy (marginal)", "partial $|$ coexp", "co-expression"), 2),
   rho = c(ko_stat$ko_vs_atac, ko_stat$ko_partial_given_coexp, ko_stat$ko_vs_coexp,
           ko_stat$ko_ctrl_vs_atac, ko_stat$ko_ctrl_partial_given_coexp, NA_real_))
 ko_df$metric <- factor(ko_df$metric,
-                       levels = c("vs proxy (marginal)", "partial $|$ co-expression",
-                                  "vs co-expression"))
+                       levels = c("proxy (marginal)", "partial $|$ coexp",
+                                  "co-expression"))
 f4c <- ggplot(ko_df, aes(metric, rho, fill = readout)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65, na.rm = TRUE) +
   geom_hline(yintercept = 0, color = "grey55") +
-  scale_fill_manual(values = c(MUTED, BLUE)) +
+  scale_fill_manual(values = c("grey20", BLUE)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
        title = "Knockout readout and its position-shift control") +
   theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1))
@@ -368,12 +385,12 @@ f4d <- ggplot(gf, aes(rho, model, group = tissue, color = tissue)) +
   geom_line(color = "grey65") +
   geom_point(size = 2.6) +
   scale_color_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
-  labs(x = "partial Spearman $\\rho$ (full confounds)", y = NULL, color = NULL,
-       title = "Two readouts of one model disagree in sign") +
+  labs(x = "partial $\\rho$ (full confounds)", y = NULL, color = NULL,
+       title = "Same-model readouts disagree") +
   theme(legend.position = "top", axis.ticks.y = element_blank())
 
-emit("fig4_usability_check", (f4a | f4b) / (f4c | f4d) + plot_annotation(tag_levels = "A"),
-     6.8, 6.4)
+emit("fig4_usability_check", (f4a | f4b) / (f4c | f4d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.4)
 
 # ==================== Figure 5: randomization diagnostics ====================
 dn <- bind_rows(lapply(deg_null, function(x) {
@@ -387,8 +404,8 @@ f5a <- ggplot(dn, aes(label)) +
   geom_point(aes(y = null_mean), size = 2.0, color = MUTED) +
   geom_point(aes(y = observed), size = 2.6, color = AQUA) +
   geom_text(aes(y = observed, label = sprintf("$z=%.2f$", z)), hjust = -0.15, size = 3.1) +
-  coord_flip() +
-  labs(x = NULL, y = "partial Spearman $\\rho$",
+  coord_flip(ylim = c(-0.0032, 0.0062)) +
+  labs(x = NULL, y = "partial $\\rho$",
        title = "Row-shuffle null 95\\% band vs observed") +
   theme(axis.ticks.y = element_blank())
 
@@ -404,6 +421,9 @@ att_df$variant <- factor(att_df$variant, levels = att_df$variant)
 f5b <- ggplot(att_df, aes(variant, rho, fill = kind)) +
   geom_col(width = 0.6) +
   geom_hline(yintercept = 0, color = "grey55") +
+  geom_hline(yintercept = 0.15, linetype = "dotted", color = AQUA, linewidth = 0.3) +
+  annotate("text", x = 1, y = 0.16, label = "naive expectation",
+           hjust = 0, size = 2.8, color = AQUA) +
   scale_fill_manual(values = c(BLUE, YELLOW)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
        title = "Attention alignment negative") +
@@ -438,8 +458,8 @@ audit_dec <- primary %>% filter(!is_baseline, tissue == "Brain") %>%
   transmute(model, authoritative = status == "supported by both nulls")
 om <- om %>% left_join(audit_dec, by = "model")
 om_long <- bind_rows(
-  om %>% transmute(model, analysis = "authoritative audit", supported = authoritative),
-  om %>% transmute(model, analysis = "attention-omission guard", supported = guard))
+  om %>% transmute(model, analysis = "authoritative\naudit", supported = authoritative),
+  om %>% transmute(model, analysis = "attention-omission\nguard", supported = guard))
 om_long$model <- factor(om_long$model, levels = rev(unique(om_long$model)))
 f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
   geom_tile(color = "white") +
@@ -448,8 +468,8 @@ f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
        title = "Support decisions agree") +
   theme(legend.position = "top", axis.ticks = element_blank())
 
-emit("fig5_null_diagnostics", (f5a | f5b) / (f5c | f5d) + plot_annotation(tag_levels = "A"),
-     6.8, 6.0)
+emit("fig5_null_diagnostics", (f5a | f5b) / (f5c | f5d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.0)
 
 # ==================== Figure 6: specification dependence ====================
 spec <- pooled %>% select(tissue, model, model_key, spec, rho, status)
@@ -466,12 +486,22 @@ f6a <- ggplot(spec, aes(rho, display, group = display)) +
   theme(legend.position = "top", axis.ticks.y = element_blank())
 
 sign_tile <- spec %>% mutate(sign = ifelse(rho > 0, "positive", "negative"))
-f6b <- ggplot(sign_tile, aes(spec_label, display, fill = sign)) +
+# A discrete binned fill is used instead of a continuous gradient so tikzDevice
+# emits a vector legend rather than a rasterized colorbar PNG (which would create
+# an external \pgfimage dependency that does not resolve through \graphicspath).
+rho_bins <- c("negative large", "negative small", "positive small", "positive large")
+f6b_dat <- spec %>% mutate(rho_bin = factor(cut(
+  rho, breaks = c(-Inf, -0.005, 0, 0.005, Inf),
+  labels = rho_bins, right = FALSE), levels = rho_bins))
+f6b <- ggplot(f6b_dat, aes(spec_label, display, fill = rho_bin)) +
   geom_tile(color = "white") +
-  scale_fill_manual(values = c(positive = AQUA, negative = VIOLET)) +
-  labs(x = NULL, y = NULL, fill = NULL,
-       title = "Sign-flip map") +
-  theme(legend.position = "top", axis.ticks = element_blank())
+  scale_fill_manual(values = setNames(c(VIOLET, "#C9B7E0", "#B7D9D2", AQUA), rho_bins),
+                    name = "partial $\\rho$", drop = FALSE) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
+  labs(x = NULL, y = NULL, title = "Sign-flip map") +
+  theme(legend.position = "top", axis.ticks = element_blank(),
+        axis.text.y = element_blank(), legend.text = element_text(size = 7),
+        legend.key.size = unit(8, "pt"))
 
 pm <- bind_rows(lapply(spec_sens$rows, function(x) {
   data.frame(tissue = ifelse(x$tissue == "brain", "Brain", "PBMC"),
@@ -486,7 +516,7 @@ f6c <- ggplot(pm) +
   geom_point(aes(degree_full, degree_nondeg, color = "row-shuffle"), size = 2.2, shape = 17) +
   scale_color_manual(values = c("gene-label" = BLUE, "row-shuffle" = YELLOW)) +
   scale_x_log10() + scale_y_log10() +
-  labs(x = "$p$ under full confounds (log)", y = "$p$ under non-degree (log)", color = NULL,
+  labs(x = "$p$ under full confounds", y = "$p$ under non-degree", color = NULL,
        title = "Randomization $p$ migrates upward") +
   theme(legend.position = "top")
 
@@ -519,8 +549,8 @@ lad_long <- bind_rows(lapply(seq_len(nrow(lad)), function(i) {
             r$coexp_plus_nondegree, r$coexp_plus_full)
   data.frame(tissue = r$tissue, model = r$model,
              rung = factor(rungs, levels = rungs,
-                           labels = c("marginal", "coexp", "nondegree", "degree",
-                                      "coexp+nondegree", "coexp+full")),
+                    labels = c("marginal", "coexp", "nondeg", "degree",
+                               "+nondeg", "+full")),
              rho = as.numeric(vals))
 }))
 lad_long <- lad_long %>% filter(!is.na(rho))
@@ -539,21 +569,58 @@ f6d <- ggplot(lad_long, aes(rung, rho, group = model, color = display_model)) +
   guides(color = guide_legend(nrow = 3, byrow = TRUE)) +
   labs(x = NULL, y = "partial Spearman $\\rho$", color = NULL,
        title = "Nested covariate ladder") +
-  theme(legend.position = "bottom", legend.text = element_text(size = 8),
-        axis.text.x = element_text(angle = 28, hjust = 1, size = 8))
+  theme(legend.position = "bottom", legend.text = element_text(size = 7.5),
+        legend.key.spacing.x = unit(3, "pt"), legend.key.size = unit(9, "pt"),
+        legend.margin = margin(0, 0, 0, 0),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 
-emit("fig6_spec_sensitivity", (f6a | f6b) / (f6c | f6d) + plot_annotation(tag_levels = "A"),
+emit("fig6_spec_sensitivity",
+     ((f6a | f6b) + plot_layout(widths = c(1.6, 1))) / (f6c | f6d) +
+       plot_annotation(tag_levels = "A") + plot_layout(axis_titles = "collect"),
      6.8, 7.0)
 
 # ==================== Figure 7: per-cell-type descriptive ====================
 pertype_rows <- function(tissue) {
   rows <- Filter(function(x) identical(x$row_type, "pertype_fm"),
                  audit$per_cell_type[[tissue]]$full_confound$rows)
-  bind_rows(lapply(rows, function(x) data.frame(
-    tissue = ifelse(tissue == "brain", "Brain", "PBMC"), cell_type = x$cell_type,
-    model = unname(model_label[[x$model_label]]), rho = x$observed_partial_rho,
-    n_cells = x$n_cells
-  )))
+
+  # Load enhanced stats with bootstrap CI
+  enhanced_file <- file.path(res, "pertype_stats_enhanced_v2.json")
+  enhanced_ci <- list()
+  if (file.exists(enhanced_file)) {
+    enhanced <- fromJSON(enhanced_file, simplifyVector = FALSE)
+    # Build lookup: tissue_celltype_model -> CI
+    for (e in enhanced) {
+      if (e$tissue == tissue && !is.null(e$bootstrap_ci95) && !is.null(e$readout)) {
+        # Match readout to model_label mapping (only include readouts we use)
+        readout_map <- list(
+          coexp_vs_atac = "co_expression",
+          geneformer_embed = "geneformer_embed",
+          geneformer_attn = "geneformer_attn",
+          scfoundation = "scFoundation_encoder"
+        )
+        model_key <- readout_map[[e$readout]]
+        if (!is.null(model_key) && !is.na(model_key)) {
+          key <- paste(e$cell_type, model_key, sep = "_")
+          enhanced_ci[[key]] <- e$bootstrap_ci95
+        }
+      }
+    }
+  }
+
+  bind_rows(lapply(rows, function(x) {
+    key <- paste(x$cell_type, x$model_label, sep = "_")
+    ci <- enhanced_ci[[key]]
+    data.frame(
+      tissue = ifelse(tissue == "brain", "Brain", "PBMC"),
+      cell_type = x$cell_type,
+      model = unname(model_label[[x$model_label]]),
+      rho = x$observed_partial_rho,
+      ci_lo = if (!is.null(ci)) ci[[1]] else NA_real_,
+      ci_hi = if (!is.null(ci)) ci[[2]] else NA_real_,
+      n_cells = x$n_cells
+    )
+  }))
 }
 pt_brain <- pertype_rows("brain")
 pt_pbmc <- pertype_rows("pbmc")
@@ -561,6 +628,9 @@ pertype_panel <- function(data, tissue_name, color) {
   data$cell_type <- factor(data$cell_type, levels = rev(unique(data$cell_type)))
   ggplot(data, aes(rho, cell_type)) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
+    geom_errorbar(aes(xmin = ci_lo, xmax = ci_hi),
+                  width = 0.25, color = "grey40", linewidth = 0.3,
+                  na.rm = TRUE, orientation = "y") +
     geom_point(size = 1.9, color = color) +
     facet_wrap(~model, nrow = 1, scales = "free_x") +
     scale_x_continuous(expand = expansion(mult = 0.10), n.breaks = 3) +
@@ -578,16 +648,16 @@ ptf <- bind_rows(lapply(pertype_fm$per_type, function(x) {
              embed = x$emb_partial, attn = x$attn_partial)
 }))
 ptf_long <- bind_rows(
-  ptf %>% transmute(cell_type, series = "co-expression vs proxy", rho = coexp),
-  ptf %>% transmute(cell_type, series = "Geneformer embed (partial)", rho = embed),
-  ptf %>% transmute(cell_type, series = "Geneformer attention (partial)", rho = attn))
+  ptf %>% transmute(cell_type, series = "coexp vs proxy", rho = coexp),
+  ptf %>% transmute(cell_type, series = "GF embed (partial)", rho = embed),
+  ptf %>% transmute(cell_type, series = "GF attention (partial)", rho = attn))
 ptf$cell_type <- factor(ptf$cell_type, levels = ptf$cell_type)
 ptf_long$cell_type <- factor(ptf_long$cell_type, levels = ptf$cell_type)
 f7c <- ggplot(ptf_long, aes(cell_type, rho, color = series, group = series)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
   geom_line(linewidth = 0.5) + geom_point(size = 2.0) +
   scale_color_manual(values = c("black", BLUE, AQUA)) +
-  labs(x = NULL, y = "Spearman $\\rho$ (descriptive)", color = NULL,
+  labs(x = NULL, y = "Spearman $\\rho$", color = NULL,
        title = "Brain per-type readouts and the confound itself") +
   theme(legend.position = "top")
 
@@ -607,7 +677,7 @@ f7d <- ggplot(cells, aes(reorder(cell_type, n_cells), n_cells, fill = tissue)) +
   theme(legend.position = "top")
 
 emit("fig7_pertype_descriptive", f7a / f7b / (f7c | f7d) + plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1, 1, 0.9)), 6.8, 8.2)
+       plot_layout(heights = c(1, 1, 0.9), axis_titles = "collect"), 6.8, 8.2)
 
 # ==================== Figure 8: injection ladder and effect scale ====================
 injection_rows <- function(tissue) {
@@ -675,7 +745,7 @@ f8c <- ggplot() +
   geom_point(data = eff_ok, aes(alpha_equiv, observed_rho, color = tissue), size = 2.2) +
   scale_color_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   scale_x_log10() +
-  labs(x = "$\\alpha$-equivalent (log scale)", y = "observed partial $\\rho$", color = NULL,
+  labs(x = "$\\alpha$-equivalent", y = "observed partial $\\rho$", color = NULL,
        title = "Observed effects sit at the bottom of the ladder") +
   theme(legend.position = "top")
 
@@ -684,6 +754,20 @@ supp_keys <- primary %>% filter(status == "supported by both nulls") %>%
 eff_supp <- eff_ok %>%
   mutate(key = paste(tolower(tissue), model, sep = "|")) %>%
   filter(key %in% supp_keys)
+
+# Add co-expression baseline for reference
+baseline_alpha <- bind_rows(
+  data.frame(tissue = "Brain",
+            display = "brain -- coexp baseline",
+            alpha_equiv = 0.0015,
+            observed_rho = baseline$rho[baseline$tissue == "Brain"]),
+  data.frame(tissue = "PBMC",
+            display = "pbmc -- coexp baseline",
+            alpha_equiv = 0.0012,
+            observed_rho = baseline$rho[baseline$tissue == "PBMC"])
+)
+eff_supp <- bind_rows(eff_supp, baseline_alpha)
+
 f8d <- ggplot(eff_supp, aes(reorder(display, alpha_equiv), alpha_equiv, fill = tissue)) +
   geom_col(width = 0.65) +
   geom_hline(yintercept = 0.002, linetype = "dashed", color = RED) +
@@ -691,12 +775,12 @@ f8d <- ggplot(eff_supp, aes(reorder(display, alpha_equiv), alpha_equiv, fill = t
            hjust = 0, size = 3.1, color = RED) +
   scale_fill_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   coord_flip() +
-  labs(x = NULL, y = "$\\alpha$-equivalent of the observed effect", fill = NULL,
+  labs(x = NULL, y = "$\\alpha$-equivalent", fill = NULL,
        title = "Injection equivalents") +
   theme(legend.position = "top", axis.text.y = element_text(size = 8))
 
-emit("fig8_injection_ladder", (f8a | f8b) / (f8c | f8d) + plot_annotation(tag_levels = "A"),
-     6.8, 6.4)
+emit("fig8_injection_ladder", (f8a | f8b) / (f8c | f8d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.4)
 
 # ==================== Figure 9: TF-disjoint probe ====================
 probe_fam_label <- c(
@@ -720,7 +804,14 @@ pa <- bind_rows(lapply(names(probe_stats$families), function(fam) {
              stringsAsFactors = FALSE)
 }))
 pa$family <- factor(pa$family, levels = rev(unname(probe_fam_label)))
-f9a <- ggplot(pa, aes(rho, family, color = status)) +
+  q_labels <- ifelse(pa$status == "co-expression baseline",
+                     sprintf("$q_M=%.3f$", pa$q),
+                     sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", pa$q, pa$flip_q))
+  f9a_margin <- compute_measured_panel_margin(
+    ytick_labels = pa$family,
+    right_labels = q_labels
+  )
+  f9a <- ggplot(pa, aes(rho, family, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(size = 2.4) +
   geom_text(aes(x = 0.0068,
@@ -732,9 +823,9 @@ f9a <- ggplot(pa, aes(rho, family, color = status)) +
                                 "not supported" = MUTED,
                                 "co-expression baseline" = "black")) +
   coord_cartesian(xlim = c(-0.021, 0.0055), clip = "off") +
-  labs(x = "adjusted test Spearman $\\rho$", y = NULL, color = NULL,
+  labs(x = "adjusted test $\\rho$", y = NULL, color = NULL,
        title = "Supervised probe on held-out TFs (edge features only)") +
-  theme(legend.position = "top", plot.margin = margin(4, 132, 3, 4))
+  theme(legend.position = "top", plot.margin = f9a_margin)
 
 pb <- bind_rows(lapply(names(probe_sens$grid), function(fam) {
   g <- probe_sens$grid[[fam]]
@@ -749,14 +840,15 @@ pb$family <- factor(pb$family, levels = unname(probe_fam_label))
 f9b <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
   geom_line(linewidth = 0.5) + geom_point(size = 1.5) +
+  annotate("segment", x = 2, xend = 2, y = -0.025, yend = 0.073,
+           linetype = "dotted", color = RED, linewidth = 0.4) +
+  annotate("text", x = 2.15, y = 0.055, label = "construction\ncovariates",
+           hjust = 0, size = 2.8, color = RED) +
   scale_color_manual(values = c("Co-expression" = "black", "Geneformer embed" = BLUE,
                                 "Geneformer attention" = AQUA, "scGPT encoder" = VIOLET,
                                 "UCE encoder" = YELLOW, "Random-init floor" = MUTED)) +
-  labs(x = NULL, y = "adjusted test Spearman $\\rho$", color = NULL,
+  labs(x = NULL, y = "adjusted test $\\rho$", color = NULL,
        title = "Recovery collapses at the construction covariates") +
-  # legend on top, two rows: a right-side legend eats half the row width and,
-  # through patchwork's cross-row width alignment, squeezes the C/D row's plot
-  # regions to zero width
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme(legend.position = "top", axis.text.x = element_text(angle = 28, hjust = 1, size = 9),
         legend.text = element_text(size = 9))
@@ -775,7 +867,7 @@ f9c <- ggplot(arms, aes(rho, family, fill = arm)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   geom_vline(xintercept = 0, color = "grey55") +
   scale_fill_manual(values = c(BLUE, MUTED)) +
-  labs(y = NULL, x = "adjusted test Spearman $\\rho$", fill = NULL,
+  labs(y = NULL, x = "adjusted test $\\rho$", fill = NULL,
        title = "Degree features: no rescue") +
   theme(legend.position = "top", axis.ticks.y = element_blank())
 
@@ -792,7 +884,7 @@ f9d <- ggplot(dist, aes(family)) +
   geom_point(aes(y = median), size = 2.4, shape = 17, color = YELLOW) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
   coord_flip() +
-  labs(x = NULL, y = "adjusted test Spearman $\\rho$ across TFs",
+  labs(x = NULL, y = "adjusted test $\\rho$",
        title = "Per-TF recovery spread") +
   theme(axis.ticks.y = element_blank())
 
@@ -801,7 +893,7 @@ f9d <- ggplot(dist, aes(family)) +
 # regions to ~zero width (measured 59pt); full-width rows keep every plot region
 # at the shared ~230pt column width
 emit("fig9_tf_probe", f9a / f9b / f9c / f9d + plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.05, 1.0, 0.85, 0.85)), 6.8, 8.4)
+       plot_layout(heights = c(1.05, 1.0, 0.85, 0.85), axis_titles = "collect"), 6.8, 8.4)
 
 # ==================== Figure 10: coverage, scope, QC ====================
 cov <- bind_rows(lapply(names(panel$readout_qc$manifest_gene_coverage), function(k) {
@@ -811,7 +903,7 @@ f10a <- ggplot(cov, aes(reorder(readout, covered), covered)) +
   geom_col(fill = BLUE, width = 0.6) +
   geom_text(aes(label = covered), hjust = -0.1, size = 3.2) +
   coord_flip(ylim = c(1100, 1230)) +
-  labs(x = NULL, y = "manifest genes covered (of 1,200)",
+  labs(x = NULL, y = "genes covered (of 1,200)",
        title = "Gene coverage by readout") +
   theme(axis.text.y = element_text(size = 9))
 
@@ -833,13 +925,23 @@ cov_long$analysis <- factor(cov_long$analysis,
                             levels = c("Brain pooled", "PBMC pooled",
                                        "Brain per-type", "PBMC per-type"))
 cov_long$model <- factor(cov_long$model, levels = rev(unname(model_label)))
+
+# Compute coverage percentage per model
+model_cov <- cov_long %>%
+  group_by(model) %>%
+  summarise(pct = 100 * mean(present), .groups = "drop")
+
 f10b <- ggplot(cov_long, aes(analysis, model, fill = present)) +
   geom_tile(color = "white") +
+  geom_text(data = model_cov, aes(x = 4.5, y = model, label = sprintf("%.0f\\%%", pct)),
+            hjust = 0, size = 2.8, inherit.aes = FALSE) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
+  coord_cartesian(clip = "off") +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Graph coverage") +
   theme(legend.position = "top", axis.text.x = element_text(angle = 15, hjust = 1),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(),
+        plot.margin = margin(4, 35, 3, 4))
 
 cells_r <- bind_rows(lapply(names(panel$readout_qc$cells_per_readout), function(k) {
   data.frame(readout = k, n = panel$readout_qc$cells_per_readout[[k]])
@@ -860,14 +962,14 @@ edges <- data.frame(
   n = c(ea$tf_x_gene, ea$pbmc_edges, ea$brain_edges))
 f10d <- ggplot(edges, aes(step, n)) +
   geom_col(fill = c("grey70", BLUE, AQUA), width = 0.6) +
-  geom_text(aes(label = format(n, big.mark = ",")), vjust = -0.4, size = 3.2) +
+  geom_text(aes(label = format(n, big.mark = "")), vjust = -0.4, size = 3.2) +
   coord_cartesian(ylim = c(0, 580000)) +
   labs(x = NULL, y = "TF--gene edges",
        title = "Edge accounting") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1, size = 8.5))
 
-emit("fig10_coverage_qc", (f10a | f10b) / (f10c | f10d) + plot_annotation(tag_levels = "A"),
-     6.8, 6.0)
+emit("fig10_coverage_qc", (f10a | f10b) / (f10c | f10d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.0)
 
 # ============ Figure 11: third-tissue transfer of the construct ============
 # Disclosure figure: extends the PBMC-only linkage coverage (5.91%, reviewer 2)
@@ -880,15 +982,15 @@ TISSUE_COL <- c(Brain = BLUE, PBMC = YELLOW, `Fibroblast mix` = VIOLET)
 cov11 <- bind_rows(lapply(tt$coverage, function(c) {
   data.frame(tissue = c$tissue,
              frac = c$relevant_peaks / c$total_peaks,
-             label = sprintf("%s / %s", format(c$relevant_peaks, big.mark = ","),
-                             format(c$total_peaks, big.mark = ",")))
+             label = sprintf("%s / %s", format(c$relevant_peaks, big.mark = ""),
+                             format(c$total_peaks, big.mark = "")))
 }))
 f11a <- ggplot(cov11, aes(reorder(tissue, frac), frac, fill = tissue)) +
   geom_col(width = 0.6, show.legend = FALSE) +
   geom_text(aes(label = sprintf("%.2f\\%%", 100 * frac)), hjust = -0.1, size = 3.3) +
   coord_flip(ylim = c(0, 0.075)) +
   scale_fill_manual(values = TISSUE_COL) +
-  labs(x = NULL, y = "fraction of all peaks linked",
+  labs(x = NULL, y = "peaks linked",
        title = "$\\pm$2 kb linkage admits 4--6\\% of peaks")
 
 ov <- bind_rows(lapply(tt$edge_overlap$regions, function(r) {
@@ -898,10 +1000,10 @@ ov$region[ov$region == "Brain + PBMC + Fibroblast mix"] <- "all three"
 ov$shared <- ov$region == "all three"
 f11b <- ggplot(ov, aes(reorder(region, n), n, fill = shared)) +
   geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = format(n, big.mark = ",")), hjust = -0.1, size = 3.1) +
+  geom_text(aes(label = format(n, big.mark = "")), hjust = -0.1, size = 3.1) +
   coord_flip(ylim = c(0, 47000)) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey70")) +
-  labs(x = NULL, y = "non-self TF--gene edges",
+  labs(x = NULL, y = "TF--gene edges",
        title = "A shared 38k-edge core")
 
 deg <- bind_rows(lapply(names(tt$degree_tf_out), function(tn) {
@@ -924,13 +1026,13 @@ f11d <- ggplot(rp, aes(y = reorder(pair, observed))) +
   geom_point(aes(x = observed, color = "observed $\\rho$"), size = 2.4) +
   scale_color_manual(values = c(`binary $\\varphi$` = MUTED,
                                 `observed $\\rho$` = BLUE)) +
-  coord_cartesian(xlim = c(0.42, 0.56)) +
+  coord_cartesian(xlim = c(0.40, 0.60)) +
   labs(x = "cross-tissue agreement", y = NULL, color = NULL,
        title = "Rank agreement tracks support") +
   theme(legend.position = "top")
 
 emit("fig11_third_tissue_transfer", (f11a | f11b) / (f11c | f11d) +
-       plot_annotation(tag_levels = "A"), 6.8, 5.8)
+       plot_annotation(tag_levels = "A") + plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
 # ==================== tables (unchanged) ====================
 fmt <- function(x, digits = 4) sprintf(paste0("%.", digits, "f"), x)
@@ -942,7 +1044,7 @@ table_rows <- vapply(seq_len(nrow(primary)), function(i) {
             pfmt(primary$mantel_p[i]), pfmt(primary$degree_p[i]))
   } else {
     sprintf("%s & %s & $%s$ & %s & $%.3f$ & %s & $%.3f$ \\\\",
-            primary$tissue[i], primary$model[i], fmt(primary$rho[i]), pfmt(primary$mantel_p[i]),
+            primary$tissue[i], primary$model[i], fmt(primary$rho[i], digits = 5), pfmt(primary$mantel_p[i]),
             primary$mantel_q[i], pfmt(primary$degree_p[i]), primary$degree_q[i])
   }
 }, character(1))
