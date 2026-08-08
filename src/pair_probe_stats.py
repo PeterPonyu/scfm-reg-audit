@@ -11,67 +11,24 @@ Also reports a paired FM-vs-co-expression contrast: the per-TF difference in
 adjusted rho, tested by sign-flipping the paired differences.
 """
 import json
-import re
-import time
-from pathlib import Path
+import os
+import sys
 
 import numpy as np
-from scipy.stats import rankdata, spearmanr
-from sklearn.linear_model import RidgeCV
 
-ROOT = Path(__file__).resolve().parents[2]
-PAIR_DIR = ROOT / "results/v2/tf_probe_pair"
-EVAL = ROOT / "results/v2/tf_probe_pair_eval_v2.json"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pair_probe_common as ppc  # noqa: E402
+from pair_probe_common import BASELINE, EVAL, PAIR_DIR, ROOT, bh, blocks, log  # noqa: E402
+
 OUT = ROOT / "results/v2/tf_probe_pair_stats_v2.json"
 
 N_PERM = 999
 SEED_ROOT = 20260730
-ALPHAS = np.logspace(-3, 3, 25)
-BASELINE = "co_expression"
-FAMILY_RE = re.compile(r"\A[A-Za-z0-9_]+\Z")
-
-
-def log(*values):
-    print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
-
-
-def family_pairs_path(fam):
-    """Resolve a family's pair file, rejecting names that escape PAIR_DIR."""
-    if not FAMILY_RE.match(fam):
-        raise ValueError(f"invalid family name in tf_probe_pair_eval_v2.json: {fam!r}")
-    return PAIR_DIR / f"{fam}_pairs.npz"
-
-
-def bh(pvals):
-    """Benjamini-Hochberg q-values, order preserved."""
-    p = np.asarray(pvals, dtype=float)
-    order = np.argsort(p)
-    ranked = p[order] * len(p) / (np.arange(len(p)) + 1)
-    ranked = np.minimum.accumulate(ranked[::-1])[::-1]
-    q = np.empty_like(ranked)
-    q[order] = np.clip(ranked, 0, 1)
-    return q
-
-
-def make_residualiser(design):
-    """Return f(vec) -> rank residuals against a fixed design matrix."""
-    pinv = np.linalg.pinv(design)
-
-    def f(vec):
-        r = rankdata(vec)
-        return r - design @ (pinv @ r)
-
-    return f
 
 
 def adjusted_per_tf(y_true, y_pred, resid):
     """Confound-adjusted Spearman per TF for (n_tf, n_gene) blocks."""
-    out = np.full(y_true.shape[0], np.nan)
-    for i in range(y_true.shape[0]):
-        a, b = resid(y_true[i]), resid(y_pred[i])
-        if np.std(a) > 0 and np.std(b) > 0:
-            out[i] = spearmanr(a, b).statistic
-    return out
+    return ppc.per_tf_rho(y_true, y_pred, residualise=resid)
 
 
 def main():
@@ -87,22 +44,13 @@ def main():
 
     tg = np.load(PAIR_DIR / "pair_targets.npz", allow_pickle=False)
     y_train = tg["y_train"].astype(np.float64)
-    y_test = tg["y_test"].astype(np.float64).reshape(n_tf, n_genes)
-    cg = tg["conf_gene"].astype(np.float64)
-    cz = (cg - cg.mean(0)) / np.where(cg.std(0) == 0, 1.0, cg.std(0))
-    resid = make_residualiser(np.column_stack([np.ones(n_genes), cz]))
+    y_test = blocks(tg["y_test"], n_tf, n_genes)
+    resid = ppc.rank_residualiser(ppc.confound_design(tg["conf_gene"], n_genes))
     log(f"arm={arm} features={ev['arms'][arm]} test TFs={n_tf} perms={N_PERM}")
 
     obs, per_tf = {}, {}
     for fam_index, fam in enumerate(families):
-        d = np.load(family_pairs_path(fam), allow_pickle=False)
-        xtr = d["X_train"].astype(np.float64)[:, cols]
-        xte = d["X_test"].astype(np.float64)[:, cols]
-        mu, sd = xtr.mean(0), xtr.std(0)
-        sd = np.where(sd == 0, 1.0, sd)
-        model = RidgeCV(alphas=ALPHAS, scoring="neg_mean_squared_error")
-        model.fit((xtr - mu) / sd, y_train)
-        pred = model.predict((xte - mu) / sd).reshape(n_tf, n_genes)
+        pred = blocks(ppc.fit_family_probe(fam, cols, y_train).prediction, n_tf, n_genes)
         per_tf[fam] = adjusted_per_tf(y_test, pred, resid)
         obs[fam] = float(np.nanmean(per_tf[fam]))
 
@@ -112,8 +60,7 @@ def main():
         for b in range(N_PERM):
             shuffled = np.stack([rng.permutation(pred[i]) for i in range(n_tf)])
             null[b] = np.nanmean(adjusted_per_tf(y_test, shuffled, resid))
-        # Two-sided: the claim is "differs from chance", in either direction.
-        p = (1 + np.sum(np.abs(null) >= abs(obs[fam]))) / (1 + N_PERM)
+        p = ppc.permutation_p(null, obs[fam], N_PERM)
         obs[fam] = {
             "adjusted_rho_mean": obs[fam],
             "null_mean": float(null.mean()),
@@ -139,7 +86,7 @@ def main():
         rng = np.random.default_rng(SEED_ROOT + 1)
         signs = rng.choice([-1.0, 1.0], size=(N_PERM, diff.size))
         null = (signs * diff).mean(axis=1)
-        p = (1 + np.sum(np.abs(null) >= abs(diff.mean()))) / (1 + N_PERM)
+        p = ppc.permutation_p(null, diff.mean(), N_PERM)
         contrasts[fam] = {
             "paired_delta_mean": float(diff.mean()),
             "paired_delta_std": float(diff.std()),

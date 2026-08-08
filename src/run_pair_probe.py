@@ -7,21 +7,17 @@ and (for FM families) partial Spearman conditioning on the co-expression
 probe's prediction for the same pair.
 """
 import json
-import re
-import time
-from pathlib import Path
+import os
+import sys
 
 import numpy as np
 from scipy.stats import rankdata, spearmanr
-from sklearn.linear_model import RidgeCV
 
-ROOT = Path(__file__).resolve().parents[2]
-PAIR_DIR = ROOT / "results/v2/tf_probe_pair"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pair_probe_common as ppc  # noqa: E402
+from pair_probe_common import BASELINE, PAIR_DIR, ROOT, blocks, log  # noqa: E402
+
 OUT = ROOT / "results/v2/tf_probe_pair_eval_v2.json"
-
-ALPHAS = np.logspace(-3, 3, 25)
-BASELINE = "co_expression"
-FAMILY_RE = re.compile(r"\A[A-Za-z0-9_]+\Z")
 
 # Feature-set arms. `all` lets the probe use gene-level degree columns, which are
 # themselves confound-correlated and let it shortcut past the edge weights;
@@ -33,55 +29,17 @@ ARMS = {
 PRIMARY_ARM = "edge_only"
 
 
-def log(*values):
-    print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
-
-
-def family_pairs_path(fam):
-    """Resolve a family's pair file, rejecting names that escape PAIR_DIR."""
-    if not FAMILY_RE.match(fam):
-        raise ValueError(f"invalid family name in provenance.json: {fam!r}")
-    return PAIR_DIR / f"{fam}_pairs.npz"
-
-
-def residualise(vec, design):
-    """Rank-residualise vec against an intercept-augmented design matrix."""
-    r = rankdata(vec)
-    coef, *_ = np.linalg.lstsq(design, r, rcond=None)
-    return r - design @ coef
-
-
-def per_tf_rho(y_true, y_pred, n_tf, n_genes, design=None):
-    """Spearman per test TF, optionally after residualising both sides."""
-    yt = y_true.reshape(n_tf, n_genes)
-    yp = y_pred.reshape(n_tf, n_genes)
-    out = []
-    for i in range(n_tf):
-        a, b = yt[i], yp[i]
-        if design is not None:
-            a, b = residualise(a, design), residualise(b, design)
-        if np.std(b) == 0 or np.std(a) == 0:
-            out.append(np.nan)
-            continue
-        out.append(spearmanr(a, b).statistic)
-    return np.asarray(out, dtype=float)
-
-
-def partial_rho(y_true, y_pred, y_ctrl, n_tf, n_genes):
+def partial_rho(y_true, y_pred, y_ctrl):
     """Partial Spearman of (y_true, y_pred) given the baseline prediction."""
-    yt = y_true.reshape(n_tf, n_genes)
-    yp = y_pred.reshape(n_tf, n_genes)
-    yc = y_ctrl.reshape(n_tf, n_genes)
-    out = []
-    for i in range(n_tf):
-        design = np.column_stack([np.ones(n_genes), rankdata(yc[i])])
-        a = residualise(yt[i], design)
-        b = residualise(yp[i], design)
-        if np.std(a) == 0 or np.std(b) == 0:
-            out.append(np.nan)
-            continue
-        out.append(spearmanr(a, b).statistic)
-    return np.asarray(out, dtype=float)
+    out = np.full(y_true.shape[0], np.nan)
+    n_genes = y_true.shape[1]
+    for i in range(y_true.shape[0]):
+        design = np.column_stack([np.ones(n_genes), rankdata(y_ctrl[i])])
+        residualise = ppc.rank_residualiser(design)
+        a, b = residualise(y_true[i]), residualise(y_pred[i])
+        if np.std(a) > 0 and np.std(b) > 0:
+            out[i] = spearmanr(a, b).statistic
+    return out
 
 
 def summarise(name, rhos):
@@ -104,46 +62,37 @@ def main():
 
     tg = np.load(PAIR_DIR / "pair_targets.npz", allow_pickle=False)
     y_train = tg["y_train"].astype(np.float64)
-    y_test = tg["y_test"].astype(np.float64)
-    conf_gene = tg["conf_gene"].astype(np.float64)
+    y_test = blocks(tg["y_test"], n_test_tf, n_genes)
 
     # Confound design replicated across test TFs, standardised, with intercept.
-    cz = (conf_gene - conf_gene.mean(0)) / np.where(conf_gene.std(0) == 0, 1.0, conf_gene.std(0))
-    design_conf = np.column_stack([np.ones(n_genes), cz])
-    log(f"train pairs {y_train.shape[0]}, test pairs {y_test.shape[0]}, test TFs {n_test_tf}")
+    adjust = ppc.rank_residualiser(ppc.confound_design(tg["conf_gene"], n_genes))
+    log(f"train pairs {y_train.shape[0]}, test pairs {y_test.size}, test TFs {n_test_tf}")
 
     results = {arm: {} for arm in ARMS}
     for arm, cols in ARMS.items():
         log(f"--- arm: {arm} ({len(cols)} features) ---")
         preds = {}
         for fam in families:
-            d = np.load(family_pairs_path(fam), allow_pickle=False)
-            names = [str(v) for v in d["feature_names"]]
-            xtr = d["X_train"].astype(np.float64)[:, cols]
-            xte = d["X_test"].astype(np.float64)[:, cols]
-            mu, sd = xtr.mean(0), xtr.std(0)
-            sd = np.where(sd == 0, 1.0, sd)
-            model = RidgeCV(alphas=ALPHAS, scoring="neg_mean_squared_error")
-            model.fit((xtr - mu) / sd, y_train)
-            preds[fam] = model.predict((xte - mu) / sd)
+            fit = ppc.fit_family_probe(fam, cols, y_train)
+            preds[fam] = blocks(fit.prediction, n_test_tf, n_genes)
 
-            marg = per_tf_rho(y_test, preds[fam], n_test_tf, n_genes)
-            adj = per_tf_rho(y_test, preds[fam], n_test_tf, n_genes, design=design_conf)
+            marg = ppc.per_tf_rho(y_test, preds[fam])
+            adj = ppc.per_tf_rho(y_test, preds[fam], residualise=adjust)
             results[arm][fam] = {
-                "alpha": float(model.alpha_),
-                "coef": {names[c]: float(v) for c, v in zip(cols, model.coef_)},
-                "train_r2": float(model.score((xtr - mu) / sd, y_train)),
+                "alpha": fit.alpha,
+                "coef": {fit.feature_names[c]: float(v) for c, v in zip(cols, fit.coef)},
+                "train_r2": fit.train_r2,
                 **summarise("marginal_rho", marg),
                 **summarise("adjusted_rho", adj),
             }
-            log(f"  {fam:20s} alpha={model.alpha_:8.3f} "
+            log(f"  {fam:20s} alpha={fit.alpha:8.3f} "
                 f"marginal={results[arm][fam]['marginal_rho_mean']:+.4f} "
                 f"adjusted={results[arm][fam]['adjusted_rho_mean']:+.4f}")
 
         for fam in families:
             if fam == BASELINE:
                 continue
-            part = partial_rho(y_test, preds[fam], preds[BASELINE], n_test_tf, n_genes)
+            part = partial_rho(y_test, preds[fam], preds[BASELINE])
             results[arm][fam].update(summarise("partial_rho_given_coexp", part))
             for key in ("marginal_rho", "adjusted_rho"):
                 results[arm][fam][f"delta_{key}_vs_coexp"] = float(

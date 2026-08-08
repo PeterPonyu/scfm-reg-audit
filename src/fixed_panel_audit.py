@@ -45,15 +45,17 @@ Degree-preserving row-shuffle null:
 
 Pure numpy/scipy on cached graphs (results/v2/*.npz). No GPU. No FM re-embedding.
 """
-import hashlib
 import json
 import os
-from typing import Dict, List, Optional, Tuple
+from pathlib import Path
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import anndata as ad
 import numpy as np
 import pyfaidx
 from scipy.stats import rankdata
+
+import audit_utils as au
 
 
 # ----------------------------- paths / constants -----------------------------
@@ -92,13 +94,76 @@ MARKER_TISSUES = {"brain"}
 
 # ----------------------------- manifest / confound cache ---------------------
 def load_manifest() -> Tuple[List[str], Dict[str, float], str]:
-    from pathlib import Path
     man = json.loads(Path(MANI).read_text())
     genes = man["genes"]
-    sha = hashlib.sha256(("\n".join(genes)).encode()).hexdigest()
+    sha = au.sha256_text("\n".join(genes))
     if sha != man["sha256"]:
         raise ValueError(f"manifest sha mismatch: {sha} vs {man['sha256']}")
     return genes, man["detection"], sha
+
+
+def manifest_genes() -> List[str]:
+    """The frozen panel's gene order (no detection map, no hash check)."""
+    return json.loads(Path(MANI).read_text())["genes"]
+
+
+# ----------------------------- promoter windows / peak binning ---------------
+def promoter_windows(genes: Sequence[str]) -> Dict[str, Tuple[str, int, int, int]]:
+    """Map each panel gene to (chrom, window_lo, window_hi, gene_length).
+
+    The window extends PROM bp upstream of the gene on its own strand; the first
+    annotation row wins for genes with several entries."""
+    wanted = set(genes)
+    windows: Dict[str, Tuple[str, int, int, int]] = {}
+    with Path(COORDS).open() as fh:
+        for ln in fh:
+            c, s, e, st, nm = ln.rstrip("\n").split("\t")
+            if nm not in wanted or nm in windows:
+                continue
+            s, e = int(s), int(e)
+            lo = s - PROM if st == "+" else s
+            hi = e if st == "+" else e + PROM
+            windows[nm] = (c, lo, hi, abs(e - s))
+    return windows
+
+
+def peak_midpoints(atac_file: str) -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
+    """Parse `chrom:start-end` peak names into midpoints plus a per-chromosome index."""
+    Av = ad.read_h5ad(atac_file, backed="r")
+    peaks = [str(p) for p in Av.var_names]
+    Av.file.close()
+    pchr = np.array([p.split(":")[0] for p in peaks])
+    pse = np.array([[int(x) for x in p.split(":")[1].split("-")] for p in peaks])
+    pmid = (pse[:, 0] + pse[:, 1]) // 2
+    by: Dict[str, list] = {}
+    for i, c in enumerate(pchr):
+        by.setdefault(c, []).append(i)
+    return pmid, {c: np.array(v) for c, v in by.items()}
+
+
+def peaks_in_window(pmid: np.ndarray, by_chrom: Dict[str, np.ndarray],
+                    chrom: str, lo: int, hi: int) -> np.ndarray:
+    """Indices of peaks whose midpoint falls inside [lo, hi] on ``chrom``."""
+    peak_indices = by_chrom.get(chrom)
+    if peak_indices is None:
+        return np.empty(0, dtype=int)
+    return peak_indices[(pmid[peak_indices] >= lo) & (pmid[peak_indices] <= hi)]
+
+
+def peak_counts(atac_file: str, genes: Optional[Sequence[str]] = None) -> np.ndarray:
+    """Per-gene promoter-window peak count for one ATAC dataset."""
+    if genes is None:
+        genes, _, _ = load_manifest()
+    windows = promoter_windows(genes)
+    pmid, by_chrom = peak_midpoints(atac_file)
+    counts = np.zeros(len(genes), dtype=np.float32)
+    for i, gene in enumerate(genes):
+        window = windows.get(gene)
+        if window is None:
+            continue
+        chrom, lo, hi, _length = window
+        counts[i] = len(peaks_in_window(pmid, by_chrom, chrom, lo, hi))
+    return counts
 
 
 _CONF_CACHE: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {}
@@ -110,27 +175,8 @@ def build_confounds(atac_file: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
     genes, det, _ = load_manifest()
     gidx = {g: i for i, g in enumerate(genes)}
     Ng = len(genes)
-    gco: Dict[str, Tuple[str, int, int, int]] = {}
-    from pathlib import Path
-    with Path(COORDS).open() as _coords_fh:
-        for ln in _coords_fh:
-            c, s, e, st, nm = ln.rstrip("\n").split("\t")
-            if nm not in gidx or nm in gco:
-                continue
-            s, e = int(s), int(e)
-            lo = s - PROM if st == "+" else s
-            hi = e if st == "+" else e + PROM
-            gco[nm] = (c, lo, hi, abs(e - s))
-    Av = ad.read_h5ad(atac_file, backed="r")
-    peaks = [str(p) for p in Av.var_names]
-    pchr = np.array([p.split(":")[0] for p in peaks])
-    pse = np.array([[int(x) for x in p.split(":")[1].split("-")] for p in peaks])
-    pmid = (pse[:, 0] + pse[:, 1]) // 2
-    by: Dict[str, np.ndarray] = {}
-    for i, c in enumerate(pchr):
-        by.setdefault(c, []).append(i)
-    for c in list(by.keys()):
-        by[c] = np.array(by[c])
+    gco = promoter_windows(genes)
+    pmid, by = peak_midpoints(atac_file)
     fa = pyfaidx.Fasta(HG38, sequence_always_upper=True)
     peakcount = np.zeros(Ng); genelen = np.zeros(Ng); gc = np.zeros(Ng)
     for g, i in gidx.items():
@@ -138,10 +184,7 @@ def build_confounds(atac_file: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
             continue
         c, lo, hi, ln_ = gco[g]
         genelen[i] = ln_
-        pis = by.get(c)
-        if pis is None:
-            continue
-        sel = pis[(pmid[pis] >= lo) & (pmid[pis] <= hi)]
+        sel = peaks_in_window(pmid, by, c, lo, hi)
         peakcount[i] = len(sel)
         if len(sel) and c in fa.keys():
             ks = []
@@ -248,6 +291,33 @@ def pcorr_fwl(x_r: np.ndarray, y_r: np.ndarray, X_fixed_resid_x: np.ndarray,
 
 def spearman_paired(x: np.ndarray, y: np.ndarray) -> float:
     return float(np.corrcoef(rankdata(x), rankdata(y))[0, 1])
+
+
+# ----------------------------- graph / panel helpers -------------------------
+def load_consensus_proxy(path: str) -> Tuple[np.ndarray, np.ndarray, List[str]]:
+    """Load a cached proxy graph as (consensus over cell types, tf_rows, cell types)."""
+    Z = np.load(path, allow_pickle=False)
+    types = [str(t) for t in Z["types"]]
+    tf_rows = np.array(Z["tf_rows"])
+    consensus = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
+    return consensus, tf_rows, types
+
+
+def graph_degrees(G: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """Binary out-degree per TF row and in-degree per target column."""
+    return ((G > 0).sum(1).astype(np.float32), (G > 0).sum(0).astype(np.float32))
+
+
+def panel_edge_indices(tissue: str, tf_rows: np.ndarray, n_genes: int,
+                       genes: Optional[Sequence[str]] = None
+                       ) -> Tuple[np.ndarray, np.ndarray]:
+    """The audit's edge set: every (TF row, gene column) pair kept by edge_mask."""
+    if genes is None:
+        genes = manifest_genes()
+    ii_all = np.repeat(tf_rows, n_genes)
+    jj_all = np.tile(np.arange(n_genes), len(tf_rows))
+    keep = edge_mask(tissue, genes, tf_rows, ii_all, jj_all)
+    return ii_all[keep], jj_all[keep]
 
 
 # ----------------------------- mask helpers ----------------------------------
@@ -357,17 +427,8 @@ def mantel_randomization(
                 C_perm = np.column_stack([pc_z, gl_z, dv_z, gc_z])
             null[k] = pcorr(fm_r, ap_r,
                              np.column_stack([co_r, C_perm]) if use_coexp else C_perm)
-    abs_null = np.abs(null)
-    p_mc = (int(np.sum(abs_null >= abs(observed))) + 1) / (n_perm + 1)
     return {
-        "p_mc": float(p_mc),
-        "N_perm": int(n_perm),
-        "seed": int(seed),
-        "resolution": float(1 / (n_perm + 1)),
-        "null_mean": float(null.mean()),
-        "null_sd": float(null.std()),
-        "z": float((observed - null.mean()) / (null.std() + 1e-9)),
-        "null_obs_count_at_or_above_obs": int(np.sum(abs_null >= abs(observed))),
+        **au.mc_null_summary(null, observed, n_perm, seed),
         "test_type": "gene_label_mantel_plus_one_corrected",
         "confound_spec": confound_spec,
         "null_columns_perm_recomputed": (["tf_outdeg", "atac_indeg"] if confound_spec == "full" else ["atac_only"]),
@@ -423,17 +484,8 @@ def degree_preserving_null(
             null[k] = pcorr_inplace(fm_r, ap_r, C_perm)
         except np.linalg.LinAlgError:
             null[k] = pcorr(fm_r, ap_r, C_perm[:, 1:])
-    abs_null = np.abs(null)
-    p_mc = (int(np.sum(abs_null >= abs(observed))) + 1) / (n_perm + 1)
     return {
-        "p_mc": float(p_mc),
-        "N_perm": int(n_perm),
-        "seed": int(seed),
-        "resolution": float(1 / (n_perm + 1)),
-        "null_mean": float(null.mean()),
-        "null_sd": float(null.std()),
-        "z": float((observed - null.mean()) / (null.std() + 1e-9)),
-        "null_obs_count_at_or_above_obs": int(np.sum(abs_null >= abs(observed))),
+        **au.mc_null_summary(null, observed, n_perm, seed),
         "test_type": "degree_preserving_row_shuffle_plus_one_corrected",
         "confound_spec": confound_spec,
         "null_columns_perm_recomputed": (["atac", "atac_indeg"]
@@ -710,17 +762,8 @@ def batched_pvalue_summary(null: np.ndarray, observed: float, n_perm: int,
     """Plus-one Monte-Carlo p-value summary for a single null distribution.
     Optionally stamps test_type and confound_spec into the summary so callers don't
     need to overlay those fields separately."""
-    abs_null = np.abs(null)
-    p_mc = (int(np.sum(abs_null >= abs(observed))) + 1) / (n_perm + 1)
     out = {
-        "p_mc": float(p_mc),
-        "N_perm": int(n_perm),
-        "seed": int(seed),
-        "resolution": float(1 / (n_perm + 1)),
-        "null_mean": float(null.mean()),
-        "null_sd": float(null.std()),
-        "z": float((observed - null.mean()) / (null.std() + 1e-9)),
-        "null_obs_count_at_or_above_obs": int(np.sum(abs_null >= abs(observed))),
+        **au.mc_null_summary(null, observed, n_perm, seed),
         "batch_id": batch_id,
     }
     if test_type is not None:
@@ -732,24 +775,13 @@ def batched_pvalue_summary(null: np.ndarray, observed: float, n_perm: int,
 
 # ----------------------------- BH-FDR ---------------------------------------
 def bh_qvalues(pvals: List[float]) -> List[float]:
-    p = np.asarray(pvals, dtype=float)
-    n = len(p)
-    order = np.argsort(p)
-    ranked = p[order] * n / (np.arange(n) + 1)
-    q = np.minimum.accumulate(ranked[::-1])[::-1]
-    out = np.empty(n)
-    out[order] = np.clip(q, 0, 1)
-    return [round(float(x), 6) for x in out]
+    """Audit-facing BH q-values, rounded to the reported 6 decimals."""
+    return au.bh_qvalues(pvals, round_to=6)
 
 
 # ----------------------------- file hashing ---------------------------------
-def sha256_file(p: str) -> str:
-    from pathlib import Path
-    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-
-
-def sha256_array(a: np.ndarray) -> str:
-    return hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()
+sha256_file = au.sha256_file
+sha256_array = au.sha256_array
 
 
 # ----------------------------- provenance record builder ---------------------

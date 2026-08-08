@@ -10,14 +10,12 @@ import time
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audit_utils as au
 import fixed_panel_audit as fpa
 import run_fixed_panel_audit as drv
-DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+from run_fixed_panel_audit import ATAC_BRAIN, ATAC_PBMC
 
-
-def log(*a, flush=True):
-    print(f"[{time.strftime('%H:%M:%S')}]", *a, flush=flush)
-
+log = au.log
 
 N_PERM = int(os.environ.get("BENCH_N_PERM", "99"))
 SEED_ROOT = int(os.environ.get("SEED_ROOT", "20260724"))
@@ -28,18 +26,16 @@ def bench_pooled():
     ss = np.random.SeedSequence(SEED_ROOT)
     G_atac_b, co_b, models_b, tf_b, types_b = drv.load_pooled_brain()
     ko_models, _ = drv.load_geneformer_ko()
-    ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
     t0 = time.time()
-    pooled_brain = drv.run_pooled_family(ss.spawn(1)[0], ATAC_B, "brain", G_atac_b, co_b,
+    pooled_brain = drv.run_pooled_family(ss.spawn(1)[0], ATAC_BRAIN, "brain", G_atac_b, co_b,
                                          models_b, tf_b, ko_models, N_PERM, N_PERM)
     log(f"brain pooled (N={N_PERM}): {time.time() - t0:.2f}s  "
         f"({len(pooled_brain['primary_family']['rows'])} primary, "
         f"{len(pooled_brain['sensitivity_family']['rows'])} sensitivity)")
 
     G_atac_p, co_p, models_p, tf_p, types_p = drv.load_pooled_pbmc()
-    ATAC_P = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
     t0 = time.time()
-    pooled_pbmc = drv.run_pooled_family(ss.spawn(1)[0], ATAC_P, "pbmc", G_atac_p, co_p,
+    pooled_pbmc = drv.run_pooled_family(ss.spawn(1)[0], ATAC_PBMC, "pbmc", G_atac_p, co_p,
                                         models_p, tf_p, None, N_PERM, N_PERM)
     log(f"pbmc pooled (N={N_PERM}): {time.time() - t0:.2f}s  "
         f"({len(pooled_pbmc['primary_family']['rows'])} primary, "
@@ -52,13 +48,12 @@ def bench_pertype_descriptive():
     ss = np.random.SeedSequence(SEED_ROOT)
     G_atac_b, co_b, _, tf_b, _ = drv.load_pooled_brain()
     type_models_b, _, _ = drv.load_brain_pertype_models()
-    ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
     ncells_b = json.load(open(f"{fpa.OUT}/pertype_fm_v2.json"))["per_type"]
     ncells_b = {r["cell_type"]: r["n"] for r in ncells_b}
     for cs in ("full", "non_degree"):
         t0 = time.time()
         pt = drv.run_pertype_family(
-            ss.spawn(1)[0], ATAC_B, "brain", G_atac_b, co_b,
+            ss.spawn(1)[0], ATAC_BRAIN, "brain", G_atac_b, co_b,
             type_models_b, tf_b, cs, ncells_b,
         )
         log(f"brain per-type {cs}: {time.time() - t0:.2f}s  "
@@ -66,13 +61,12 @@ def bench_pertype_descriptive():
 
     G_atac_p, co_p, _, tf_p, _ = drv.load_pooled_pbmc()
     type_models_p, _, _ = drv.load_pbmc_pertype_models()
-    ATAC_P = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
     ncells_p = json.load(open(f"{fpa.OUT}/pbmc_eval_v2.json"))["per_type_coexp"]
     ncells_p = {r["cell_type"]: r["n"] for r in ncells_p}
     for cs in ("full", "non_degree"):
         t0 = time.time()
         pt = drv.run_pertype_family(
-            ss.spawn(1)[0], ATAC_P, "pbmc", G_atac_p, co_p,
+            ss.spawn(1)[0], ATAC_PBMC, "pbmc", G_atac_p, co_p,
             type_models_p, tf_p, cs, ncells_p,
         )
         log(f"pbmc per-type {cs}: {time.time() - t0:.2f}s  "

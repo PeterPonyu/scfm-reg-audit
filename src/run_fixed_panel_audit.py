@@ -12,16 +12,27 @@ import json
 import os
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 import numpy as np
 from scipy.stats import rankdata, spearmanr
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audit_utils as au
 import fixed_panel_audit as fpa
 import pbmc_cache
 DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+ATAC_BRAIN = os.environ.get(
+    "SCFM_BRAIN_ATAC",
+    f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad")
+ATAC_PBMC = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
+PBMC_RNA = f"{fpa.ROOT}/data/multiome/pbmc10k_rna.h5ad"
+PBMC_POOL_CAP = 4000
+PBMC_SELECTION_SEED = 20260713
+PROXY_CACHE = {
+    "brain": "G_ATAC_v2_GSE174367.npz",
+    "pbmc": "G_ATAC_v2_PBMC10k.npz",
+}
 
 
 # ----------------------------- defaults --------------------------------------
@@ -32,22 +43,18 @@ N_REPLICATES = int(os.environ.get("N_REPLICATES", "30"))
 ALPHAS = [0.0, 0.02, 0.05, 0.08, 0.12, 0.18, 0.25, 0.35, 0.5, 0.75, 1.0]
 
 
-def log(*a):
-    print(f"[{time.strftime('%H:%M:%S')}]", *a, flush=True)
-
-
-def spawn_int_seeds(ss, n: int) -> list:
-    """Spawn n SeedSequence children and return n Python int seeds via generate_state(1)[0]."""
-    children = ss.spawn(n)
-    return [int(s.generate_state(1, dtype=np.uint64)[0]) for s in children]
+log = au.log
+spawn_int_seeds = au.spawn_int_seeds
 
 
 # ----------------------------- cached graph loaders --------------------------
+def load_proxy_consensus(tissue: str):
+    """Consensus regulatory-potential proxy, TF rows, and cell types for one tissue."""
+    return fpa.load_consensus_proxy(f"{fpa.OUT}/{PROXY_CACHE[tissue]}")
+
+
 def load_pooled_brain():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
-    types_b = [str(t) for t in Z["types"]]
-    tf_b = np.array(Z["tf_rows"])
-    G_atac = np.mean([Z[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)
+    G_atac, tf_b, types_b = load_proxy_consensus("brain")
     F = np.load(f"{fpa.OUT}/fmgraphs_pooled_v2.npz")
     Sb = np.load(f"{fpa.OUT}/G_scf_pooled.npz")["G"]
     Ub = np.load(f"{fpa.OUT}/G_uce_pooled.npz")["G"]
@@ -68,10 +75,7 @@ def load_pooled_brain():
 
 
 def load_pooled_pbmc():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
-    types_p = [str(t) for t in Z["types"]]
-    tf_p = np.array(Z["tf_rows"])
-    G_atac = np.mean([Z[f"G_{t}"] for t in types_p], axis=0).astype(np.float32)
+    G_atac, tf_p, types_p = load_proxy_consensus("pbmc")
     Fp = np.load(f"{fpa.OUT}/pbmc_fmgraphs_pooled.npz")
     Sp = np.load(f"{fpa.OUT}/G_scf_pbmc_pooled.npz")["G"]
     models = {
@@ -82,79 +86,38 @@ def load_pooled_pbmc():
     return G_atac, Fp["co"], models, tf_p, types_p
 
 
-def load_optional_pbmc_scgpt():
-    path = f"{fpa.OUT}/pbmc_scgpt_pooled_v2.npz"
+def load_optional_pbmc_graph(cache_name: str, graph_key: str, label: str):
+    """An optional PBMC pooled model graph with its matched co-expression control.
+
+    The scGPT and UCE caches were computed but never appended to the audit family;
+    both are loaded here behind the same provenance gates (gene panel, manifest
+    hash, cell pool selection, pool cap, RNA input hash) before use.
+    """
+    path = f"{fpa.OUT}/{cache_name}"
     if not os.path.exists(path):
         return None
-    rna_path = f"{fpa.ROOT}/data/multiome/pbmc10k_rna.h5ad"
     import anndata as ad
-    rna = ad.read_h5ad(rna_path, backed="r")
-    expected_cell_ids = pbmc_cache.select_pool_cell_ids(rna.n_obs, 4000, 20260713)
+    rna = ad.read_h5ad(PBMC_RNA, backed="r")
+    expected_cell_ids = pbmc_cache.select_pool_cell_ids(
+        rna.n_obs, PBMC_POOL_CAP, PBMC_SELECTION_SEED)
     rna.file.close()
-    expected_rna_sha = pbmc_cache.sha256_file(rna_path)
-    with np.load(path, allow_pickle=False) as cache:
-        genes = json.loads(Path(fpa.MANI).read_text())["genes"]
-        manifest_sha = json.loads(Path(fpa.MANI).read_text())["sha256"]
-        if [str(g) for g in cache["genes"]] != genes:
-            raise ValueError("PBMC scGPT graph gene order mismatch")
-        if str(cache["manifest_sha"].item()) != manifest_sha:
-            raise ValueError("PBMC scGPT graph manifest mismatch")
-        if int(cache["selection_seed"].item()) != 20260713:
-            raise ValueError("PBMC scGPT graph selection seed mismatch")
-        if int(cache["pool_cap"].item()) != 4000:
-            raise ValueError("PBMC scGPT graph pool cap mismatch")
-        if not np.array_equal(cache["cell_ids"], expected_cell_ids):
-            raise ValueError("PBMC scGPT graph selected cells mismatch")
-        if str(cache["rna_sha256"].item()) != expected_rna_sha:
-            raise ValueError("PBMC scGPT graph RNA input mismatch")
-        co, sg = cache["co"].copy(), cache["sg"].copy()
-    expected_shape = (len(genes), len(genes))
-    if co.shape != expected_shape or sg.shape != expected_shape:
-        raise ValueError("PBMC scGPT graph shape mismatch")
-    if not np.isfinite(co).all() or not np.isfinite(sg).all():
-        raise ValueError("PBMC scGPT graph contains non-finite values")
-    return path, co, sg
+    manifest = json.loads(Path(fpa.MANI).read_text())
+    genes = manifest["genes"]
+    cache = pbmc_cache.load_graph_cache(
+        path, ("co", graph_key),
+        {"genes": genes, "manifest_sha": manifest["sha256"],
+         "selection_seed": PBMC_SELECTION_SEED, "pool_cap": PBMC_POOL_CAP,
+         "cell_ids": expected_cell_ids, "rna_sha256": pbmc_cache.sha256_file(PBMC_RNA)},
+        label, len(genes))
+    return path, cache["co"], cache[graph_key]
+
+
+def load_optional_pbmc_scgpt():
+    return load_optional_pbmc_graph("pbmc_scgpt_pooled_v2.npz", "sg", "PBMC scGPT graph")
 
 
 def load_optional_pbmc_uce():
-    """UCE PBMC pooled graph with its matched co-expression control.
-
-    pbmc_uce_pooled_v2.npz carries the same manifest/selection provenance as the
-    scGPT cache plus the UCE checkpoint and ESM2 hashes; the graph was computed
-    (07-29) but never appended to the audit family, so it is loaded here with the
-    same provenance gates as scGPT.
-    """
-    path = f"{fpa.OUT}/pbmc_uce_pooled_v2.npz"
-    if not os.path.exists(path):
-        return None
-    rna_path = f"{fpa.ROOT}/data/multiome/pbmc10k_rna.h5ad"
-    import anndata as ad
-    rna = ad.read_h5ad(rna_path, backed="r")
-    expected_cell_ids = pbmc_cache.select_pool_cell_ids(rna.n_obs, 4000, 20260713)
-    rna.file.close()
-    expected_rna_sha = pbmc_cache.sha256_file(rna_path)
-    with np.load(path, allow_pickle=False) as cache:
-        genes = json.loads(Path(fpa.MANI).read_text())["genes"]
-        manifest_sha = json.loads(Path(fpa.MANI).read_text())["sha256"]
-        if [str(g) for g in cache["genes"]] != genes:
-            raise ValueError("PBMC UCE graph gene order mismatch")
-        if str(cache["manifest_sha"].item()) != manifest_sha:
-            raise ValueError("PBMC UCE graph manifest mismatch")
-        if int(cache["selection_seed"].item()) != 20260713:
-            raise ValueError("PBMC UCE graph selection seed mismatch")
-        if int(cache["pool_cap"].item()) != 4000:
-            raise ValueError("PBMC UCE graph pool cap mismatch")
-        if not np.array_equal(cache["cell_ids"], expected_cell_ids):
-            raise ValueError("PBMC UCE graph selected cells mismatch")
-        if str(cache["rna_sha256"].item()) != expected_rna_sha:
-            raise ValueError("PBMC UCE graph RNA input mismatch")
-        co, uce = cache["co"].copy(), cache["uce"].copy()
-    expected_shape = (len(genes), len(genes))
-    if co.shape != expected_shape or uce.shape != expected_shape:
-        raise ValueError("PBMC UCE graph shape mismatch")
-    if not np.isfinite(co).all() or not np.isfinite(uce).all():
-        raise ValueError("PBMC UCE graph contains non-finite values")
-    return path, co, uce
+    return load_optional_pbmc_graph("pbmc_uce_pooled_v2.npz", "uce", "PBMC UCE graph")
 
 
 def load_geneformer_ko():
@@ -165,58 +128,43 @@ def load_geneformer_ko():
     }, np.array(K["tf_rows"])
 
 
-def load_brain_pertype_models():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
-    types_b = [str(t) for t in Z["types"]]
-    tf_b = np.array(Z["tf_rows"])
+def _load_pertype_models(tissue: str, prefix: str, scf_prefix: str | None = None):
+    """Per-cell-type FM graphs for one tissue, skipping cell types with no cache."""
+    _G, tf_rows, types = load_proxy_consensus(tissue)
     out: dict = {}
-    for t in types_b:
-        fpath = f"{fpa.OUT}/brain_fmgraphs_{t}.npz"
+    for t in types:
+        fpath = f"{fpa.OUT}/{prefix}_{t}.npz"
         if not os.path.exists(fpath):
             continue
         F = np.load(fpath)
-        spath = f"{fpa.OUT}/brain_scfgraphs_{t}.npz"
-        scf = np.load(spath)["scf"] if os.path.exists(spath) else None
         out[t] = {
             "geneformer_embed": F["gf"],
             "geneformer_attn": F["at"],
             "coexp": F["co"],
         }
-        if scf is not None:
-            out[t]["scFoundation_encoder"] = scf
-    return out, tf_b, types_b
+        spath = f"{fpa.OUT}/{scf_prefix}_{t}.npz" if scf_prefix else None
+        if spath is not None and os.path.exists(spath):
+            out[t]["scFoundation_encoder"] = np.load(spath)["scf"]
+    return out, tf_rows, types
+
+
+def load_brain_pertype_models():
+    return _load_pertype_models("brain", "brain_fmgraphs", "brain_scfgraphs")
 
 
 def load_pbmc_pertype_models():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
-    types_p = [str(t) for t in Z["types"]]
-    tf_p = np.array(Z["tf_rows"])
-    out: dict = {}
-    for t in types_p:
-        fpath = f"{fpa.OUT}/pbmc_fmgraphs_{t}.npz"
-        if not os.path.exists(fpath):
-            continue
-        F = np.load(fpath)
-        out[t] = {
-            "geneformer_embed": F["gf"],
-            "geneformer_attn": F["at"],
-            "coexp": F["co"],
-        }
-    return out, tf_p, types_p
+    return _load_pertype_models("pbmc", "pbmc_fmgraphs")
 
 
 def load_cross_tissue():
-    Zg = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
-    Zp = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
-    Zc = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE206767.npz", allow_pickle=False)
-    tags = ["GSE174367", "PBMC10k", "GSE206767"]
+    caches = {"GSE174367": "G_ATAC_v2_GSE174367.npz",
+              "PBMC10k": "G_ATAC_v2_PBMC10k.npz",
+              "GSE206767": "G_ATAC_v2_GSE206767.npz"}
     consensus = {}
     tfs = {}
-    for Z, tag in [(Zg, "GSE174367"), (Zp, "PBMC10k"), (Zc, "GSE206767")]:
-        ts = [str(t) for t in Z["types"]]
-        consensus[tag] = np.mean([Z[f"G_{t}"] for t in ts], axis=0).astype(np.float32)
-        tfs[tag] = np.array(Z["tf_rows"])
-    return consensus, tfs, tags
+    for tag, cache_name in caches.items():
+        consensus[tag], tfs[tag], _types = fpa.load_consensus_proxy(f"{fpa.OUT}/{cache_name}")
+    return consensus, tfs, list(caches)
 
 
 # ----------------------------- KO readout tagging ----------------------------
@@ -320,14 +268,10 @@ def run_pooled_family(ss, atac_file: str, tissue: str, G_atac, co, models: dict,
     atac_resid)."""
     Ng = G_atac.shape[0]
     peakcount, genelen, gc, detv = fpa.build_confounds(atac_file)
-    tf_outdeg = (G_atac > 0).sum(1).astype(np.float32)
-    atac_indeg = (G_atac > 0).sum(0).astype(np.float32)
+    tf_outdeg, atac_indeg = fpa.graph_degrees(G_atac)
     rows: list = []
 
-    ii_all = np.repeat(tf_rows, Ng)
-    jj_all = np.tile(np.arange(Ng), len(tf_rows))
-    m_all = fpa.edge_mask(tissue, json.loads(Path(fpa.MANI).read_text())["genes"], tf_rows, ii_all, jj_all)
-    ii, jj = ii_all[m_all], jj_all[m_all]
+    ii, jj = fpa.panel_edge_indices(tissue, tf_rows, Ng)
 
     fm_entries: list = list(models.items())
     if ko_models is not None:
@@ -572,13 +516,8 @@ def append_independent_control_model(
 ) -> None:
     Ng = G_atac.shape[0]
     peakcount, genelen, gc, detv = fpa.build_confounds(atac_file)
-    tf_outdeg = (G_atac > 0).sum(1).astype(np.float32)
-    atac_indeg = (G_atac > 0).sum(0).astype(np.float32)
-    genes = json.loads(Path(fpa.MANI).read_text())["genes"]
-    ii_all = np.repeat(tf_rows, Ng)
-    jj_all = np.tile(np.arange(Ng), len(tf_rows))
-    mask = fpa.edge_mask(tissue, genes, tf_rows, ii_all, jj_all)
-    ii, jj = ii_all[mask], jj_all[mask]
+    tf_outdeg, atac_indeg = fpa.graph_degrees(G_atac)
+    ii, jj = fpa.panel_edge_indices(tissue, tf_rows, Ng)
     seeds = spawn_int_seeds(seed_sequence, 4)
     seed_m_full, seed_m_nd, seed_d_full, seed_d_nd = seeds
     for spec, seed_mantel, seed_deg, family_key in (
@@ -625,18 +564,12 @@ def run_pertype_family(ss, atac_file: str, tissue: str, G_atac_pooled: np.ndarra
     Ng = G_atac_pooled.shape[0]
     peakcount, genelen, gc, detv = fpa.build_confounds(atac_file)
     rows: list = []
-    genes = json.loads(Path(fpa.MANI).read_text())["genes"]
-    atac_path = f"{fpa.OUT}/G_ATAC_v2_{ 'GSE174367' if tissue=='brain' else 'PBMC10k' }.npz"
-    Z_atac = np.load(atac_path, allow_pickle=False)
+    Z_atac = np.load(f"{fpa.OUT}/{PROXY_CACHE[tissue]}", allow_pickle=False)
+    ii, jj = fpa.panel_edge_indices(tissue, tf_rows, Ng)
 
     for ctype, models in type_models.items():
         G_atac_type = Z_atac[f"G_{ctype}"].astype(np.float32)
-        tf_outdeg_t = (G_atac_type > 0).sum(1).astype(np.float32)
-        atac_indeg_t = (G_atac_type > 0).sum(0).astype(np.float32)
-        ii_all = np.repeat(tf_rows, Ng)
-        jj_all = np.tile(np.arange(Ng), len(tf_rows))
-        m = fpa.edge_mask(tissue, genes, tf_rows, ii_all, jj_all)
-        ii, jj = ii_all[m], jj_all[m]
+        tf_outdeg_t, atac_indeg_t = fpa.graph_degrees(G_atac_type)
         atac_v = G_atac_type[ii, jj]
         co_v = co_pooled[ii, jj]
         n_cells = int((cell_count_lookup or {}).get(ctype, 0))
@@ -740,11 +673,8 @@ def run_sensitivity(ss, tissue: str, G_atac_pooled: np.ndarray, co_pooled: np.nd
     """Per (tissue, alpha, replicate): inject alpha*z(resid) + (1-alpha)*z(noise). NO CI."""
     Ng = G_atac_pooled.shape[0]
     peakcount, genelen, gc, detv = fpa.build_confounds(atac_file)
-    tf_outdeg = (G_atac_pooled > 0).sum(1).astype(np.float32)
-    atac_indeg = (G_atac_pooled > 0).sum(0).astype(np.float32)
-    ii_all = np.repeat(tf_rows, Ng); jj_all = np.tile(np.arange(Ng), len(tf_rows))
-    m = fpa.edge_mask(tissue, json.loads(Path(fpa.MANI).read_text())["genes"], tf_rows, ii_all, jj_all)
-    ii, jj = ii_all[m], jj_all[m]
+    tf_outdeg, atac_indeg = fpa.graph_degrees(G_atac_pooled)
+    ii, jj = fpa.panel_edge_indices(tissue, tf_rows, Ng)
     atac_v = G_atac_pooled[ii, jj]
     co_v = co_pooled[ii, jj]
 
@@ -1092,8 +1022,7 @@ def main():
     )
     log("preflight passed: legacy hashes, fixed panel, graph shapes, and finite values")
 
-    ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
-    ATAC_P = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
+    ATAC_B, ATAC_P = ATAC_BRAIN, ATAC_PBMC
     for input_path in (ATAC_B, ATAC_P, fpa.MANI, fpa.COORDS, fpa.HG38):
         if not os.path.exists(input_path):
             raise FileNotFoundError(f"required fixed-panel input missing: {input_path}")

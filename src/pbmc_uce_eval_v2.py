@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 """Generate a provenance-bound pooled PBMC UCE gene graph."""
-import hashlib
 import json
 import os
-import tempfile
-import time
 from pathlib import Path
 
 import anndata as ad
@@ -12,9 +9,12 @@ import numpy as np
 import scipy.sparse as sp
 from scipy.stats import rankdata, spearmanr
 
+import audit_utils as au
 import fm_readout as fr
 import fm_readout_uce as fuce
 import pbmc_cache
+
+log = au.log
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -46,103 +46,52 @@ def normalized_log_counts(matrix):
     return cp10k
 
 
-def log(*values):
-    print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
-
-
-def _atomic_json(path, document):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=path.name, suffix=".json", dir=path.parent)
-    try:
-        with os.fdopen(fd, "w") as handle:
-            json.dump(document, handle, indent=2, sort_keys=True, allow_nan=False)
-            handle.write("\n")
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+def _uce_provenance(cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
+                    checkpoint_sha256, esm2_sha256, with_co_normalization):
+    """Provenance fields a UCE cache must match before it can be reused."""
+    expectations = {
+        "cell_ids": cell_ids, "genes": list(genes), "manifest_sha": manifest_sha,
+        "selection_seed": SELECTION_SEED, "pool_cap": pool_cap,
+        "rna_sha256": rna_sha256, "checkpoint_sha256": checkpoint_sha256,
+        "esm2_sha256": esm2_sha256,
+    }
+    if with_co_normalization:
+        expectations["co_normalization_version"] = CO_NORMALIZATION_VERSION
+    return expectations
 
 
 def load_legacy_uce_cache(path, cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
                           checkpoint_sha256, esm2_sha256):
     """Load pre-contract cache only to migrate its UCE embedding, never its co graph."""
-    with np.load(path, allow_pickle=False) as cache:
-        metadata_matches = (
-            np.array_equal(cache["cell_ids"], cell_ids)
-            and [str(g) for g in cache["genes"]] == list(genes)
-            and str(cache["manifest_sha"].item()) == manifest_sha
-            and int(cache["selection_seed"].item()) == SELECTION_SEED
-            and int(cache["pool_cap"].item()) == pool_cap
-            and str(cache["rna_sha256"].item()) == rna_sha256
-            and str(cache["checkpoint_sha256"].item()) == checkpoint_sha256
-            and str(cache["esm2_sha256"].item()) == esm2_sha256
-        )
-        if not metadata_matches:
-            raise ValueError("PBMC UCE legacy cache provenance mismatch")
-        uce = cache["uce"].copy()
-        covered = int(cache["covered"].item())
-    shape = (len(genes), len(genes))
-    if uce.shape != shape or not np.isfinite(uce).all():
-        raise ValueError("PBMC UCE legacy cache graph shape mismatch")
-    return uce, covered
+    cache = pbmc_cache.load_graph_cache(
+        path, ("uce",),
+        _uce_provenance(cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
+                        checkpoint_sha256, esm2_sha256, with_co_normalization=False),
+        "PBMC UCE legacy", len(genes), scalar_keys=("covered",))
+    if cache is None:
+        raise FileNotFoundError(f"legacy UCE cache missing: {path}")
+    return cache["uce"], cache["covered"]
 
 
 def load_uce_cache(path, cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
                    checkpoint_sha256, esm2_sha256):
-    if not Path(path).exists():
+    cache = pbmc_cache.load_graph_cache(
+        path, ("co", "uce"),
+        _uce_provenance(cell_ids, genes, manifest_sha, pool_cap, rna_sha256,
+                        checkpoint_sha256, esm2_sha256, with_co_normalization=True),
+        "PBMC UCE", len(genes), scalar_keys=("covered",))
+    if cache is None:
         return None
-    with np.load(path, allow_pickle=False) as cache:
-        metadata_matches = (
-            np.array_equal(cache["cell_ids"], cell_ids)
-            and [str(g) for g in cache["genes"]] == list(genes)
-            and str(cache["manifest_sha"].item()) == manifest_sha
-            and int(cache["selection_seed"].item()) == SELECTION_SEED
-            and int(cache["pool_cap"].item()) == pool_cap
-            and str(cache["rna_sha256"].item()) == rna_sha256
-            and str(cache["checkpoint_sha256"].item()) == checkpoint_sha256
-            and str(cache["esm2_sha256"].item()) == esm2_sha256
-            and str(cache["co_normalization_version"].item()) == CO_NORMALIZATION_VERSION
-        )
-        if not metadata_matches:
-            raise ValueError("PBMC UCE cache provenance mismatch")
-        co = cache["co"].copy()
-        uce = cache["uce"].copy()
-        covered = int(cache["covered"].item())
-    shape = (len(genes), len(genes))
-    if co.shape != shape or uce.shape != shape:
-        raise ValueError("PBMC UCE cache graph shape mismatch")
-    if not np.isfinite(co).all() or not np.isfinite(uce).all():
-        raise ValueError("PBMC UCE cache contains non-finite values")
-    return co, uce, covered
+    return cache["co"], cache["uce"], cache["covered"]
 
 
 def write_uce_cache(path, co, uce, covered, cell_ids, genes, manifest_sha,
                     pool_cap, rna_sha256, checkpoint_sha256, esm2_sha256):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=path.name, suffix=".npz", dir=path.parent)
-    os.close(fd)
-    try:
-        np.savez(
-            temporary,
-            co=co,
-            uce=uce,
-            covered=np.asarray(covered),
-            cell_ids=np.asarray(cell_ids),
-            genes=np.asarray(genes),
-            manifest_sha=np.asarray(manifest_sha),
-            selection_seed=np.asarray(SELECTION_SEED),
-            pool_cap=np.asarray(pool_cap),
-            rna_sha256=np.asarray(rna_sha256),
-            checkpoint_sha256=np.asarray(checkpoint_sha256),
-            esm2_sha256=np.asarray(esm2_sha256),
-            co_normalization_version=np.asarray(CO_NORMALIZATION_VERSION),
-        )
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    pbmc_cache.write_graph_cache(
+        path, co=co, uce=uce, covered=covered, cell_ids=cell_ids, genes=genes,
+        manifest_sha=manifest_sha, selection_seed=SELECTION_SEED, pool_cap=pool_cap,
+        rna_sha256=rna_sha256, checkpoint_sha256=checkpoint_sha256,
+        esm2_sha256=esm2_sha256, co_normalization_version=CO_NORMALIZATION_VERSION)
 
 
 def partial_spearman(x, y, control):
@@ -157,7 +106,7 @@ def main():
     manifest = json.loads(MANIFEST.read_text())
     genes = manifest["genes"]
     manifest_sha = manifest["sha256"]
-    observed_manifest_sha = hashlib.sha256("\n".join(genes).encode()).hexdigest()
+    observed_manifest_sha = au.sha256_text("\n".join(genes))
     if observed_manifest_sha != manifest_sha:
         raise ValueError("manifest self-hash mismatch")
 
@@ -258,7 +207,7 @@ def main():
             "cache_sha256": pbmc_cache.sha256_file(CACHE_PATH),
         },
     }
-    _atomic_json(RESULT_PATH, result)
+    au.write_json_atomic(RESULT_PATH, result)
     log(json.dumps(result["metrics"], sort_keys=True))
     log(f"saved result {RESULT_PATH}")
 
