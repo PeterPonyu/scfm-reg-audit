@@ -7,6 +7,7 @@ and (for FM families) partial Spearman conditioning on the co-expression
 probe's prediction for the same pair.
 """
 import json
+import re
 import time
 from pathlib import Path
 
@@ -20,6 +21,7 @@ OUT = ROOT / "results/v2/tf_probe_pair_eval_v2.json"
 
 ALPHAS = np.logspace(-3, 3, 25)
 BASELINE = "co_expression"
+FAMILY_RE = re.compile(r"\A[A-Za-z0-9_]+\Z")
 
 # Feature-set arms. `all` lets the probe use gene-level degree columns, which are
 # themselves confound-correlated and let it shortcut past the edge weights;
@@ -33,6 +35,13 @@ PRIMARY_ARM = "edge_only"
 
 def log(*values):
     print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
+
+
+def family_pairs_path(fam):
+    """Resolve a family's pair file, rejecting names that escape PAIR_DIR."""
+    if not FAMILY_RE.match(fam):
+        raise ValueError(f"invalid family name in provenance.json: {fam!r}")
+    return PAIR_DIR / f"{fam}_pairs.npz"
 
 
 def residualise(vec, design):
@@ -108,7 +117,7 @@ def main():
         log(f"--- arm: {arm} ({len(cols)} features) ---")
         preds = {}
         for fam in families:
-            d = np.load(PAIR_DIR / f"{fam}_pairs.npz", allow_pickle=False)
+            d = np.load(family_pairs_path(fam), allow_pickle=False)
             names = [str(v) for v in d["feature_names"]]
             xtr = d["X_train"].astype(np.float64)[:, cols]
             xte = d["X_test"].astype(np.float64)[:, cols]

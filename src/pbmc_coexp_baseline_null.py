@@ -59,7 +59,7 @@ def pbmc_peakcount():
 
 
 def main():
-    Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     types = [str(t) for t in Z["types"]]
     tf = np.array(Z["tf_rows"])
     G = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)

@@ -96,7 +96,8 @@ def load_manifest() -> Tuple[List[str], Dict[str, float], str]:
     man = json.loads(Path(MANI).read_text())
     genes = man["genes"]
     sha = hashlib.sha256(("\n".join(genes)).encode()).hexdigest()
-    assert sha == man["sha256"], f"manifest sha mismatch: {sha} vs {man['sha256']}"
+    if sha != man["sha256"]:
+        raise ValueError(f"manifest sha mismatch: {sha} vs {man['sha256']}")
     return genes, man["detection"], sha
 
 
@@ -756,7 +757,7 @@ def matrix_provenance(path: str, key: Optional[str] = None) -> Dict[str, object]
     """Build a provenance record for a (path, optional key) matrix."""
     rec: Dict[str, object] = {"file_sha256": sha256_file(path)}
     if key is not None:
-        z = np.load(path, allow_pickle=True)
+        z = np.load(path, allow_pickle=False)
         arr = z[key]
         rec["key"] = key
         rec["matrix_sha256"] = sha256_array(arr)

@@ -11,6 +11,7 @@ Also reports a paired FM-vs-co-expression contrast: the per-TF difference in
 adjusted rho, tested by sign-flipping the paired differences.
 """
 import json
+import re
 import time
 from pathlib import Path
 
@@ -27,10 +28,18 @@ N_PERM = 999
 SEED_ROOT = 20260730
 ALPHAS = np.logspace(-3, 3, 25)
 BASELINE = "co_expression"
+FAMILY_RE = re.compile(r"\A[A-Za-z0-9_]+\Z")
 
 
 def log(*values):
     print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
+
+
+def family_pairs_path(fam):
+    """Resolve a family's pair file, rejecting names that escape PAIR_DIR."""
+    if not FAMILY_RE.match(fam):
+        raise ValueError(f"invalid family name in tf_probe_pair_eval_v2.json: {fam!r}")
+    return PAIR_DIR / f"{fam}_pairs.npz"
 
 
 def bh(pvals):
@@ -86,7 +95,7 @@ def main():
 
     obs, per_tf = {}, {}
     for fam_index, fam in enumerate(families):
-        d = np.load(PAIR_DIR / f"{fam}_pairs.npz", allow_pickle=False)
+        d = np.load(family_pairs_path(fam), allow_pickle=False)
         xtr = d["X_train"].astype(np.float64)[:, cols]
         xte = d["X_test"].astype(np.float64)[:, cols]
         mu, sd = xtr.mean(0), xtr.std(0)
