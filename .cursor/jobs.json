@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "main@W0",
+  "merge_tip": "8b243d4",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -90,7 +90,7 @@
     {
       "id": "0x13",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Finish Table2/Table3 enrichment",
       "assets": [
         "table"
