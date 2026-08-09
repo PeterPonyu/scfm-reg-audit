@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "project": "scfm-reg-audit",
+  "updated": "2026-08-09",
+  "source": "docs/reports/redteam-response-workplan.md",
+  "canvas": "screg-eval-redteam",
+  "merge_tip": "main@W0",
+  "waves": {
+    "W0": "claim hygiene",
+    "W1": "figs/tables from existing JSON",
+    "W2": "targeted new analyses",
+    "W3": "capsule integrity",
+    "W4": "optional heavy"
+  },
+  "jobs": [
+    {
+      "id": "0x01",
+      "wave": "W0",
+      "status": "done",
+      "title": "Abstract reframe Support\u2260recovery",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x02",
+      "wave": "W0",
+      "status": "done",
+      "title": "Kill free-of-RNA overclaim",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x03",
+      "wave": "W0",
+      "status": "done",
+      "title": "Estimand statement block",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x04",
+      "wave": "W0",
+      "status": "done",
+      "title": "Rename usability\u2192concordance",
+      "assets": [
+        "text",
+        "fig4"
+      ]
+    },
+    {
+      "id": "0x05",
+      "wave": "W0",
+      "status": "done",
+      "title": "Bidirectional scope + CS front",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x10",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Protocol-pass matrix Table/Fig",
+      "assets": [
+        "table",
+        "fig"
+      ]
+    },
+    {
+      "id": "0x11",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Fig.6 full vs non-degree forest",
+      "assets": [
+        "fig"
+      ]
+    },
+    {
+      "id": "0x12",
+      "wave": "W1",
+      "status": "pending",
+      "title": "FM \u03c1 vs baseline + r\u00b2 panel",
+      "assets": [
+        "fig"
+      ]
+    },
+    {
+      "id": "0x13",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Finish Table2/Table3 enrichment",
+      "assets": [
+        "table"
+      ]
+    },
+    {
+      "id": "0x14",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Related-work comparison table",
+      "assets": [
+        "table"
+      ]
+    },
+    {
+      "id": "0x15",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Scope card schematic",
+      "assets": [
+        "fig"
+      ]
+    },
+    {
+      "id": "0x16",
+      "wave": "W1",
+      "status": "pending",
+      "title": "Fig.4 full concordance scatter",
+      "assets": [
+        "fig"
+      ]
+    },
+    {
+      "id": "0x20",
+      "wave": "W2",
+      "status": "pending",
+      "title": "SAP freeze + protocol-pass def",
+      "assets": [
+        "docs"
+      ]
+    },
+    {
+      "id": "0x21",
+      "wave": "W2",
+      "status": "pending",
+      "title": "FM\u2212baseline superiority test",
+      "assets": [
+        "experiment",
+        "table"
+      ]
+    },
+    {
+      "id": "0x22",
+      "wave": "W2",
+      "status": "pending",
+      "title": "Dual-null intersection OC",
+      "assets": [
+        "experiment",
+        "supp"
+      ]
+    },
+    {
+      "id": "0x23",
+      "wave": "W2",
+      "status": "pending",
+      "title": "Estimand-matched non-degree null",
+      "assets": [
+        "experiment",
+        "text"
+      ]
+    },
+    {
+      "id": "0x24",
+      "wave": "W2",
+      "status": "pending",
+      "title": "Geometry/anisotropy diagnostic",
+      "assets": [
+        "experiment",
+        "fig"
+      ]
+    },
+    {
+      "id": "0x25",
+      "wave": "W2",
+      "status": "pending",
+      "title": "Probe estimand cleanup",
+      "assets": [
+        "analysis",
+        "text"
+      ]
+    },
+    {
+      "id": "0x30",
+      "wave": "W3",
+      "status": "pending",
+      "title": "Methods peak-count vs code",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x31",
+      "wave": "W3",
+      "status": "pending",
+      "title": "MANIFEST + validate_artifacts PASS",
+      "assets": [
+        "capsule"
+      ]
+    },
+    {
+      "id": "0x32",
+      "wave": "W3",
+      "status": "pending",
+      "title": "FULL_RERUN boundary rewrite",
+      "assets": [
+        "docs"
+      ]
+    },
+    {
+      "id": "0x33",
+      "wave": "W3",
+      "status": "pending",
+      "title": "Panel ATAC-filter disclosure",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x34",
+      "wave": "W3",
+      "status": "pending",
+      "title": "Preregistered wording or OSF lock",
+      "assets": [
+        "docs"
+      ]
+    },
+    {
+      "id": "0x40",
+      "wave": "W4",
+      "status": "blocked",
+      "title": "ENCODE/ChIP calibration",
+      "assets": [
+        "experiment"
+      ],
+      "needs": "approval"
+    },
+    {
+      "id": "0x41",
+      "wave": "W4",
+      "status": "blocked",
+      "title": "No-ATAC-filter sensitivity panel",
+      "assets": [
+        "experiment"
+      ],
+      "needs": "go-ahead"
+    },
+    {
+      "id": "0x42",
+      "wave": "W4",
+      "status": "blocked",
+      "title": "allow_pickle purge loaders",
+      "assets": [
+        "eng"
+      ],
+      "needs": "go-ahead"
+    }
+  ]
+}

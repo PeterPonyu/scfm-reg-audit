@@ -1,0 +1,16 @@
+---
+description: scReg-Eval red-team response jobs — prefer strengthening claims with figs/tables/experiments per hex job IDs
+alwaysApply: true
+---
+
+# Red-team response jobs
+
+When editing the PeerJ manuscript, figures, tables, or audit capsule:
+
+1. Read `docs/reports/redteam-response-workplan.md` and `.cursor/jobs.json`.
+2. Prefer jobs in wave order: **W0 → W1 → W3 → W2 → W4** (W4 needs explicit user go-ahead).
+3. Job IDs are hex (`0x01`…`0x42`). Mention the ID in commit messages / progress notes.
+4. Strengthening means concrete assets: rewritten claim text, new/upgraded figures, enriched tables, or targeted experiments — not only hedging adjectives.
+5. Do not reintroduce retired bootstrap/MDE artifacts listed as Forbidden in `docs/reports/table-enrichment-plan.md`.
+6. Manuscript tip must stay aligned with salvage-restored narrative sources unless a later job supersedes them.
+7. Before PeerJ package rebuild, complete `0x30`–`0x32` (Methods/code match + MANIFEST green + FULL_RERUN boundary).

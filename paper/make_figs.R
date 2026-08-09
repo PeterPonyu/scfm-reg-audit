@@ -190,9 +190,9 @@ f1a <- ggplot(flow, aes(x, y)) +
            color = arrow_col, linewidth = 0.6) +
   annotate("text", x = 2.02, y = 0.96, label = "restrict to panel",
            size = 2.45, color = MUTED) +
-  # disclaimer as integrated footer chip (Methods: no RNA enters the proxy)
+  # disclaimer as integrated footer chip (edge weights without expression stats; not RNA-structure-independent overall)
   annotate("label", x = 2.0, y = 0.38,
-           label = "no RNA input; regulatory-potential proxy, not causal ground truth",
+           label = "edge weights without expression stats; regulatory-potential proxy, not causal ground truth",
            size = 2.75, color = RED, fill = "#fdeeee",
            label.size = 0.35, label.r = unit(0.12, "lines"),
            label.padding = unit(0.26, "lines")) +
@@ -427,7 +427,8 @@ emit("fig3_primary_audit",
        plot_layout(heights = c(1.15, 1.0, 0.95)),
      6.8, 8.0)  # 9.2->8.0: a 9.2in float exceeded the text block, forcing a near-empty float page (large whitespace band); 8.0in fits the caption on one float page
 
-# ==================== Figure 4: usability check ====================
+# ==================== Figure 4: concordance (attention-likeness) check ====================
+# Panel JSON key remains usability_fm_vs_coexp for schema stability; plot labels use "concordance".
 usa <- bind_rows(lapply(names(panel$usability_fm_vs_coexp), function(tn) {
   u <- panel$usability_fm_vs_coexp[[tn]]
   bind_rows(lapply(names(u), function(mk) {
@@ -446,22 +447,22 @@ f4a <- ggplot(usa, aes(fm_vs_coexp, display, color = status)) +
   geom_point(size = 2.5) +
   scale_color_manual(values = support_colors) +
   labs(x = "FM-co-expression $\\rho$", y = NULL, color = NULL,
-       title = "Positives fail usability") +
+       title = "Positives fail concordance") +
   theme(legend.position = "top", axis.ticks.y = element_blank())
 
 tile <- usa %>% transmute(display,
                           `supported positive` =
                             status == "supported by both nulls" & primary_rho > 0,
-                          `passes usability ($\\rho>0$)` = fm_vs_coexp > 0)
+                          `passes concordance ($\\rho>0$)` = fm_vs_coexp > 0)
 tile_long <- bind_rows(
   tile %>% transmute(display, check = "supported positive", pass = `supported positive`),
-  tile %>% transmute(display, check = "passes usability ($\\rho>0$)",
-                     pass = `passes usability ($\\rho>0$)`))
+  tile %>% transmute(display, check = "passes concordance ($\\rho>0$)",
+                     pass = `passes concordance ($\\rho>0$)`))
 f4b <- ggplot(tile_long, aes(check, display, fill = pass)) +
   geom_tile(color = "white") +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey80")) +
   labs(x = NULL, y = NULL, fill = NULL,
-       title = "Support vs usability") +
+       title = "Support vs concordance") +
   # Nudge only the B tag right; title stays on the plot title grob.
   theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1),
         axis.ticks = element_blank(),
