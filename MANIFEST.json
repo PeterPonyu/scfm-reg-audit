@@ -84,63 +84,63 @@
     },
     {
       "path": "paper/figs/fig10_coverage_qc.tex",
-      "bytes": 22683,
-      "sha256": "683bdbd683bd3b6bfc37c39007f3d624f240bda45c2defa0825e808467414594"
+      "bytes": 23589,
+      "sha256": "0e3f46aff741983707d275cc20b2bfdc404383bf3b33c1968b8a1f72e9e71f01"
     },
     {
       "path": "paper/figs/fig11_third_tissue_transfer.tex",
-      "bytes": 56496,
-      "sha256": "54434cfaa1b42a48279004034ae99a001ec79d7c32af604ae8f0cb25e5f84493"
+      "bytes": 56757,
+      "sha256": "408ba89ede0fbd45294546cece065578218ea6dc59a22d335c15fa227060ac50"
     },
     {
       "path": "paper/figs/fig1_truth_construct.tex",
-      "bytes": 22569,
-      "sha256": "f4cc9100a65114fb9c52845916b2963e44691ad4e622de457cb38a6ba33a59b7"
+      "bytes": 22150,
+      "sha256": "5fcd6011616f89ec4d899517049f9a0b6b8d0703d1c68797b30fd4d9f07c7e59"
     },
     {
       "path": "paper/figs/fig2_cross_tissue_decomp.tex",
-      "bytes": 19584,
-      "sha256": "bbc714db9b69a92d93c9314b658cbfe2c6561572ac9d596e2ddd9ec04506b156"
+      "bytes": 19563,
+      "sha256": "35068fd267e3dc31194b64645bd60d94b85bea12fc9c354874dbac2131ea25b7"
     },
     {
       "path": "paper/figs/fig3_primary_audit.tex",
-      "bytes": 35658,
-      "sha256": "be8358533b714b2826b02695eedbd46bfd7b68c6994f9f0c7a3e720cbf853335"
+      "bytes": 33376,
+      "sha256": "c527752127f79e3ec1d0e5acdeb1b6124389dbbf6204f355156c9faac8e76094"
     },
     {
       "path": "paper/figs/fig4_usability_check.tex",
-      "bytes": 28590,
-      "sha256": "f25f131242155641e0f84af4ab7848e949f172c577e14c2c84295ff1c21ef7ab"
+      "bytes": 28525,
+      "sha256": "ac9df0fcfa9eb1e585b8886239710adafa2b8ea33d6f2eecca0698a7ca951031"
     },
     {
       "path": "paper/figs/fig5_null_diagnostics.tex",
-      "bytes": 23763,
-      "sha256": "67921df047c0db25d354d180fe9bbaebf713e0f32e95c087153b73c0f84bf277"
+      "bytes": 24822,
+      "sha256": "c00ad404a364a6e4ece8b64003a5a7d35d14f7c23f17e4893a673be423ee3982"
     },
     {
       "path": "paper/figs/fig6_spec_sensitivity.tex",
-      "bytes": 54696,
-      "sha256": "9637b030e5b2de42e15a66f8275cc88909529e98652a196eabe73cfc52520d57"
+      "bytes": 54519,
+      "sha256": "810ac3947725761d20a323c6d482e910a75be5ece3dfe0cc1659d91be8df1b15"
     },
     {
       "path": "paper/figs/fig7_pertype_descriptive.tex",
-      "bytes": 35335,
-      "sha256": "852a9ce74ff67552fdf3fe664d380b0e0b5bf37b343c9171765b6fce2e46edd6"
+      "bytes": 43629,
+      "sha256": "3dab2d250660177597d1d91f3abc633d6360f1d13f85b85c13d8eaf94497a25b"
     },
     {
       "path": "paper/figs/fig8_injection_ladder.tex",
-      "bytes": 31596,
-      "sha256": "3fa3fc6b48ebf947fc559c24f27f1126453cbe5b63a197a38c88139f698176e7"
+      "bytes": 32220,
+      "sha256": "3042ceb9d225d9b9ca924a30b472efe4a8c4aef9ace2e18fb9c837fa8e0d9ab2"
     },
     {
       "path": "paper/figs/fig9_tf_probe.tex",
-      "bytes": 35811,
-      "sha256": "099cec8397a6e9a24e38ddb0a862bea46e32f50fef5b802b0acbe4e3d8c02a6c"
+      "bytes": 35917,
+      "sha256": "fea27203f3824c3240dc7815df815bda49da1bcd8c8c8618dd3b3963cbf889e7"
     },
     {
       "path": "paper/figs/table1_primary_fixed_panel.tex",
-      "bytes": 1329,
-      "sha256": "f5a7f2b0d3f6a1271f34579a9622dc008636ed4df489114bf18c3089e9b067f4"
+      "bytes": 1342,
+      "sha256": "c55f9d1929c0b09887a5f3d207392a0d553bdd965cc3ab39527a4036999ccab5"
     },
     {
       "path": "paper/figs/table2_cross_tissue_observed.tex",
@@ -149,13 +149,13 @@
     },
     {
       "path": "paper/figs_preview.tex",
-      "bytes": 2677,
-      "sha256": "a5c875e125f1ace3d8a7c1e80337a60c066e22904581af785fd11cc49d1f3995"
+      "bytes": 2661,
+      "sha256": "8fef483de11853472a2afad9ccccbc0373c7ca689835cbd76009865f85f34e4a"
     },
     {
       "path": "paper/make_figs.R",
-      "bytes": 50429,
-      "sha256": "26edba371ff0757f362e7a7bda8b3d6d7539aa503c1a1a253bf4725ed0c1b1e9"
+      "bytes": 55386,
+      "sha256": "dae4a2a579cc4ebabac619f0ac656b0efbacbcb3e1bf0044cfe37f5803c83b6b"
     },
     {
       "path": "paper/make_panel_data.py",
@@ -164,13 +164,13 @@
     },
     {
       "path": "paper/manuscript.pdf",
-      "bytes": 278791,
-      "sha256": "b7f12d720921ec27aeb1f68a6e368b949d4195691137ca65c824a2042d5fa476"
+      "bytes": 287812,
+      "sha256": "85aa7fcef64f39941bd6c3187ec202e0517899b6e9a129a90ec662bd918eabd1"
     },
     {
       "path": "paper/manuscript.tex",
-      "bytes": 45547,
-      "sha256": "d66d032362d51fb0d1dfc7a8b052a771763c03c0c41c63fde971fc332d181366"
+      "bytes": 48916,
+      "sha256": "09e91517dfb2d844f6531bbf95c139268da45e1d7a71ac31a5ea835139d76159"
     },
     {
       "path": "paper/panel_data.json",
@@ -179,8 +179,8 @@
     },
     {
       "path": "paper/references.bib",
-      "bytes": 5691,
-      "sha256": "bbf2d75a571653a04035d8a5b751af3fdd9f04f163df0655d6439204a1e887cc"
+      "bytes": 10056,
+      "sha256": "90dc278385d60d9883507dbc8a73d864b018b6dd369e885c251c94c9f6e25f0d"
     },
     {
       "path": "results/NOTICE.md",
@@ -219,7 +219,7 @@
     },
     {
       "path": "results/inference_status_v2.public.json",
-      "bytes": 16032,
+      "bytes": 16033,
       "sha256": "670fe1ca2d5849935b68869a9ced742b871f6fb25fdecd4b5b2db19b4f52252a"
     },
     {
@@ -319,8 +319,8 @@
     },
     {
       "path": "src/run_fixed_panel_audit.py",
-      "bytes": 60466,
-      "sha256": "91974a36b5233a99195ec9923201f768e0e218fd245f0a014c4f91c0f00d1dde"
+      "bytes": 60492,
+      "sha256": "ba7fddb4131ca6031f75be06a6cd0ae82cbca2432dd4a7070e294c1afafd5e4f"
     },
     {
       "path": "src/run_pair_probe.py",
@@ -349,13 +349,13 @@
     },
     {
       "path": "src/tests/test_validate_artifacts.py",
-      "bytes": 9236,
-      "sha256": "b7800a598680179898505d59fc09689f83428d26068d8d6414609ca9166094d1"
+      "bytes": 13008,
+      "sha256": "c674366e66ccdd5c3e013aeef1a1443d29c66e235203c7aad328897db9f66216"
     },
     {
       "path": "validate_artifacts.py",
-      "bytes": 10474,
-      "sha256": "47bc8da101f3b1bae41a6f47e6d0eb908f0f089ff8899fd0132c21ba871d43a7"
+      "bytes": 12079,
+      "sha256": "c78e70eb58e0c04ad6a80135bd55d906e07810f7641fc678a8fa5750314a93b4"
     }
   ]
 }

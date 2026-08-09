@@ -940,8 +940,10 @@ def _stage_json(path: str, document: dict) -> str:
         return temp_path
     except BaseException:
         # Cleanup only; the staging failure itself is re-raised unchanged.
-        if os.path.exists(temp_path):
+        try:
             os.unlink(temp_path)
+        except FileNotFoundError:
+            pass
         raise
 
 

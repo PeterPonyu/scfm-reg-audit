@@ -44,8 +44,10 @@ class TestPbmcUceCache(unittest.TestCase):
         transformed = eval_uce.normalized_log_counts(matrix).toarray()
         np.testing.assert_allclose(transformed[0], transformed[1], rtol=1e-12, atol=1e-12)
 
-    @unittest.skipUnless(Path(stats_uce.UCE_PATH).exists(),
-                         "installed PBMC UCE cache not present (fresh checkout)")
+    @unittest.skipUnless(
+        Path(stats_uce.UCE_PATH).exists() and Path(eval_uce.RNA).exists(),
+        "installed PBMC UCE cache or RNA h5ad not present (fresh checkout)",
+    )
     def test_formal_graph_loader_accepts_installed_cache(self):
         co, uce = stats_uce.load_uce_graph(stats_uce.UCE_PATH)
         self.assertEqual(co.shape, (1200, 1200))

@@ -42,6 +42,9 @@
                 justification=raggedright]{caption}
 
 \RequirePackage{natbib}
+% PeerJ / PeerJ Computer Science official style: Name-Year in text with an
+% alphabetized reference list (author instructions: "Name. Year" style).
+% Do not use numbered citation-sequence (unsrtnat) for PeerJ submissions.
 \bibliographystyle{apalike}
 
 %
@@ -206,5 +209,10 @@ THE ABSTRACT\vskip12pt}\let\go\relax\fi
 \renewcommand{\thebibliography}[1]{%
 \addcontentsline{toc}{section}{\hspace*{-\tocsep}\refname}%
 \oldbibliography{#1}%
-\setlength\itemsep{0pt}%
+% Pack the reference list so the final entry does not orphan onto a near-empty
+% extra page (PeerJ lastpage footer otherwise shows N+1 / N).
+\setlength{\itemsep}{0pt}%
+\setlength{\parsep}{0pt}%
+\setlength{\parskip}{0pt}%
+\setlength{\bibsep}{0pt}%
 }

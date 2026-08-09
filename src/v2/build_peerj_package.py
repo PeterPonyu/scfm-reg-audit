@@ -78,6 +78,12 @@ def build_pdf_with_bib(cwd, tex_name="manuscript.tex"):
     subprocess.run(["bibtex", stem], cwd=cwd, capture_output=True, text=True)
     subprocess.run(pdflatex, cwd=cwd, capture_output=True, text=True)
     last = subprocess.run(pdflatex, cwd=cwd, capture_output=True, text=True)
+    # A third pdflatex can still leave "Label(s) may have changed"; one more
+    # pass is required before the log gate, otherwise packaging aborts on a
+    # clean tree after figure regeneration.
+    log_path = Path(cwd) / f"{stem}.log"
+    if log_path.exists() and "Label(s) may have changed" in log_path.read_text(errors="replace"):
+        last = subprocess.run(pdflatex, cwd=cwd, capture_output=True, text=True)
     pdf_path = Path(cwd) / f"{stem}.pdf"
     if not pdf_path.exists():
         raise RuntimeError(
