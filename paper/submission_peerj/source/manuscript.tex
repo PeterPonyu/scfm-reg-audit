@@ -283,7 +283,9 @@ marker-mask exclusions.}\label{fig:coverage}
 \subsection{The proxy is reproducible, but remains a proxy}
 The accessibility/motif construct shows moderate observed agreement across tissue consensus graphs:
 brain--PBMC $\rho=0.5249$, brain--fibroblast-mix $\rho=0.5245$, and PBMC--fibroblast-mix
-$\rho=0.4623$ (Fig.~\ref{fig:proxy}; Table~\ref{tab:cross}). The third dataset (GSE206767) is a
+$\rho=0.4623$ (Fig.~\ref{fig:proxy}; Table~\ref{tab:cross}). Table~\ref{tab:cross} also reports
+edge Jaccard, mean per-TF-row Spearman, residual agreement after additive marginal fits, and
+binary support $\varphi$ for the same pairs. The third dataset (GSE206767) is a
 chemical-reprogramming experiment whose accessibility track pools day-0 fibroblasts and day-3
 induced neuron-like cells, so it does not represent any resting tissue. These are descriptive
 fixed-panel correlations without new randomization inference. They show the construct is stable
@@ -323,8 +325,12 @@ fixed-panel quantities without new randomization inference.}\label{fig:decomp}
 
 \begin{table}[!tbp]\centering
 \fitfig{\input{figs/table2_cross_tissue_observed.tex}}
-\caption{Observed cross-tissue reproducibility of the regulatory-potential proxy. No
-confidence interval or new randomization inference is attached to these descriptive comparisons.}
+\caption{Descriptive cross-tissue reproducibility of the regulatory-potential proxy on the fixed
+panel. Columns report observed Spearman $\rho$, the fraction of that agreement explained by
+TF-row and gene-column additive marginals, residual Spearman after each tissue's own additive fit,
+binary support $\varphi$, edge Jaccard, mean per-TF-row Spearman, and the number of shared TFs.
+These are fixed-panel descriptive quantities with no confidence interval and no new randomization
+inference.}
 \label{tab:cross}
 \end{table}
 
@@ -350,10 +356,13 @@ co-expression baseline.}\label{fig:primary}
 
 \begin{table}[!tbp]\centering
 \fitfig{\input{figs/table1_primary_fixed_panel.tex}}
-\caption{Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row
-degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null
-family. The co-expression baseline is tested on the same edge set outside the FM families; its
-entries are uncorrected $p$-values (dashes mark where no family correction applies).}\label{tab:primary}
+\caption{Primary fixed-panel results (full confound specification). $M$ denotes the gene-label
+null and $D$ the within-TF-row degree-preserving target shuffle; each $q$ is BH-adjusted within
+its tissue-by-specification-by-null family. Support is \emph{both} when $q_M<0.05$ and $q_D<0.05$,
+\emph{both (neg)} when that dual support occurs with negative partial $\rho$, and \emph{neither}
+otherwise. The co-expression baseline is tested on the same edge set outside the FM families; its
+entries are uncorrected $p$-values (dashes mark where no family correction or Support label
+applies).}\label{tab:primary}
 \end{table}
 
 One further row is supported by both nulls with the opposite sign: brain Geneformer attention,
@@ -449,10 +458,12 @@ so per-cell-type rows score readouts against a reference with essentially no cel
 we report them only as descriptive robustness summaries. The full-confound cell-type analysis
 contains 15 brain (3 readouts $\times$ 5 cell types) and 14 PBMC (2 readouts $\times$ 7 cell
 types) FM rows per specification
-(Fig.~\ref{fig:pertype}). Brain full-confound estimates range from $-0.00396$ to $0.00445$ with
-median $0.00258$; PBMC estimates range from $0.00222$ to $0.00682$ with median $0.00413$. These
-rows have no randomization $p$-values or BH correction. They neither support cell-type
-discoveries nor provide population uncertainty.
+(Fig.~\ref{fig:pertype}; Table~\ref{tab:pertype_ranges}). Brain full-confound estimates range from
+$-0.00396$ to $0.00445$ with median $0.00258$; PBMC estimates range from $0.00222$ to $0.00682$ with
+median $0.00413$. Under the non-degree specification the same exploratory rows spread further
+(brain median $-0.00053$, range $[-0.00986,0.01625]$; PBMC median $0.01502$, range
+$[-0.01303,0.05371]$; Table~\ref{tab:pertype_ranges}). These rows have no randomization $p$-values
+or BH correction. They neither support cell-type discoveries nor provide population uncertainty.
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig7_pertype_descriptive.tex}}
@@ -462,6 +473,15 @@ embedding, and Geneformer-attention summaries on the same fixed panel. (D) Cell 
 the per-type rows. These observed effects have no randomization $p$-values, multiplicity claims,
 or population-uncertainty interpretation.}\label{fig:pertype}
 \end{figure}
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{figs/table3_pertype_ranges.tex}}
+\caption{Per-cell-type descriptive ranges of observed partial $\rho$ under full and non-degree
+confound specifications (brain: 15 exploratory FM$\times$type rows; PBMC: 14). Min, max, and median
+are taken across those rows only. No randomization $p$-values, BH correction, or
+population-uncertainty interpretation.}
+\label{tab:pertype_ranges}
+\end{table}
 
 \subsection{The implementation responds monotonically to aligned injection, and the observed
 effects sit at the bottom of that ladder}

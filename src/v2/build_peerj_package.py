@@ -23,7 +23,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PAPER = ROOT / "paper"
 PKG = PAPER / "submission_peerj"
-TABLE_FRAGMENTS = ["table1_primary_fixed_panel", "table2_cross_tissue_observed"]
+TABLE_FRAGMENTS = [
+    "table1_primary_fixed_panel",
+    "table2_cross_tissue_observed",
+    "table3_pertype_ranges",
+]
 
 # Import typography contract (figure map, validation)
 import sys
@@ -175,6 +179,7 @@ def build_flat(flat):
         )
     text = text.replace("figs/table1_primary_fixed_panel.tex", "table1_primary_fixed_panel.tex")
     text = text.replace("figs/table2_cross_tissue_observed.tex", "table2_cross_tissue_observed.tex")
+    text = text.replace("figs/table3_pertype_ranges.tex", "table3_pertype_ranges.tex")
     (flat / "manuscript.tex").write_text(text)
     shutil.copy2(PAPER / "references.bib", flat / "references.bib")
     shutil.copy2(PAPER / "wlpeerj.cls", flat / "wlpeerj.cls")

@@ -5,7 +5,6 @@ suppressMessages({
   library(ggplot2)
   library(dplyr)
   library(patchwork)
-  library(cowplot)
   library(jsonlite)
   library(tikzDevice)
 })
@@ -59,11 +58,6 @@ theme_set(theme_bw(base_size = 11) + theme(
   strip.text = element_text(size = 10), legend.title = element_text(size = 9.5),
   legend.text = element_text(size = 9.5), axis.title = element_text(size = 10),
   axis.text = element_text(size = 9.5), plot.margin = margin(4, 6, 3, 4)))
-
-# Bottom-right D panels often carry longer titles that crowd the D tag when
-# left-flush; a small left margin shifts the title right of the tag.
-d_title_nudge <- theme(
-  plot.title = element_text(hjust = 0, margin = margin(b = 3, l = 10)))
 
 emit <- function(name, plot, width, height, tags = LETTERS[1:4]) {
   path <- file.path(figs, paste0(name, ".tex"))
@@ -139,76 +133,29 @@ cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, fun
 }))
 
 # ==================== Figure 1: construct, evidence, panel ====================
-# A: S-shaped construction schematic matching Methods: ATAC peak → peak–gene
-# link + JASPAR/MOODS motif → directed TF→target weight → restrict to the
-# hash-pinned 446×1,200 panel. No RNA enters the proxy.
-flow <- data.frame(
-  x = c(1.0, 3.05, 3.05, 1.0),
-  y = c(2.18, 2.18, 1.18, 1.18),
-  step = 1:4,
-  label = c("accessible peak", "motif match",
-            "TF$\\rightarrow$target weight", "fixed panel"),
-  stage = c("ATAC evidence", "JASPAR / MOODS",
-            "proxy score", "446$\\times$1{,}200 audit set"),
-  fill = c(LIGHT, "#ebe6f6", "#d9efe8", "#f2f2f2"),
-  border = c(BLUE, VIOLET, AQUA, MUTED)
-)
-arrow_col <- "#5c6770"
+# A: flow schematic laid out as an S (two boxes per row) so labels stay large.
+flow <- data.frame(x = c(1, 3, 3, 1), y = c(2, 2, 1, 1),
+                   label = c("accessible peak", "motif match", "TF-target weight", "fixed panel"))
 f1a <- ggplot(flow, aes(x, y)) +
-  # stage chips under each node (darker text for PeerJ downscale)
-  geom_label(aes(y = y - 0.36, label = stage),
-             size = 2.55, label.size = 0, fill = "grey96", color = MUTED,
-             label.padding = unit(0.11, "lines"), show.legend = FALSE) +
-  # main nodes
-  geom_label(aes(label = label, fill = fill, color = border),
-             size = 3.35, label.size = 0.6, fontface = "plain",
-             label.padding = unit(0.38, "lines"), label.r = unit(0.14, "lines"),
-             show.legend = FALSE) +
-  scale_fill_identity() +
-  scale_color_identity() +
-  # numbered badges anchored at each node's upper-left
-  annotate("point", x = c(0.42, 2.47, 2.47, 0.42),
-           y = c(2.42, 2.42, 1.42, 1.42),
-           size = 5.0, color = c(BLUE, VIOLET, AQUA, MUTED)) +
-  annotate("text", x = c(0.42, 2.47, 2.47, 0.42),
-           y = c(2.42, 2.42, 1.42, 1.42),
-           label = c("1", "2", "3", "4"),
-           size = 2.7, color = "white", fontface = "bold") +
-  # directed arrows with method-accurate edge labels
-  annotate("segment", x = 1.72, xend = 2.32, y = 2.18, yend = 2.18,
-           arrow = arrow(length = unit(0.09, "in"), type = "closed"),
-           color = arrow_col, linewidth = 0.6) +
-  annotate("text", x = 2.02, y = 2.40, label = "$\\pm$2\\,kb gene link",
-           size = 2.45, color = MUTED) +
-  annotate("segment", x = 3.05, xend = 3.05, y = 1.86, yend = 1.50,
-           arrow = arrow(length = unit(0.09, "in"), type = "closed"),
-           color = arrow_col, linewidth = 0.6) +
-  annotate("text", x = 3.42, y = 1.68, label = "aggregate",
-           size = 2.45, color = MUTED, hjust = 0) +
-  annotate("segment", x = 2.32, xend = 1.72, y = 1.18, yend = 1.18,
-           arrow = arrow(length = unit(0.09, "in"), type = "closed"),
-           color = arrow_col, linewidth = 0.6) +
-  annotate("text", x = 2.02, y = 0.96, label = "restrict to panel",
-           size = 2.45, color = MUTED) +
-  # disclaimer as integrated footer chip (Methods: no RNA enters the proxy)
-  annotate("label", x = 2.0, y = 0.38,
-           label = "no RNA input; regulatory-potential proxy, not causal ground truth",
-           size = 2.75, color = RED, fill = "#fdeeee",
-           label.size = 0.35, label.r = unit(0.12, "lines"),
-           label.padding = unit(0.26, "lines")) +
-  coord_cartesian(xlim = c(0.15, 3.85), ylim = c(0.18, 2.62), clip = "off") +
+  geom_label(aes(label = label), size = 3.6, linewidth = 0.3, fill = "white") +
+  annotate("segment", x = 1.62, xend = 2.38, y = 2, yend = 2,
+           arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  annotate("segment", x = 3, xend = 3, y = 1.74, yend = 1.26,
+           arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  annotate("segment", x = 2.38, xend = 1.62, y = 1, yend = 1,
+           arrow = arrow(length = unit(0.08, "in")), color = MUTED) +
+  annotate("text", x = 2, y = 0.52,
+           label = "regulatory-potential proxy; not causal ground truth", size = 3.2, color = RED) +
+  coord_cartesian(xlim = c(0.3, 3.7), ylim = c(0.35, 2.35), clip = "off") +
   labs(title = "Accessibility and motif evidence define the audited proxy") +
-  theme_void(base_size = 11) +
-  theme(plot.title = element_text(size = 11, hjust = 0),
-        plot.margin = margin(4, 10, 3, 0))
+  theme_void(base_size = 11) + theme(plot.title = element_text(size = 11, hjust = 0))
 
 f1b <- ggplot(cross, aes(reorder(pair, rho), rho)) +
   geom_col(fill = BLUE, width = 0.62) +
   geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.58)) +
   labs(x = NULL, y = "observed Spearman $\\rho$", title = "Proxy structure is reproducible across tissues") +
-  theme(axis.text.x = element_text(angle = 12, hjust = 0.95),
-        plot.margin = margin(4, 8, 3, 6))
+  theme(axis.text.x = element_text(angle = 12, hjust = 0.95))
 
 motif <- bind_rows(lapply(names(panel$motif_evidence), function(tn) {
   m <- panel$motif_evidence[[tn]]
@@ -240,14 +187,9 @@ f1d <- ggplot(comp, aes(tissue, n, fill = metric)) +
   coord_cartesian(ylim = c(0, 160)) +
   labs(x = NULL, y = "TFs (of 446)", fill = NULL,
        title = "The fixed panel is composition-biased") +
-  theme(legend.position = "top") +
-  d_title_nudge
+  theme(legend.position = "top")
 
-# free(f1a): A is theme_void, so default panel-align with C leaves a large
-# left blank under C's y-axis; releasing it shifts A left and opens air to B.
-emit("fig1_truth_construct",
-     ((free(f1a) | f1b) + plot_layout(widths = c(1.06, 0.94))) / (f1c | f1d) +
-       plot_annotation(tag_levels = "A") +
+emit("fig1_truth_construct", (f1a | f1b) / (f1c | f1d) + plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
 # ============== Figure 2: cross-tissue additive decomposition ==============
@@ -272,15 +214,7 @@ f2a <- ggplot(dec_long, aes(pair, rho, fill = metric)) +
   scale_fill_manual(values = c(BLUE, YELLOW, AQUA)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
        title = "Most apparent reproducibility is marginal structure") +
-  # One-row legend is wider than the panel and clips the left key; two
-  # compact rows keep all three entries inside the figure box.
-  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8.5),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        plot.margin = margin(4, 6, 3, 6),
-        axis.text.x = element_text(angle = 15, hjust = 1))
+  theme(legend.position = "top", axis.text.x = element_text(angle = 15, hjust = 1))
 
 f2b <- ggplot(dec, aes(reorder(pair, frac), frac)) +
   geom_col(fill = BLUE, width = 0.6) +
@@ -311,8 +245,7 @@ f2d <- ggplot(inv, aes(tissue, mean)) +
   coord_cartesian(ylim = c(0.95, 1.0)) +
   labs(x = NULL, y = "cell-type consensus $\\rho$",
        title = "Proxy is near cell-type-invariant") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1)) +
-  d_title_nudge
+  theme(axis.text.x = element_text(angle = 15, hjust = 1))
 
 emit("fig2_cross_tissue_decomp", (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"), 6.8, 5.8)
@@ -326,14 +259,9 @@ mk_forest <- function(df, title) {
   q_labels <- ifelse(df$is_baseline,
                      sprintf("$p_M=%.3f;\\ p_D=%.3f$", df$mantel_p, df$degree_p),
                      sprintf("$q_M=%.3f;\\ q_D=%.3f$", df$mantel_q, df$degree_q))
-  # Y-tick width is already reserved in the axis grob (~153pt). The helper's
-  # extra left pad (>120pt envelope) indented A/B relative to the full-width
-  # C|D row; keep only a thin gutter so the forests extend left.
   panel_margin <- compute_measured_panel_margin(
     ytick_labels = df$display,
-    right_labels = q_labels,
-    base_left_pt = 0,
-    normal_ytick_envelope_pt = 160
+    right_labels = q_labels
   )
   ggplot(df, aes(rho, display, color = status)) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
@@ -348,7 +276,6 @@ mk_forest <- function(df, title) {
     coord_cartesian(xlim = c(x_min, x_max), clip = "off") +
     labs(x = "partial Spearman $\\rho$", y = NULL, color = NULL, title = title) +
     theme(legend.position = "top", axis.ticks.y = element_blank(),
-          axis.text.y = element_text(margin = margin(r = 2)),
           plot.margin = panel_margin)
 }
 primary <- pooled %>% filter(spec == "full")
@@ -389,43 +316,14 @@ base_cmp <- bind_rows(lapply(seq_len(nrow(supp)), function(i) {
                        kind = "co-expression baseline", rho = b$rho[1]))
 }))
 f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
-  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(values = c(AQUA, "black")) +
   labs(x = NULL, y = "partial Spearman $\\rho$", fill = NULL,
        title = "Supported vs baseline") +
-  # Inset legend inside the panel (top-right, stacked) so it does not
-  # steal a title→spine band; keep it over the short UCE bars.
-  guides(fill = guide_legend(ncol = 1,
-                             keywidth = unit(0.5, "lines"),
-                             keyheight = unit(0.4, "lines"))) +
-  theme(legend.position = c(0.99, 0.98),
-        legend.justification = c(1, 1),
-        legend.direction = "vertical",
-        legend.text = element_text(size = 6.5),
-        legend.key.size = unit(0.32, "lines"),
-        legend.spacing.y = unit(0, "pt"),
-        legend.background = element_rect(fill = "white", color = NA),
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.margin = margin(0, 0, 0, 0),
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 1, l = 10)),
-        axis.text.x = element_text(size = 7.5, angle = 40, hjust = 1))
+  theme(legend.position = "top", axis.text.x = element_text(size = 6.5, angle = 60, hjust = 1))
 
-# Bottom row: A/B forests keep a narrow *panel* (data box ~176-354 of 491 pt)
-# with y-tick / q-label text in the margins. Plain patchwork panel-aligns C|D
-# into that column (too short); free()+plot_spacer() still clips the right edge
-# to the forest panel. cowplot (align="none") lets C|D span nearly full width
-# under the A/B y-tick column (spacer 1.28 -> none). wrap_elements keeps tags.
-f3_bottom <- cowplot::plot_grid(
-  f3c, f3d, nrow = 1,
-  rel_widths = c(1.0, 1.1),
-  labels = c("C", "D"), label_size = 11, label_fontface = "plain",
-  hjust = 0, vjust = 1.1
-)
-emit("fig3_primary_audit",
-     (f3a / f3b / wrap_elements(full = f3_bottom)) +
-       plot_annotation(tag_levels = list(c("A", "B", ""))) +
-       plot_layout(heights = c(1.15, 1.0, 0.95)),
-     6.8, 8.0)  # 9.2->8.0: a 9.2in float exceeded the text block, forcing a near-empty float page (large whitespace band); 8.0in fits the caption on one float page
+emit("fig3_primary_audit", f3a / f3b / (f3c | f3d) + plot_annotation(tag_levels = "A") +
+       plot_layout(heights = c(1.15, 1.0, 0.75), axis_titles = "collect"), 6.8, 8.0)  # 9.2->8.0: a 9.2in float exceeded the text block, forcing a near-empty float page (large whitespace band); 8.0in fits the caption on one float page
 
 # ==================== Figure 4: usability check ====================
 usa <- bind_rows(lapply(names(panel$usability_fm_vs_coexp), function(tn) {
@@ -462,10 +360,8 @@ f4b <- ggplot(tile_long, aes(check, display, fill = pass)) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey80")) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Support vs usability") +
-  # Nudge only the B tag right; title stays on the plot title grob.
   theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1),
-        axis.ticks = element_blank(),
-        plot.tag.position = c(0.10, 1))
+        axis.ticks = element_blank())
 
 ko_df <- data.frame(
   readout = rep(c("KO raw", "KO artifact-corrected"), each = 3),
@@ -491,25 +387,10 @@ f4d <- ggplot(gf, aes(rho, model, group = tissue, color = tissue)) +
   scale_color_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   labs(x = "partial $\\rho$ (full confounds)", y = NULL, color = NULL,
        title = "Same-model readouts disagree") +
-  theme(legend.position = "top", axis.ticks.y = element_blank()) +
-  d_title_nudge
+  theme(legend.position = "top", axis.ticks.y = element_blank())
 
-# Bottom row: A/B share long y-tick labels, so plain patchwork panel-aligns
-# C|D into the short data column (large blank under the ticks). cowplot
-# (align="none") lets C|D span the full width; wrap_elements keeps tags.
-# label_size 13 ≈ patchwork tag scale 1.20 at 11pt; label_x nudges D only.
-f4_bottom <- cowplot::plot_grid(
-  f4c, f4d, nrow = 1,
-  rel_widths = c(1.05, 0.95),
-  labels = c("C", "D"), label_size = 13, label_fontface = "plain",
-  label_x = c(0, 0.08), label_y = 1,
-  hjust = 0, vjust = 1.1
-)
-emit("fig4_usability_check",
-     ((f4a | f4b) / wrap_elements(full = f4_bottom)) +
-       plot_annotation(tag_levels = list(c("A", "B", ""))) +
-       plot_layout(heights = c(1.15, 1.0)),
-     6.8, 6.4)
+emit("fig4_usability_check", (f4a | f4b) / (f4c | f4d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.4)
 
 # ==================== Figure 5: randomization diagnostics ====================
 dn <- bind_rows(lapply(deg_null, function(x) {
@@ -526,11 +407,7 @@ f5a <- ggplot(dn, aes(label)) +
   coord_flip(ylim = c(-0.0032, 0.0062)) +
   labs(x = NULL, y = "partial $\\rho$",
        title = "Row-shuffle null 95\\% band vs observed") +
-  # Title over the panel (not the full plot) so long y-ticks do not pull it
-  # into the left gutter; free(..., side="t") still lets the panel rise.
-  theme(axis.ticks.y = element_blank(),
-        plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)))
+  theme(axis.ticks.y = element_blank())
 
 att_obs <- attn_readout$observed
 att_df <- data.frame(
@@ -550,12 +427,7 @@ f5b <- ggplot(att_df, aes(variant, rho, fill = kind)) +
   scale_fill_manual(values = c(BLUE, YELLOW)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
        title = "Attention alignment negative") +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5))
+  theme(legend.position = "top", axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5))
 
 ko_null <- bind_rows(lapply(c("mantel_ko_partial", "mantel_ko_ctrl_partial"), function(k) {
   m <- ko_stat[[k]]
@@ -570,14 +442,9 @@ f5c <- ggplot(ko_null, aes(readout)) +
   geom_point(aes(y = observed), size = 2.6, color = BLUE) +
   geom_text(aes(y = observed, label = sprintf("$p=%.3f$", p)), hjust = -0.15, size = 3.1) +
   coord_flip() +
-  # Short panel title keeps the left edge aligned with the plot spine; the longer
-  # "KO raw + artifact-corrected both align after co-expression alone" wording
-  # lives in the figure caption (panel C).
   labs(x = NULL, y = "partial $\\rho$ $|$ co-expression",
-       title = "KO aligns after co-expression alone") +
-  theme(axis.ticks.y = element_blank(),
-        plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)))
+       title = "KO and control both align after co-expression alone") +
+  theme(axis.ticks.y = element_blank())
 
 # The omission guard is a parallel brain analysis with its own seed stream; its
 # q-values differ from the authoritative audit, so the panel compares DECISIONS,
@@ -599,23 +466,10 @@ f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Support decisions agree") +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        axis.ticks = element_blank()) +
-  d_title_nudge
+  theme(legend.position = "top", axis.ticks = element_blank())
 
-# free(A/C, side="t"): B/D keep a legend band above the panel; without freeing,
-# A/C titles stay level with B/D while their panels drop, leaving a blank under
-# the title. Tags stay on the default aligned corners (do not move).
-emit("fig5_null_diagnostics",
-     (free(f5a, type = "panel", side = "t") | f5b) /
-       (free(f5c, type = "panel", side = "t") | f5d) +
-       plot_annotation(tag_levels = "A") +
-       plot_layout(axis_titles = "collect"),
-     6.8, 6.0)
+emit("fig5_null_diagnostics", (f5a | f5b) / (f5c | f5d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.0)
 
 # ==================== Figure 6: specification dependence ====================
 spec <- pooled %>% select(tissue, model, model_key, spec, rho, status)
@@ -664,13 +518,7 @@ f6c <- ggplot(pm) +
   scale_x_log10() + scale_y_log10() +
   labs(x = "$p$ under full confounds", y = "$p$ under non-degree", color = NULL,
        title = "Randomization $p$ migrates upward") +
-  # Compact top legend; free(f6c) below pulls the axis box left next to ylab.
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        axis.title.y = element_text(margin = margin(r = 2)),
-        plot.margin = margin(4, 4, 3, 2))
+  theme(legend.position = "top")
 
 lad <- bind_rows(lapply(ladder$rows, function(x) {
   data.frame(tissue = ifelse(x$tissue == "brain", "Brain", "PBMC"),
@@ -718,27 +566,17 @@ f6d <- ggplot(lad_long, aes(rung, rho, group = model, color = display_model)) +
   geom_line(linewidth = 0.5) + geom_point(size = 1.6) +
   facet_wrap(~tissue) +
   scale_color_manual(values = c(BLUE, AQUA, YELLOW, VIOLET, RED, MUTED, "grey20", "grey70", "tan3")) +
-  # One-column legend on the right frees the bottom band so the facet
-  # panels can shift left into the former legend footprint.
-  guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+  guides(color = guide_legend(nrow = 3, byrow = TRUE)) +
   labs(x = NULL, y = "partial Spearman $\\rho$", color = NULL,
        title = "Nested covariate ladder") +
-  theme(legend.position = "right",
-        legend.text = element_text(size = 7.2),
-        legend.key.size = unit(8, "pt"),
-        legend.spacing.y = unit(1, "pt"),
-        legend.margin = margin(0, 0, 0, 2),
-        plot.margin = margin(4, 2, 3, 2),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  d_title_nudge
+  theme(legend.position = "bottom", legend.text = element_text(size = 7.5),
+        legend.key.spacing.x = unit(3, "pt"), legend.key.size = unit(9, "pt"),
+        legend.margin = margin(0, 0, 0, 0),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 
-# free(f6c): A/B y-ticks otherwise panel-align C's axis box far right of its
-# ylab; D keeps a right legend column and a slightly wider share.
 emit("fig6_spec_sensitivity",
-     ((f6a | f6b) + plot_layout(widths = c(1.6, 1))) /
-       ((free(f6c) | f6d) + plot_layout(widths = c(0.95, 1.15))) +
-       plot_annotation(tag_levels = "A") +
-       plot_layout(axis_titles = "collect"),
+     ((f6a | f6b) + plot_layout(widths = c(1.6, 1))) / (f6c | f6d) +
+       plot_annotation(tag_levels = "A") + plot_layout(axis_titles = "collect"),
      6.8, 7.0)
 
 # ==================== Figure 7: per-cell-type descriptive ====================
@@ -821,15 +659,7 @@ f7c <- ggplot(ptf_long, aes(cell_type, rho, color = series, group = series)) +
   scale_color_manual(values = c("black", BLUE, AQUA)) +
   labs(x = NULL, y = "Spearman $\\rho$", color = NULL,
        title = "Brain per-type readouts and the confound itself") +
-  guides(color = guide_legend(nrow = 1, byrow = TRUE)) +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 7.5),
-        legend.key.size = unit(0.28, "cm"),
-        legend.key.spacing.x = unit(4, "pt"),
-        legend.margin = margin(0, 0, 0, 0),
-        plot.title.position = "plot",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
-        plot.margin = margin(4, 4, 3, 2))
+  theme(legend.position = "top")
 
 cells <- bind_rows(lapply(names(panel$pertype_n_cells), function(tn) {
   cc <- panel$pertype_n_cells[[tn]]
@@ -838,36 +668,16 @@ cells <- bind_rows(lapply(names(panel$pertype_n_cells), function(tn) {
                cell_type = ct, n_cells = cc[[ct]])
   }))
 }))
-# Legend must sit outside the panel spines (same band as C's series legend and
-# A/B facet strips), not inside the bar-chart frame.
 f7d <- ggplot(cells, aes(reorder(cell_type, n_cells), n_cells, fill = tissue)) +
   geom_col(width = 0.65) +
   scale_fill_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   coord_flip() +
   labs(x = NULL, y = "cells", fill = NULL,
        title = "Cell counts behind the per-type rows") +
-  guides(fill = guide_legend(nrow = 1, byrow = TRUE,
-                             override.aes = list(color = NA))) +
-  theme(legend.position = "top",
-        legend.justification = "left",
-        legend.direction = "horizontal",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.28, "cm"),
-        legend.key.spacing.x = unit(6, "pt"),
-        legend.margin = margin(0, 0, 2, 0),
-        legend.box.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        # Reserve a clear header band above the top spine (matches C).
-        plot.title.position = "plot",
-        # Long D title: shift right of the D tag (tag itself nudged right too).
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2, l = 10)),
-        plot.margin = margin(4, 6, 3, 2),
-        # Nudge panel tag D further right toward the plot spine / title start
-        # (deep y-tick gutter otherwise leaves D too far left of the title).
-        plot.tag.position = c(0.24, 1))
+  theme(legend.position = "top")
 
 emit("fig7_pertype_descriptive", f7a / f7b / (f7c | f7d) + plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1, 1, 0.95), axis_titles = "collect"), 6.8, 8.2)
+       plot_layout(heights = c(1, 1, 0.9), axis_titles = "collect"), 6.8, 8.2)
 
 # ==================== Figure 8: injection ladder and effect scale ====================
 injection_rows <- function(tissue) {
@@ -901,12 +711,9 @@ dose_panel <- function(data, subdiv_data, tissue_name, color) {
          title = paste(tissue_name, "injection ladder")) +
     theme(legend.position = "none")
 }
-# Panel A: nudge title slightly left toward the A tag (small left margin only;
-# keep title.position = panel so it does not collide with the tag).
 f8a <- dose_panel(dose %>% filter(tissue == "Brain"),
                   if (is.null(subdiv)) NULL else subdiv %>% filter(tissue == "Brain"),
-                  "Brain", BLUE) +
-  theme(plot.title = element_text(hjust = 0, margin = margin(b = 3, l = -10)))
+                  "Brain", BLUE)
 f8b <- dose_panel(dose %>% filter(tissue == "PBMC"),
                   if (is.null(subdiv)) NULL else subdiv %>% filter(tissue == "PBMC"),
                   "PBMC", AQUA)
@@ -940,15 +747,7 @@ f8c <- ggplot() +
   scale_x_log10() +
   labs(x = "$\\alpha$-equivalent", y = "observed partial $\\rho$", color = NULL,
        title = "Observed effects sit at the bottom of the ladder") +
-  theme(legend.position = "top",
-        legend.justification = "left",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.26, "cm"),
-        legend.margin = margin(t = 0, r = 0, b = 0, l = 0),
-        legend.box.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(0, "pt"),
-        plot.title = element_text(margin = margin(t = 0, b = 0)),
-        plot.margin = margin(1, 4, 3, 2))
+  theme(legend.position = "top")
 
 supp_keys <- primary %>% filter(status == "supported by both nulls") %>%
   mutate(key = paste(tolower(tissue), model_key, sep = "|")) %>% pull(key)
@@ -978,16 +777,7 @@ f8d <- ggplot(eff_supp, aes(reorder(display, alpha_equiv), alpha_equiv, fill = t
   coord_flip() +
   labs(x = NULL, y = "$\\alpha$-equivalent", fill = NULL,
        title = "Injection equivalents") +
-  theme(legend.position = "top",
-        legend.justification = "left",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.26, "cm"),
-        legend.margin = margin(t = 0, r = 0, b = 0, l = 0),
-        legend.box.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(0, "pt"),
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 0, l = 10)),
-        plot.margin = margin(1, 4, 3, 2),
-        axis.text.y = element_text(size = 8))
+  theme(legend.position = "top", axis.text.y = element_text(size = 8))
 
 emit("fig8_injection_ladder", (f8a | f8b) / (f8c | f8d) + plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"), 6.8, 6.4)
@@ -1017,18 +807,14 @@ pa$family <- factor(pa$family, levels = rev(unname(probe_fam_label)))
   q_labels <- ifelse(pa$status == "co-expression baseline",
                      sprintf("$q_M=%.3f$", pa$q),
                      sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", pa$q, pa$flip_q))
-  # Thin left gutter + tighter right pad so the forest spans more of the 6.8in width.
   f9a_margin <- compute_measured_panel_margin(
     ytick_labels = pa$family,
-    right_labels = q_labels,
-    base_left_pt = 0,
-    normal_ytick_envelope_pt = 160,
-    padding_pt = 6
+    right_labels = q_labels
   )
   f9a <- ggplot(pa, aes(rho, family, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(size = 2.4) +
-  geom_text(aes(x = 0.0075,
+  geom_text(aes(x = 0.0068,
                 label = ifelse(status == "co-expression baseline",
                                sprintf("$q_M=%.3f$", q),
                                sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", q, flip_q))),
@@ -1036,13 +822,10 @@ pa$family <- factor(pa$family, levels = rev(unname(probe_fam_label)))
   scale_color_manual(values = c("supported vs baseline" = AQUA,
                                 "not supported" = MUTED,
                                 "co-expression baseline" = "black")) +
-  coord_cartesian(xlim = c(-0.021, 0.0062), clip = "off") +
+  coord_cartesian(xlim = c(-0.021, 0.0055), clip = "off") +
   labs(x = "adjusted test $\\rho$", y = NULL, color = NULL,
        title = "Supervised probe on held-out TFs (edge features only)") +
-  theme(legend.position = "top",
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        plot.margin = f9a_margin)
+  theme(legend.position = "top", plot.margin = f9a_margin)
 
 pb <- bind_rows(lapply(names(probe_sens$grid), function(fam) {
   g <- probe_sens$grid[[fam]]
@@ -1067,13 +850,8 @@ f9b <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
   labs(x = NULL, y = "adjusted test $\\rho$", color = NULL,
        title = "Recovery collapses at the construction covariates") +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8.5),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        axis.text.x = element_text(angle = 28, hjust = 1, size = 9),
-        plot.margin = margin(4, 8, 3, 4))
+  theme(legend.position = "top", axis.text.x = element_text(angle = 28, hjust = 1, size = 9),
+        legend.text = element_text(size = 9))
 
 arms <- bind_rows(lapply(names(probe_fam_label), function(fam) {
   eo <- probe_eval$results$edge_only[[fam]]
@@ -1083,19 +861,15 @@ arms <- bind_rows(lapply(names(probe_fam_label), function(fam) {
              rho = c(eo$adjusted_rho_mean, al$adjusted_rho_mean))
 }))
 arms$family <- factor(arms$family, levels = rev(unname(probe_fam_label)))
+# horizontal bars: rotated x labels for the long family names collapse the plot
+# region to a sliver when this panel shares a stacked patchwork row
 f9c <- ggplot(arms, aes(rho, family, fill = arm)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   geom_vline(xintercept = 0, color = "grey55") +
   scale_fill_manual(values = c(BLUE, MUTED)) +
   labs(y = NULL, x = "adjusted test $\\rho$", fill = NULL,
        title = "Degree features: no rescue") +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.28, "cm"),
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.spacing = unit(2, "pt"),
-        axis.ticks.y = element_blank(),
-        plot.margin = margin(4, 4, 3, 2))
+  theme(legend.position = "top", axis.ticks.y = element_blank())
 
 dist <- bind_rows(lapply(names(probe_fam_label), function(fam) {
   eo <- probe_eval$results$edge_only[[fam]]
@@ -1112,23 +886,14 @@ f9d <- ggplot(dist, aes(family)) +
   coord_flip() +
   labs(x = NULL, y = "adjusted test $\\rho$",
        title = "Per-TF recovery spread") +
-  theme(axis.ticks.y = element_blank(),
-        plot.margin = margin(4, 6, 3, 2)) +
-  d_title_nudge
+  theme(axis.ticks.y = element_blank())
 
-# A/B stay full-width. C|D share one row via cowplot: plain patchwork (C|D)
-# nested under A/B used to squeeze the bottom plot regions (~59pt).
-f9_bottom <- cowplot::plot_grid(
-  f9c, f9d, nrow = 1,
-  rel_widths = c(1.05, 0.95),
-  labels = c("C", "D"), label_size = 11, label_fontface = "plain",
-  hjust = 0, vjust = 1.1
-)
-emit("fig9_tf_probe",
-     (f9a / f9b / wrap_elements(full = f9_bottom)) +
-       plot_annotation(tag_levels = list(c("A", "B", ""))) +
-       plot_layout(heights = c(1.1, 1.0, 1.15)),
-     6.8, 7.6)
+# four stacked full-width rows: in a three-row stack with (C | D) nested,
+# patchwork's cross-row plot-region alignment squeezes the bottom row's plot
+# regions to ~zero width (measured 59pt); full-width rows keep every plot region
+# at the shared ~230pt column width
+emit("fig9_tf_probe", f9a / f9b / f9c / f9d + plot_annotation(tag_levels = "A") +
+       plot_layout(heights = c(1.05, 1.0, 0.85, 0.85), axis_titles = "collect"), 6.8, 8.4)
 
 # ==================== Figure 10: coverage, scope, QC ====================
 cov <- bind_rows(lapply(names(panel$readout_qc$manifest_gene_coverage), function(k) {
@@ -1140,9 +905,7 @@ f10a <- ggplot(cov, aes(reorder(readout, covered), covered)) +
   coord_flip(ylim = c(1100, 1230)) +
   labs(x = NULL, y = "genes covered (of 1,200)",
        title = "Gene coverage by readout") +
-  theme(axis.text.y = element_text(size = 9),
-        # Trim left pad so free(f10a) can reclaim the blank left of short labels
-        plot.margin = margin(4, 6, 3, 0))
+  theme(axis.text.y = element_text(size = 9))
 
 covtab <- audit$model_coverage_table
 cov_rows <- bind_rows(lapply(names(model_label), function(mk) {
@@ -1168,27 +931,17 @@ model_cov <- cov_long %>%
   group_by(model) %>%
   summarise(pct = 100 * mean(present), .groups = "drop")
 
-# Continuous x so % labels can sit past the panel spine (discrete scales oob-
-# squish positions > n_levels into the right border). xlim keeps the tile grid
-# tight; clip="off" + right margin let the row-% annotations clear the spine.
-analysis_lvls <- levels(cov_long$analysis)
-cov_long$analysis_num <- as.numeric(cov_long$analysis)
-
-f10b <- ggplot(cov_long, aes(analysis_num, model, fill = present)) +
+f10b <- ggplot(cov_long, aes(analysis, model, fill = present)) +
   geom_tile(color = "white") +
-  geom_text(data = model_cov, aes(x = 4.62, y = model, label = sprintf("%.0f\\%%", pct)),
-            hjust = 0, size = 3.2, inherit.aes = FALSE) +
-  scale_x_continuous(breaks = seq_along(analysis_lvls), labels = analysis_lvls,
-                     expand = c(0, 0)) +
+  geom_text(data = model_cov, aes(x = 4.5, y = model, label = sprintf("%.0f\\%%", pct)),
+            hjust = 0, size = 2.8, inherit.aes = FALSE) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
-  coord_cartesian(xlim = c(0.5, 4.5), clip = "off") +
+  coord_cartesian(clip = "off") +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Graph coverage") +
-  theme(legend.position = "top",
-        axis.text.x = element_text(size = 10.5, angle = 40, hjust = 1, vjust = 1),
-        axis.text.y = element_text(size = 10),
+  theme(legend.position = "top", axis.text.x = element_text(angle = 15, hjust = 1),
         axis.ticks = element_blank(),
-        plot.margin = margin(4, 42, 3, 4))
+        plot.margin = margin(4, 35, 3, 4))
 
 cells_r <- bind_rows(lapply(names(panel$readout_qc$cells_per_readout), function(k) {
   data.frame(readout = k, n = panel$readout_qc$cells_per_readout[[k]])
@@ -1198,10 +951,7 @@ f10c <- ggplot(cells_r, aes(reorder(readout, n), n)) +
   coord_flip() +
   labs(x = NULL, y = "cells",
        title = "Cells per readout") +
-  theme(axis.text.y = element_text(size = 8.5),
-        # Keep "cells" tight to C's ticks/spine (not D's deep rotated labels).
-        axis.title.x = element_text(margin = margin(t = 1, b = 0)),
-        plot.margin = margin(4, 6, 1, 4))
+  theme(axis.text.y = element_text(size = 8.5))
 
 ea <- panel$readout_qc$edge_accounting
 edges <- data.frame(
@@ -1216,19 +966,10 @@ f10d <- ggplot(edges, aes(step, n)) +
   coord_cartesian(ylim = c(0, 580000)) +
   labs(x = NULL, y = "TF--gene edges",
        title = "Edge accounting") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1, size = 8.5)) +
-  d_title_nudge
+  theme(axis.text.x = element_text(angle = 15, hjust = 1, size = 8.5))
 
-# free(f10a): C's longer y-ticks otherwise panel-align A rightward.
-# Bottom row: do NOT collect x-axis titles — collect was parking C's "cells"
-# on the same baseline as D's xlab under the rotated tick block. free(label,"b")
-# also lets C's axis-title slot ignore D's deep bottom label band.
-emit("fig10_coverage_qc",
-     ((free(f10a) | f10b) + plot_layout(widths = c(1.25, 0.75))) /
-       ((free(f10c, type = "label", side = "b") | f10d) +
-          plot_layout(axis_titles = "keep")) +
-       plot_annotation(tag_levels = "A"),
-     6.8, 6.0)
+emit("fig10_coverage_qc", (f10a | f10b) / (f10c | f10d) + plot_annotation(tag_levels = "A") +
+       plot_layout(axis_titles = "collect"), 6.8, 6.0)
 
 # ============ Figure 11: third-tissue transfer of the construct ============
 # Disclosure figure: extends the PBMC-only linkage coverage (5.91%, reviewer 2)
@@ -1288,30 +1029,23 @@ f11d <- ggplot(rp, aes(y = reorder(pair, observed))) +
   coord_cartesian(xlim = c(0.40, 0.60)) +
   labs(x = "cross-tissue agreement", y = NULL, color = NULL,
        title = "Rank agreement tracks support") +
-  theme(legend.position = "top") +
-  d_title_nudge
+  theme(legend.position = "top")
 
-# Tags default to the outer y-tick margin; nudge right toward each panel spine.
-emit("fig11_third_tissue_transfer",
-     ((f11a | f11b) / (f11c | f11d) +
-        plot_annotation(tag_levels = "A") +
-        plot_layout(axis_titles = "collect")) &
-       theme(plot.tag.position = c(0.28, 1)),
-     6.8, 5.8)
+emit("fig11_third_tissue_transfer", (f11a | f11b) / (f11c | f11d) +
+       plot_annotation(tag_levels = "A") + plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
-# ==================== tables (locked enrichment SPEC) ====================
+# ==================== tables (enriched from v2 results) ====================
+# Table 1: primary + dual-BH Support. Table 2: cross-tissue descriptive metrics.
+# Table 3: per-type rho ranges full vs non-degree. No bootstrap/MDE/power columns.
 fmt <- function(x, digits = 4) sprintf(paste0("%.", digits, "f"), x)
 pfmt <- function(p) ifelse(p <= 0.001, "$<0.001$", sprintf("$%.3f$", p))
 
-# Table 1 (tab:primary): keep 15 full-confound rows; add Support column.
-# Support for FM rows only: dual within-family BH q_M<0.05 and q_D<0.05 →
-# "both" (or "both (neg)" if observed_partial_rho<0); else "neither".
-# Co-expression baselines sit outside FM BH families → Support="--".
 primary$support <- ifelse(
   primary$is_baseline, "--",
   ifelse(primary$mantel_q < 0.05 & primary$degree_q < 0.05,
          ifelse(primary$rho < 0, "both (neg)", "both"),
          "neither"))
+
 table_rows <- vapply(seq_len(nrow(primary)), function(i) {
   if (primary$is_baseline[i]) {
     sprintf("%s & %s & $%s$ & %s & -- & %s & -- & -- \\\\",
@@ -1321,8 +1055,8 @@ table_rows <- vapply(seq_len(nrow(primary)), function(i) {
     sprintf("%s & %s & $%s$ & %s & $%.3f$ & %s & $%.3f$ & %s \\\\",
             primary$tissue[i], primary$model[i],
             fmt(primary$rho[i], digits = 5), pfmt(primary$mantel_p[i]),
-            primary$mantel_q[i], pfmt(primary$degree_p[i]),
-            primary$degree_q[i], primary$support[i])
+            primary$mantel_q[i], pfmt(primary$degree_p[i]), primary$degree_q[i],
+            primary$support[i])
   }
 }, character(1))
 writeLines(c(
@@ -1331,71 +1065,68 @@ writeLines(c(
   "\\midrule", table_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table1_primary_fixed_panel.tex"))
 
-# Table 2 (tab:cross): 8 descriptive columns from additive decomp + pair files.
-# Join on tissue-pair IDs; no Mantel p, bootstrap CI, or additive_pred as inference.
-tissue_names <- c(GSE174367 = "Brain", PBMC10k = "PBMC", GSE206767 = "Fibroblast mix")
-pair_extra_files <- list(
-  "Brain--PBMC" = "cross_tissue_brain_vs_pbmc.json",
-  "Brain--Fibroblast mix" = "cross_tissue_atac_v2.json",
-  "PBMC--Fibroblast mix" = "cross_tissue_pbmc_vs_fibroblast.json"
+# Pair-level descriptive extras (edge Jaccard, mean per-TF-row Spearman).
+# Join to decomp by accession pair; display names match Table 2 / text.
+pair_meta <- list(
+  list(ids = c("GSE174367", "PBMC10k"),
+       file = "cross_tissue_brain_vs_pbmc.json",
+       label = "Brain--PBMC"),
+  list(ids = c("GSE174367", "GSE206767"),
+       file = "cross_tissue_atac_v2.json",
+       label = "Brain--Fibroblast mix"),
+  list(ids = c("PBMC10k", "GSE206767"),
+       file = "cross_tissue_pbmc_vs_fibroblast.json",
+       label = "PBMC--Fibroblast mix")
 )
-t2 <- bind_rows(lapply(decomp$rows, function(x) {
-  pair_lab <- paste(tissue_names[[x$pair[[1]]]], tissue_names[[x$pair[[2]]]],
-                    sep = "--")
-  extra <- J(pair_extra_files[[pair_lab]])
+decomp_rows <- decomp$rows
+cross_enrich <- bind_rows(lapply(pair_meta, function(pm) {
+  dr <- Filter(function(x) {
+    identical(sort(unlist(x$pair)), sort(pm$ids))
+  }, decomp_rows)[[1]]
+  pr <- fromJSON(file.path(res, pm$file), simplifyVector = FALSE)
   data.frame(
-    pair = pair_lab,
-    obs_rho = x$observed_spearman,
-    add_frac = x$fraction_explained_by_additive_marginals,
-    resid_rho = x$residual_spearman_after_own_additive_fits,
-    phi = x$binary_support_phi,
-    edge_jaccard = extra$edge_jaccard,
-    mean_row_rho = extra$mean_per_tf_row_spearman,
-    n_tf = x$n_tf_common,
+    pair = pm$label,
+    rho = dr$observed_spearman,
+    add_frac = dr$fraction_explained_by_additive_marginals,
+    resid = dr$residual_spearman_after_own_additive_fits,
+    phi = dr$binary_support_phi,
+    jacc = pr$edge_jaccard,
+    row_rho = pr$mean_per_tf_row_spearman,
+    n_tf = 446,
     stringsAsFactors = FALSE
   )
 }))
-# Stable display order matching the locked SPEC.
-t2_order <- c("Brain--PBMC", "Brain--Fibroblast mix", "PBMC--Fibroblast mix")
-t2 <- t2[match(t2_order, t2$pair), ]
-cross_rows <- vapply(seq_len(nrow(t2)), function(i) sprintf(
+cross_rows <- vapply(seq_len(nrow(cross_enrich)), function(i) sprintf(
   "%s & $%.4f$ & $%.4f$ & $%.4f$ & $%.4f$ & $%.3f$ & $%.4f$ & %d \\\\",
-  t2$pair[i], t2$obs_rho[i], t2$add_frac[i], t2$resid_rho[i], t2$phi[i],
-  t2$edge_jaccard[i], t2$mean_row_rho[i], as.integer(t2$n_tf[i])
-), character(1))
+  cross_enrich$pair[i], cross_enrich$rho[i], cross_enrich$add_frac[i],
+  cross_enrich$resid[i], cross_enrich$phi[i], cross_enrich$jacc[i],
+  cross_enrich$row_rho[i], cross_enrich$n_tf[i]), character(1))
 writeLines(c(
+  "\\begingroup\\footnotesize",
   "\\begin{tabular}{lrrrrrrr}", "\\toprule",
-  paste0("Tissue pair & Obs.\\ $\\rho$ & Add.\\ frac.\\ & Resid.\\ $\\rho$ & ",
-         "$\\varphi$ & Edge Jac.\\ & Mean row $\\rho$ & Shared TFs \\\\ "),
-  "\\midrule", cross_rows, "\\bottomrule", "\\end{tabular}"
+  paste0("Tissue pair & Obs.\\ $\\rho$ & Add.\\ frac. & Resid.\\ $\\rho$ & ",
+         "$\\varphi$ & Edge Jac. & Mean row $\\rho$ & Shared TFs \\\\ "),
+  "\\midrule", cross_rows, "\\bottomrule", "\\end{tabular}",
+  "\\endgroup"
 ), file.path(figs, "table2_cross_tissue_observed.tex"))
 
-# Table 3 (tab:pertype_ranges): 4-row descriptive min/max/median only.
-# Source: audit$per_cell_type.*.descriptive_summary; no p_mc / q / BH / CI.
-spec_keys <- c(full = "full_confound", `non-degree` = "non_degree_confound")
-t3 <- bind_rows(lapply(c("brain", "pbmc"), function(tn) {
-  bind_rows(lapply(names(spec_keys), function(spec_lab) {
-    ds <- audit$per_cell_type[[tn]][[spec_keys[[spec_lab]]]]$descriptive_summary
-    data.frame(
-      tissue = ifelse(tn == "brain", "Brain", "PBMC"),
-      spec = spec_lab,
-      n_rows = ds$n_rows_exploratory,
-      rho_min = ds$rho_min,
-      rho_max = ds$rho_max,
-      rho_median = ds$rho_median,
-      stringsAsFactors = FALSE
-    )
-  }))
-}))
-t3_rows <- vapply(seq_len(nrow(t3)), function(i) sprintf(
-  "%s & %s & %d & $%.5f$ & $%.5f$ & $%.5f$ \\\\",
-  t3$tissue[i], t3$spec[i], as.integer(t3$n_rows[i]),
-  t3$rho_min[i], t3$rho_max[i], t3$rho_median[i]
-), character(1))
+# Table 3: per-type descriptive ranges (full vs non-degree), exploratory FM rows only.
+pt_specs <- list(
+  list(tissue = "brain", key = "full_confound", label_t = "Brain", label_s = "full"),
+  list(tissue = "brain", key = "non_degree_confound", label_t = "Brain", label_s = "non-degree"),
+  list(tissue = "pbmc", key = "full_confound", label_t = "PBMC", label_s = "full"),
+  list(tissue = "pbmc", key = "non_degree_confound", label_t = "PBMC", label_s = "non-degree")
+)
+pt_rows <- vapply(pt_specs, function(ps) {
+  ds <- audit$per_cell_type[[ps$tissue]][[ps$key]]$descriptive_summary
+  sprintf("%s & %s & %d & $%.5f$ & $%.5f$ & $%.5f$ \\\\",
+          ps$label_t, ps$label_s, ds$n_rows_exploratory,
+          ds$rho_min, ds$rho_max, ds$rho_median)
+}, character(1))
 writeLines(c(
   "\\begin{tabular}{llrrrr}", "\\toprule",
-  "Tissue & Confound spec & $n_{\\mathrm{rows}}$ & $\\rho_{\\min}$ & $\\rho_{\\max}$ & $\\rho_{\\mathrm{median}}$ \\\\ ",
-  "\\midrule", t3_rows, "\\bottomrule", "\\end{tabular}"
+  "Tissue & Confound spec & $n$ rows & $\\rho_{\\min}$ & $\\rho_{\\max}$ & $\\rho_{\\mathrm{median}}$ \\\\ ",
+  "\\midrule", pt_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table3_pertype_ranges.tex"))
 
 cat("all authoritative figures and tables written to", figs, "\n")
