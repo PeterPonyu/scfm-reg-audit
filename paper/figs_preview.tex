@@ -11,6 +11,9 @@
 \pagestyle{empty}
 \begin{document}
 
+% Input order must match validate_artifacts.CURRENT_FRAGMENTS
+% (= CURRENT_FIGURES then CURRENT_TABLES; manuscript first-to-last order).
+
 \begin{figure}[p]\centering
 \resizebox{\textwidth}{!}{\input{figs/fig10_coverage_qc.tex}}
 \caption*{Figure~1 --- Coverage and fixed-panel quality control.}
@@ -33,7 +36,7 @@
 
 \begin{figure}[p]\centering
 \resizebox{\textwidth}{!}{\input{figs/fig4_usability_check.tex}}
-\caption*{Figure~5 --- Readout usability and internal consistency.}
+\caption*{Figure~5 --- Readout concordance (attention-likeness) and internal consistency.}
 \end{figure}
 
 \begin{figure}[p]\centering
@@ -66,14 +69,29 @@
 \caption*{Figure~11 --- Third-tissue transfer of the proxy construct.}
 \end{figure}
 
+\begin{figure}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/fig12_protocol_pass_matrix.tex}}
+\caption*{Figure~12 --- Protocol-pass gate heatmap ($0/13$ rows pass).}
+\end{figure}
+
 \begin{table}[p]\centering
 \resizebox{0.78\textwidth}{!}{\input{figs/table2_cross_tissue_observed.tex}}
-\caption*{Table~1 --- Observed cross-tissue reproducibility.}
+\caption*{Table --- Observed cross-tissue reproducibility.}
 \end{table}
 
 \begin{table}[p]\centering
 \resizebox{\textwidth}{!}{\input{figs/table1_primary_fixed_panel.tex}}
-\caption*{Table~2 --- Primary fixed-panel results under both nulls.}
+\caption*{Table --- Primary fixed-panel results under both nulls.}
+\end{table}
+
+\begin{table}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/table4_protocol_pass.tex}}
+\caption*{Table --- Protocol-pass gate matrix ($0/13$).}
+\end{table}
+
+\begin{table}[p]\centering
+\resizebox{\textwidth}{!}{\input{figs/table3_pertype_ranges.tex}}
+\caption*{Table --- Per-cell-type descriptive $\rho$ ranges.}
 \end{table}
 
 \end{document}

@@ -148,6 +148,7 @@ FIGURE_MAP = (
     ("fig8_injection_ladder", "Figure9"),
     ("fig9_tf_probe", "Figure10"),
     ("fig11_third_tissue_transfer", "Figure11"),
+    ("fig12_protocol_pass_matrix", "Figure12"),
 )
 
 # Composite structure for each figure (panel tags)
@@ -163,6 +164,8 @@ FIGURE_COMPOSITES = {
     "fig9_tf_probe": FigureComposite("fig9", ("A", "B", "C", "D")),
     "fig10_coverage_qc": FigureComposite("fig10", ("A", "B", "C", "D")),
     "fig11_third_tissue_transfer": FigureComposite("fig11", ("A", "B", "C", "D")),
+    # Single-panel gate heatmap (0x10); not a 2x2 multipanel.
+    "fig12_protocol_pass_matrix": FigureComposite("fig12", ("A",)),
 }
 
 

@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "8b243d4",
+  "merge_tip": "pending-0x10-commit",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -62,7 +62,7 @@
     {
       "id": "0x10",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Protocol-pass matrix Table/Fig",
       "assets": [
         "table",

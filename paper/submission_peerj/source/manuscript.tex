@@ -385,6 +385,29 @@ baseline is tested on the same edge set outside the FM families and is marked ``
 its entries are uncorrected $p$-values (dashes mark where no family correction applies).}\label{tab:primary}
 \end{table}
 
+Dual-null Support is only one gate. Table~\ref{tab:protocol} and
+Fig.~\ref{fig:protocol} stack five predeclared protocol gates on the same thirteen FM rows:
+dual-null under full confounds, dual-null under non-degree, FM--co-expression concordance
+(Spearman $>0$), non-degree same sign as the full estimate, multi-readout sign agreement within
+model family and tissue, and full-spec $\rho$ strictly above the tissue co-expression baseline.
+\textbf{Protocol-pass} requires dual-full, concordance, non-degree same sign, multi-readout sign
+agreement, and $\rho>$ baseline simultaneously. Under those gates,
+\textbf{$0/13$ rows protocol-pass}---including every dual-null positive---so dual-null Support is not
+treated as regulatory recovery (Fig.~\ref{fig:protocol}).
+
+\begin{table}[!tbp]\centering
+\resizebox{\linewidth}{!}{\input{figs/table4_protocol_pass.tex}}
+\caption{Protocol-pass matrix for the thirteen pooled FM/readout rows. Dual full / Dual non-deg:
+both within-family BH $q_M,q_D<0.05$ under the named confound specification. Concord.:
+FM--co-expression Spearman $>0$ (attention-likeness). ND same sign: full and non-degree partial
+$\rho$ share sign. Multi-RO sign: all full-spec readouts of the same model family in that tissue
+agree in sign (single-readout families pass). $\rho>$ base: full-spec $\rho$ exceeds the
+tissue co-expression baseline on the same edge set. Protocol-pass is the conjunction of Dual full,
+Concord., ND same sign, Multi-RO sign, and $\rho>$ base (Dual non-deg is reported but not required
+beyond same-sign, matching the dual-null failure mode under non-degree). All thirteen rows fail
+protocol-pass.}\label{tab:protocol}
+\end{table}
+
 One further row is supported by both nulls with the opposite sign: brain Geneformer attention,
 $\rho=-0.00362$ ($q_M=0.005$, $q_D=0.016$), from the same model whose embedding readout is positive
 in the same tissue. A sign-inconsistent pair of readouts within one model is not what a
@@ -579,6 +602,13 @@ admitted by the $\pm$2 kb linkage window (relevant over total peaks). (B) Overla
 38,082-edge core present in all three. (C) Empirical CDF of TF out-degree (supported targets per
 TF) per tissue. (D) Observed cross-tissue Spearman $\rho$ versus binary-support $\varphi$ for the
 three tissue pairs.}\label{fig:third_tissue}
+\end{figure}
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig12_protocol_pass_matrix.tex}}
+\caption{Binary protocol-pass gate heatmap for the thirteen pooled FM/readout rows (green pass,
+grey fail), companion to Table~\ref{tab:protocol}. No row is green in the Protocol-pass
+column.}\label{fig:protocol}
 \end{figure}
 
 \section{Discussion}

@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
 
+# Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.
 CURRENT_FIGURES = (
     "fig10_coverage_qc.tex",
     "fig1_truth_construct.tex",
@@ -23,10 +24,13 @@ CURRENT_FIGURES = (
     "fig8_injection_ladder.tex",
     "fig9_tf_probe.tex",
     "fig11_third_tissue_transfer.tex",
+    "fig12_protocol_pass_matrix.tex",
 )
 CURRENT_TABLES = (
     "table2_cross_tissue_observed.tex",
     "table1_primary_fixed_panel.tex",
+    "table4_protocol_pass.tex",
+    "table3_pertype_ranges.tex",
 )
 CURRENT_FRAGMENTS = CURRENT_FIGURES + CURRENT_TABLES
 FIGURE_INPUT_RE = re.compile(r"\\input\{figs/([^}]+\.tex)\}")

@@ -143,7 +143,7 @@ class TestFigureMap:
 
     def test_figure_map_structure(self):
         """Test figure map has expected structure."""
-        assert len(FIGURE_MAP) == 11
+        assert len(FIGURE_MAP) == 12
         for r_name, sub_name in FIGURE_MAP:
             assert r_name.startswith("fig")
             assert sub_name.startswith("Figure")
@@ -162,11 +162,14 @@ class TestFigureMap:
         composite_names = set(FIGURE_COMPOSITES.keys())
         assert map_names == composite_names
 
-    def test_all_composites_have_four_panels(self):
-        """Test that all composites have exactly 4 panels (A, B, C, D)."""
-        for comp in FIGURE_COMPOSITES.values():
-            assert len(comp.panels) == 4
-            assert comp.panels == ("A", "B", "C", "D")
+    def test_all_composites_have_declared_panels(self):
+        """Most figures are 2x2 (A–D); fig12 is a single-panel heatmap."""
+        for name, comp in FIGURE_COMPOSITES.items():
+            assert len(comp.panels) >= 1
+            if name == "fig12_protocol_pass_matrix":
+                assert comp.panels == ("A",)
+            else:
+                assert comp.panels == ("A", "B", "C", "D")
 
 
 class TestFigureMapValidation:

@@ -1399,4 +1399,136 @@ writeLines(c(
   "\\midrule", t3_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table3_pertype_ranges.tex"))
 
+# ==================== Table 4 + Fig.12: protocol-pass gate matrix (0x10) ====================
+# Predeclared protocol-pass (see also 0x20 SAP intent):
+#   dual_full ∧ concordance (FM–coexp Spearman > 0) ∧ non-degree same sign
+#   ∧ multi-readout same-sign within model_family×tissue ∧ ρ > tissue coexp baseline.
+# dual_nondeg is reported as its own column (0/13 under current data) but is NOT an
+# extra AND beyond non-degree same-sign in the protocol-pass definition above.
+yn <- function(x) ifelse(x, "yes", "no")
+
+# Family id from audit rows (prefer model_family field).
+fam_of <- function(tissue_key, model_key) {
+  rows <- Filter(function(x) identical(x$row_type, "pooled_fm") &&
+                   identical(x$model_label, model_key) &&
+                   identical(x$confound_spec, "full"),
+                 audit$pooled[[tissue_key]]$rows)
+  if (!length(rows)) return(model_key)
+  rows[[1]]$model_family %||% model_key
+}
+
+fm_full <- pooled %>% filter(spec == "full")
+fm_nd <- pooled %>% filter(spec == "non_degree") %>%
+  select(tissue, model_key, rho_nd = rho, mantel_q_nd = mantel_q, degree_q_nd = degree_q)
+pp <- fm_full %>%
+  left_join(fm_nd, by = c("tissue", "model_key")) %>%
+  mutate(
+    tissue_key = ifelse(tissue == "Brain", "brain", "pbmc"),
+    dual_full = mantel_q < 0.05 & degree_q < 0.05,
+    dual_nondeg = !is.na(mantel_q_nd) & mantel_q_nd < 0.05 &
+      !is.na(degree_q_nd) & degree_q_nd < 0.05,
+    same_sign_nd = !is.na(rho_nd) & (
+      (rho == 0 & rho_nd == 0) | (rho * rho_nd > 0)
+    ),
+    baseline_rho = ifelse(tissue == "Brain",
+                          baseline$rho[baseline$tissue == "Brain"][1],
+                          baseline$rho[baseline$tissue == "PBMC"][1]),
+    vs_baseline = rho > baseline_rho
+  )
+
+# Concordance Spearmans from panel_data.json (schema key still usability_*).
+usa_long <- bind_rows(lapply(names(panel$usability_fm_vs_coexp), function(tn) {
+  u <- panel$usability_fm_vs_coexp[[tn]]
+  data.frame(
+    tissue = ifelse(tn == "brain", "Brain", "PBMC"),
+    model_key = names(u),
+    conc_rho = as.numeric(unlist(u)),
+    stringsAsFactors = FALSE
+  )
+}))
+pp <- pp %>% left_join(usa_long, by = c("tissue", "model_key")) %>%
+  mutate(concordance = !is.na(conc_rho) & conc_rho > 0)
+
+# Multi-readout same-sign: all full-spec ρ in the same model_family × tissue agree in sign.
+pp$family <- mapply(fam_of, pp$tissue_key, pp$model_key, USE.NAMES = FALSE)
+fam_signs <- pp %>%
+  group_by(tissue, family) %>%
+  summarise(
+    multi_ok = {
+      s <- sign(rho)
+      s <- s[s != 0]
+      length(unique(s)) <= 1
+    },
+    .groups = "drop"
+  )
+pp <- pp %>% left_join(fam_signs, by = c("tissue", "family")) %>%
+  mutate(
+    multi_ok = ifelse(is.na(multi_ok), TRUE, multi_ok),
+    protocol_pass = dual_full & concordance & same_sign_nd & multi_ok & vs_baseline
+  )
+
+# Stable row order: match Table 1 FM row order (primary without baselines).
+primary_fm_order <- primary %>% filter(!is_baseline) %>%
+  transmute(tissue, model_key, ord = row_number())
+pp <- pp %>%
+  left_join(primary_fm_order, by = c("tissue", "model_key")) %>%
+  arrange(ord) %>%
+  select(-ord)
+stopifnot(nrow(pp) == 13L)
+stopifnot(sum(pp$protocol_pass) == 0L)
+stopifnot(!any(is.na(pp$protocol_pass)))
+
+pp_rows <- vapply(seq_len(nrow(pp)), function(i) sprintf(
+  "%s & %s & %s & %s & %s & %s & %s & %s & %s \\\\",
+  pp$tissue[i], pp$model[i],
+  yn(pp$dual_full[i]), yn(pp$dual_nondeg[i]), yn(pp$concordance[i]),
+  yn(pp$same_sign_nd[i]), yn(pp$multi_ok[i]), yn(pp$vs_baseline[i]),
+  yn(pp$protocol_pass[i])
+), character(1))
+writeLines(c(
+  "\\begin{tabular}{llccccccc}", "\\toprule",
+  paste0("Tissue & Readout & Dual full & Dual non-deg & Concord. & ",
+         "ND same sign & Multi-RO sign & $\\rho>$ base & Protocol-pass \\\\ "),
+  "\\midrule", pp_rows, "\\bottomrule", "\\end{tabular}"
+), file.path(figs, "table4_protocol_pass.tex"))
+
+# Binary heatmap (rows × gates) as Fig.12 companion to Table 4.
+gate_levels <- c("Dual full", "Dual non-deg", "Concordance",
+                 "ND same sign", "Multi-RO sign", "$\\rho>$ baseline",
+                 "Protocol-pass")
+pp_long <- bind_rows(
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "Dual full", pass = pp$dual_full, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "Dual non-deg", pass = pp$dual_nondeg, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "Concordance", pass = pp$concordance, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "ND same sign", pass = pp$same_sign_nd, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "Multi-RO sign", pass = pp$multi_ok, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "$\\rho>$ baseline", pass = pp$vs_baseline, stringsAsFactors = FALSE),
+  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
+             gate = "Protocol-pass", pass = pp$protocol_pass, stringsAsFactors = FALSE)
+)
+pp_long$display <- factor(pp_long$display, levels = rev(unique(pp_long$display)))
+pp_long$gate <- factor(pp_long$gate, levels = gate_levels)
+f12 <- ggplot(pp_long, aes(gate, display, fill = pass)) +
+  geom_tile(color = "white", linewidth = 0.4) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85"),
+                    labels = c(`TRUE` = "pass", `FALSE` = "fail"),
+                    name = NULL) +
+  labs(x = NULL, y = NULL,
+       title = "Protocol-pass gates: $0/13$ rows pass all predeclared checks") +
+  theme(axis.text.x = element_text(angle = 28, hjust = 1, size = 8.5),
+        axis.text.y = element_text(size = 8),
+        legend.position = "top",
+        panel.grid = element_blank())
+# Single-panel heatmap: stamp an "A" tag so figure-contract composites stay honest.
+f12 <- f12 + plot_annotation(tag_levels = "A") +
+  theme(plot.tag.position = c(0.02, 0.98))
+emit("fig12_protocol_pass_matrix", f12, 6.8, 5.2, tags = "A")
+
+cat("protocol-pass 0/13 confirmed; table4 + fig12 written\n")
 cat("all authoritative figures and tables written to", figs, "\n")

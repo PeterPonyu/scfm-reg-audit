@@ -31,11 +31,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 class BuilderConstantShape(unittest.TestCase):
 
     def test_constants_consistent(self):
-        self.assertEqual(len(CURRENT_FIGURES), 11)
-        self.assertEqual(len(CURRENT_TABLES), 2)
+        self.assertEqual(len(CURRENT_FIGURES), 12)
+        self.assertEqual(len(CURRENT_TABLES), 4)
         self.assertEqual(CURRENT_FRAGMENTS, CURRENT_FIGURES + CURRENT_TABLES)
         self.assertEqual(CURRENT_FIGURES[0], "fig10_coverage_qc.tex")
-        self.assertEqual(CURRENT_FIGURES[-1], "fig11_third_tissue_transfer.tex")
+        self.assertEqual(CURRENT_FIGURES[-1], "fig12_protocol_pass_matrix.tex")
+        self.assertIn("fig12_protocol_pass_matrix.tex", CURRENT_FIGURES)
         self.assertEqual(CURRENT_FIGURES, CAP_FIGS)  # builder + validator use the same allowlist
 
 
@@ -73,7 +74,7 @@ class WrappersMatchContract(unittest.TestCase):
     def test_wrappers_match_contract(self):
         wrapper_inputs = tuple(
             WRAPPER_INPUT_RE.findall((WRAPPERS / f"Figure{index}.tex").read_text())[0]
-            for index in range(1, 12)
+            for index in range(1, len(CURRENT_FIGURES) + 1)
         )
         self.assertEqual(wrapper_inputs, CURRENT_FIGURES)
 
