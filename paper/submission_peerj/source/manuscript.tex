@@ -154,9 +154,20 @@ We freeze and hash the TF--target panel; label the reference as a regulatory-pot
 than causal truth; control co-expression and structural covariates; state exactly what each
 randomization changes; use plus-one Monte Carlo $p$-values; define FDR families before reading
 results; and keep exploratory cell-type and sensitivity analyses distinct from the primary test.
+Relative to scFM interpretability studies, living GRN benchmarks, and scFM task suites
+(Table~\ref{tab:related}), scReg-Eval is designed to \emph{complement} rather than compete: it
+holds motif/ATAC edge weights free of expression statistics, freezes dual-null families, and ships
+a hash-pinned audit capsule rather than a leaderboard score.
 Methods define the panel, proxy, confounds, and nulls; Results report the primary full-confound
 audit and the co-primary non-degree sensitivity; Discussion and the final figure set bound what the
 alignments can and cannot claim.
+
+\begin{table}[!tbp]\centering
+\resizebox{\linewidth}{!}{\input{figs/table5_related_work.tex}}
+\caption{Protocol axes versus related evaluation resources. Entries are qualitative design
+features, not performance ranks. scReg-Eval is a fixed-panel audit capsule; GeneRNIB and BioLLM-style
+suites score broader tasks against often expression-linked references.}\label{tab:related}
+\end{table}
 
 \section{Methods}
 \subsection{Estimand}\label{sec:estimand}
@@ -371,8 +382,9 @@ $q_D=0.003$), and UCE encoder has $\rho=0.00593$ ($q_M=0.002$, $q_D=0.003$).
 confound pooled rows and the same-edge co-expression baseline; labels give BH-adjusted $q_M$
 and $q_D$ for FM rows and uncorrected $p_M,p_D$ for the baseline. (B) Non-degree co-primary
 rows; no row is supported by both nulls. (C) Full-confound $q_M$ versus $q_D$; support requires
-both coordinates below 0.05. (D) Each supported positive row compared with its own-tissue
-co-expression baseline.}\label{fig:primary}
+both coordinates below 0.05. (D) Dual-null rows versus the same-edge co-expression baseline with
+$r^{2}=\rho^{2}$ on FM bars (tiny effects; several dual-null positives do not exceed baseline).}
+\label{fig:primary}
 \end{figure}
 
 \begin{table}[!tbp]\centering
@@ -460,12 +472,13 @@ rather than as regulatory signal (Fig.~\ref{fig:concordance}).
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig4_usability_check.tex}}
-\caption{Readout concordance (attention-likeness) and internal consistency. (A) FM--co-expression
-correlation for all 13 pooled readouts, colored by full-confound dual-null support. (B) Positive
-joint-null support and positive concordance shown as separate binary checks; brain Geneformer
-attention is a concordance passer with negative dual-null support. (C) Marginal and partial behavior
-of the Geneformer knockout readout and its artifact-corrected knockout readout. (D) Geneformer
-embedding and attention effects within each tissue; the brain effects have opposite signs.}
+\caption{Readout concordance (attention-likeness) and internal consistency. (A) Scatter of
+FM--co-expression concordance versus full-confound partial $\rho$ for all 13 pooled readouts;
+fill encodes dual-null Support, and the open red ring marks brain Geneformer attention (concordance
+passer, dual-null negative). (B) Positive joint-null support and positive concordance as separate
+binary checks. (C) Marginal and partial behavior of the Geneformer knockout readout and its
+artifact-corrected knockout readout. (D) Geneformer embedding and attention effects within each
+tissue; the brain effects have opposite signs.}
 \label{fig:concordance}
 \end{figure}
 
@@ -493,10 +506,12 @@ none, so degree adjustment and null choice define different finite-panel questio
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig6_spec_sensitivity.tex}}
-\caption{Dependence on the confound specification. (A) Full and non-degree estimates joined within
-each row. (B) Effect-sign map across specifications. (C) Full-confound versus non-degree
-randomization $p$-values for both nulls. (D) Nested covariate ladder from marginal correlation to
-the primary rung; lines are descriptive and are not a model-selection exercise.}\label{fig:spec}
+\caption{Dependence on the confound specification. (A) Paired full$\leftrightarrow$non-degree
+partial $\rho$ for all 13 FM rows: circles full, squares non-degree; aqua fill marks dual-null
+Support (7 under full, 0 under non-degree); red segments mark sign flips. (B) Effect-sign map
+across specifications. (C) Full-confound versus non-degree randomization $p$-values for both nulls.
+(D) Nested covariate ladder from marginal correlation to the primary rung; lines are descriptive
+and are not a model-selection exercise.}\label{fig:spec}
 \end{figure}
 
 \subsection{Per-cell-type patterns are descriptive}
@@ -611,6 +626,15 @@ grey fail), companion to Table~\ref{tab:protocol}. No row is green in the Protoc
 column.}\label{fig:protocol}
 \end{figure}
 
+\begin{figure}[!tbp]\centering
+\fitfig{\input{figs/fig13_scope_card.tex}}
+\caption{Protocol-instance scope card: the audit scores motif matches in $\pm$2\,kb-linked ATAC
+peaks on a fixed panel. Distal/3D structure and ChIP-derived causal TF--target maps are out of
+scope; the proxy is cell-type near-invariant on this panel. Failure to support a global capability
+claim therefore cannot be read as a field-level negative
+(Sec.~\ref{sec:estimand}).}\label{fig:scope}
+\end{figure}
+
 \section{Discussion}
 The audit finds six small positive fixed-panel alignments and one negative one, all supported by
 both randomization nulls under the full confound specification. Three features of that result
@@ -648,7 +672,8 @@ benchmarks that find scFMs unreliable or only weakly structured relative to simp
 baselines~\citep{kedzierska2023assessing,wu2025biologydriven,qiu2025biollm}. Failure to support a
 global regulatory-capability claim on this panel equally cannot support a field-level negative
 conclusion: the probe is linear and operates on pairwise graph summaries, the proxy is a narrow
-accessibility/motif construct, and other panels, tissues, or GRN-informed models could differ.
+accessibility/motif construct (Fig.~\ref{fig:scope}), and other panels, tissues, or GRN-informed
+models could differ.
 Models pretrained with explicit GRN inductive biases~\citep{yang2024genecompass,kalfon2025scprint,hu2026regformer}
 are outside the present multi-readout audit and remain a natural target for the same fixed-panel
 protocol.

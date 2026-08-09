@@ -25,8 +25,10 @@ CURRENT_FIGURES = (
     "fig9_tf_probe.tex",
     "fig11_third_tissue_transfer.tex",
     "fig12_protocol_pass_matrix.tex",
+    "fig13_scope_card.tex",
 )
 CURRENT_TABLES = (
+    "table5_related_work.tex",
     "table2_cross_tissue_observed.tex",
     "table1_primary_fixed_panel.tex",
     "table4_protocol_pass.tex",

@@ -143,7 +143,7 @@ class TestFigureMap:
 
     def test_figure_map_structure(self):
         """Test figure map has expected structure."""
-        assert len(FIGURE_MAP) == 12
+        assert len(FIGURE_MAP) == 13
         for r_name, sub_name in FIGURE_MAP:
             assert r_name.startswith("fig")
             assert sub_name.startswith("Figure")
@@ -166,7 +166,7 @@ class TestFigureMap:
         """Most figures are 2x2 (A–D); fig12 is a single-panel heatmap."""
         for name, comp in FIGURE_COMPOSITES.items():
             assert len(comp.panels) >= 1
-            if name == "fig12_protocol_pass_matrix":
+            if name in ("fig12_protocol_pass_matrix", "fig13_scope_card"):
                 assert comp.panels == ("A",)
             else:
                 assert comp.panels == ("A", "B", "C", "D")

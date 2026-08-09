@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "pending-0x10-commit",
+  "merge_tip": "W1-complete-local",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -72,7 +72,7 @@
     {
       "id": "0x11",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Fig.6 full vs non-degree forest",
       "assets": [
         "fig"
@@ -81,7 +81,7 @@
     {
       "id": "0x12",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "FM \u03c1 vs baseline + r\u00b2 panel",
       "assets": [
         "fig"
@@ -99,7 +99,7 @@
     {
       "id": "0x14",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Related-work comparison table",
       "assets": [
         "table"
@@ -108,7 +108,7 @@
     {
       "id": "0x15",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Scope card schematic",
       "assets": [
         "fig"
@@ -117,7 +117,7 @@
     {
       "id": "0x16",
       "wave": "W1",
-      "status": "pending",
+      "status": "done",
       "title": "Fig.4 full concordance scatter",
       "assets": [
         "fig"

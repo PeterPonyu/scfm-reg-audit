@@ -1,6 +1,6 @@
 # scReg-Eval red-team response workplan
 
-**Status:** W0 done; W1: 0x10+0x13 done; remaining 0x11–0x12, 0x14–0x16  
+**Status:** W0 done; **W1 complete** (0x10–0x16); next W3 then W2  
 **Inputs:** four independent red-teams (construct / stats / repro / PeerJ CS) + canvas `screg-eval-redteam`  
 **Tip after merge fix:** `main` @ salvage-restored manuscript (`f75e70a`)  
 **Goal:** strengthen the paper with text, figures, tables, and targeted experiments so reviewer attacks become design features / bounded claims.
@@ -223,3 +223,4 @@ Job IDs use hex codes (`0x01`…) and are mirrored in `.cursor/jobs.json` for ag
 
 - 2026-08-09: W0 (`0x01`–`0x05`) applied on `main` after salvage merge tip; local work branches deleted (fully merged).
 - 2026-08-09: `0x10` protocol-pass matrix Table~\ref{tab:protocol} + Fig.~\ref{fig:protocol}; **0/13** protocol-pass under predeclared gates.
+- 2026-08-09: W1 remainder `0x11`–`0x16` (Fig.6 paired forest, baseline r², concordance scatter, related-work table, scope card); PeerJ package rebuilt; monorepo log under singlecell-genomics-research/projects/scfm-reg-audit/docs/reports/.

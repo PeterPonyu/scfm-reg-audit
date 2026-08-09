@@ -377,24 +377,38 @@ f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = 
        color = NULL, title = "Both nulls below 0.05") +
   theme(legend.position = "none")  # colors defined by panel A's legend; no room here
 
-supp <- primary %>% filter(status == "supported by both nulls" & rho > 0)
+# 0x12: dual-null positives vs same-edge co-expression baseline, with r^2 notes.
+# Also mark rows below their tissue baseline (e.g. PBMC Geneformer embed).
 short_model <- c("Geneformer embed" = "GF emb", "scGPT encoder" = "scGPT",
-                 "UCE encoder" = "UCE")
+                 "UCE encoder" = "UCE", "Geneformer attention" = "GF attn",
+                 "scFoundation encoder" = "scF", "Random-init floor" = "rand",
+                 "Geneformer KO" = "KO", "Artifact-corrected KO" = "KO+")
+supp <- primary %>% filter(status == "supported by both nulls")
 base_cmp <- bind_rows(lapply(seq_len(nrow(supp)), function(i) {
   b <- baseline[baseline$tissue == supp$tissue[i], ]
   tissue_short <- ifelse(supp$tissue[i] == "Brain", "B", "P")
-  bind_rows(supp[i, ] %>% transmute(label = paste(short_model[[model]], tissue_short, sep = "-"),
-                                    kind = "FM row", rho = rho),
-            data.frame(label = paste(short_model[[supp$model[i]]], tissue_short, sep = "-"),
-                       kind = "co-expression baseline", rho = b$rho[1]))
+  sm <- short_model[[supp$model[i]]] %||% substr(supp$model[i], 1, 8)
+  lab <- paste(sm, tissue_short, sep = "-")
+  bind_rows(
+    data.frame(label = lab, kind = "FM dual-null", rho = supp$rho[i],
+               r2 = supp$rho[i]^2, stringsAsFactors = FALSE),
+    data.frame(label = lab, kind = "co-expression baseline", rho = b$rho[1],
+               r2 = b$rho[1]^2, stringsAsFactors = FALSE)
+  )
 }))
+base_cmp$label <- factor(base_cmp$label, levels = unique(base_cmp$label))
+# r^2 annotation only on FM bars (tiny effects: scientific notation avoided).
+r2_lab <- base_cmp %>% filter(kind == "FM dual-null") %>%
+  mutate(lab = sprintf("$r^{2}\\!=\\!%.2e$", r2))
 f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  scale_fill_manual(values = c(AQUA, "black")) +
+  geom_text(data = r2_lab, aes(x = label, y = rho, label = lab),
+            vjust = -0.35, size = 2.0, color = MUTED, inherit.aes = FALSE) +
+  scale_fill_manual(values = c("FM dual-null" = AQUA, "co-expression baseline" = "black")) +
   labs(x = NULL, y = "partial Spearman $\\rho$", fill = NULL,
-       title = "Supported vs baseline") +
-  # Inset legend inside the panel (top-right, stacked) so it does not
-  # steal a title→spine band; keep it over the short UCE bars.
+       title = "Dual-null rows vs baseline ($r^{2}=\\rho^{2}$ on FM bars)") +
+  coord_cartesian(ylim = c(min(0, min(base_cmp$rho) - 0.001),
+                           max(base_cmp$rho) * 1.22)) +
   guides(fill = guide_legend(ncol = 1,
                              keywidth = unit(0.5, "lines"),
                              keyheight = unit(0.4, "lines"))) +
@@ -439,16 +453,31 @@ usa <- bind_rows(lapply(names(panel$usability_fm_vs_coexp), function(tn) {
 }))
 usa$display <- paste(usa$model, usa$tissue, sep = " -- ")
 usa <- usa %>% left_join(primary %>% filter(!is_baseline) %>%
-                           select(model_key, tissue, status, primary_rho = rho),
+                           select(model_key, tissue, status, primary_rho = rho,
+                                  mantel_q, degree_q),
                          by = c("model_key", "tissue"))
+usa$dual_null <- usa$status == "supported by both nulls"
 usa$display <- factor(usa$display, levels = rev(usa$display))
-f4a <- ggplot(usa, aes(fm_vs_coexp, display, color = status)) +
+# 0x16: full scatter of all 13 readouts; dual-null status in legend; call out
+# brain Geneformer attention (concordance passer, dual-null negative).
+usa$highlight <- usa$model_key == "geneformer_attn" & usa$tissue == "Brain"
+f4a <- ggplot(usa, aes(fm_vs_coexp, primary_rho)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
-  geom_point(size = 2.5) +
-  scale_color_manual(values = support_colors) +
-  labs(x = "FM-co-expression $\\rho$", y = NULL, color = NULL,
-       title = "Positives fail concordance") +
-  theme(legend.position = "top", axis.ticks.y = element_blank())
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
+  geom_point(aes(fill = dual_null, shape = dual_null), size = 2.6,
+             color = "black", stroke = 0.3) +
+  geom_point(data = usa %>% filter(highlight),
+             shape = 1, size = 5.0, color = RED, stroke = 0.7) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey75"),
+                    labels = c(`TRUE` = "dual-null Support",
+                               `FALSE` = "not dual-null"),
+                    name = NULL) +
+  scale_shape_manual(values = c(`TRUE` = 21, `FALSE` = 22), guide = "none") +
+  labs(x = "FM--co-expression concordance $\\rho$",
+       y = "full-confound partial $\\rho$",
+       title = "All readouts: concordance vs dual-null (ring: GF attn passer)") +
+  theme(legend.position = "top",
+        legend.text = element_text(size = 7.5))
 
 tile <- usa %>% transmute(display,
                           `supported positive` =
@@ -619,20 +648,57 @@ emit("fig5_null_diagnostics",
      6.8, 6.0)
 
 # ==================== Figure 6: specification dependence ====================
-spec <- pooled %>% select(tissue, model, model_key, spec, rho, status)
-spec$spec_label <- ifelse(spec$spec == "full", "Full", "Non-degree")
-spec$display <- paste(spec$model, spec$tissue, sep = " -- ")
-spec$display <- factor(spec$display, levels = rev(unique(spec$display)))
-f6a <- ggplot(spec, aes(rho, display, group = display)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
-  geom_line(color = "grey65", linewidth = 0.45) +
-  geom_point(aes(fill = spec_label), shape = 21, size = 2.2, color = "black", stroke = 0.25) +
-  scale_fill_manual(values = c("Full" = BLUE, "Non-degree" = YELLOW)) +
-  labs(x = "partial Spearman $\\rho$", y = NULL, fill = NULL,
-       title = "Specification changes effect direction") +
-  theme(legend.position = "top", axis.ticks.y = element_blank())
+# 0x11: panel A is a paired full↔non-degree forest with dual-null markers
+# (7 dual-null under full → 0 under non-degree) and sign-flip emphasis.
+spec <- pooled %>%
+  transmute(tissue, model, model_key, spec, rho, status, mantel_q, degree_q,
+            spec_label = ifelse(spec == "full", "Full", "Non-degree"),
+            dual = mantel_q < 0.05 & degree_q < 0.05,
+            display = paste(model, tissue, sep = " -- "))
+spec_ord <- primary %>% filter(!is_baseline) %>%
+  transmute(tissue, model_key, ord = dplyr::row_number())
+spec <- spec %>% left_join(spec_ord, by = c("tissue", "model_key"))
+disp_levels <- rev((spec %>% filter(spec == "full") %>% arrange(ord))$display)
+spec$display <- factor(spec$display, levels = disp_levels)
 
-sign_tile <- spec %>% mutate(sign = ifelse(rho > 0, "positive", "negative"))
+full6 <- spec %>% filter(spec_label == "Full") %>%
+  select(display, tissue, model, model_key, ord, rho_Full = rho, dual_Full = dual)
+nd6 <- spec %>% filter(spec_label == "Non-degree") %>%
+  select(display, rho_nd = rho, dual_nd = dual)
+pair6 <- full6 %>% left_join(nd6, by = "display")
+pair6$sign_flip <- pair6$rho_Full * pair6$rho_nd < 0
+stopifnot(nrow(pair6) == 13L, sum(pair6$dual_Full) == 7L, sum(pair6$dual_nd) == 0L)
+n_flip <- sum(pair6$sign_flip)
+
+f6a <- ggplot(pair6, aes(y = display)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
+  geom_segment(aes(x = rho_Full, xend = rho_nd, yend = display,
+                   color = sign_flip), linewidth = 0.55) +
+  geom_point(aes(x = rho_Full, shape = "Full", fill = dual_Full),
+             size = 2.5, color = "black", stroke = 0.3) +
+  geom_point(aes(x = rho_nd, shape = "Non-degree", fill = dual_nd),
+             size = 2.5, color = "black", stroke = 0.3) +
+  scale_shape_manual(values = c(Full = 21, `Non-degree` = 22), name = NULL) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "white"),
+                    labels = c(`TRUE` = "dual-null", `FALSE` = "not dual-null"),
+                    name = NULL) +
+  scale_color_manual(values = c(`TRUE` = RED, `FALSE` = "grey70"),
+                     labels = c(`TRUE` = "sign flip", `FALSE` = "same sign"),
+                     name = NULL) +
+  labs(x = "partial Spearman $\\rho$", y = NULL,
+       title = sprintf(
+         "Paired full$\\leftrightarrow$non-degree: dual-null $7\\rightarrow 0$; %d sign flips",
+         n_flip)) +
+  guides(fill = guide_legend(override.aes = list(shape = 21)),
+         shape = guide_legend(order = 1),
+         color = guide_legend(order = 3)) +
+  theme(legend.position = "top",
+        legend.box = "vertical",
+        legend.margin = margin(0, 0, 0, 0),
+        legend.spacing.y = unit(1, "pt"),
+        legend.text = element_text(size = 7.5),
+        axis.ticks.y = element_blank())
+
 # A discrete binned fill is used instead of a continuous gradient so tikzDevice
 # emits a vector legend rather than a rasterized colorbar PNG (which would create
 # an external \pgfimage dependency that does not resolve through \graphicspath).
@@ -1529,6 +1595,71 @@ f12 <- ggplot(pp_long, aes(gate, display, fill = pass)) +
 f12 <- f12 + plot_annotation(tag_levels = "A") +
   theme(plot.tag.position = c(0.02, 0.98))
 emit("fig12_protocol_pass_matrix", f12, 6.8, 5.2, tags = "A")
+
+
+# ==================== Figure 13: protocol scope card (0x15) ====================
+scope_nodes <- data.frame(
+  x = c(1, 2, 3, 4),
+  y = c(1.2, 1.2, 1.2, 1.2),
+  lab = c("$\\pm$2 kb\nwindow", "JASPAR\nmotif", "ATAC peak\npresence", "fixed 446$\\times$1{,}200\npanel"),
+  stringsAsFactors = FALSE
+)
+scope_out <- data.frame(
+  x = c(1.5, 2.5, 3.5),
+  y = c(0.35, 0.35, 0.35),
+  lab = c("distal / 3D\nexcluded", "ChIP / causal\nTF--target not claimed", "cell-type near-invariant\nproxy"),
+  stringsAsFactors = FALSE
+)
+f13 <- ggplot() +
+  geom_segment(aes(x = 1, xend = 4, y = 1.2, yend = 1.2),
+               color = MUTED, linewidth = 0.6,
+               arrow = arrow(length = unit(0.08, "in"), type = "closed")) +
+  geom_label(data = scope_nodes, aes(x, y, label = lab),
+             size = 2.8, label.size = 0.4, fill = LIGHT, color = BLUE,
+             label.padding = unit(0.25, "lines"), lineheight = 0.95) +
+  geom_label(data = scope_out, aes(x, y, label = lab),
+             size = 2.4, label.size = 0.3, fill = "grey96", color = MUTED,
+             label.padding = unit(0.2, "lines"), lineheight = 0.95) +
+  annotate("text", x = 2.5, y = 1.85,
+           label = "Protocol instance scope (what the audit asks)",
+           size = 3.2, color = "black") +
+  annotate("text", x = 2.5, y = -0.15,
+           label = "Out of scope for this instance --- not a claim that models lack regulation elsewhere",
+           size = 2.4, color = MUTED) +
+  coord_cartesian(xlim = c(0.5, 4.5), ylim = c(-0.35, 2.1)) +
+  theme_void() +
+  theme(plot.margin = margin(6, 8, 4, 8))
+f13 <- f13 + plot_annotation(tag_levels = "A") +
+  theme(plot.tag.position = c(0.02, 0.98))
+emit("fig13_scope_card", f13, 6.8, 2.6, tags = "A")
+
+# ==================== Table 5: related-work comparison (0x14) ====================
+# Qualitative protocol axes only; complement-not-compete framing (PeerJ #4).
+writeLines(c(
+  "\\begin{tabular}{lccccc}",
+  "\\toprule",
+  paste0("Resource & Expression in reference? & Degree / confound control? & ",
+         "Explicit null semantics? & Multi-readout? & Hash-pinned capsule? \\\\ "),
+  "\\midrule",
+  paste0("scReg-Eval (this work) & No (edge weights motif+ATAC) & ",
+         "Yes (coexp + 6 structural) & Yes (two MC nulls + BH families) & ",
+         "Yes & Yes \\\\ "),
+  paste0("Kendiukhov et al.\\ scFM interpretability & ",
+         "Yes (co-expression / pathways) & Partial & ",
+         "Varies & Attention-focused & No \\\\ "),
+  paste0("Kendiukhov et al.\\ SAE residual stream & ",
+         "Pathway/interaction features & Partial & ",
+         "Varies & Feature-level & No \\\\ "),
+  paste0("GeneRNIB living GRN benchmark & ",
+         "Often literature / expression GRNs & Task-dependent & ",
+         "Benchmark scores & Multi-method & Community leaderboard \\\\ "),
+  paste0("BioLLM / scFM task suites & ",
+         "Task labels from biology & Task-dependent & ",
+         "Standard ML splits & Multi-task & Code releases \\\\ "),
+  "\\bottomrule",
+  "\\end{tabular}"
+), file.path(figs, "table5_related_work.tex"))
+
 
 cat("protocol-pass 0/13 confirmed; table4 + fig12 written\n")
 cat("all authoritative figures and tables written to", figs, "\n")

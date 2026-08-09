@@ -28,6 +28,7 @@ TABLE_FRAGMENTS = [
     "table2_cross_tissue_observed",
     "table3_pertype_ranges",
     "table4_protocol_pass",
+    "table5_related_work",
 ]
 
 # Import typography contract (figure map, validation)
@@ -182,6 +183,7 @@ def build_flat(flat):
     text = text.replace("figs/table2_cross_tissue_observed.tex", "table2_cross_tissue_observed.tex")
     text = text.replace("figs/table3_pertype_ranges.tex", "table3_pertype_ranges.tex")
     text = text.replace("figs/table4_protocol_pass.tex", "table4_protocol_pass.tex")
+    text = text.replace("figs/table5_related_work.tex", "table5_related_work.tex")
     (flat / "manuscript.tex").write_text(text)
     shutil.copy2(PAPER / "references.bib", flat / "references.bib")
     shutil.copy2(PAPER / "wlpeerj.cls", flat / "wlpeerj.cls")
