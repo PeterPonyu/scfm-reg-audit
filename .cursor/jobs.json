@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "W1-complete-local",
+  "merge_tip": "W3-local",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -185,7 +185,7 @@
     {
       "id": "0x30",
       "wave": "W3",
-      "status": "pending",
+      "status": "done",
       "title": "Methods peak-count vs code",
       "assets": [
         "text"
@@ -194,7 +194,7 @@
     {
       "id": "0x31",
       "wave": "W3",
-      "status": "pending",
+      "status": "done",
       "title": "MANIFEST + validate_artifacts PASS",
       "assets": [
         "capsule"
@@ -203,7 +203,7 @@
     {
       "id": "0x32",
       "wave": "W3",
-      "status": "pending",
+      "status": "done",
       "title": "FULL_RERUN boundary rewrite",
       "assets": [
         "docs"
@@ -212,7 +212,7 @@
     {
       "id": "0x33",
       "wave": "W3",
-      "status": "pending",
+      "status": "done",
       "title": "Panel ATAC-filter disclosure",
       "assets": [
         "text"
@@ -221,7 +221,7 @@
     {
       "id": "0x34",
       "wave": "W3",
-      "status": "pending",
+      "status": "done",
       "title": "Preregistered wording or OSF lock",
       "assets": [
         "docs"

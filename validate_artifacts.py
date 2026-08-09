@@ -15,12 +15,20 @@ EXCLUDED_NAMES = {"MANIFEST.json", ".gitignore"}
 # Local/dev trees may coexist with the slim public capsule. These prefixes are
 # ignored by the closed-tree equality check; MANIFEST records are still
 # hash-verified unconditionally.
+# Paths allowed on a developer checkout of the capsule without being listed in
+# MANIFEST.json (local overlays, PeerJ rebuild tree, heavy results, agent state).
 LOCAL_WORKTREE_PREFIXES = (
     "src/v2/",
     "paper/submission_peerj/",
     "paper/docs/",
     "results/v2/",
     "paper/.tikz",
+    ".cursor/",
+    ".grok/",
+    ".omc/",
+    ".omx/",
+    "docs/reports/",
+    "archive/",
 )
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",
@@ -28,6 +36,15 @@ LOCAL_WORKTREE_NAMES = {
     "wlpeerj.cls",
     "manuscript.bbl",
     "manuscript.docx",
+    ".tikz_metrics_pdftex",
+    # LaTeX intermediates (never capsule content)
+    "manuscript.aux",
+    "manuscript.log",
+    "manuscript.out",
+    "manuscript.fls",
+    "manuscript.fdb_latexmk",
+    "manuscript.blg",
+    "Rplots.pdf",
 }
 
 # Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.

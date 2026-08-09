@@ -183,14 +183,22 @@ attention-like co-expression geometry; they do not adjudicate residual regulator
 returns to this scope when interpreting Support counts.
 
 \subsection{Regulatory-potential proxy and fixed panel}\label{sec:proxy}
-The panel contains 1,200 genes, including 446 unique in-range transcription factors, frozen by a
-SHA-256 manifest. Accessible peaks from brain snATAC-seq, paired PBMC multiome, and a chemical
-reprogramming ATAC dataset (GSE206767, in which day-0 BJ fibroblasts are pooled with day-3 induced
-neuron-like cells as a single \texttt{ALL} accessibility track) are linked to genes by a
-$\pm2$\,kb promoter-plus-gene-body rule, which retains 6{,}609 of 111{,}743 accessible peaks in the
-PBMC data (5.91\%) and systematically excludes distal enhancer elements. JASPAR2024 CORE vertebrate motifs
-are scanned with MOODS~\citep{rauluseviciute2024jaspar,korhonen2009moods}; motif evidence in an
-accessible peak contributes a directed TF--target regulatory-potential weight, following the
+The panel contains 1,200 genes, including 446 unique in-range transcription factors,
+protocol-frozen in-repo by a SHA-256 manifest
+(\texttt{manifest\_sha256=}\texttt{6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848};
+TF-panel hash
+\texttt{b07ae73888cd2e075cd1992f73b5fac9a2fa9c5d8f73c596eac653d259eae8da}).
+This is an in-repository protocol freeze, not an external preregistration
+(OSF/AsPredicted) link. Panel construction further requires each gene to have at least one brain
+snATAC peak in the same $\pm2$\,kb promoter-plus-gene-body window used for linkage, together with
+RNA-detection and vocabulary filters; the panel is therefore \emph{not} ATAC-orthogonal. Accessible
+peaks from brain snATAC-seq, paired PBMC multiome, and a chemical reprogramming ATAC dataset
+(GSE206767, in which day-0 BJ fibroblasts are pooled with day-3 induced neuron-like cells as a
+single \texttt{ALL} accessibility track) are linked to genes by that window rule, which retains
+6{,}609 of 111{,}743 accessible peaks in the PBMC data (5.91\%) and systematically excludes distal
+enhancer elements. JASPAR2024 CORE vertebrate motifs are scanned with
+MOODS~\citep{rauluseviciute2024jaspar,korhonen2009moods}; motif evidence in an accessible peak
+contributes a directed TF--target regulatory-potential weight, following the
 motif-in-accessible-region linkage paradigm used by regulon-inference methods~\citep{aibar2017scenic}. Edge
 weights are assembled without expression statistics; panel membership and ATAC peak-presence
 filters remain expression-adjacent inputs, so the proxy is not claimed RNA-structure-independent in
@@ -232,9 +240,10 @@ otherwise.
 For each retained TF--target pair, all graph weights are rank transformed. The primary statistic is
 the Pearson correlation between residualized ranks, equivalent to partial Spearman correlation. The
 \emph{full} design contains an intercept, ranked co-expression, and standardized target peak count,
-gene length, RNA detection rate, GC content, TF out-degree, and target in-degree. Peak-count and GC
-covariates are computed from at most 40 peaks per gene, so they understate the extremes of very
-peak-dense genes. The two degree
+gene length, RNA detection rate, GC content, TF out-degree, and target in-degree. Target peak count
+is the count of \emph{all} linked peaks in the gene window (no per-gene cap). GC content is estimated
+from at most 40 peaks per gene (centered windows on the peak midpoints), so GC understates the
+extremes of very peak-dense genes while peak count does not. The two degree
 covariates are computed from the proxy graph itself, so the full specification conditions on
 functions of the outcome; this is a validity hazard, not a bookkeeping detail, and it is why the
 \emph{non-degree} design, which omits both degree columns, is reported co-primary rather than as a
@@ -260,9 +269,9 @@ Both tests use two-sided plus-one correction~\citep{phipson2010permutation},
 \]
 with resolution 0.001. Benjamini--Hochberg correction~\citep{benjamini1995fdr} is performed within
 each of eight families: tissue (brain/PBMC) $\times$ confound specification (full/non-degree)
-$\times$ null (gene-label/row-shuffle). The full specification is the preregistered primary; the
-non-degree specification is reported alongside it as co-primary because the full specification
-conditions on proxy-derived degree covariates.
+$\times$ null (gene-label/row-shuffle). The full specification is the protocol-frozen primary (in-repo
+family definitions); the non-degree specification is reported alongside it as co-primary because the
+full specification conditions on proxy-derived degree covariates.
 
 \subsection{TF-disjoint supervised probe}\label{sec:probe}
 The pooled audit is an unsupervised raw-readout test. As a supervised complement, run on paired
@@ -458,8 +467,8 @@ statistics and q-values differ under that stricter sensitivity design. We theref
 sensitivity audit rather than claiming that the primary headline has been re-tested under S1. External
 binding calibration against ENCODE-compatible edges remains approval-blocked and is not treated as
 completed evidence.
- Our protocol pre-registers a readout
-\emph{concordance} (attention-likeness) check: a co-expression-like readout should correlate
+ Our protocol freezes a readout
+\emph{concordance} (attention-likeness) check in-repo: a co-expression-like readout should correlate
 positively with co-expression (attention $\approx$ co-expression is well established). This check
 blocks analogy to attention-GRN recovery stories; it does \emph{not} adjudicate residual regulatory
 content on its own. The six dual-null positive rows fail concordance: their FM--co-expression
@@ -658,7 +667,7 @@ small, readout-specific, specification-dependent alignments exist on this fixed 
 are concentrated in embedding-geometry readouts rather than attention readouts, and that under
 this audit they cannot be distinguished from residual confound structure
 (Sec.~\ref{sec:estimand}). A further observation points the same way: our own protocol
-pre-registers a concordance (attention-likeness) check in which a co-expression-like readout
+freezes a concordance (attention-likeness) check in-repo in which a co-expression-like readout
 should correlate with co-expression (attention $\approx$ co-expression is well established). The
 supported positives come from readouts that fail that check (FM--co-expression Spearman $-0.18$ to
 $+0.01$), while concordance passers (scFoundation $+0.08$, PBMC Geneformer attention $+0.40$) are

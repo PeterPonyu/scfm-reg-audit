@@ -154,6 +154,7 @@ def build_confounds(atac_file: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
         if c not in fa.keys():
             without_genome_chromosome.append(g)
             continue
+        # peakcount above uses ALL linked peaks; GC samples at most 40 peaks/gene.
         ks = []
         for p in sel[:40]:
             s = str(fa[c][max(0, int(pmid[p]) - W // 2): int(pmid[p]) + W // 2])

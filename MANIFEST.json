@@ -1,361 +1,396 @@
 {
-  "capsule": "scfm-reg-audit-audit-capsule-v0.3.0",
-  "version": "v0.3.0",
-  "files": [
-    {
-      "path": "CITATION.cff",
-      "bytes": 842,
-      "sha256": "b9cb0ae5031773cfdbd1b5a2f6487049268a54de99e5371f8b9e9abd9cb66a2f"
-    },
-    {
-      "path": "ENVIRONMENT.example",
-      "bytes": 1291,
-      "sha256": "f503f234aace4e6ce21898b304ca4cfafc51639fc89851c5a7a409fe81c98d2f"
-    },
-    {
-      "path": "LICENSE",
-      "bytes": 1064,
-      "sha256": "10ef938551816fda8e6981789fd207e905524d51abd3023de441f7aac6dedfd1"
-    },
-    {
-      "path": "LICENSE-CONTENT.md",
-      "bytes": 18657,
-      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
-    },
-    {
-      "path": "LICENSING.md",
-      "bytes": 936,
-      "sha256": "cbe3965c5849f2d2f3b01c5f3182beddf8031032ab3cc1e069232f7361d70f50"
-    },
-    {
-      "path": "README.md",
-      "bytes": 2561,
-      "sha256": "4d1a7edd438130fa8c5b783064f0d2655659e80589cc97c9648ad7438ee9f1b9"
-    },
-    {
-      "path": "README_PROJECT.md",
-      "bytes": 3520,
-      "sha256": "6a708b9ada4b963677cbed7ca723ccf4bc1348ec93c30b53da60bb22b7fcec5d"
-    },
-    {
-      "path": "data/manifest/shared_genes.v2.json",
-      "bytes": 64799,
-      "sha256": "6bea3f873e71ea98c9c9bf6f6499c688ccb2f268275f682125d583595c067a9d"
-    },
-    {
-      "path": "docs/FULL_RERUN.md",
-      "bytes": 6826,
-      "sha256": "1e3156087247961a6115062db42b9cab216d0b7d4110220bdebc75671515320a"
-    },
-    {
-      "path": "docs/FULL_RUN_LOG.md",
-      "bytes": 4148,
-      "sha256": "92d98df173c020127fc94cb7e214901a0a720d9a5afc3c3f06e59ae87b1e03a9"
-    },
-    {
-      "path": "docs/LEGACY_INFERENCE_NOTE.md",
-      "bytes": 7511,
-      "sha256": "118907669dab3e1b2d8d2cd2a095af8ad27f2ec72aab1c53d8ac34f01aaa0108"
-    },
-    {
-      "path": "docs/NOTICE.md",
-      "bytes": 293,
-      "sha256": "c46ad10b9cb261c521b4b902802324c90444949fa9c7d2f4ae289596e84286a4"
-    },
-    {
-      "path": "docs/PAPER_OUTLINE.md",
-      "bytes": 5328,
-      "sha256": "dd309d9d02b96b1fb25c8f212b4ffab009af642cbf006a3774418f7be49a393a"
-    },
-    {
-      "path": "docs/SCREG_EVAL_PROTOCOL.md",
-      "bytes": 11073,
-      "sha256": "d2fa663f83e93b288f51bb65cebf2a59cc9316fe7af8d6b9ccb5679baa86f14c"
-    },
-    {
-      "path": "docs/TF_PROBE_RESULT.md",
-      "bytes": 6665,
-      "sha256": "2e051662ecc9948c026827b04281da3b0d94124b9cd4e17672f5353b6d946972"
-    },
-    {
-      "path": "paper/NOTICE.md",
-      "bytes": 287,
-      "sha256": "e1d785d2eafefed9c14327d7a9056491a985ad5906c9bff7824b53ee23f1dec4"
-    },
-    {
-      "path": "paper/figs/fig10_coverage_qc.tex",
-      "bytes": 23589,
-      "sha256": "0e3f46aff741983707d275cc20b2bfdc404383bf3b33c1968b8a1f72e9e71f01"
-    },
-    {
-      "path": "paper/figs/fig11_third_tissue_transfer.tex",
-      "bytes": 56757,
-      "sha256": "408ba89ede0fbd45294546cece065578218ea6dc59a22d335c15fa227060ac50"
-    },
-    {
-      "path": "paper/figs/fig1_truth_construct.tex",
-      "bytes": 22150,
-      "sha256": "5fcd6011616f89ec4d899517049f9a0b6b8d0703d1c68797b30fd4d9f07c7e59"
-    },
-    {
-      "path": "paper/figs/fig2_cross_tissue_decomp.tex",
-      "bytes": 19563,
-      "sha256": "35068fd267e3dc31194b64645bd60d94b85bea12fc9c354874dbac2131ea25b7"
-    },
-    {
-      "path": "paper/figs/fig3_primary_audit.tex",
-      "bytes": 33376,
-      "sha256": "c527752127f79e3ec1d0e5acdeb1b6124389dbbf6204f355156c9faac8e76094"
-    },
-    {
-      "path": "paper/figs/fig4_usability_check.tex",
-      "bytes": 28525,
-      "sha256": "ac9df0fcfa9eb1e585b8886239710adafa2b8ea33d6f2eecca0698a7ca951031"
-    },
-    {
-      "path": "paper/figs/fig5_null_diagnostics.tex",
-      "bytes": 24822,
-      "sha256": "c00ad404a364a6e4ece8b64003a5a7d35d14f7c23f17e4893a673be423ee3982"
-    },
-    {
-      "path": "paper/figs/fig6_spec_sensitivity.tex",
-      "bytes": 54519,
-      "sha256": "810ac3947725761d20a323c6d482e910a75be5ece3dfe0cc1659d91be8df1b15"
-    },
-    {
-      "path": "paper/figs/fig7_pertype_descriptive.tex",
-      "bytes": 43629,
-      "sha256": "3dab2d250660177597d1d91f3abc633d6360f1d13f85b85c13d8eaf94497a25b"
-    },
-    {
-      "path": "paper/figs/fig8_injection_ladder.tex",
-      "bytes": 32220,
-      "sha256": "3042ceb9d225d9b9ca924a30b472efe4a8c4aef9ace2e18fb9c837fa8e0d9ab2"
-    },
-    {
-      "path": "paper/figs/fig9_tf_probe.tex",
-      "bytes": 35917,
-      "sha256": "fea27203f3824c3240dc7815df815bda49da1bcd8c8c8618dd3b3963cbf889e7"
-    },
-    {
-      "path": "paper/figs/table1_primary_fixed_panel.tex",
-      "bytes": 1342,
-      "sha256": "c55f9d1929c0b09887a5f3d207392a0d553bdd965cc3ab39527a4036999ccab5"
-    },
-    {
-      "path": "paper/figs/table2_cross_tissue_observed.tex",
-      "bytes": 236,
-      "sha256": "e8a778eb2f36f4029472a3df405501890661f5d520defd41fda6e5e314137cbf"
-    },
-    {
-      "path": "paper/figs_preview.tex",
-      "bytes": 2661,
-      "sha256": "8fef483de11853472a2afad9ccccbc0373c7ca689835cbd76009865f85f34e4a"
-    },
-    {
-      "path": "paper/make_figs.R",
-      "bytes": 55386,
-      "sha256": "dae4a2a579cc4ebabac619f0ac656b0efbacbcb3e1bf0044cfe37f5803c83b6b"
-    },
-    {
-      "path": "paper/make_panel_data.py",
-      "bytes": 16891,
-      "sha256": "a06e36159e69034ad5262a9ef9ae6ebb701c2c9df00df02d48ad70bb3bada05d"
-    },
-    {
-      "path": "paper/manuscript.pdf",
-      "bytes": 287812,
-      "sha256": "85aa7fcef64f39941bd6c3187ec202e0517899b6e9a129a90ec662bd918eabd1"
-    },
-    {
-      "path": "paper/manuscript.tex",
-      "bytes": 48916,
-      "sha256": "09e91517dfb2d844f6531bbf95c139268da45e1d7a71ac31a5ea835139d76159"
-    },
-    {
-      "path": "paper/panel_data.json",
-      "bytes": 46807,
-      "sha256": "122a86406c2d9785db8466c2e4570cd5f6e26ead4081753d974d204a5cb6c10a"
-    },
-    {
-      "path": "paper/references.bib",
-      "bytes": 10056,
-      "sha256": "90dc278385d60d9883507dbc8a73d864b018b6dd369e885c251c94c9f6e25f0d"
-    },
-    {
-      "path": "results/NOTICE.md",
-      "bytes": 274,
-      "sha256": "3f79888d2d6bea0b55a22495e2adbe5822682432ccd56b55c5d465c1eaf8898d"
-    },
-    {
-      "path": "results/brain_coexp_baseline_null_v2.public.json",
-      "bytes": 360,
-      "sha256": "5122f75ffe96f7bdc03973a302ffd94e96750ac880539e6644adfad4ef5231f2"
-    },
-    {
-      "path": "results/cross_tissue_additive_decomp_v2.public.json",
-      "bytes": 1140,
-      "sha256": "0cad674a4b1bec89a48a94925410421eed4cbab13bb905a0c1ca966c5426111f"
-    },
-    {
-      "path": "results/degree_preserving_null_v2.public.json",
-      "bytes": 691,
-      "sha256": "c2efb681c67132c824fcafd16305436dcf2b8a715590ee9ad5ef21f6834a00d1"
-    },
-    {
-      "path": "results/effect_vs_injection_scale_v2.public.json",
-      "bytes": 20762,
-      "sha256": "1fe3276838cb2e78db85352d46e95e57ddb854a0f700079ba647de8faf13310d"
-    },
-    {
-      "path": "results/fixed_panel_audit_v2.public.json",
-      "bytes": 230254,
-      "sha256": "1605e1b4c81bfb91e8059c92982b9011d0d3867da725d994058fc449d52afb56"
-    },
-    {
-      "path": "results/fixed_panel_signal_injection_v2.public.json",
-      "bytes": 192514,
-      "sha256": "96129465691d5e34f310fed4ac04fb06c15e0f92144ace3ba9a6ef5de980253e"
-    },
-    {
-      "path": "results/inference_status_v2.public.json",
-      "bytes": 16033,
-      "sha256": "670fe1ca2d5849935b68869a9ced742b871f6fb25fdecd4b5b2db19b4f52252a"
-    },
-    {
-      "path": "results/injection_subdivided_v2.public.json",
-      "bytes": 43362,
-      "sha256": "c8622c6c6681386564a9ab0a3f1378b6d20f322e1a72765b19852ccc0535c56c"
-    },
-    {
-      "path": "results/insilico_ko_v2.public.json",
-      "bytes": 557,
-      "sha256": "117737b60a6b7be7924126aae5d8780277da415010cf3588f2eea1e3d5ec3b1f"
-    },
-    {
-      "path": "results/marginal_vs_adjusted_v2.public.json",
-      "bytes": 12161,
-      "sha256": "528ac6a61e2a4783d6a728aa9592c4ccce351e47b194bd6aa24093444aad36e7"
-    },
-    {
-      "path": "results/pbmc_coexp_baseline_null_v2.public.json",
-      "bytes": 356,
-      "sha256": "060e5e85b4dbe4d6448daab9ac4fb2029e5eefff5c4cb5f3de92494c76c8deb0"
-    },
-    {
-      "path": "results/pertype_fm_v2.public.json",
-      "bytes": 1390,
-      "sha256": "86694dfedf92c0233068c8f9e641ccb68d67bc31a8d5a9d49396d523dc8e25e4"
-    },
-    {
-      "path": "results/proxy_celltype_invariance_v2.public.json",
-      "bytes": 11938,
-      "sha256": "71c1e537d407acba45f5cd1292659d51ad917fe72945e46a326f75faec72e5f0"
-    },
-    {
-      "path": "results/readout_attention_v2.public.json",
-      "bytes": 609,
-      "sha256": "a841f3edd23b2c03df323d961cb2f94cd8f79faa051ff88dac2431b09e150a62"
-    },
-    {
-      "path": "results/spec_sensitivity_v2.public.json",
-      "bytes": 9523,
-      "sha256": "09703e2e43b1d750d82d544ca0451915e69245fabc85b37d54dc8a89c73c7a1d"
-    },
-    {
-      "path": "results/tf_probe_pair_eval_v2.public.json",
-      "bytes": 12144,
-      "sha256": "71b91f3c8f905206660124e1c4fb2e752e9731f5f72564478eaede546c345a5f"
-    },
-    {
-      "path": "results/tf_probe_pair_sensitivity_v2.public.json",
-      "bytes": 3989,
-      "sha256": "9f1f8e1041b20dfebdeedd31c1efcbff76cee88e86d632a9b2a8ef21f544655b"
-    },
-    {
-      "path": "results/tf_probe_pair_stats_v2.public.json",
-      "bytes": 3659,
-      "sha256": "94690d2a9aa0ac7368307fcd0e00ad31101a9c9ade8e320af747100d3eef95ba"
-    },
-    {
-      "path": "results/verify_brain_attention_omission_v2.public.json",
-      "bytes": 1139,
-      "sha256": "be771c70a12898da3998a161f7bca4e7b773e1615cc9451188c917358a3276f9"
-    },
-    {
-      "path": "src/benchmark_n99.py",
-      "bytes": 3737,
-      "sha256": "e14bc11d016eb854a0ad6af52ec1506a12bbb34bf9064904e02ecd526246e7f1"
-    },
-    {
-      "path": "src/brain_coexp_baseline_null.py",
-      "bytes": 4048,
-      "sha256": "b7d854b086ed5377ccb800096e827de9e26d721b59f23b6a073d6e1d4cb5b2fb"
-    },
-    {
-      "path": "src/fixed_panel_audit.py",
-      "bytes": 37482,
-      "sha256": "02425e48eda49d6873c2318acfcc7998b955c0f6a14fd87aa10d6d41bd6a614d"
-    },
-    {
-      "path": "src/pair_probe_stats.py",
-      "bytes": 7478,
-      "sha256": "0cafa5d1f731112137f5f4c5b2e8fe7677c80d559f30ac99c9562c214b7b41b2"
-    },
-    {
-      "path": "src/pbmc_cache.py",
-      "bytes": 4832,
-      "sha256": "ac2f4e7a531b085bbba98ebb14e6bcd10da1c2fbb3c098fe1811d998810baa56"
-    },
-    {
-      "path": "src/pbmc_coexp_baseline_null.py",
-      "bytes": 4351,
-      "sha256": "095e8d2045901a667c9b9ee0d46ceeb255b1ea7d26ba80e196c4e36308ff36b7"
-    },
-    {
-      "path": "src/pbmc_uce_eval_v2.py",
-      "bytes": 12493,
-      "sha256": "8bc3dd6c25de53065953caf16d23f64ce83a9e5cfb92d8fda633c80daca12ee7"
-    },
-    {
-      "path": "src/run_fixed_panel_audit.py",
-      "bytes": 60492,
-      "sha256": "ba7fddb4131ca6031f75be06a6cd0ae82cbca2432dd4a7070e294c1afafd5e4f"
-    },
-    {
-      "path": "src/run_pair_probe.py",
-      "bytes": 7016,
-      "sha256": "651bfa68f490f0813ee1006231b8325aebc81572580b3b93aa2c85d384fa393d"
-    },
-    {
-      "path": "src/tests/test_coexp_baseline_null.py",
-      "bytes": 7834,
-      "sha256": "bb82a3b1ab14ba48fc41484370f8572f32aa255e9a4346fe6764d0192bdcac2a"
-    },
-    {
-      "path": "src/tests/test_fixed_panel_audit.py",
-      "bytes": 70367,
-      "sha256": "18f38af8bd68abde51bb8f695083f47d7739ad536277214beb757eeb49d03f06"
-    },
-    {
-      "path": "src/tests/test_pair_probe.py",
-      "bytes": 13357,
-      "sha256": "52756009a0f312ed9da1daf13b308e5e790f3f303525cab9af4cef3b1940aa76"
-    },
-    {
-      "path": "src/tests/test_pbmc_cache.py",
-      "bytes": 10967,
-      "sha256": "591766dd203308a750860d4d794cad5de8feb75e51fa8212e8e8aaf7d20c7f75"
-    },
-    {
-      "path": "src/tests/test_validate_artifacts.py",
-      "bytes": 13008,
-      "sha256": "c674366e66ccdd5c3e013aeef1a1443d29c66e235203c7aad328897db9f66216"
-    },
-    {
-      "path": "validate_artifacts.py",
-      "bytes": 12079,
-      "sha256": "c78e70eb58e0c04ad6a80135bd55d906e07810f7641fc678a8fa5750314a93b4"
-    }
-  ]
+ "capsule": "scfm-reg-audit-audit-capsule-v0.3.0",
+ "version": "v0.3.0",
+ "files": [
+  {
+   "path": "CITATION.cff",
+   "bytes": 842,
+   "sha256": "b9cb0ae5031773cfdbd1b5a2f6487049268a54de99e5371f8b9e9abd9cb66a2f"
+  },
+  {
+   "path": "ENVIRONMENT.example",
+   "bytes": 1291,
+   "sha256": "f503f234aace4e6ce21898b304ca4cfafc51639fc89851c5a7a409fe81c98d2f"
+  },
+  {
+   "path": "LICENSE",
+   "bytes": 1064,
+   "sha256": "10ef938551816fda8e6981789fd207e905524d51abd3023de441f7aac6dedfd1"
+  },
+  {
+   "path": "LICENSE-CONTENT.md",
+   "bytes": 18657,
+   "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+  },
+  {
+   "path": "LICENSING.md",
+   "bytes": 936,
+   "sha256": "cbe3965c5849f2d2f3b01c5f3182beddf8031032ab3cc1e069232f7361d70f50"
+  },
+  {
+   "path": "README.md",
+   "bytes": 2561,
+   "sha256": "4d1a7edd438130fa8c5b783064f0d2655659e80589cc97c9648ad7438ee9f1b9"
+  },
+  {
+   "path": "README_PROJECT.md",
+   "bytes": 3520,
+   "sha256": "6a708b9ada4b963677cbed7ca723ccf4bc1348ec93c30b53da60bb22b7fcec5d"
+  },
+  {
+   "path": "REPO_TOPOLOGY.md",
+   "bytes": 2877,
+   "sha256": "55b2d33f52cf31137e5dafe7551007e32f400b0b535281c78d7e2da56a90fcc7"
+  },
+  {
+   "path": "data/manifest/shared_genes.v2.json",
+   "bytes": 64799,
+   "sha256": "6bea3f873e71ea98c9c9bf6f6499c688ccb2f268275f682125d583595c067a9d"
+  },
+  {
+   "path": "docs/FULL_RERUN.md",
+   "bytes": 8327,
+   "sha256": "88bb88f2f5a84e6691578ad6c2471dfb189f99c4654619ae6b35f66a2de0c745"
+  },
+  {
+   "path": "docs/FULL_RUN_LOG.md",
+   "bytes": 4148,
+   "sha256": "92d98df173c020127fc94cb7e214901a0a720d9a5afc3c3f06e59ae87b1e03a9"
+  },
+  {
+   "path": "docs/LEGACY_INFERENCE_NOTE.md",
+   "bytes": 7511,
+   "sha256": "118907669dab3e1b2d8d2cd2a095af8ad27f2ec72aab1c53d8ac34f01aaa0108"
+  },
+  {
+   "path": "docs/NOTICE.md",
+   "bytes": 293,
+   "sha256": "c46ad10b9cb261c521b4b902802324c90444949fa9c7d2f4ae289596e84286a4"
+  },
+  {
+   "path": "docs/PAPER_OUTLINE.md",
+   "bytes": 5328,
+   "sha256": "dd309d9d02b96b1fb25c8f212b4ffab009af642cbf006a3774418f7be49a393a"
+  },
+  {
+   "path": "docs/SCREG_EVAL_PROTOCOL.md",
+   "bytes": 11073,
+   "sha256": "d2fa663f83e93b288f51bb65cebf2a59cc9316fe7af8d6b9ccb5679baa86f14c"
+  },
+  {
+   "path": "docs/TF_PROBE_RESULT.md",
+   "bytes": 6665,
+   "sha256": "2e051662ecc9948c026827b04281da3b0d94124b9cd4e17672f5353b6d946972"
+  },
+  {
+   "path": "paper/CANONICAL_BUILD.md",
+   "bytes": 2014,
+   "sha256": "2daba376459d9a97fa2173262b15591ea124c836689558e6cecbbe482b553f21"
+  },
+  {
+   "path": "paper/NOTICE.md",
+   "bytes": 287,
+   "sha256": "e1d785d2eafefed9c14327d7a9056491a985ad5906c9bff7824b53ee23f1dec4"
+  },
+  {
+   "path": "paper/figs/fig10_coverage_qc.tex",
+   "bytes": 23594,
+   "sha256": "414de8a0d0c47973a0469b6ee2801198ad72c5a870350eb50e32bae04a21a529"
+  },
+  {
+   "path": "paper/figs/fig11_third_tissue_transfer.tex",
+   "bytes": 56757,
+   "sha256": "845a95c4874f60db8d964c65d709f1faa20926e78e1a6efa9a7f294d8f8228ef"
+  },
+  {
+   "path": "paper/figs/fig12_protocol_pass_matrix.tex",
+   "bytes": 18260,
+   "sha256": "6c544d1ea9cadf4f64e4bf8d99f42df1bb6942b43ea1cee71994fb0fc86db6ce"
+  },
+  {
+   "path": "paper/figs/fig13_scope_card.tex",
+   "bytes": 13036,
+   "sha256": "8d14ad3aa9344876c3b16e4d24d956eab4a2127a4e2c5956b4a468e5e7793e40"
+  },
+  {
+   "path": "paper/figs/fig1_truth_construct.tex",
+   "bytes": 31057,
+   "sha256": "bd02690cfd6ad77d16543ed36151614805e8fefc96496d9116efacd38ec1b2a4"
+  },
+  {
+   "path": "paper/figs/fig2_cross_tissue_decomp.tex",
+   "bytes": 19563,
+   "sha256": "2220e385a6a4f630ddab7d0d9c501d580bfd1192c6c5695479a266b4658725b4"
+  },
+  {
+   "path": "paper/figs/fig3_primary_audit.tex",
+   "bytes": 35578,
+   "sha256": "af3278af48980adaecf9cc50c17fc5768af55b13d613844364b2782983c9cc19"
+  },
+  {
+   "path": "paper/figs/fig4_usability_check.tex",
+   "bytes": 28250,
+   "sha256": "a8c9742aa78e604f4c581301513b1b0eb613969e5d9f39206a24a850ac71f8a1"
+  },
+  {
+   "path": "paper/figs/fig5_null_diagnostics.tex",
+   "bytes": 24806,
+   "sha256": "bf875db7a627d0b16393ccfdbafc2cb662a704cd5d53f8dc3f2ead9436b3b04e"
+  },
+  {
+   "path": "paper/figs/fig6_spec_sensitivity.tex",
+   "bytes": 56851,
+   "sha256": "fcd272e08d68fc670c303c0001eedead80faa1e0e276d2b4aebc22801a398670"
+  },
+  {
+   "path": "paper/figs/fig7_pertype_descriptive.tex",
+   "bytes": 43629,
+   "sha256": "232109183218d525e5ea354f118092b413ba4b44106f35cae7ffb5b7123705d0"
+  },
+  {
+   "path": "paper/figs/fig8_injection_ladder.tex",
+   "bytes": 32220,
+   "sha256": "b4983e0670b9ebc66ef52abbf4b551e66d3bbf00cfbf07b6f6b23c1428ba205c"
+  },
+  {
+   "path": "paper/figs/fig9_tf_probe.tex",
+   "bytes": 36460,
+   "sha256": "d1e49eee2dc0436016bbe94e94f1c7a383f3b9313d68ff174012568e538b062a"
+  },
+  {
+   "path": "paper/figs/table1_primary_fixed_panel.tex",
+   "bytes": 1478,
+   "sha256": "6fc0ef816d38d04596f332b2638483767a3931da509060e4b6f300e5cc729af2"
+  },
+  {
+   "path": "paper/figs/table2_cross_tissue_observed.tex",
+   "bytes": 466,
+   "sha256": "c70b9fe37bb94131e06ef97bf00bc290bf17a5d9a06370bd4e0b85cf6328e9ea"
+  },
+  {
+   "path": "paper/figs/table3_pertype_ranges.tex",
+   "bytes": 418,
+   "sha256": "f03a8258bcaf26a9476e011f4e3e7522d21b46fbcd37c1e785b01c54f99ae059"
+  },
+  {
+   "path": "paper/figs/table4_protocol_pass.tex",
+   "bytes": 1039,
+   "sha256": "7a28b8ad9f4eb6f11ff6da47c25a226ac9393253ec96a69287dd14521bc903df"
+  },
+  {
+   "path": "paper/figs/table5_related_work.tex",
+   "bytes": 844,
+   "sha256": "58e601c732cefc0b4a6c7f36f04b82b962f0e1956e7e0ac878efd1545e2cc188"
+  },
+  {
+   "path": "paper/figs_preview.tex",
+   "bytes": 3049,
+   "sha256": "2ae22c90fb237ab2f43b31ee1cbb1b0b90d4238f502b13a3ebee704937d828ea"
+  },
+  {
+   "path": "paper/make_figs.R",
+   "bytes": 83791,
+   "sha256": "e47899a597112dd87ba93e20110c322695505dfab45a6609ba8153ccc65b029d"
+  },
+  {
+   "path": "paper/make_panel_data.py",
+   "bytes": 16891,
+   "sha256": "a06e36159e69034ad5262a9ef9ae6ebb701c2c9df00df02d48ad70bb3bada05d"
+  },
+  {
+   "path": "paper/manuscript.pdf",
+   "bytes": 312365,
+   "sha256": "222b917fe26ec8bb0e59864ab08d79206cc501640cca6972ed7ab4a6b0285de4"
+  },
+  {
+   "path": "paper/manuscript.tex",
+   "bytes": 59013,
+   "sha256": "b038f15c84e27e5fa06861ce8003e5296161067841edda4cf7c924e262c582e2"
+  },
+  {
+   "path": "paper/panel_data.json",
+   "bytes": 46807,
+   "sha256": "122a86406c2d9785db8466c2e4570cd5f6e26ead4081753d974d204a5cb6c10a"
+  },
+  {
+   "path": "paper/references.bib",
+   "bytes": 14094,
+   "sha256": "2c7087461576de58823377d9bb9274a05f4138d300b480675ff0afc59da01bac"
+  },
+  {
+   "path": "results/NOTICE.md",
+   "bytes": 274,
+   "sha256": "3f79888d2d6bea0b55a22495e2adbe5822682432ccd56b55c5d465c1eaf8898d"
+  },
+  {
+   "path": "results/brain_coexp_baseline_null_v2.public.json",
+   "bytes": 360,
+   "sha256": "5122f75ffe96f7bdc03973a302ffd94e96750ac880539e6644adfad4ef5231f2"
+  },
+  {
+   "path": "results/cross_tissue_additive_decomp_v2.public.json",
+   "bytes": 1140,
+   "sha256": "0cad674a4b1bec89a48a94925410421eed4cbab13bb905a0c1ca966c5426111f"
+  },
+  {
+   "path": "results/degree_preserving_null_v2.public.json",
+   "bytes": 691,
+   "sha256": "c2efb681c67132c824fcafd16305436dcf2b8a715590ee9ad5ef21f6834a00d1"
+  },
+  {
+   "path": "results/effect_vs_injection_scale_v2.public.json",
+   "bytes": 20762,
+   "sha256": "1fe3276838cb2e78db85352d46e95e57ddb854a0f700079ba647de8faf13310d"
+  },
+  {
+   "path": "results/fixed_panel_audit_v2.public.json",
+   "bytes": 230254,
+   "sha256": "1605e1b4c81bfb91e8059c92982b9011d0d3867da725d994058fc449d52afb56"
+  },
+  {
+   "path": "results/fixed_panel_signal_injection_v2.public.json",
+   "bytes": 192514,
+   "sha256": "96129465691d5e34f310fed4ac04fb06c15e0f92144ace3ba9a6ef5de980253e"
+  },
+  {
+   "path": "results/inference_status_v2.public.json",
+   "bytes": 16033,
+   "sha256": "670fe1ca2d5849935b68869a9ced742b871f6fb25fdecd4b5b2db19b4f52252a"
+  },
+  {
+   "path": "results/injection_subdivided_v2.public.json",
+   "bytes": 43362,
+   "sha256": "c8622c6c6681386564a9ab0a3f1378b6d20f322e1a72765b19852ccc0535c56c"
+  },
+  {
+   "path": "results/insilico_ko_v2.public.json",
+   "bytes": 557,
+   "sha256": "117737b60a6b7be7924126aae5d8780277da415010cf3588f2eea1e3d5ec3b1f"
+  },
+  {
+   "path": "results/marginal_vs_adjusted_v2.public.json",
+   "bytes": 12161,
+   "sha256": "528ac6a61e2a4783d6a728aa9592c4ccce351e47b194bd6aa24093444aad36e7"
+  },
+  {
+   "path": "results/pbmc_coexp_baseline_null_v2.public.json",
+   "bytes": 356,
+   "sha256": "060e5e85b4dbe4d6448daab9ac4fb2029e5eefff5c4cb5f3de92494c76c8deb0"
+  },
+  {
+   "path": "results/pertype_fm_v2.public.json",
+   "bytes": 1390,
+   "sha256": "86694dfedf92c0233068c8f9e641ccb68d67bc31a8d5a9d49396d523dc8e25e4"
+  },
+  {
+   "path": "results/proxy_celltype_invariance_v2.public.json",
+   "bytes": 11938,
+   "sha256": "71c1e537d407acba45f5cd1292659d51ad917fe72945e46a326f75faec72e5f0"
+  },
+  {
+   "path": "results/readout_attention_v2.public.json",
+   "bytes": 609,
+   "sha256": "a841f3edd23b2c03df323d961cb2f94cd8f79faa051ff88dac2431b09e150a62"
+  },
+  {
+   "path": "results/spec_sensitivity_v2.public.json",
+   "bytes": 9523,
+   "sha256": "09703e2e43b1d750d82d544ca0451915e69245fabc85b37d54dc8a89c73c7a1d"
+  },
+  {
+   "path": "results/tf_probe_pair_eval_v2.public.json",
+   "bytes": 12144,
+   "sha256": "71b91f3c8f905206660124e1c4fb2e752e9731f5f72564478eaede546c345a5f"
+  },
+  {
+   "path": "results/tf_probe_pair_sensitivity_v2.public.json",
+   "bytes": 3989,
+   "sha256": "9f1f8e1041b20dfebdeedd31c1efcbff76cee88e86d632a9b2a8ef21f544655b"
+  },
+  {
+   "path": "results/tf_probe_pair_stats_v2.public.json",
+   "bytes": 3659,
+   "sha256": "94690d2a9aa0ac7368307fcd0e00ad31101a9c9ade8e320af747100d3eef95ba"
+  },
+  {
+   "path": "results/verify_brain_attention_omission_v2.public.json",
+   "bytes": 1139,
+   "sha256": "be771c70a12898da3998a161f7bca4e7b773e1615cc9451188c917358a3276f9"
+  },
+  {
+   "path": "src/benchmark_n99.py",
+   "bytes": 3737,
+   "sha256": "e14bc11d016eb854a0ad6af52ec1506a12bbb34bf9064904e02ecd526246e7f1"
+  },
+  {
+   "path": "src/brain_coexp_baseline_null.py",
+   "bytes": 4048,
+   "sha256": "b7d854b086ed5377ccb800096e827de9e26d721b59f23b6a073d6e1d4cb5b2fb"
+  },
+  {
+   "path": "src/fixed_panel_audit.py",
+   "bytes": 37565,
+   "sha256": "1ff6fefbcfaca3529dad904e5d06c319b42416590125e9b0f0f0864cab81dee7"
+  },
+  {
+   "path": "src/pair_probe_stats.py",
+   "bytes": 7478,
+   "sha256": "0cafa5d1f731112137f5f4c5b2e8fe7677c80d559f30ac99c9562c214b7b41b2"
+  },
+  {
+   "path": "src/pbmc_cache.py",
+   "bytes": 4832,
+   "sha256": "ac2f4e7a531b085bbba98ebb14e6bcd10da1c2fbb3c098fe1811d998810baa56"
+  },
+  {
+   "path": "src/pbmc_coexp_baseline_null.py",
+   "bytes": 4351,
+   "sha256": "095e8d2045901a667c9b9ee0d46ceeb255b1ea7d26ba80e196c4e36308ff36b7"
+  },
+  {
+   "path": "src/pbmc_uce_eval_v2.py",
+   "bytes": 12493,
+   "sha256": "8bc3dd6c25de53065953caf16d23f64ce83a9e5cfb92d8fda633c80daca12ee7"
+  },
+  {
+   "path": "src/run_fixed_panel_audit.py",
+   "bytes": 60492,
+   "sha256": "ba7fddb4131ca6031f75be06a6cd0ae82cbca2432dd4a7070e294c1afafd5e4f"
+  },
+  {
+   "path": "src/run_pair_probe.py",
+   "bytes": 7016,
+   "sha256": "651bfa68f490f0813ee1006231b8325aebc81572580b3b93aa2c85d384fa393d"
+  },
+  {
+   "path": "src/tests/test_coexp_baseline_null.py",
+   "bytes": 7834,
+   "sha256": "bb82a3b1ab14ba48fc41484370f8572f32aa255e9a4346fe6764d0192bdcac2a"
+  },
+  {
+   "path": "src/tests/test_fixed_panel_audit.py",
+   "bytes": 70367,
+   "sha256": "18f38af8bd68abde51bb8f695083f47d7739ad536277214beb757eeb49d03f06"
+  },
+  {
+   "path": "src/tests/test_pair_probe.py",
+   "bytes": 13357,
+   "sha256": "52756009a0f312ed9da1daf13b308e5e790f3f303525cab9af4cef3b1940aa76"
+  },
+  {
+   "path": "src/tests/test_pbmc_cache.py",
+   "bytes": 10967,
+   "sha256": "591766dd203308a750860d4d794cad5de8feb75e51fa8212e8e8aaf7d20c7f75"
+  },
+  {
+   "path": "src/tests/test_validate_artifacts.py",
+   "bytes": 13008,
+   "sha256": "c674366e66ccdd5c3e013aeef1a1443d29c66e235203c7aad328897db9f66216"
+  },
+  {
+   "path": "validate_artifacts.py",
+   "bytes": 12807,
+   "sha256": "b176ad66386e21809236aae5b9c17edbc28f1ed58b5ecf6d21266e5b21578fca"
+  }
+ ]
 }

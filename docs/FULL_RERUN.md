@@ -1,25 +1,68 @@
 # Full-rerun recipe — scReg-Eval v2
 
-How to regenerate every authoritative `results/v2/*.json` from public inputs. Three
-reproducibility layers are distinguished explicitly:
+This document is the **development / experiment-workspace** full-pipeline recipe.
+It is **not** something a fresh public-capsule clone can run end-to-end without
+external inputs.
 
-1. **Artifact validation** — no downloads needed. Unpack the audit capsule and run
-   `python validate_artifacts.py` plus `python -m unittest discover -s src/tests`.
-2. **Statistical reruns** — needs the datasets below plus the cached FM graphs in
+## 0. Two trees (do not conflate)
+
+| Tree | Role | Full rerun? |
+|------|------|-------------|
+| **Publish / audit capsule** `~/Desktop/scfm-reg-audit` (GitHub `PeterPonyu/scfm-reg-audit`) | Manuscript SoT, public JSON, validator, PeerJ package | **No.** Validate only. |
+| **Experiment workspace** `singlecell-genomics-research/projects/scfm-reg-audit` | Heavy data, NPZ caches, model weights, vendor code | **Yes** (this recipe). |
+
+### Capsule fail-closed gate (fresh clone)
+
+```bash
+cd /path/to/scfm-reg-audit   # public capsule checkout
+python validate_artifacts.py
+python -m unittest discover -s src/tests
+```
+
+Expected: **PASS** without downloading H5AD/NPZ/weights.
+
+The following will **fail closed** on a capsule-only tree (missing inputs, not silent
+wrong results):
+
+```bash
+# These paths / artifacts are NOT redistributed in the capsule:
+python src/v2/run_fixed_panel_audit.py
+# → requires results/v2/*.npz graph caches and raw ATAC/RNA under SCREG_DATA_ROOT
+python src/v2/build_atac_graph_v2.py
+# → requires genome FASTA, ATAC H5AD, JASPAR, monorepo-scale disk
+```
+
+If `results/v2/*.npz` or `SCREG_DATA_ROOT` / `SCFM_BRAIN_ATAC` are unset, drivers
+must error with a clear missing-input message. Do not invent empty graphs.
+
+`src/v2/` in the **capsule working tree** may exist as a local development overlay
+(see `validate_artifacts.py` `LOCAL_WORKTREE_PREFIXES`). The **closed release
+tarball** ships only the sanitized `src/` statistical surface listed in
+`MANIFEST.json`, not a pretend full monorepo.
+
+Pinned panel hashes (protocol freeze, in-repo — not OSF):
+
+- `manifest_sha256` = `6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848`
+- `tf_panel_sha256` = `b07ae73888cd2e075cd1992f73b5fac9a2fa9c5d8f73c596eac653d259eae8da`
+
+## 1. Three reproducibility layers
+
+1. **Artifact validation** — no downloads. Capsule: `python validate_artifacts.py`
+   plus `python -m unittest discover -s src/tests`.
+2. **Statistical reruns** — needs datasets below plus cached FM graphs in
    `results/v2/*.npz` (not redistributed; regenerate per §4 or treat as inputs).
-3. **Full pipeline** — datasets + model weights + vendor code. This document.
+3. **Full pipeline** — datasets + model weights + vendor code. **Experiment workspace
+   only.** Commands below assume monorepo root
+   `projects/scfm-reg-audit` and `ENVIRONMENT.example`.
 
-All commands assume the repository root as `projects/scfm-reg-audit` and the
-variables in `ENVIRONMENT.example`.
-
-## 1. Environment (locked 2026-07-31)
+## 2. Environment (locked 2026-07-31)
 
 - Python 3.13.5; numpy 2.2.6; scipy 1.16.3; anndata 0.12.10; torch 2.12.0+cu130;
   scikit-learn 1.8.0; pyfaidx 0.9.0.4; pandas 2.3.3
 - R 4.3.3; ggplot2 4.0.3; dplyr 1.2.1; patchwork 1.3.2; jsonlite 2.0.0; tikzDevice 0.12.6
 - LaTeX: pdfLaTeX with tikz, booktabs, natbib, mdframed, placeins, helvet
 
-## 2. Datasets
+## 3. Datasets (SHA pins)
 
 | role | accession / source | local file | SHA-256 | bytes |
 |---|---|---|---|---|
@@ -36,7 +79,7 @@ Accession URLs: `https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE174367`,
 `https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE206767`, 10x Genomics
 datasets portal ("10k PBMC from a healthy donor, multiome"). Download dates: 2026-07.
 
-## 3. Model weights
+## 4. Model weights (SHA pins)
 
 | model | source | checkpoint | SHA-256 | license note |
 |---|---|---|---|---|
@@ -51,31 +94,33 @@ datasets portal ("10k PBMC from a healthy donor, multiome"). Download dates: 202
 The UCE checkpoint and ESM2 hashes are enforced at load time in
 `src/v2/pbmc_uce_eval_v2.py` (`EXPECTED_CHECKPOINT_SHA256`, `EXPECTED_ESM2_SHA256`).
 
-## 4. Ordered commands
+## 5. Ordered commands (experiment workspace)
 
 Set `SCREG_DATA_ROOT` (datasets + models) and `SCFM_BRAIN_ATAC` first.
+Working directory: monorepo `projects/scfm-reg-audit` (or an equivalent full tree
+that actually contains `results/v2` NPZ caches and vendor code).
 
 ```bash
 # 1. Panel + proxy (CPU, hours for motif scan)
 python src/v2/freeze_gene_manifest.py
 python src/v2/build_atac_graph_v2.py          # per tissue (brain, PBMC, GSE206767)
 
-# 2. FM graphs (model-specific; GPU recommended, CPU possible with the cached settings)
-python src/v2/crossmodal_v2.py                # brain Geneformer embed + scGPT embed
-python src/v2/readout_attention_v2.py         # brain Geneformer attention
-python src/v2/insilico_ko_v2.py               # brain Geneformer KO + artifact-corrected
-python src/v2/crossmodal_scf_v2.py            # brain scFoundation encoder
-python src/v2/crossmodal_uce_v2.py            # brain UCE encoder
-python src/v2/gen_floor_attn_graphs_v2.py     # random-init floor
-python src/v2/pbmc_eval_v2.py                 # PBMC Geneformer embed/attn + coexp
-python src/v2/generate_pbmc_scgpt_graph_v2.py # PBMC scGPT
-python src/v2/pbmc_uce_eval_v2.py             # PBMC UCE (normalization contract v1)
+# 2. FM graphs (model-specific; GPU recommended)
+python src/v2/crossmodal_v2.py
+python src/v2/readout_attention_v2.py
+python src/v2/insilico_ko_v2.py
+python src/v2/crossmodal_scf_v2.py
+python src/v2/crossmodal_uce_v2.py
+python src/v2/gen_floor_attn_graphs_v2.py
+python src/v2/pbmc_eval_v2.py
+python src/v2/generate_pbmc_scgpt_graph_v2.py
+python src/v2/pbmc_uce_eval_v2.py
 
 # 3. Authoritative statistics (CPU)
-python src/v2/run_fixed_panel_audit.py        # fixed_panel_audit_v2.json + inference_status_v2.json
-python src/v2/brain_coexp_baseline_null.py    # brain baseline nulls (explicit seeds)
-python src/v2/pbmc_coexp_baseline_null.py     # PBMC baseline nulls
-python src/v2/subdivide_injection.py          # injection_subdivided_v2.json
+python src/v2/run_fixed_panel_audit.py
+python src/v2/brain_coexp_baseline_null.py
+python src/v2/pbmc_coexp_baseline_null.py
+python src/v2/subdivide_injection.py
 
 # 4. Probe (CPU, ~10 min)
 python src/v2/tf_disjoint_split.py
@@ -84,27 +129,29 @@ python src/v2/run_pair_probe.py
 python src/v2/pair_probe_stats.py
 python src/v2/pair_probe_sensitivity.py
 
-# 5. Figures + manuscript
+# 5. Figures + manuscript (publish capsule paper/ is SoT for PeerJ)
 cd paper && Rscript make_figs.R && latexmk -pdf manuscript.tex
 
-# 6. Packages
+# 6. Packages (from publish capsule checkout)
 python src/v2/build_peerj_package.py
-python src/v2/build_release_capsule.py        # runs capsule tests, writes tarball + bridge
+python src/v2/build_release_capsule.py
 ```
 
 Verification: compare regenerated JSONs against `results/v2/*.json` (field-level),
-then run `python validate_artifacts.py` inside the rebuilt capsule. The
-`ORIGINAL_TO_PUBLIC_HASH_BRIDGE.json` records the expected hashes of the release.
+export scrubbed `*.public.json` into the capsule, then run
+`python validate_artifacts.py` inside the capsule. The
+`ORIGINAL_TO_PUBLIC_HASH_BRIDGE.json` records expected release hashes.
 
-## 5. Resources
+## 6. Resources
 
 - Disk: ~6 GB datasets + ~6 GB model weights + ~2 GB caches.
-- RAM: motif scan ~8 GB; FM inference 8–24 GB (GPU optional; all production numbers
+- RAM: motif scan ~8 GB; FM inference 8–24 GB (GPU optional; production numbers
   in this release were produced on a 24 GB laptop GPU and CPU).
 - Time: proxy construction dominates (hours); statistics ~30 min; probe ~10 min.
 
-## 6. What is NOT redistributed
+## 7. What is NOT redistributed (capsule)
 
 Cached NPZ graphs (`results/v2/*.npz`), vendored model code (`src/v2/scf_vendor`,
-`src/v2/uce_vendor`), model weights, raw H5AD/H5/FASTA, and the four retired legacy
-JSONs. The public capsule validates published artifacts; this recipe regenerates them.
+`src/v2/uce_vendor`), model weights, raw H5AD/H5/FASTA, and retired legacy JSONs.
+The public capsule validates published artifacts; this recipe regenerates them in the
+experiment workspace only.
