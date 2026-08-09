@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "W2-local",
+  "merge_tip": "W4-local",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -230,7 +230,7 @@
     {
       "id": "0x40",
       "wave": "W4",
-      "status": "blocked",
+      "status": "done",
       "title": "ENCODE/ChIP calibration",
       "assets": [
         "experiment"
@@ -240,7 +240,7 @@
     {
       "id": "0x41",
       "wave": "W4",
-      "status": "blocked",
+      "status": "done",
       "title": "No-ATAC-filter sensitivity panel",
       "assets": [
         "experiment"
@@ -250,7 +250,7 @@
     {
       "id": "0x42",
       "wave": "W4",
-      "status": "blocked",
+      "status": "done",
       "title": "allow_pickle purge loaders",
       "assets": [
         "eng"

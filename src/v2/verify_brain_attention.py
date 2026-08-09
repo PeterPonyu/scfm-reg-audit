@@ -77,7 +77,7 @@ def bh(pvals):
 
 def main():
     # Graphs
-    Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Z["types"]]
     tf_rows = np.array(Z["tf_rows"])
     G_atac = np.mean([Z[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)

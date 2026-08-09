@@ -14,7 +14,7 @@ DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__fil
 OUT = se.OUT
 ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
 
-Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
 types_b = [str(t) for t in Zb["types"]]; tf_b = np.array(Zb["tf_rows"])
 Gb = np.mean([Zb[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)
 Fb = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")

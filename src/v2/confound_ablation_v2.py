@@ -107,7 +107,7 @@ def ablate(tf_rows, G_atac, G_co, G_fm, atac_file, label, control_coexp=True):
 
 if __name__ == "__main__":
     results = []
-    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Zb["types"]]; tf_b = np.array(Zb["tf_rows"])
     Gb = np.mean([Zb[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)
     Fb = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")

@@ -19,7 +19,7 @@ assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"]
 
 
 def consensus(tag):
-    Z = np.load(f"{OUT}/G_ATAC_v2_{tag}.npz", allow_pickle=True)
+    Z = np.load(f"{OUT}/G_ATAC_v2_{tag}.npz", allow_pickle=False)
     ts = [str(t) for t in Z["types"]]
     return np.mean([Z[f"G_{t}"] for t in ts], axis=0).astype(np.float32), np.array(Z["tf_rows"])
 

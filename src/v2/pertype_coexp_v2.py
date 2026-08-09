@@ -30,7 +30,7 @@ ALL_MARKERS = {g for v in MARKERS.values() for g in v}
 
 man = json.load(open(MANI)); genes = man["genes"]; gidx = {g: i for i, g in enumerate(genes)}; Ng = len(genes)
 assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"]
-Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
 atac_types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 Gatac = {t: Z[f"G_{t}"] for t in atac_types}
 

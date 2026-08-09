@@ -10,7 +10,7 @@ PROM = 2000; W = 500
 man = json.load(open(f"{ROOT}/data/manifest/shared_genes.v2.json")); genes = man["genes"]; gidx = {g: i for i, g in enumerate(genes)}; Ng = len(genes)
 assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"]
 det = man["detection"]
-Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True); types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
+Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False); types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G_atac = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
 G_co = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")["co"]
 G_scf = np.load(f"{OUT}/G_scf_pooled.npz")["G"]

@@ -209,13 +209,13 @@
   },
   {
    "path": "paper/manuscript.pdf",
-   "bytes": 318876,
-   "sha256": "d421834c0e665eb6f94b03c6c8c1f3002f381014eebe4f8c03f12e4ced01144f"
+   "bytes": 320576,
+   "sha256": "d22d6e1054c4fe86244b7ac541de382fd4cf2dc21e458f0cc1a179939738cceb"
   },
   {
    "path": "paper/manuscript.tex",
-   "bytes": 61305,
-   "sha256": "6392f4e5c77742f3d0344b2ecf318e7ac2d11d4a7813559fe3fadfce63afc297"
+   "bytes": 62219,
+   "sha256": "a88f874a84e55ab28232d467f777bbca7501d764cea56393a4ac4be69b041e45"
   },
   {
    "path": "paper/panel_data.json",
@@ -258,6 +258,11 @@
    "sha256": "1fe3276838cb2e78db85352d46e95e57ddb854a0f700079ba647de8faf13310d"
   },
   {
+   "path": "results/encode_proxy_calibration_v1.public.json",
+   "bytes": 2152,
+   "sha256": "239cf15ba36356176c166392f11b997cc95680231ca0132d23f541c79b6a12b9"
+  },
+  {
    "path": "results/fixed_panel_audit_v2.public.json",
    "bytes": 230254,
    "sha256": "1605e1b4c81bfb91e8059c92982b9011d0d3867da725d994058fc449d52afb56"
@@ -291,6 +296,11 @@
    "path": "results/marginal_vs_adjusted_v2.public.json",
    "bytes": 12161,
    "sha256": "528ac6a61e2a4783d6a728aa9592c4ccce351e47b194bd6aa24093444aad36e7"
+  },
+  {
+   "path": "results/no_atac_filter_manifest_sensitivity_v1.public.json",
+   "bytes": 1341,
+   "sha256": "81ce3d9945be3d396561104e0531bc8061d86512bdb12ea78e8505e5ec441f12"
   },
   {
    "path": "results/nondegree_null_pattern_v2.public.json",

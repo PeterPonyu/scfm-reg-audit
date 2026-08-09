@@ -489,9 +489,14 @@ uses a detection-based operational label rather than a biological housekeeping a
 A separate sequence-opportunity audit (S1) applied a five-bin target-opportunity permutation and
 passed its null-calibration checks, but it is not the frozen v2 primary result: several row-level
 statistics and q-values differ under that stricter sensitivity design. We therefore report S1 as a
-sensitivity audit rather than claiming that the primary headline has been re-tested under S1. External
-binding calibration against ENCODE-compatible edges remains approval-blocked and is not treated as
-completed evidence.
+sensitivity audit rather than claiming that the primary headline has been re-tested under S1.
+External ENCODE pan-biosample TF-occupancy edges on the frozen panel (coverage gate:
+204 TFs, 114{,}467 positive edges) correlate with the pooled motif+ATAC proxy under a lightweight
+within-TF encode-shuffle null (brain Spearman $\rho=0.081$, PBMC $\rho=0.109$; plus-one
+$p=0.005$ at $N=199$; mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$ positives;
+\texttt{results/encode\_proxy\_calibration\_v1.public.json}). That association bounds the proxy as
+binding-proximal structure; it does \emph{not} convert FM dual-null Support into causal TF--target
+recovery.
  Our protocol freezes a readout
 \emph{concordance} (attention-likeness) check in-repo: a co-expression-like readout should correlate
 positively with co-expression (attention $\approx$ co-expression is well established). This check
@@ -735,7 +740,13 @@ We therefore report readout-level, not model-level, support.
 
 \paragraph{Limitations and scope.}
 The reference is a regulatory-potential proxy built from motif and accessibility evidence, and its
-coverage is narrow by construction. The $\pm2$\,kb promoter-plus-gene-body rule retains 6{,}609 of
+coverage is narrow by construction. Panel membership further requires $\ge1$ brain ATAC peak in the
+linkage window (Sec.~\ref{sec:proxy}); a no-peak-filter manifest under the same $n=1200$ cap
+overlaps the frozen panel in 1167/1200 genes (Jaccard $0.946$) and enlarges the pre-cap universe
+from 12{,}382 to 12{,}690 genes
+(\texttt{results/no\_atac\_filter\_manifest\_sensitivity\_v1.public.json}). A full dual-null re-audit
+on that alternate universe was not re-run (would require new proxy and FM graphs). The $\pm2$\,kb
+promoter-plus-gene-body rule retains 6{,}609 of
 111{,}743 accessible peaks in the PBMC data (5.91\%); distal enhancer elements, which carry most
 cell-type-specific TF occupancy~\citep{thurman2012accessible}, are systematically excluded, and no co-accessibility or
 3D-genome linker (for example Cicero~\citep{pliner2018cicero} or activity-by-contact models~\citep{fulco2019activity}) is used. At the MOODS

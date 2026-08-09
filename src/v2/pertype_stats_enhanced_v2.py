@@ -121,7 +121,7 @@ if __name__ == "__main__":
     results = []
 
     # ---- BRAIN: 5 types x {coexp, geneformer_embed, geneformer_attn, scfoundation} ----
-    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Zb["types"]]; tf_b = np.array(Zb["tf_rows"])
     ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
     ncells_b = json.load(open(f"{OUT}/pertype_fm_v2.json"))["per_type"]
@@ -142,7 +142,7 @@ if __name__ == "__main__":
             results.append(analyze_type("brain", t, tf_b, Ga, F["co"], S["scf"], ATAC_B, "scfoundation", n, mask_markers=True))
 
     # ---- PBMC: 7 types x {coexp, geneformer_embed, geneformer_attn} ----
-    Zp = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    Zp = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     types_p = [str(t) for t in Zp["types"]]; tf_p = np.array(Zp["tf_rows"])
     ATAC_P = f"{ROOT}/data/multiome/pbmc10k_atac.h5ad"
     ncells_p = json.load(open(f"{OUT}/pbmc_eval_v2.json"))["per_type_coexp"]

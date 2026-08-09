@@ -177,7 +177,7 @@ if __name__ == "__main__":
     results = []
 
     # ---- BRAIN ----
-    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Zb = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Zb["types"]]; tf_b = np.array(Zb["tf_rows"])
     Gb = np.mean([Zb[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)
     Fb = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     results.append(analyze("brain", tf_b, Gb, Fb["co"], Kb["G_ko_ctrl"], ATAC_B, "geneformer_ko_posctrl"))
 
     # ---- PBMC ----
-    Zp = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    Zp = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     types_p = [str(t) for t in Zp["types"]]; tf_p = np.array(Zp["tf_rows"])
     Gp = np.mean([Zp[f"G_{t}"] for t in types_p], axis=0).astype(np.float32)
     Fp = np.load(f"{OUT}/pbmc_fmgraphs_pooled.npz")

@@ -28,7 +28,7 @@ N_ITER = 50
 
 
 def load_consensus(tag):
-    Z = np.load(OUT / f"G_ATAC_v2_{tag}.npz", allow_pickle=True)
+    Z = np.load(OUT / f"G_ATAC_v2_{tag}.npz", allow_pickle=False)
     types = [str(t) for t in Z["types"]]
     G = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float64)
     return G, np.array(Z["tf_rows"])

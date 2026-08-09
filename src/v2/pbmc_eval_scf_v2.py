@@ -21,7 +21,7 @@ N_CELLS = int(os.environ.get("N_CELLS", "2000")); CAP = int(os.environ.get("SCF_
 man = json.load(open(MANI)); genes = man["genes"]; gidx = {g: i for i, g in enumerate(genes)}; Ng = len(genes)
 assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"]
 det = man["detection"]
-Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
 types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G_atac = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
 G_co = np.load(f"{OUT}/pbmc_fmgraphs_pooled.npz")["co"]

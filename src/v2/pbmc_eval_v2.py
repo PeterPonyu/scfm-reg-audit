@@ -35,7 +35,7 @@ man = json.load(open(MANI)); genes = man["genes"]; gidx = {g: i for i, g in enum
 manifest_sha = hashlib.sha256(("\n".join(genes)).encode()).hexdigest()
 assert manifest_sha == man["sha256"]
 det = man["detection"]
-Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+Z = np.load(f"{OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
 zgenes = [str(g) for g in Z["genes"]]; assert zgenes == genes
 types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G_atac_pooled = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)

@@ -27,7 +27,7 @@ assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"],
 Ng = len(genes); log(f"manifest {Ng} genes sha={man['sha256'][:12]} OK")
 
 # ---- G_ATAC v2 consensus (mean over cell types) ----
-Z = np.load(GATAC, allow_pickle=True)
+Z = np.load(GATAC, allow_pickle=False)
 zgenes = [str(g) for g in Z["genes"]]; assert zgenes == genes, "G_ATAC gene order != manifest"
 types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G_atac = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)

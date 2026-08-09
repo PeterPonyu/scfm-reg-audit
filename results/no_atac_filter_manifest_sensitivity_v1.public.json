@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "job": "0x41",
+  "method": "manifest_cap_rule_with_without_brain_atac_peak_filter_v1",
+  "params": {
+    "promoter_bp": 2000,
+    "detect_frac": 0.01,
+    "n_max": 1200
+  },
+  "universe_with_atac_peak_filter": 12382,
+  "universe_without_atac_peak_filter": 12690,
+  "manifest_with_filter_n": 1200,
+  "manifest_without_filter_n": 1200,
+  "frozen_v2_n": 1200,
+  "jaccard_frozen_vs_with_filter_manifest": 1.0,
+  "jaccard_frozen_vs_without_filter_manifest": 0.9464720194647201,
+  "overlap_frozen_in_without_filter_manifest": 1167,
+  "genes_in_frozen_missing_from_without_filter_cap": [
+    "AFF4",
+    "ARPC4",
+    "BRD4",
+    "CHURC1",
+    "CLTC",
+    "CREBRF",
+    "CUTA",
+    "DDX18",
+    "DYNC1I2",
+    "EIF3D",
+    "GRB2",
+    "HNRNPAB",
+    "HNRNPF",
+    "ID3",
+    "IER5",
+    "LAPTM5",
+    "NCOR1",
+    "NDUFA12",
+    "NDUFB9",
+    "NDUFC1"
+  ],
+  "n_genes_in_frozen_missing_from_without_filter_cap": 33,
+  "qualitative_stability_statement": "Removing the brain ATAC \u22651-peak filter enlarges the gene universe before the n=1200 cap; the frozen v2 panel is a peak-filtered, detection-filled slice and is not ATAC-orthogonal. A full dual-null re-audit on an alternate no-peak-filter panel was not re-run here (would require new proxy+FM graphs); this sensitivity reports universe/manifest composition only."
+}

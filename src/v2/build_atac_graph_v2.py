@@ -104,7 +104,7 @@ mot_order = sorted(use_mot); mcol = {m: k for k, m in enumerate(mot_order)}
 ck = hashlib.sha256(f"{man['sha256']}|{nRel}|{MOTIF_P}|{PEAK_WIDTH}|{mot_order}".encode()).hexdigest()[:16]
 cpath = f"{CACHE}/peak_motif_{ck}.npz"
 if os.path.exists(cpath):
-    Z = np.load(cpath, allow_pickle=True); H = sp.csr_matrix((Z["Hdata"], Z["Hind"], Z["Hptr"]), shape=tuple(Z["Hshape"])); mot_order = list(Z["mot_order"])
+    Z = np.load(cpath, allow_pickle=False); H = sp.csr_matrix((Z["Hdata"], Z["Hind"], Z["Hptr"]), shape=tuple(Z["Hshape"])); mot_order = list(Z["mot_order"])
     log(f"loaded cached peak×motif {H.shape} from {os.path.basename(cpath)}")
 else:
     w2 = PEAK_WIDTH // 2

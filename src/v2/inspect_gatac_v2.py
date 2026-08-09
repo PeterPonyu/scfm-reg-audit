@@ -3,7 +3,7 @@
 Guards against 'every TF hits every peak' -> every TF row proportional to target accessibility."""
 import os, json, numpy as np
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-Z = np.load(f"{ROOT}/results/v2/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+Z = np.load(f"{ROOT}/results/v2/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
 genes = [str(g) for g in Z["genes"]]; types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G = np.mean([Z[f"G_{t}"] for t in types], axis=0)
 Ng = len(genes)

@@ -24,7 +24,7 @@ RNA = f"{DATA_ROOT}/datasets/extra_preprocessed/ad_hm_prepped.h5ad"
 man = json.load(open(MANI)); genes = man["genes"]
 assert hashlib.sha256(("\n".join(genes)).encode()).hexdigest() == man["sha256"]
 Ng = len(genes)
-Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
 types = [str(t) for t in Z["types"]]; tf_rows = np.array(Z["tf_rows"])
 G_atac = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
 G_co = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")["co"]     # reuse cached co-expression

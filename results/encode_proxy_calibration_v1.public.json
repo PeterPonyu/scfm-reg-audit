@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "job": "0x40",
+  "method": "encode_per_tf_manifest_vs_pooled_G_ATAC_v1",
+  "encode_manifest_sha256": "9dab59334051b2b6d53e0c359ae06b00f9f46498bb2ae2ecd69ef44860385b79",
+  "panel_manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+  "n_panel_genes": 1200,
+  "n_panel_tfs": 446,
+  "coverage_gate": {
+    "minimum_experiment_support_per_edge": 2,
+    "minimum_passing_tf_count": 100,
+    "minimum_positive_targets_per_tf": 5,
+    "minimum_total_positive_edges": 1000,
+    "observed_passing_tf_count": 204,
+    "observed_total_positive_edges": 114467,
+    "status": "passed",
+    "passing_tfs_n": 204,
+    "passing_tfs_head": [
+      "ARID3A",
+      "ARNT",
+      "ATF1",
+      "ATF2",
+      "ATF3",
+      "ATF4",
+      "ATF6",
+      "BACH1",
+      "BCL11A",
+      "BCL6"
+    ]
+  },
+  "tissues": {
+    "brain": {
+      "n_edges_on_panel": 114330,
+      "observed_spearman_encode_vs_proxy": 0.0805478035673148,
+      "row_shuffle_p_plusone": 0.005,
+      "n_perm": 199,
+      "null_mean": 0.04254823476489242,
+      "null_sd": 0.0008579868602852422,
+      "mean_ap_over_tfs_with_ge5_pos": 0.5101187738358655,
+      "n_tfs_in_ap": 204,
+      "interpretation_bound": "ENCODE pan-biosample occupancy support correlates with motif+ATAC proxy; not tissue-specific causal regulatory truth."
+    },
+    "pbmc": {
+      "n_edges_on_panel": 114330,
+      "observed_spearman_encode_vs_proxy": 0.10888620235776399,
+      "row_shuffle_p_plusone": 0.005,
+      "n_perm": 199,
+      "null_mean": 0.05823277502986137,
+      "null_sd": 0.0008076542098263287,
+      "mean_ap_over_tfs_with_ge5_pos": 0.526047145374577,
+      "n_tfs_in_ap": 204,
+      "interpretation_bound": "ENCODE pan-biosample occupancy support correlates with motif+ATAC proxy; not tissue-specific causal regulatory truth."
+    }
+  },
+  "capability_language_bound": "Positive ENCODE\u2013proxy association supports that the proxy carries binding-proximal structure; it does NOT license FM dual-null Support as causal TF\u2013target recovery.",
+  "note": "Lightweight calibration; N_perm=199 within-TF encode shuffles; no coexp partialling."
+}

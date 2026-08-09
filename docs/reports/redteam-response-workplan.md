@@ -1,6 +1,6 @@
 # scReg-Eval red-team response workplan
 
-**Status:** W0+W1+W2+W3 done; W4 blocked pending approval  
+**Status:** W0–W4 complete (W4: ENCODE proxy calibration + no-ATAC manifest sensitivity + allow_pickle purge)  
 **Inputs:** four independent red-teams (construct / stats / repro / PeerJ CS) + canvas `screg-eval-redteam`  
 **Tip after merge fix:** `main` @ salvage-restored manuscript (`f75e70a`)  
 **Goal:** strengthen the paper with text, figures, tables, and targeted experiments so reviewer attacks become design features / bounded claims.
