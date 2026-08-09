@@ -1034,32 +1034,99 @@ f11d <- ggplot(rp, aes(y = reorder(pair, observed))) +
 emit("fig11_third_tissue_transfer", (f11a | f11b) / (f11c | f11d) +
        plot_annotation(tag_levels = "A") + plot_layout(axis_titles = "collect"), 6.8, 5.8)
 
-# ==================== tables (unchanged) ====================
+# ==================== tables (enriched from v2 results) ====================
+# Table 1: primary + dual-BH Support. Table 2: cross-tissue descriptive metrics.
+# Table 3: per-type rho ranges full vs non-degree. No bootstrap/MDE/power columns.
 fmt <- function(x, digits = 4) sprintf(paste0("%.", digits, "f"), x)
 pfmt <- function(p) ifelse(p <= 0.001, "$<0.001$", sprintf("$%.3f$", p))
+
+primary$support <- ifelse(
+  primary$is_baseline, "--",
+  ifelse(primary$mantel_q < 0.05 & primary$degree_q < 0.05,
+         ifelse(primary$rho < 0, "both (neg)", "both"),
+         "neither"))
+
 table_rows <- vapply(seq_len(nrow(primary)), function(i) {
   if (primary$is_baseline[i]) {
-    sprintf("%s & %s & $%s$ & %s & -- & %s & -- \\\\",
+    sprintf("%s & %s & $%s$ & %s & -- & %s & -- & -- \\\\",
             primary$tissue[i], primary$model[i], fmt(primary$rho[i]),
             pfmt(primary$mantel_p[i]), pfmt(primary$degree_p[i]))
   } else {
-    sprintf("%s & %s & $%s$ & %s & $%.3f$ & %s & $%.3f$ \\\\",
-            primary$tissue[i], primary$model[i], fmt(primary$rho[i], digits = 5), pfmt(primary$mantel_p[i]),
-            primary$mantel_q[i], pfmt(primary$degree_p[i]), primary$degree_q[i])
+    sprintf("%s & %s & $%s$ & %s & $%.3f$ & %s & $%.3f$ & %s \\\\",
+            primary$tissue[i], primary$model[i],
+            fmt(primary$rho[i], digits = 5), pfmt(primary$mantel_p[i]),
+            primary$mantel_q[i], pfmt(primary$degree_p[i]), primary$degree_q[i],
+            primary$support[i])
   }
 }, character(1))
 writeLines(c(
-  "\\begin{tabular}{llrrrrr}", "\\toprule",
-  "Tissue & Readout & Partial $\\rho$ & $p_M$ & $q_M$ & $p_D$ & $q_D$ \\\\ ",
+  "\\begin{tabular}{llrrrrrl}", "\\toprule",
+  "Tissue & Readout & Partial $\\rho$ & $p_M$ & $q_M$ & $p_D$ & $q_D$ & Support \\\\ ",
   "\\midrule", table_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table1_primary_fixed_panel.tex"))
 
-cross_rows <- vapply(seq_len(nrow(cross)), function(i) sprintf(
-  "%s & $%.4f$ & 446 \\\\", cross$pair[i], cross$rho[i]), character(1))
+# Pair-level descriptive extras (edge Jaccard, mean per-TF-row Spearman).
+# Join to decomp by accession pair; display names match Table 2 / text.
+pair_meta <- list(
+  list(ids = c("GSE174367", "PBMC10k"),
+       file = "cross_tissue_brain_vs_pbmc.json",
+       label = "Brain--PBMC"),
+  list(ids = c("GSE174367", "GSE206767"),
+       file = "cross_tissue_atac_v2.json",
+       label = "Brain--Fibroblast mix"),
+  list(ids = c("PBMC10k", "GSE206767"),
+       file = "cross_tissue_pbmc_vs_fibroblast.json",
+       label = "PBMC--Fibroblast mix")
+)
+decomp_rows <- decomp$rows
+cross_enrich <- bind_rows(lapply(pair_meta, function(pm) {
+  dr <- Filter(function(x) {
+    identical(sort(unlist(x$pair)), sort(pm$ids))
+  }, decomp_rows)[[1]]
+  pr <- fromJSON(file.path(res, pm$file), simplifyVector = FALSE)
+  data.frame(
+    pair = pm$label,
+    rho = dr$observed_spearman,
+    add_frac = dr$fraction_explained_by_additive_marginals,
+    resid = dr$residual_spearman_after_own_additive_fits,
+    phi = dr$binary_support_phi,
+    jacc = pr$edge_jaccard,
+    row_rho = pr$mean_per_tf_row_spearman,
+    n_tf = 446,
+    stringsAsFactors = FALSE
+  )
+}))
+cross_rows <- vapply(seq_len(nrow(cross_enrich)), function(i) sprintf(
+  "%s & $%.4f$ & $%.4f$ & $%.4f$ & $%.4f$ & $%.3f$ & $%.4f$ & %d \\\\",
+  cross_enrich$pair[i], cross_enrich$rho[i], cross_enrich$add_frac[i],
+  cross_enrich$resid[i], cross_enrich$phi[i], cross_enrich$jacc[i],
+  cross_enrich$row_rho[i], cross_enrich$n_tf[i]), character(1))
 writeLines(c(
-  "\\begin{tabular}{lrr}", "\\toprule",
-  "Tissue pair & Observed Spearman $\\rho$ & Shared TFs \\\\ ",
-  "\\midrule", cross_rows, "\\bottomrule", "\\end{tabular}"
+  "\\begingroup\\footnotesize",
+  "\\begin{tabular}{lrrrrrrr}", "\\toprule",
+  paste0("Tissue pair & Obs.\\ $\\rho$ & Add.\\ frac. & Resid.\\ $\\rho$ & ",
+         "$\\varphi$ & Edge Jac. & Mean row $\\rho$ & Shared TFs \\\\ "),
+  "\\midrule", cross_rows, "\\bottomrule", "\\end{tabular}",
+  "\\endgroup"
 ), file.path(figs, "table2_cross_tissue_observed.tex"))
+
+# Table 3: per-type descriptive ranges (full vs non-degree), exploratory FM rows only.
+pt_specs <- list(
+  list(tissue = "brain", key = "full_confound", label_t = "Brain", label_s = "full"),
+  list(tissue = "brain", key = "non_degree_confound", label_t = "Brain", label_s = "non-degree"),
+  list(tissue = "pbmc", key = "full_confound", label_t = "PBMC", label_s = "full"),
+  list(tissue = "pbmc", key = "non_degree_confound", label_t = "PBMC", label_s = "non-degree")
+)
+pt_rows <- vapply(pt_specs, function(ps) {
+  ds <- audit$per_cell_type[[ps$tissue]][[ps$key]]$descriptive_summary
+  sprintf("%s & %s & %d & $%.5f$ & $%.5f$ & $%.5f$ \\\\",
+          ps$label_t, ps$label_s, ds$n_rows_exploratory,
+          ds$rho_min, ds$rho_max, ds$rho_median)
+}, character(1))
+writeLines(c(
+  "\\begin{tabular}{llrrrr}", "\\toprule",
+  "Tissue & Confound spec & $n$ rows & $\\rho_{\\min}$ & $\\rho_{\\max}$ & $\\rho_{\\mathrm{median}}$ \\\\ ",
+  "\\midrule", pt_rows, "\\bottomrule", "\\end{tabular}"
+), file.path(figs, "table3_pertype_ranges.tex"))
 
 cat("all authoritative figures and tables written to", figs, "\n")
