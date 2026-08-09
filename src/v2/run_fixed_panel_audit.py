@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import time
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -44,7 +45,7 @@ def spawn_int_seeds(ss, n: int) -> list:
 
 # ----------------------------- cached graph loaders --------------------------
 def load_pooled_brain():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Z["types"]]
     tf_b = np.array(Z["tf_rows"])
     G_atac = np.mean([Z[f"G_{t}"] for t in types_b], axis=0).astype(np.float32)
@@ -68,7 +69,7 @@ def load_pooled_brain():
 
 
 def load_pooled_pbmc():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     types_p = [str(t) for t in Z["types"]]
     tf_p = np.array(Z["tf_rows"])
     G_atac = np.mean([Z[f"G_{t}"] for t in types_p], axis=0).astype(np.float32)
@@ -165,14 +166,30 @@ def load_geneformer_ko():
     }, np.array(K["tf_rows"])
 
 
+def _report_absent_pertype_caches(tissue: str, missing: list, label: str) -> None:
+    """Report cell types whose cached graph is absent.
+
+    Skipping them silently shrinks the per-type readout set without any trace in the
+    logs or the artifact, so the omission is announced on both channels.
+    """
+    if not missing:
+        return
+    message = (f"{tissue}: {len(missing)} cell types have no {label} cache and are excluded "
+               f"from the per-type readouts: {sorted(missing)}")
+    log(f"WARNING {message}")
+    warnings.warn(message, RuntimeWarning, stacklevel=2)
+
+
 def load_brain_pertype_models():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types_b = [str(t) for t in Z["types"]]
     tf_b = np.array(Z["tf_rows"])
     out: dict = {}
+    missing_fm, missing_scf = [], []
     for t in types_b:
         fpath = f"{fpa.OUT}/brain_fmgraphs_{t}.npz"
         if not os.path.exists(fpath):
+            missing_fm.append(t)
             continue
         F = np.load(fpath)
         spath = f"{fpa.OUT}/brain_scfgraphs_{t}.npz"
@@ -182,19 +199,25 @@ def load_brain_pertype_models():
             "geneformer_attn": F["at"],
             "coexp": F["co"],
         }
-        if scf is not None:
+        if scf is None:
+            missing_scf.append(t)
+        else:
             out[t]["scFoundation_encoder"] = scf
+    _report_absent_pertype_caches("brain", missing_fm, "brain_fmgraphs")
+    _report_absent_pertype_caches("brain", missing_scf, "brain_scfgraphs")
     return out, tf_b, types_b
 
 
 def load_pbmc_pertype_models():
-    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    Z = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     types_p = [str(t) for t in Z["types"]]
     tf_p = np.array(Z["tf_rows"])
     out: dict = {}
+    missing_fm = []
     for t in types_p:
         fpath = f"{fpa.OUT}/pbmc_fmgraphs_{t}.npz"
         if not os.path.exists(fpath):
+            missing_fm.append(t)
             continue
         F = np.load(fpath)
         out[t] = {
@@ -202,13 +225,14 @@ def load_pbmc_pertype_models():
             "geneformer_attn": F["at"],
             "coexp": F["co"],
         }
+    _report_absent_pertype_caches("pbmc", missing_fm, "pbmc_fmgraphs")
     return out, tf_p, types_p
 
 
 def load_cross_tissue():
-    Zg = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
-    Zp = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
-    Zc = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE206767.npz", allow_pickle=True)
+    Zg = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
+    Zp = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
+    Zc = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE206767.npz", allow_pickle=False)
     tags = ["GSE174367", "PBMC10k", "GSE206767"]
     consensus = {}
     tfs = {}
@@ -627,7 +651,7 @@ def run_pertype_family(ss, atac_file: str, tissue: str, G_atac_pooled: np.ndarra
     rows: list = []
     genes = json.loads(Path(fpa.MANI).read_text())["genes"]
     atac_path = f"{fpa.OUT}/G_ATAC_v2_{ 'GSE174367' if tissue=='brain' else 'PBMC10k' }.npz"
-    Z_atac = np.load(atac_path, allow_pickle=True)
+    Z_atac = np.load(atac_path, allow_pickle=False)
 
     for ctype, models in type_models.items():
         G_atac_type = Z_atac[f"G_{ctype}"].astype(np.float32)
@@ -915,6 +939,7 @@ def _stage_json(path: str, document: dict) -> str:
             raise RuntimeError(f"staged JSON validation mismatch for {destination.name}")
         return temp_path
     except BaseException:
+        # Cleanup only; the staging failure itself is re-raised unchanged.
         try:
             os.unlink(temp_path)
         except FileNotFoundError:
@@ -1017,7 +1042,7 @@ def build_inference_status(audit_hashes: dict, legacy_actual: dict,
             "scgpt_pooled_brain_recompute_command": (
                 "python3 -c \"import numpy as np; from scipy.stats import rankdata; "
                 "ROOT='" + os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")) + "'; "
-                "Z=np.load(ROOT+'/results/v2/G_ATAC_v2_GSE174367.npz', allow_pickle=True); "
+                "Z=np.load(ROOT+'/results/v2/G_ATAC_v2_GSE174367.npz', allow_pickle=False); "
                 "F=np.load(ROOT+'/results/v2/fmgraphs_pooled_v2.npz'); "
                 "types=[str(t) for t in Z['types']]; tf=np.array(Z['tf_rows']); "
                 "G=np.mean([Z[f'G_{t}'] for t in types], axis=0).astype(np.float32); "
@@ -1032,7 +1057,7 @@ def build_inference_status(audit_hashes: dict, legacy_actual: dict,
             "crossmodal_v2_json_path": "results/v2/crossmodal_v2.json",
             "fmgraphs_pooled_v2_npz_sha256": fpa.sha256_file(f"{fpa.OUT}/fmgraphs_pooled_v2.npz"),
             "fmgraphs_pooled_v2_sg_matrix_sha256": fpa.sha256_array(
-                np.load(f"{fpa.OUT}/fmgraphs_pooled_v2.npz", allow_pickle=True)["sg"]
+                np.load(f"{fpa.OUT}/fmgraphs_pooled_v2.npz", allow_pickle=False)["sg"]
             ),
         },
     }
@@ -1071,8 +1096,8 @@ def main():
         **{f"ko_{name}": matrix for name, matrix in ko_models.items()},
         **{f"cross_tissue_{name}": matrix for name, matrix in consensus.items()},
     }
-    brain_proxy_cache = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
-    pbmc_proxy_cache = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=True)
+    brain_proxy_cache = np.load(f"{fpa.OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
+    pbmc_proxy_cache = np.load(f"{fpa.OUT}/G_ATAC_v2_PBMC10k.npz", allow_pickle=False)
     for cell_type in types_b:
         matrices[f"brain_proxy_{cell_type}"] = brain_proxy_cache[f"G_{cell_type}"]
     for cell_type in types_p:

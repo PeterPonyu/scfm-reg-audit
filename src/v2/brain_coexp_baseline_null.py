@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 """Co-expression baseline through both nulls, brain tissue."""
-import json
 import os
 import sys
 import time
@@ -54,7 +53,7 @@ def brain_peakcount():
 
 
 def main():
-    Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=True)
+    Z = np.load(f"{OUT}/G_ATAC_v2_GSE174367.npz", allow_pickle=False)
     types = [str(t) for t in Z["types"]]
     tf = np.array(Z["tf_rows"])
     G = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
@@ -86,14 +85,15 @@ def main():
                                      seed=BRAIN_DEGREE_SEED)
     print(f"brain baseline: rho={obs:+.6f} pM={man['p_mc']} pD={deg['p_mc']} "
           f"zM={man['z']:.2f} zD={deg['z']:.2f}  ({time.time()-t:.0f}s)", flush=True)
-    json.dump({
+    document = {
         "schema_version": 2,
         "tissue": "brain", "model_label": "co_expression_baseline",
         "rung": "degree_only_no_selfpartial", "observed_rho": float(obs),
         "pM": man["p_mc"], "pD": deg["p_mc"], "zM": man["z"], "zD": deg["z"],
         "n_perm": 999, "mantel_seed": BRAIN_MANTEL_SEED,
         "degree_seed": BRAIN_DEGREE_SEED, "seed_contract": "explicit_integer_v1",
-    }, open(f"{OUT}/brain_coexp_baseline_null_v2.json", "w"), indent=1)
+    }
+    fpa.write_json_atomic(f"{OUT}/brain_coexp_baseline_null_v2.json", document)
     print("wrote brain_coexp_baseline_null_v2.json", flush=True)
 
 

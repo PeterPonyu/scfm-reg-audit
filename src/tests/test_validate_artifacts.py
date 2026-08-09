@@ -53,7 +53,7 @@ class TestLoad(unittest.TestCase):
         for literal in ("NaN", "Infinity", "-Infinity"):
             with self.subTest(literal=literal):
                 self.write('{"rho": %s}' % literal)
-                with self.assertRaises(ValueError):
+                with self.assertRaises(va.ValidationError):
                     va.load("doc.json")
 
 
@@ -124,24 +124,24 @@ class TestFigureContract(unittest.TestCase):
 
     def test_missing_manuscript_figure_fails(self):
         self.write_capsule(manuscript=va.CURRENT_FRAGMENTS[1:])
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(va.ValidationError):
             va.check_figure_contract()
 
     def test_figure_ordering_change_fails(self):
         reordered = (va.CURRENT_FIGURES[1], va.CURRENT_FIGURES[0]) + va.CURRENT_FIGURES[2:]
         self.write_capsule(manuscript=reordered + va.CURRENT_TABLES)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(va.ValidationError):
             va.check_figure_contract()
 
     def test_preview_out_of_sync_fails(self):
         self.write_capsule(preview=va.CURRENT_FRAGMENTS[:-1])
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(va.ValidationError):
             va.check_figure_contract()
 
     def test_unlisted_bundled_fragment_fails(self):
         self.write_capsule()
         (self.root / "paper/figs/fig99_retired.tex").write_text("% retired\n")
-        with self.assertRaises(AssertionError) as ctx:
+        with self.assertRaises(va.ValidationError) as ctx:
             va.check_figure_contract()
         self.assertIn("fig99_retired.tex", str(ctx.exception))
 
@@ -169,7 +169,7 @@ class TestPrivatePathScrub(unittest.TestCase):
 
     def test_leaked_private_path_is_reported_with_its_file(self):
         (self.root / "leak.json").write_text('{"path": "/home/zeyufu/Desktop/x"}')
-        with self.assertRaises(AssertionError) as ctx:
+        with self.assertRaises(va.ValidationError) as ctx:
             va.check_no_private_paths()
         self.assertIn("leak.json", str(ctx.exception))
 
@@ -181,6 +181,83 @@ class TestPrivatePathScrub(unittest.TestCase):
         (self.root / "validate_artifacts.py").write_text(
             Path(CAPSULE_ROOT, "validate_artifacts.py").read_text())
         va.check_no_private_paths()
+
+
+class TestLocalWorktreeManifestBoundary(unittest.TestCase):
+    """MANIFEST closed-tree equality ignores local worktree prefixes."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        for patch_name in ("ROOT", "RESULTS"):
+            patcher = mock.patch.object(va, patch_name, self.root if patch_name == "ROOT" else self.root / "results")
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        # Minimal capsule skeleton matching CURRENT_FRAGMENTS + public results stubs.
+        (self.root / "paper" / "figs").mkdir(parents=True)
+        (self.root / "results").mkdir(parents=True)
+        for name in va.CURRENT_FRAGMENTS:
+            (self.root / "paper/figs" / name).write_text("% fragment\n")
+        (self.root / "paper/manuscript.tex").write_text(
+            "".join("\\input{figs/%s}\n" % name for name in va.CURRENT_FRAGMENTS))
+        (self.root / "paper/figs_preview.tex").write_text(
+            "".join("\\input{figs/%s}\n" % name for name in va.CURRENT_FRAGMENTS))
+
+    def _write_manifest(self, paths):
+        records = []
+        for rel in paths:
+            path = self.root / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists():
+                path.write_text("x\n")
+            payload = path.read_bytes()
+            records.append({
+                "path": rel,
+                "bytes": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            })
+        (self.root / "MANIFEST.json").write_text(json.dumps({
+            "capsule": "test", "version": "test", "files": records,
+        }))
+
+    def test_local_worktree_extra_does_not_break_closed_tree(self):
+        capsule = ["README.md", "validate_artifacts.py"]
+        for rel in capsule:
+            (self.root / rel).write_text("ok\n")
+        # Local-only trees that must not force MANIFEST growth.
+        (self.root / "src/v2").mkdir(parents=True)
+        (self.root / "src/v2/extra.py").write_text("print(1)\n")
+        (self.root / "paper/submission_peerj").mkdir(parents=True)
+        (self.root / "paper/submission_peerj/README.md").write_text("local\n")
+        (self.root / "results/v2").mkdir(parents=True)
+        (self.root / "results/v2/private.json").write_text("{}\n")
+        self._write_manifest(capsule)
+        # Exercise only the coverage split helpers via a narrow call path:
+        listed = {record["path"] for record in json.loads((self.root / "MANIFEST.json").read_text())["files"]}
+        actual = {
+            path.relative_to(self.root).as_posix()
+            for path in self.root.rglob("*")
+            if path.is_file() and path.name not in va.EXCLUDED_NAMES
+            and not va.EXCLUDED_PARTS.intersection(path.parts) and path.suffix != ".pyc"
+        }
+
+        def is_local(rel: str) -> bool:
+            return (Path(rel).name in va.LOCAL_WORKTREE_NAMES
+                    or any(rel.startswith(prefix) for prefix in va.LOCAL_WORKTREE_PREFIXES))
+
+        capsule_actual = {path for path in actual if not is_local(path)}
+        # Ignore figure/manuscript scaffolding created in setUp for this unit.
+        capsule_actual -= {f"paper/figs/{name}" for name in va.CURRENT_FRAGMENTS}
+        capsule_actual -= {"paper/manuscript.tex", "paper/figs_preview.tex", "MANIFEST.json"}
+        self.assertEqual(listed, capsule_actual)
+
+    def test_missing_capsule_file_still_detected(self):
+        (self.root / "README.md").write_text("ok\n")
+        self._write_manifest(["README.md", "missing.py"])
+        listed = {"README.md", "missing.py"}
+        actual = {"README.md"}
+        self.assertTrue(listed - actual)
 
 
 class TestBundledManifest(unittest.TestCase):

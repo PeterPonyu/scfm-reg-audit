@@ -1,0 +1,132 @@
+\relax 
+\providecommand\babel@aux[2]{}
+\@nameuse{bbl@beforestart}
+\bibstyle{apalike}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{theodoris2023geneformer,cui2024scgpt,kalfon2025scprint}
+\citation{pratapa2020benchmarking,marbach2012wisdom,nourisa2025genernib}
+\citation{qiu2025biollm,wu2025biologydriven,nourisa2025genernib}
+\babel@aux{english}{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{ahlmanneltze2025linear,boiarsky2023deepdive,kedzierska2023assessing}
+\citation{kendiukhov2026scfm}
+\citation{kendiukhov2026sae}
+\citation{theodoris2023geneformer,cui2024scgpt,hao2024scfoundation,rosen2023uce,yang2022scbert}
+\citation{yang2024genecompass,hu2026regformer}
+\citation{rauluseviciute2024jaspar,korhonen2009moods}
+\citation{aibar2017scenic}
+\citation{wen2024cellplm}
+\citation{efron1993bootstrap}
+\citation{mantel1967}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Methods}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Regulatory-potential proxy and fixed panel}{3}{subsection.2.1}\protected@file@percent }
+\newlabel{sec:proxy}{{2.1}{3}{Regulatory-potential proxy and fixed panel}{subsection.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Foundation-model and baseline graphs}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Observed statistic and confound specifications}{3}{subsection.2.3}\protected@file@percent }
+\newlabel{sec:statistic}{{2.3}{3}{Observed statistic and confound specifications}{subsection.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Finite-panel randomization inference}{3}{subsection.2.4}\protected@file@percent }
+\newlabel{sec:inference}{{2.4}{3}{Finite-panel randomization inference}{subsection.2.4}{}}
+\citation{phipson2010permutation}
+\citation{benjamini1995fdr}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}TF-disjoint supervised probe}{4}{subsection.2.5}\protected@file@percent }
+\newlabel{sec:probe}{{2.5}{4}{TF-disjoint supervised probe}{subsection.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Descriptive and pipeline-sensitivity analyses}{4}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{4}{section.3}\protected@file@percent }
+\newlabel{sec:results}{{3}{4}{Results}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The proxy is reproducible, but remains a proxy}{4}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Coverage and fixed-panel quality control. (A) Manifest-gene coverage for encoder readouts. (B) Validated graph availability by tissue and analysis level; coverage is intentionally reported rather than assumed balanced. (C) Cell counts used by representative pooled inference runs. (D) Edge accounting from the $446\times 1{,}200$ Cartesian panel through self-pair and brain marker-mask exclusions.}}{5}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:coverage}{{1}{5}{Coverage and fixed-panel quality control. (A) Manifest-gene coverage for encoder readouts. (B) Validated graph availability by tissue and analysis level; coverage is intentionally reported rather than assumed balanced. (C) Cell counts used by representative pooled inference runs. (D) Edge accounting from the $446\times 1{,}200$ Cartesian panel through self-pair and brain marker-mask exclusions}{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Primary full-confound audit: six weak positives, one negative, and a baseline that matches them}{5}{subsection.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Regulatory-potential proxy, evidence, and panel composition. (A) Construction pipeline: accessible peaks are linked to genes ($\pm 2$\,kb promoter-plus-gene-body), JASPAR/MOODS motif matches contribute directed TF$\rightarrow $target weights, and edges are restricted to the hash-pinned 446-TF$\times $1{,}200-gene panel; no RNA enters the proxy, which is not causal ground truth. (B) Observed consensus-graph correlations across three tissue datasets. (C) Motif hits per accessible peak relative to the expected 5.5 random hits at the $10^{-5}$ motif threshold. (D) TF target-profile redundancy: counts with an identical binary profile or a partner at cosine similarity $>0.8$, out of 446 TFs.}}{6}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:proxy}{{2}{6}{Regulatory-potential proxy, evidence, and panel composition. (A) Construction pipeline: accessible peaks are linked to genes ($\pm 2$\,kb promoter-plus-gene-body), JASPAR/MOODS motif matches contribute directed TF$\rightarrow $target weights, and edges are restricted to the hash-pinned 446-TF$\times $1{,}200-gene panel; no RNA enters the proxy, which is not causal ground truth. (B) Observed consensus-graph correlations across three tissue datasets. (C) Motif hits per accessible peak relative to the expected 5.5 random hits at the $10^{-5}$ motif threshold. (D) TF target-profile redundancy: counts with an identical binary profile or a partner at cosine similarity $>0.8$, out of 446 TFs}{figure.caption.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Observed cross-tissue reproducibility of the regulatory-potential proxy on the fixed panel. Columns report observed Spearman $\rho $; the additive fraction of that agreement explained by TF-row plus gene-column marginals; residual Spearman after each tissue's own additive fit; binary support $\varphi $; edge Jaccard; mean per-TF-row Spearman; and the shared TF count. These are fixed-panel descriptive quantities with no confidence interval or new randomization inference.}}{6}{table.caption.4}\protected@file@percent }
+\newlabel{tab:cross}{{1}{6}{Observed cross-tissue reproducibility of the regulatory-potential proxy on the fixed panel. Columns report observed Spearman $\rho $; the additive fraction of that agreement explained by TF-row plus gene-column marginals; residual Spearman after each tissue's own additive fit; binary support $\varphi $; edge Jaccard; mean per-TF-row Spearman; and the shared TF count. These are fixed-panel descriptive quantities with no confidence interval or new randomization inference}{table.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Cross-tissue structure of the regulatory-potential proxy. (A) Observed agreement, TF-row-plus-gene-column additive prediction, and agreement after removing each tissue's own additive fit. (B) Fraction of observed agreement predicted by additive marginals. (C) Difference between residual and observed correlation; brain--fibroblast mix is net-subtractive. (D) Range and mean of pairwise cell-type proxy correlations within brain and PBMC. These are descriptive fixed-panel quantities without new randomization inference.}}{7}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:decomp}{{3}{7}{Cross-tissue structure of the regulatory-potential proxy. (A) Observed agreement, TF-row-plus-gene-column additive prediction, and agreement after removing each tissue's own additive fit. (B) Fraction of observed agreement predicted by additive marginals. (C) Difference between residual and observed correlation; brain--fibroblast mix is net-subtractive. (D) Range and mean of pairwise cell-type proxy correlations within brain and PBMC. These are descriptive fixed-panel quantities without new randomization inference}{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Primary fixed-panel audit under both prespecified confound specifications. (A) Full- confound pooled rows and the same-edge co-expression baseline; labels give BH-adjusted $q_M$ and $q_D$ for FM rows and uncorrected $p_M,p_D$ for the baseline. (B) Non-degree co-primary rows; no row is supported by both nulls. (C) Full-confound $q_M$ versus $q_D$; support requires both coordinates below 0.05. (D) Each supported positive row compared with its own-tissue co-expression baseline.}}{8}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:primary}{{4}{8}{Primary fixed-panel audit under both prespecified confound specifications. (A) Full- confound pooled rows and the same-edge co-expression baseline; labels give BH-adjusted $q_M$ and $q_D$ for FM rows and uncorrected $p_M,p_D$ for the baseline. (B) Non-degree co-primary rows; no row is supported by both nulls. (C) Full-confound $q_M$ versus $q_D$; support requires both coordinates below 0.05. (D) Each supported positive row compared with its own-tissue co-expression baseline}{figure.caption.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null family. Support is dual within-family BH threshold $q_M<0.05$ and $q_D<0.05$ (``both''); opposite-sign dual support is labeled ``both (neg)''; ``neither'' otherwise. The co-expression baseline is tested on the same edge set outside the FM families and is marked ``--'' in Support; its entries are uncorrected $p$-values (dashes mark where no family correction applies).}}{9}{table.caption.6}\protected@file@percent }
+\newlabel{tab:primary}{{2}{9}{Primary fixed-panel results. $M$ denotes the gene-label null and $D$ the within-TF-row degree-preserving target shuffle; each $q$ is BH-adjusted within its tissue-by-specification-by-null family. Support is dual within-family BH threshold $q_M<0.05$ and $q_D<0.05$ (``both''); opposite-sign dual support is labeled ``both (neg)''; ``neither'' otherwise. The co-expression baseline is tested on the same edge set outside the FM families and is marked ``--'' in Support; its entries are uncorrected $p$-values (dashes mark where no family correction applies)}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}The alignments depend on conditioning on proxy-derived degree covariates}{9}{subsection.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Readout usability and internal consistency. (A) FM--co-expression correlation for all 13 pooled readouts, colored by full-confound support. (B) Positive joint-null support and positive usability shown as separate binary checks. (C) Marginal and partial behavior of the Geneformer knockout readout and its artifact-corrected knockout readout. (D) Geneformer embedding and attention effects within each tissue; the brain effects have opposite signs.}}{10}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:usability}{{5}{10}{Readout usability and internal consistency. (A) FM--co-expression correlation for all 13 pooled readouts, colored by full-confound support. (B) Positive joint-null support and positive usability shown as separate binary checks. (C) Marginal and partial behavior of the Geneformer knockout readout and its artifact-corrected knockout readout. (D) Geneformer embedding and attention effects within each tissue; the brain effects have opposite signs}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Per-cell-type patterns are descriptive}{10}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}The implementation responds monotonically to aligned injection, and the observed effects sit at the bottom of that ladder}{10}{subsection.3.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Randomization and readout diagnostics. (A) Observed statistics against the row-shuffle null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout both align with the proxy after partialling co-expression alone ($p=0.001$ and $p=0.004$); the audit's full confound specification removes that alignment (Table~\ref {tab:primary}). (D) Joint-null support decisions are identical between the authoritative audit and the attention-omission guard.}}{11}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:nulls}{{6}{11}{Randomization and readout diagnostics. (A) Observed statistics against the row-shuffle null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout both align with the proxy after partialling co-expression alone ($p=0.001$ and $p=0.004$); the audit's full confound specification removes that alignment (Table~\ref {tab:primary}). (D) Joint-null support decisions are identical between the authoritative audit and the attention-omission guard}{figure.caption.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Per-cell-type descriptive ranges of observed partial $\rho $ under full and non-degree confound specifications (brain: 15 exploratory FM$\times $type rows; PBMC: 14). Min/max/median across those rows only; no randomization $p$-values, BH correction, or population-uncertainty interpretation.}}{11}{table.caption.11}\protected@file@percent }
+\newlabel{tab:pertype_ranges}{{3}{11}{Per-cell-type descriptive ranges of observed partial $\rho $ under full and non-degree confound specifications (brain: 15 exploratory FM$\times $type rows; PBMC: 14). Min/max/median across those rows only; no randomization $p$-values, BH correction, or population-uncertainty interpretation}{table.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Dependence on the confound specification. (A) Full and non-degree estimates joined within each row. (B) Effect-sign map across specifications. (C) Full-confound versus non-degree randomization $p$-values for both nulls. (D) Nested covariate ladder from marginal correlation to the primary rung; lines are descriptive and are not a model-selection exercise.}}{12}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:spec}{{7}{12}{Dependence on the confound specification. (A) Full and non-degree estimates joined within each row. (B) Effect-sign map across specifications. (C) Full-confound versus non-degree randomization $p$-values for both nulls. (D) Nested covariate ladder from marginal correlation to the primary rung; lines are descriptive and are not a model-selection exercise}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}A supervised TF-disjoint probe gives mixed family-level results}{12}{subsection.3.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Per-cell-type descriptive robustness summaries. (A) Brain full-confound rows by readout. (B) PBMC full-confound rows by readout. (C) Earlier brain per-type co-expression, Geneformer- embedding, and Geneformer-attention summaries on the same fixed panel. (D) Cell counts underlying the per-type rows. These observed effects have no randomization $p$-values, multiplicity claims, or population-uncertainty interpretation.}}{13}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:pertype}{{8}{13}{Per-cell-type descriptive robustness summaries. (A) Brain full-confound rows by readout. (B) PBMC full-confound rows by readout. (C) Earlier brain per-type co-expression, Geneformer- embedding, and Geneformer-attention summaries on the same fixed panel. (D) Cell counts underlying the per-type rows. These observed effects have no randomization $p$-values, multiplicity claims, or population-uncertainty interpretation}{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Axis-aligned pipeline-sensitivity diagnostic and observed-effect scale. (A--B) Brain and PBMC ladders; lines show the mean across 30 independent noise replicates, ribbons the replicate range, and diamonds the subdivided low-$\alpha $ points. (C) Observed effects located on the injection curves. (D) $\alpha $-equivalents of the six supported positive rows relative to the smallest probed nonzero fraction; the negative brain attention row has no positive $\alpha $-equivalent. This is not a confidence interval, power curve, MDE, or exclusion analysis.}}{14}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:sensitivity}{{9}{14}{Axis-aligned pipeline-sensitivity diagnostic and observed-effect scale. (A--B) Brain and PBMC ladders; lines show the mean across 30 independent noise replicates, ribbons the replicate range, and diamonds the subdivided low-$\alpha $ points. (C) Observed effects located on the injection curves. (D) $\alpha $-equivalents of the six supported positive rows relative to the smallest probed nonzero fraction; the negative brain attention row has no positive $\alpha $-equivalent. This is not a confidence interval, power curve, MDE, or exclusion analysis}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}The construct transfers across three independent ATAC datasets}{14}{subsection.3.7}\protected@file@percent }
+\newlabel{sec:third_tissue}{{3.7}{14}{The construct transfers across three independent ATAC datasets}{subsection.3.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135 held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, paired sign-flip $q_{\mathrm  {flip}}$ against co-expression. Green rows are supported against the baseline at $q_{\mathrm  {flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$). (B) Recovery across confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TFmean, median, and one standard deviation of adjusted recovery.}}{15}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:probe}{{10}{15}{TF-disjoint supervised probe. (A) Confound-adjusted test correlation per family on 135 held-out TFs; labels give the gene-label permutation $q_M$ and, for each FM family, paired sign-flip $q_{\mathrm {flip}}$ against co-expression. Green rows are supported against the baseline at $q_{\mathrm {flip}}<0.05$ (UCE $0.0325$; random-init floor $0.0300$). (B) Recovery across confound subsets. (C) Edge-only primary arm versus the all-feature sensitivity arm. (D) Across-TFmean, median, and one standard deviation of adjusted recovery}{figure.caption.13}{}}
+\citation{kendiukhov2026scfm,kendiukhov2026sae}
+\citation{kedzierska2023assessing,wu2025biologydriven,qiu2025biollm}
+\citation{yang2024genecompass,kalfon2025scprint,hu2026regformer}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Third-tissue transfer of the proxy construct. (A) Fraction of each dataset's peaks admitted by the $\pm $2 kb linkage window (relevant over total peaks). (B) Overlap of supported (nonzero) non-self TF--gene edges across the three consensus proxies; the green bar is the 38,082-edge core present in all three. (C) Empirical CDF of TF out-degree (supported targets per TF) per tissue. (D) Observed cross-tissue Spearman $\rho $ versus binary-support $\varphi $ for the three tissue pairs.}}{16}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:third_tissue}{{11}{16}{Third-tissue transfer of the proxy construct. (A) Fraction of each dataset's peaks admitted by the $\pm $2 kb linkage window (relevant over total peaks). (B) Overlap of supported (nonzero) non-self TF--gene edges across the three consensus proxies; the green bar is the 38,082-edge core present in all three. (C) Empirical CDF of TF out-degree (supported targets per TF) per tissue. (D) Observed cross-tissue Spearman $\rho $ versus binary-support $\varphi $ for the three tissue pairs}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{16}{section.4}\protected@file@percent }
+\citation{benjamini2001control}
+\citation{thurman2012accessible}
+\citation{pliner2018cicero}
+\citation{fulco2019activity}
+\citation{wasserman2004applied}
+\citation{stormo2000dna}
+\@writefile{toc}{\contentsline {paragraph}{Limitations and scope.}{17}{paragraph*.15}\protected@file@percent }
+\citation{nourisa2025genernib,qiu2025biollm}
+\citation{morabito2021gse174367}
+\citation{tenx_pbmc_multiome}
+\citation{gse206767}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{18}{section.5}\protected@file@percent }
+\bibdata{references}
+\bibcite{tenx_pbmc_multiome}{{1}{2021}{{10x Genomics}}{{}}}
+\bibcite{ahlmanneltze2025linear}{{2}{2025}{{Ahlmann-Eltze et~al.}}{{}}}
+\bibcite{aibar2017scenic}{{3}{2017}{{Aibar et~al.}}{{}}}
+\bibcite{benjamini1995fdr}{{4}{1995}{{Benjamini and Hochberg}}{{}}}
+\bibcite{benjamini2001control}{{5}{2001}{{Benjamini and Yekutieli}}{{}}}
+\bibcite{boiarsky2023deepdive}{{6}{2023}{{Boiarsky et~al.}}{{}}}
+\bibcite{cui2024scgpt}{{7}{2024}{{Cui et~al.}}{{}}}
+\bibcite{efron1993bootstrap}{{8}{1993}{{Efron and Tibshirani}}{{}}}
+\bibcite{fulco2019activity}{{9}{2019}{{Fulco et~al.}}{{}}}
+\bibcite{gse206767}{{10}{2023}{{Gene Expression Omnibus}}{{}}}
+\bibcite{hao2024scfoundation}{{11}{2024}{{Hao et~al.}}{{}}}
+\bibcite{hu2026regformer}{{12}{2026}{{Hu et~al.}}{{}}}
+\bibcite{kalfon2025scprint}{{13}{2025}{{Kalfon et~al.}}{{}}}
+\bibcite{kedzierska2023assessing}{{14}{2025}{{Kedzierska et~al.}}{{}}}
+\bibcite{kendiukhov2026sae}{{15}{2026a}{{Kendiukhov}}{{}}}
+\bibcite{kendiukhov2026scfm}{{16}{2026b}{{Kendiukhov}}{{}}}
+\bibcite{korhonen2009moods}{{17}{2009}{{Korhonen et~al.}}{{}}}
+\bibcite{mantel1967}{{18}{1967}{{Mantel}}{{}}}
+\bibcite{marbach2012wisdom}{{19}{2012}{{Marbach et~al.}}{{}}}
+\bibcite{morabito2021gse174367}{{20}{2021}{{Morabito et~al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\hspace  *{-\tocsep }References}{19}{section.5}\protected@file@percent }
+\bibcite{nourisa2025genernib}{{21}{2025}{{Nourisa et~al.}}{{}}}
+\bibcite{phipson2010permutation}{{22}{2010}{{Phipson and Smyth}}{{}}}
+\bibcite{pliner2018cicero}{{23}{2018}{{Pliner et~al.}}{{}}}
+\bibcite{pratapa2020benchmarking}{{24}{2020}{{Pratapa et~al.}}{{}}}
+\bibcite{qiu2025biollm}{{25}{2025}{{Qiu et~al.}}{{}}}
+\bibcite{rauluseviciute2024jaspar}{{26}{2024}{{Rauluseviciute et~al.}}{{}}}
+\bibcite{rosen2023uce}{{27}{2026}{{Rosen et~al.}}{{}}}
+\bibcite{stormo2000dna}{{28}{2000}{{Stormo}}{{}}}
+\bibcite{theodoris2023geneformer}{{29}{2023}{{Theodoris et~al.}}{{}}}
+\bibcite{thurman2012accessible}{{30}{2012}{{Thurman et~al.}}{{}}}
+\bibcite{wasserman2004applied}{{31}{2004}{{Wasserman and Sandelin}}{{}}}
+\bibcite{wen2024cellplm}{{32}{2024}{{Wen et~al.}}{{}}}
+\bibcite{wu2025biologydriven}{{33}{2025}{{Wu et~al.}}{{}}}
+\bibcite{yang2022scbert}{{34}{2022}{{Yang et~al.}}{{}}}
+\bibcite{yang2024genecompass}{{35}{2024}{{Yang et~al.}}{{}}}
+\ttl@finishall
+\newlabel{LastPage}{{5}{20}{}{page.20}{}}
+\gdef\lastpage@lastpage{20}
+\gdef\lastpage@lastpageHy{20}
+\gdef \@abspage@last{20}

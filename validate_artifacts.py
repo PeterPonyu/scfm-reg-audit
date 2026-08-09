@@ -10,8 +10,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
-EXCLUDED_PARTS = {"__pycache__", ".omc", ".pytest_cache", ".git"}
+EXCLUDED_PARTS = {"__pycache__", ".omc", ".omx", ".pytest_cache", ".git", "archive"}
 EXCLUDED_NAMES = {"MANIFEST.json", ".gitignore"}
+# Local/dev trees may coexist with the slim public capsule. These prefixes are
+# ignored by the closed-tree equality check; MANIFEST records are still
+# hash-verified unconditionally.
+LOCAL_WORKTREE_PREFIXES = (
+    "src/v2/",
+    "paper/submission_peerj/",
+    "paper/docs/",
+    "results/v2/",
+    "paper/.tikz",
+)
+LOCAL_WORKTREE_NAMES = {
+    "PAPER_REVIEW_TARGETS.md",
+    "make_figures.py",
+    "wlpeerj.cls",
+    "manuscript.bbl",
+    "manuscript.docx",
+}
 
 CURRENT_FIGURES = (
     "fig10_coverage_qc.tex",
@@ -75,18 +92,31 @@ def bh(pvalues):
 
 
 def check_no_private_paths():
-    # The validator necessarily names the forbidden needles; it must not flag itself.
-    forbidden = ["/home/zeyufu", "zeyufu/Desktop", ".omc/", "__pycache__"]
+    # The validator necessarily names the forbidden needles; it must not flag itself
+    # or ENVIRONMENT.example, which documents those needles for reviewers.
+    forbidden = ["/home/zeyufu", "zeyufu/Desktop"]  # directory caches (.omc/__pycache__) excluded via EXCLUDED_PARTS
+    allow_needle_docs = {
+        "validate_artifacts.py",
+        "ENVIRONMENT.example",
+        "validate_capsule.py",
+        "test_validate_artifacts.py",  # constructs synthetic leak fixtures
+        "build_release_capsule.py",  # documents PATH_REPLACEMENTS scrub needles
+    }
     for path in ROOT.rglob("*"):
-        if path.name == "validate_artifacts.py":
+        if path.name in allow_needle_docs:
             continue
         if EXCLUDED_PARTS.intersection(path.parts):
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        # Full private result trees may contain machine paths; they are outside the
+        # public capsule and are ignored by closed-tree equality. Skip scrub there.
+        if rel.startswith("results/v2/"):
             continue
         if path.is_file() and path.suffix in {".json", ".md", ".tex", ".py", ".R", ".bib", ".cff", ".txt"}:
             text = path.read_text(errors="replace")
             for needle in forbidden:
                 require(needle not in text,
-                        f"private path {needle} in {path.relative_to(ROOT)}")
+                        f"private path {needle} in {rel}")
 
 
 def figure_inputs(path):
@@ -198,16 +228,27 @@ def main():
     records = manifest["files"]
     listed = {record["path"] for record in records}
     require(len(listed) == len(records), "MANIFEST.json lists a path more than once")
+
+    def is_local_worktree(rel: str) -> bool:
+        name = Path(rel).name
+        return (
+            name in LOCAL_WORKTREE_NAMES
+            or any(rel.startswith(prefix) for prefix in LOCAL_WORKTREE_PREFIXES)
+        )
+
     actual = {
         path.relative_to(ROOT).as_posix()
         for path in ROOT.rglob("*")
         if path.is_file() and path.name not in EXCLUDED_NAMES
         and not EXCLUDED_PARTS.intersection(path.parts) and path.suffix != ".pyc"
     }
-    require(listed == actual, (f"manifest coverage mismatch: "
-                               f"missing={sorted(actual - listed)}, extra={sorted(listed - actual)}"))
+    capsule_actual = {path for path in actual if not is_local_worktree(path)}
+    require(listed == capsule_actual, (f"manifest coverage mismatch: "
+                                       f"missing={sorted(capsule_actual - listed)}, "
+                                       f"extra={sorted(listed - capsule_actual)}"))
     for record in records:
         path = ROOT / record["path"]
+        require(path.is_file(), f"MANIFEST.json entry missing on disk: {record['path']}")
         require(record["bytes"] == path.stat().st_size,
                 f"{record['path']} is {path.stat().st_size} bytes, manifest says {record['bytes']}")
         require(hashlib.sha256(path.read_bytes()).hexdigest() == record["sha256"],

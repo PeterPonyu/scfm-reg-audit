@@ -11,6 +11,7 @@ Also reports a paired FM-vs-co-expression contrast: the per-TF difference in
 adjusted rho, tested by sign-flipping the paired differences.
 """
 import json
+import re
 import time
 from pathlib import Path
 
@@ -27,10 +28,18 @@ N_PERM = 999
 SEED_ROOT = 20260730
 ALPHAS = np.logspace(-3, 3, 25)
 BASELINE = "co_expression"
+FAMILY_RE = re.compile(r"\A[A-Za-z0-9_]+\Z")
 
 
 def log(*values):
     print(f"[{time.strftime('%H:%M:%S')}]", *values, flush=True)
+
+
+def family_pairs_path(fam):
+    """Resolve a family's pair file, rejecting names that escape PAIR_DIR."""
+    if not FAMILY_RE.match(fam):
+        raise ValueError(f"invalid family name in tf_probe_pair_eval_v2.json: {fam!r}")
+    return PAIR_DIR / f"{fam}_pairs.npz"
 
 
 def bh(pvals):
@@ -53,6 +62,18 @@ def make_residualiser(design):
         return r - design @ (pinv @ r)
 
     return f
+
+
+def mean_over_valid(values, context):
+    """Mean of the finite entries, refusing to report an all-degenerate vector.
+
+    np.nanmean would return NaN with only a RuntimeWarning here, which then travels
+    into the published statistic; an empty aggregate is a data failure instead.
+    """
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        raise ValueError(f"{context}: all {values.size} per-TF correlations are non-finite")
+    return float(finite.mean())
 
 
 def adjusted_per_tf(y_true, y_pred, resid):
@@ -86,7 +107,7 @@ def main():
 
     obs, per_tf = {}, {}
     for fam_index, fam in enumerate(families):
-        d = np.load(PAIR_DIR / f"{fam}_pairs.npz", allow_pickle=False)
+        d = np.load(family_pairs_path(fam), allow_pickle=False)
         xtr = d["X_train"].astype(np.float64)[:, cols]
         xte = d["X_test"].astype(np.float64)[:, cols]
         mu, sd = xtr.mean(0), xtr.std(0)
@@ -95,14 +116,15 @@ def main():
         model.fit((xtr - mu) / sd, y_train)
         pred = model.predict((xte - mu) / sd).reshape(n_tf, n_genes)
         per_tf[fam] = adjusted_per_tf(y_test, pred, resid)
-        obs[fam] = float(np.nanmean(per_tf[fam]))
+        obs[fam] = mean_over_valid(per_tf[fam], f"{fam} observed adjusted rho")
 
         fam_seed = SEED_ROOT * 1000 + fam_index
         rng = np.random.default_rng(fam_seed)
         null = np.empty(N_PERM)
         for b in range(N_PERM):
             shuffled = np.stack([rng.permutation(pred[i]) for i in range(n_tf)])
-            null[b] = np.nanmean(adjusted_per_tf(y_test, shuffled, resid))
+            null[b] = mean_over_valid(adjusted_per_tf(y_test, shuffled, resid),
+                                      f"{fam} permutation {b}")
         # Two-sided: the claim is "differs from chance", in either direction.
         p = (1 + np.sum(np.abs(null) >= abs(obs[fam]))) / (1 + N_PERM)
         obs[fam] = {
@@ -127,6 +149,10 @@ def main():
             continue
         diff = per_tf[fam] - per_tf[BASELINE]
         diff = diff[np.isfinite(diff)]
+        if diff.size == 0:
+            raise ValueError(
+                f"{fam} vs {BASELINE}: no TF has finite adjusted rho in both families, "
+                "so the paired contrast is undefined")
         rng = np.random.default_rng(SEED_ROOT + 1)
         signs = rng.choice([-1.0, 1.0], size=(N_PERM, diff.size))
         null = (signs * diff).mean(axis=1)
@@ -159,7 +185,7 @@ def main():
         "families": obs,
         "contrasts_vs_baseline": contrasts,
     }
-    OUT.write_text(json.dumps(stats, indent=2, sort_keys=True) + "\n")
+    OUT.write_text(json.dumps(stats, indent=2, sort_keys=True, allow_nan=False) + "\n")
     log(f"wrote {OUT.relative_to(ROOT)}")
 
 

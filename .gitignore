@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 archive/
 .pytest_cache/
+.omx/
+results/v2/
