@@ -1,0 +1,19 @@
+\begin{tabular}{llrrccc}
+\toprule
+Tissue & Readout & $\rho_{\mathrm{FM}}$ & $\Delta\rho$ vs base & Dual-null & Beats base & Dual$\wedge$beats \\ 
+\midrule
+Brain & Geneformer embed & $+0.00442$ & $+0.00166$ & yes & yes & yes \\
+Brain & scFoundation encoder & $+0.00062$ & $-0.00214$ & no & no & no \\
+Brain & UCE encoder & $+0.00461$ & $+0.00185$ & yes & yes & yes \\
+Brain & scGPT encoder & $+0.01241$ & $+0.00965$ & yes & yes & yes \\
+Brain & Geneformer attention & $-0.00362$ & $-0.00638$ & yes & no & no \\
+Brain & Random-init floor & $+0.00187$ & $-0.00089$ & no & no & no \\
+Brain & Geneformer KO & $-0.00093$ & $-0.00369$ & no & no & no \\
+Brain & Artifact-corrected KO & $-0.00189$ & $-0.00465$ & no & no & no \\
+Pbmc & Geneformer embed & $+0.00425$ & $-0.00272$ & yes & no & no \\
+Pbmc & Geneformer attention & $-0.00018$ & $-0.00715$ & no & no & no \\
+Pbmc & scFoundation encoder & $+0.00112$ & $-0.00586$ & no & no & no \\
+Pbmc & scGPT encoder & $+0.01098$ & $+0.00401$ & yes & yes & yes \\
+Pbmc & UCE encoder & $+0.00593$ & $-0.00105$ & yes & no & no \\
+\bottomrule
+\end{tabular}

@@ -32,6 +32,7 @@ CURRENT_TABLES = (
     "table2_cross_tissue_observed.tex",
     "table1_primary_fixed_panel.tex",
     "table4_protocol_pass.tex",
+    "table6_fm_vs_baseline.tex",
     "table3_pertype_ranges.tex",
 )
 CURRENT_FRAGMENTS = CURRENT_FIGURES + CURRENT_TABLES

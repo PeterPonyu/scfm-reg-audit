@@ -32,7 +32,7 @@ class BuilderConstantShape(unittest.TestCase):
 
     def test_constants_consistent(self):
         self.assertEqual(len(CURRENT_FIGURES), 13)
-        self.assertEqual(len(CURRENT_TABLES), 5)
+        self.assertEqual(len(CURRENT_TABLES), 6)
         self.assertEqual(CURRENT_FRAGMENTS, CURRENT_FIGURES + CURRENT_TABLES)
         self.assertEqual(CURRENT_FIGURES[0], "fig10_coverage_qc.tex")
         self.assertEqual(CURRENT_FIGURES[-1], "fig13_scope_card.tex")

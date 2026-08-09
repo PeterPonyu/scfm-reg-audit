@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "method": "bh_within_contrast_family_excluding_random_floor_v1",
+  "n_perm": 999,
+  "tissue": "PBMC only (brain not probed)",
+  "contrasts_without_random_floor": {
+    "UCE_encoder": {
+      "n_tf": 135,
+      "paired_delta_mean": 0.012360037852906946,
+      "paired_delta_std": 0.05400109712397361,
+      "signflip_p": 0.013,
+      "signflip_q": 0.0325,
+      "significant_q05": true,
+      "signflip_q_family_without_random_floor": 0.052,
+      "significant_q05_without_random_floor": false
+    },
+    "geneformer_attn": {
+      "n_tf": 135,
+      "paired_delta_mean": 0.0018541228410832488,
+      "paired_delta_std": 0.04820060118023012,
+      "signflip_p": 0.65,
+      "signflip_q": 0.65,
+      "significant_q05": false,
+      "signflip_q_family_without_random_floor": 0.65,
+      "significant_q05_without_random_floor": false
+    },
+    "geneformer_embed": {
+      "n_tf": 135,
+      "paired_delta_mean": -0.004225067491687817,
+      "paired_delta_std": 0.05681685888539718,
+      "signflip_p": 0.41,
+      "signflip_q": 0.5125,
+      "significant_q05": false,
+      "signflip_q_family_without_random_floor": 0.5466666666666666,
+      "significant_q05_without_random_floor": false
+    },
+    "scGPT_encoder": {
+      "n_tf": 135,
+      "paired_delta_mean": -0.007101996495728019,
+      "paired_delta_std": 0.056104370503258304,
+      "signflip_p": 0.153,
+      "signflip_q": 0.255,
+      "significant_q05": false,
+      "signflip_q_family_without_random_floor": 0.306,
+      "significant_q05_without_random_floor": false
+    }
+  },
+  "random_floor_original": {
+    "n_tf": 135,
+    "paired_delta_mean": 0.01436088178353416,
+    "paired_delta_std": 0.05549007751028787,
+    "signflip_p": 0.006,
+    "signflip_q": 0.03,
+    "significant_q05": true,
+    "note": "Excluded from BH family in sensitivity; original q retained for reference"
+  },
+  "summary": {
+    "UCE_encoder": {
+      "signflip_q_no_floor": 0.052,
+      "sig": false,
+      "original_signflip_q": 0.0325
+    },
+    "geneformer_attn": {
+      "signflip_q_no_floor": 0.65,
+      "sig": false,
+      "original_signflip_q": 0.65
+    },
+    "geneformer_embed": {
+      "signflip_q_no_floor": 0.5466666666666666,
+      "sig": false,
+      "original_signflip_q": 0.5125
+    },
+    "scGPT_encoder": {
+      "signflip_q_no_floor": 0.306,
+      "sig": false,
+      "original_signflip_q": 0.255
+    }
+  }
+}

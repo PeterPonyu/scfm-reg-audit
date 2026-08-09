@@ -180,7 +180,12 @@ that panel-local question only. It is not an estimand for causal TF--target effe
 of foundation models, and not a test of residual regulatory content after every possible
 confound. Concordance checks against co-expression further bound whether a dual-null row resembles
 attention-like co-expression geometry; they do not adjudicate residual regulatory truth. Discussion
-returns to this scope when interpreting Support counts.
+returns to this scope when interpreting Support counts. Reporting gates (dual-null Support,
+protocol-pass, FM-versus-baseline observed $\Delta\rho$, and probe contrast families) are frozen in
+the in-repo statistical analysis plan
+\texttt{docs/SCREG\_EVAL\_SAP.md}
+(SAP-v1.0; file SHA-256
+\texttt{3f4b8b3ceb1865d19a5b0da044994cce4ef5b31b638817e9b1f76c17931911ae}).
 
 \subsection{Regulatory-potential proxy and fixed panel}\label{sec:proxy}
 The panel contains 1,200 genes, including 446 unique in-range transcription factors,
@@ -447,6 +452,26 @@ both tissues: brain $\rho=0.00276$ ($p_M=0.019$, $p_D=0.014$) and PBMC $\rho=0.0
 alignment as the supported FM rows. Second, the PBMC Geneformer-embedding positive
 ($\rho=0.00425$) is smaller than its own baseline ($\rho=0.00697$): on that row the model aligns
 with the proxy less than the confound it is adjusted against.
+Table~\ref{tab:fmbase} reports observed
+$\Delta\rho=\rho_{\mathrm{FM,full}}-\rho_{\mathrm{baseline}}$ for all 13 FM rows: only four dual-null
+full rows beat their tissue baseline (brain Geneformer embed, UCE, scGPT; PBMC scGPT), so dual-null
+Support does not imply superiority to co-expression on the same edge set. These $\Delta\rho$ values
+are \emph{observed} contrasts (\texttt{method=observed\_delta\_v1}); a shared-null randomization of
+$\Delta\rho$ would require monorepo graph caches and is not claimed here.
+Under an independence reference operating characteristic for dual-null Support (independent
+Uniform $p_M,p_D$, BH within each full-spec tissue family, $2\times10^{4}$ draws), the Monte Carlo
+rate of $\ge1$ dual-null row is $\approx2\times10^{-4}$ (brain) and $\approx3\times10^{-4}$ (PBMC),
+while the audit records 4 and 3 dual-null rows respectively---so dual-null Support is not explained
+by naive independent double-dipping alone, yet still is not regulatory recovery
+(\texttt{results/dual\_null\_oc\_independence\_v2.public.json}).
+
+\begin{table}[!tbp]\centering
+\resizebox{\linewidth}{!}{\input{figs/table6_fm_vs_baseline.tex}}
+\caption{Observed FM versus same-edge co-expression baseline under the full confound design.
+$\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$. Dual-null is the Table~\ref{tab:primary}
+Support gate. Dual$\wedge$beats counts rows that are dual-null \emph{and} have $\Delta\rho>0$
+($4/7$ dual-null rows; $4/13$ FM rows overall).}\label{tab:fmbase}
+\end{table}
 
 Four completed enhancement-v1 checks qualify the fixed-panel interpretation without changing the
 frozen primary families. Five-fold cross-fitting of the proxy-derived degree covariates preserved the
@@ -475,9 +500,10 @@ content on its own. The six dual-null positive rows fail concordance: their FM--
 Spearman correlations are $-0.18$ to $+0.01$ (all but one negative; PBMC scGPT is $+0.01$). The
 readouts that pass it include scFoundation ($+0.08$) and PBMC Geneformer attention ($+0.40$); both
 are dual-null negative, so a concordance passer need not be dual-null supported (and conversely).
-Embedding-cosine anisotropy interacting with degree conditioning is a more parsimonious account of
-that inversion than regulatory encoding, so we report the six positives as readout-specific geometry
-rather than as regulatory signal (Fig.~\ref{fig:concordance}).
+We report the six positives as readout-specific geometry rather than as regulatory signal
+(Fig.~\ref{fig:concordance}); per-TF embedding-norm / cosine anisotropy versus degree is
+\emph{not} tested in this release and is not used as a mechanistic claim
+(SAP~\S8).
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig4_usability_check.tex}}
@@ -509,9 +535,13 @@ full-spec positives (brain Geneformer embedding, PBMC Geneformer embedding, PBMC
 negative before degree conditioning. Because the degree covariates are computed from the proxy
 graph itself, the full specification conditions on functions of the outcome; the positives
 therefore appear in exactly the specification that carries this hazard. We report the non-degree
-specification as co-primary and treat the divergence as a substantive finding, not a footnote:
-the row-shuffle null alone supports several non-degree rows while the gene-label null supports
-none, so degree adjustment and null choice define different finite-panel questions.
+specification as co-primary and treat the divergence as a substantive finding, not a footnote.
+Under non-degree, the audit records \textbf{0 dual}, \textbf{0 M-only}, and \textbf{9 D-only}
+rejections (row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$); the gene-label null never
+rejects alone. Dual-Support is therefore never granted under non-degree. Those D-only rejections
+must not be read as dual-null Support: the row-shuffle still preserves TF out-degree while the
+non-degree design does not condition on degree, so the two nulls do not address the same estimand
+(SAP~\S3; \texttt{results/nondegree\_null\_pattern\_v2.public.json}).
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig6_spec_sensitivity.tex}}
@@ -575,23 +605,23 @@ $\alpha$-equivalent. This is not a confidence interval, power curve, MDE, or exc
 \subsection{A supervised TF-disjoint probe gives mixed family-level results}
 A linear probe trained to predict each TF's proxy targets from graph features on 311 held-in TFs
 and tested on 135 disjoint TFs (Fig.~\ref{fig:probe}) gives mixed family-level results after confound
-adjustment. Paired sign-flip testing supports the UCE-versus-co-expression contrast
-($q=0.0325$) and the random-init floor contrast ($q=0.0300$), while the Geneformer embedding
-($q=0.5125$), Geneformer attention ($q=0.65$), and scGPT ($q=0.255$) contrasts are not supported.
-Two properties of that test qualify the outcome. First, the Benjamini--Hochberg family contains the
-random-init floor---a methodological control rather than an FM readout---so that families are
-compared against the baseline on equal footing; excluding it ($n=4$) raises the UCE contrast to
-$q=0.052$, just above the 0.05 line. Second, the sign-flip statistic here compares how much each
-family is over-corrected, not how much it recovers: adjusted test correlations are essentially zero
-for UCE ($+0.0003$) and the floor ($+0.0023$) but negative for co-expression ($-0.0120$), so the
-supported contrasts mean the baseline is over-corrected further below zero, not that UCE carries
-more signal. The adjusted test correlations span $-0.019$ to $+0.002$ overall. The probe's confound
-set differs from the
+adjustment. The probe estimand is supervised TF-disjoint recoverability on \textbf{paired PBMC
+multiome only}; the eight brain rows are not probed. Paired sign-flip testing against co-expression
+supports the UCE contrast ($q=0.0325$) and the random-init floor contrast ($q=0.0300$) when the
+Benjamini--Hochberg family includes the floor, while Geneformer embedding ($q=0.5125$), Geneformer
+attention ($q=0.65$), and scGPT ($q=0.255$) are not supported. As a sensitivity check that treats
+the floor as a control rather than a peer FM, BH recomputed on the $n=4$ FM contrasts
+\emph{excluding} \texttt{random\_floor} moves UCE to $q=0.052$ (no longer $<0.05$) with the other
+three FM contrasts remaining non-significant
+(\texttt{results/tf\_probe\_contrasts\_no\_floor\_v2.public.json}). The sign-flip statistic compares how
+much each family is over-corrected, not how much it recovers: adjusted test correlations are
+essentially zero for UCE ($+0.0003$) and the floor ($+0.0023$) but negative for co-expression
+($-0.0120$), so ``supported'' contrasts mean the baseline is over-corrected further below zero, not
+that UCE carries more residual regulatory signal. The probe's confound set differs from the
 audit's---it contains neither co-expression nor the proxy-derived degree covariates---so it answers a
 different question (supervised recoverability, not raw-readout alignment) and neither confirms nor
-refutes the pooled rows. In particular, the random-init result prevents interpreting the UCE contrast
-as model-specific regulatory recovery, while the UCE result prevents a blanket claim that every FM
-is indistinguishable from co-expression.
+refutes the pooled rows. In particular, the floor result and the no-floor sensitivity prevent reading
+the probe as confirmatory evidence that FMs beat co-expression.
 
 \begin{figure}[!tbp]\centering
 \fitfig{\input{figs/fig9_tf_probe.tex}}
@@ -672,10 +702,10 @@ should correlate with co-expression (attention $\approx$ co-expression is well e
 supported positives come from readouts that fail that check (FM--co-expression Spearman $-0.18$ to
 $+0.01$), while concordance passers (scFoundation $+0.08$, PBMC Geneformer attention $+0.40$) are
 dual-null negative---so concordance does not adjudicate residual regulatory content, and dual-null
-Support without concordance is not recovery. Embedding-cosine anisotropy interacting with degree
-conditioning is a more parsimonious account of that inversion than regulatory encoding. This is
-compatible with
-reports that scFM-derived gene relationships often resemble
+Support without concordance is not recovery. Embedding-cosine anisotropy versus degree remains an
+\emph{untested} mechanistic hypothesis in this release (no frozen anisotropy diagnostic); we do not
+use it to explain dual-null positives. The pattern is compatible with reports that scFM-derived gene
+relationships often resemble
 co-expression~\citep{kendiukhov2026scfm,kendiukhov2026sae}, and with zero-shot and biology-driven
 benchmarks that find scFMs unreliable or only weakly structured relative to simpler
 baselines~\citep{kedzierska2023assessing,wu2025biologydriven,qiu2025biollm}. Failure to support a

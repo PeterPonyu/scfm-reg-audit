@@ -1,6 +1,6 @@
 # scReg-Eval red-team response workplan
 
-**Status:** W0+W1+W3 done; next W2 (analyses) then W4 if approved  
+**Status:** W0+W1+W2+W3 done; W4 blocked pending approval  
 **Inputs:** four independent red-teams (construct / stats / repro / PeerJ CS) + canvas `screg-eval-redteam`  
 **Tip after merge fix:** `main` @ salvage-restored manuscript (`f75e70a`)  
 **Goal:** strengthen the paper with text, figures, tables, and targeted experiments so reviewer attacks become design features / bounded claims.
@@ -225,3 +225,4 @@ Job IDs use hex codes (`0x01`…) and are mirrored in `.cursor/jobs.json` for ag
 - 2026-08-09: `0x10` protocol-pass matrix Table~\ref{tab:protocol} + Fig.~\ref{fig:protocol}; **0/13** protocol-pass under predeclared gates.
 - 2026-08-09: W1 remainder `0x11`–`0x16` (Fig.6 paired forest, baseline r², concordance scatter, related-work table, scope card); PeerJ package rebuilt; monorepo log under singlecell-genomics-research/projects/scfm-reg-audit/docs/reports/.
 - 2026-08-09: W3 `0x30`–`0x34` — peak-count text fix; ATAC-filter + protocol-freeze wording; FULL_RERUN two-tree boundary; MANIFEST refresh; `validate_artifacts.py` PASS.
+- 2026-08-09: W2 `0x20`–`0x25` — SAP freeze; observed FM−baseline Δ; dual-null independence OC; non-degree D-only pattern; anisotropy untested; probe no-floor sensitivity. Public JSON via `src/w2_public_analyses.py`.

@@ -4,7 +4,7 @@
   "updated": "2026-08-09",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "W3-local",
+  "merge_tip": "W2-local",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
@@ -126,7 +126,7 @@
     {
       "id": "0x20",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "SAP freeze + protocol-pass def",
       "assets": [
         "docs"
@@ -135,7 +135,7 @@
     {
       "id": "0x21",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "FM\u2212baseline superiority test",
       "assets": [
         "experiment",
@@ -145,7 +145,7 @@
     {
       "id": "0x22",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "Dual-null intersection OC",
       "assets": [
         "experiment",
@@ -155,7 +155,7 @@
     {
       "id": "0x23",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "Estimand-matched non-degree null",
       "assets": [
         "experiment",
@@ -165,7 +165,7 @@
     {
       "id": "0x24",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "Geometry/anisotropy diagnostic",
       "assets": [
         "experiment",
@@ -175,7 +175,7 @@
     {
       "id": "0x25",
       "wave": "W2",
-      "status": "pending",
+      "status": "done",
       "title": "Probe estimand cleanup",
       "assets": [
         "analysis",
