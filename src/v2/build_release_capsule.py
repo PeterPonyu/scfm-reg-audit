@@ -45,6 +45,8 @@ CURRENT_TABLES = (
     "table4_protocol_pass.tex",
     "table6_fm_vs_baseline.tex",
     "table3_pertype_ranges.tex",
+    "table7_nondegree_null_pattern.tex",
+    "table8_tf_probe_numeric.tex",
 )
 CURRENT_FRAGMENTS = CURRENT_FIGURES + CURRENT_TABLES
 FIGURE_INPUT_RE = re.compile(r"\\input\{figs/([^}]+\.tex)\}")

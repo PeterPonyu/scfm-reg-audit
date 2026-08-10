@@ -598,7 +598,9 @@ f5c <- ggplot(ko_null, aes(readout)) +
                 width = 0.25, color = MUTED) +
   geom_point(aes(y = null_mean), size = 2.0, color = MUTED) +
   geom_point(aes(y = observed), size = 2.6, color = BLUE) +
-  geom_text(aes(y = observed, label = sprintf("$p=%.3f$", p)), hjust = -0.15, size = 3.1) +
+  geom_text(aes(y = observed,
+                label = ifelse(p <= 0.001 + 1e-12, "$p<0.001$", sprintf("$p=%.3f$", p))),
+            hjust = -0.15, size = 3.1) +
   coord_flip() +
   # Short panel title keeps the left edge aligned with the plot spine; the longer
   # "KO raw + artifact-corrected both align after co-expression alone" wording

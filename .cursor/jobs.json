@@ -10,7 +10,8 @@
     "W1": "figs/tables from existing JSON",
     "W2": "targeted new analyses",
     "W3": "capsule integrity",
-    "W4": "optional heavy"
+    "W4": "optional heavy",
+    "W5": "CPU polish + shared-null \u0394\u03c1 (A+B)"
   },
   "jobs": [
     {
@@ -256,6 +257,63 @@
         "eng"
       ],
       "needs": "go-ahead"
+    },
+    {
+      "id": "0x50",
+      "wave": "W5",
+      "status": "done",
+      "title": "Non-degree numeric table",
+      "assets": [
+        "table"
+      ]
+    },
+    {
+      "id": "0x51",
+      "wave": "W5",
+      "status": "done",
+      "title": "Probe numeric table + no-floor",
+      "assets": [
+        "table"
+      ]
+    },
+    {
+      "id": "0x52",
+      "wave": "W5",
+      "status": "done",
+      "title": "p=0.001 display polish",
+      "assets": [
+        "text",
+        "fig"
+      ]
+    },
+    {
+      "id": "0x53",
+      "wave": "W5",
+      "status": "done",
+      "title": "Observed-\u0394 / anisotropy claim lock",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x54",
+      "wave": "W5",
+      "status": "done",
+      "title": "PeerJ + MANIFEST + allowlist sync",
+      "assets": [
+        "capsule"
+      ]
+    },
+    {
+      "id": "0x55",
+      "wave": "W5",
+      "status": "done",
+      "title": "Shared-null \u0394\u03c1 FM vs baseline",
+      "assets": [
+        "experiment",
+        "table",
+        "json"
+      ]
     }
   ]
 }
