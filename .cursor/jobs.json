@@ -1,17 +1,18 @@
 {
   "version": 1,
   "project": "scfm-reg-audit",
-  "updated": "2026-08-09",
+  "updated": "2026-08-10",
   "source": "docs/reports/redteam-response-workplan.md",
   "canvas": "screg-eval-redteam",
-  "merge_tip": "W4-local",
+  "merge_tip": "W5-polish",
   "waves": {
     "W0": "claim hygiene",
     "W1": "figs/tables from existing JSON",
     "W2": "targeted new analyses",
     "W3": "capsule integrity",
     "W4": "optional heavy",
-    "W5": "CPU polish + shared-null \u0394\u03c1 (A+B)"
+    "W5": "CPU polish + shared-null \u0394\u03c1 (A+B)",
+    "W6": "PeerJ polish Intro/Discussion/floats"
   },
   "jobs": [
     {
@@ -313,6 +314,98 @@
         "experiment",
         "table",
         "json"
+      ]
+    },
+    {
+      "id": "0x60",
+      "wave": "W6",
+      "status": "done",
+      "title": "Intro field-level-negative pair",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x61",
+      "wave": "W6",
+      "status": "done",
+      "title": "Intro scPRINT open-cite scope fix",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x62",
+      "wave": "W6",
+      "status": "done",
+      "title": "Intro Geneformer \u00b1\u03c1 Support\u2260recovery scaffold",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x63",
+      "wave": "W6",
+      "status": "done",
+      "title": "Discussion/Conclusion shared-null 2/13 + tab:fmbase",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x64",
+      "wave": "W6",
+      "status": "done",
+      "title": "Discussion probe no-floor q=0.052",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x65",
+      "wave": "W6",
+      "status": "done",
+      "title": "Discussion estimand + non-degree 0/9 + tab:nondegree",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x66",
+      "wave": "W6",
+      "status": "done",
+      "title": "Cite orphan fig:nulls",
+      "assets": [
+        "text",
+        "fig"
+      ]
+    },
+    {
+      "id": "0x67",
+      "wave": "W6",
+      "status": "done",
+      "title": "H2-B Table 6 caption disclose recompute",
+      "assets": [
+        "text",
+        "table"
+      ]
+    },
+    {
+      "id": "0x68",
+      "wave": "W6",
+      "status": "done",
+      "title": "Move tab:probe + six/five gate prose",
+      "assets": [
+        "text"
+      ]
+    },
+    {
+      "id": "0x69",
+      "wave": "W6",
+      "status": "done",
+      "title": "PeerJ rebuild + MANIFEST + validate",
+      "assets": [
+        "capsule"
       ]
     }
   ]
