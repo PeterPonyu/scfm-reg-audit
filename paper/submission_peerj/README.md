@@ -1,7 +1,7 @@
 # scReg-Eval PeerJ submission package
 
 Generated from the canonical manuscript by `src/v2/build_peerj_package.py`.
-The package contains 13 pooled FM/readout rows and eleven figures. The builder first
+The package contains 13 pooled FM/readout rows, thirteen figures, and six tables. The builder first
 regenerates `paper/panel_data.json` with `make_panel_data.py` and all canonical figure
 and table fragments with `Rscript make_figs.R`, then rebuilds both source and flat mirrors.
 The current human-review PDF is `flat_upload/manuscript.pdf`; it is rebuilt with figures
@@ -9,8 +9,8 @@ pre-rendered as standalone PDFs.
 
 ## Layout
 
-- `source/`: self-contained editable article source, including the eleven figure fragments and two tables. Its PDF and LaTeX intermediates are generated build outputs, not the human-review target.
-- `flat_upload/`: upload-ready package with `manuscript.pdf`, `Figure1.pdf` through `Figure11.pdf`, two table fragments, references, and checksums.
+- `source/`: self-contained editable article source, including the thirteen figure fragments and six tables. Its PDF and LaTeX intermediates are generated build outputs, not the human-review target.
+- `flat_upload/`: upload-ready package with `manuscript.pdf`, `Figure1.pdf` through `Figure13.pdf`, six table fragments, references, and checksums.
 - `internal/figure_build/`: temporary standalone wrappers used to export the figure PDFs; generated only.
 - `HUMAN_GATES.md`: remaining author decisions and external actions (DONE/OPEN status).
 - `PEERJ_FORM_TEMPLATE.md`: copy-ready scientific fields; repository DOI filled.

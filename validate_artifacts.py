@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the sanitized scReg-Eval audit capsule artifacts (v0.2.0 contract)."""
+"""Validate the sanitized scReg-Eval audit capsule artifacts (v0.3.0 contract)."""
 import hashlib
 import json
 import math
