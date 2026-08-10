@@ -20,7 +20,7 @@ revision cycle:
    null-semantics documentation.
 
 No AI system generated scientific data, randomization outputs, or any reported number. All
-results are recomputed by the deterministic pipelines in `after/` and verified by the test suite
+results are recomputed by the deterministic pipelines and verified by the test suite
 and the released artifact validator.
 
 ## Contents
@@ -28,7 +28,9 @@ and the released artifact validator.
 - `before/` — the actual pre-revision versions of the three scripts, taken from the project's
   own version-control history (commit hashes recorded in `MANIFEST.json`). Personal machine
   paths are replaced by `${SCREG_DATA_ROOT}` / `${SCREG_PROJECT_ROOT}` placeholders.
-- `after/` — the current released versions of the same scripts.
+- `after/` — tip copies of the same three scripts from `src/v2/` at package rebuild time
+  (`allow_pickle=False` on NPZ loads). **Do not treat `after/` as an independent SoT**; the
+  production loaders live in the repository at `src/v2/*.py`.
 - `prompts/` — an ordered prompt log reconstructed from the session records, mapping each
   AI-assisted change to the files it touched.
 - `MANIFEST.json` — file inventory, roles, source commits, and SHA-256.

@@ -33,32 +33,32 @@
    "role": "after",
    "source_commit": "current",
    "description": "normalization-repaired PBMC UCE generator",
-   "bytes": 11353,
-   "sha256": "0c14183e47bf1702c33ed332b6ab2318c662c3dca753a4babdb11d5f67f959f9"
+   "bytes": 12493,
+   "sha256": "8bc3dd6c25de53065953caf16d23f64ce83a9e5cfb92d8fda633c80daca12ee7"
   },
   {
    "path": "after/pair_probe_stats.py",
    "role": "after",
    "source_commit": "current",
    "description": "deterministic-seed probe statistics",
-   "bytes": 6359,
-   "sha256": "791751ac74a6b681b661ce64b8fbaf197fae63cd3fddb5e991267f64ed66ddf7"
+   "bytes": 7478,
+   "sha256": "0cafa5d1f731112137f5f4c5b2e8fe7677c80d559f30ac99c9562c214b7b41b2"
   },
   {
    "path": "after/fixed_panel_audit.py",
    "role": "after",
    "source_commit": "current",
    "description": "layout-independent fixed-panel module",
-   "bytes": 34033,
-   "sha256": "88321cd11e908181c710dbdc5400bb7ebb8dcc7997415c3b0cb19060da008ab4"
+   "bytes": 37565,
+   "sha256": "1ff6fefbcfaca3529dad904e5d06c319b42416590125e9b0f0f0864cab81dee7"
   },
   {
    "path": "README.md",
    "role": "doc",
    "source_commit": "current",
    "description": "disclosure scope and usage",
-   "bytes": 2319,
-   "sha256": "7d4eee120f1a311bc3c46df2f8e345077b1a745eecaea816c56446d18bf40823"
+   "bytes": 2477,
+   "sha256": "61a36d4aca39c98d6e6388d209f374d433ba1960d111dc2965ee0f083b363b0a"
   },
   {
    "path": "prompts/00_INDEX.md",

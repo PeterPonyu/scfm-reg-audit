@@ -164,6 +164,49 @@ def check_figure_contract():
             f"active figure allowlist mismatch: {sorted(bundled)}")
 
 
+def resolve_under_root(rel_path: str) -> Path:
+    """Resolve a MANIFEST path and reject escapes outside ROOT."""
+    require(not Path(rel_path).is_absolute(), f"MANIFEST path must be relative: {rel_path}")
+    require(".." not in Path(rel_path).parts, f"MANIFEST path escapes ROOT via '..': {rel_path}")
+    path = (ROOT / rel_path).resolve()
+    try:
+        path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise ValidationError(f"MANIFEST path escapes ROOT: {rel_path}") from exc
+    return path
+
+
+def check_dual_null_concordance_claim(audit, panel_data):
+    """Freeze the primary dual-null / concordance pattern claimed in the manuscript."""
+    usability = panel_data["usability_fm_vs_coexp"]
+    positives = []
+    for tissue in ("brain", "pbmc"):
+        for row in audit["pooled"][tissue]["rows"]:
+            if row.get("row_type") != "pooled_fm" or row.get("confound_spec") != "full":
+                continue
+            rho = float(row["observed_partial_rho"])
+            mq = float(row["mantel"]["bh_q_family"])
+            dq = float(row["degree_preserving"]["bh_q_family"])
+            if mq < 0.05 and dq < 0.05 and rho > 0:
+                label = row["model_label"]
+                require(label in usability[tissue],
+                        f"missing concordance for dual-null positive {tissue}/{label}")
+                positives.append((tissue, label, float(usability[tissue][label])))
+    require(len(positives) == 6, f"expected 6 dual-null positives, got {len(positives)}")
+    failers = [p for p in positives if p[2] <= 0]
+    passers = [p for p in positives if p[2] > 0]
+    require(len(failers) == 5 and len(passers) == 1,
+            f"expected 5 concordance failers / 1 passer among dual-null positives; "
+            f"got fail={failers} pass={passers}")
+    require(passers[0][:2] == ("pbmc", "scGPT_encoder"),
+            f"sole dual-null concordance passer must be PBMC scGPT; got {passers[0]}")
+    fail_rhos = [p[2] for p in failers]
+    require(min(fail_rhos) < -0.15 and max(fail_rhos) < -0.01,
+            f"failer concordance range unexpected: {min(fail_rhos)}..{max(fail_rhos)}")
+    require(0.0 < passers[0][2] < 0.05,
+            f"PBMC scGPT concordance should be a weak positive; got {passers[0][2]}")
+
+
 def main():
     audit = load("fixed_panel_audit_v2.public.json")
     injection = load("fixed_panel_signal_injection_v2.public.json")
@@ -248,6 +291,9 @@ def main():
             "every probe family must record its mantel_seed")
     require(probe["n_perm"] == 999, f"probe n_perm is {probe['n_perm']}")
 
+    panel_data = json.loads((ROOT / "paper/panel_data.json").read_text())
+    check_dual_null_concordance_claim(audit, panel_data)
+
     manifest = json.loads((ROOT / "MANIFEST.json").read_text())
     records = manifest["files"]
     listed = {record["path"] for record in records}
@@ -271,7 +317,7 @@ def main():
                                        f"missing={sorted(capsule_actual - listed)}, "
                                        f"extra={sorted(listed - capsule_actual)}"))
     for record in records:
-        path = ROOT / record["path"]
+        path = resolve_under_root(record["path"])
         require(path.is_file(), f"MANIFEST.json entry missing on disk: {record['path']}")
         require(record["bytes"] == path.stat().st_size,
                 f"{record['path']} is {path.stat().st_size} bytes, manifest says {record['bytes']}")

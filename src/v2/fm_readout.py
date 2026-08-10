@@ -14,13 +14,49 @@ Normalization contract (set by the caller, see load_norm()):
   X_log   = log1p(X_cp10k)                              -> scGPT value bins + co-expression
 Geneformer gene_median_dictionary is on the CP10k scale, so CP10k/median is the correct rank value.
 """
-import os, json, pickle, numpy as np, scipy.sparse as sp, torch, torch.nn as nn
+import hashlib, os, json, pickle, numpy as np, scipy.sparse as sp, torch, torch.nn as nn
 from scipy.stats import spearmanr
 DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 
 GF = f"{DATA_ROOT}/models/Geneformer"; GFM = f"{GF}/Geneformer-V2-104M"; DCT = f"{GF}/geneformer"
 CK = f"{DATA_ROOT}/models/scGPT-human"
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+# Pins from docs/FULL_RERUN.md §4 — FULL_RERUN is trusted-input only (not capsule content).
+EXPECTED_GF_TOKEN_SHA256 = "67c445f4385127adfc48dcc072320cd65d6822829bf27dd38070e6e787bc597f"
+EXPECTED_GF_MEDIAN_SHA256 = "a51c53f6a771d64508dfaf61529df70e394c53bd20856926117ae5d641a24bf5"
+EXPECTED_GF_NAME_ID_SHA256 = "fabfa0c2f49c598c59ae432a32c3499a5908c033756c663b5e0cddf58deea8e1"
+EXPECTED_SCGPT_CKPT_SHA256 = "6cb5d451ab5c4b33eb673adbe4fddc61d2389df1b89b7651a9fe2e557572b922"
+
+
+def _sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _require_sha256(path: str, expected: str, label: str) -> None:
+    actual = _sha256_file(path)
+    if actual != expected:
+        raise ValueError(f"{label} SHA-256 mismatch: {actual} != {expected}")
+
+
+def _load_pickle_sha(path: str, expected: str, label: str):
+    _require_sha256(path, expected, label)
+    with open(path, "rb") as fh:
+        return pickle.load(fh)
+
+
+def _torch_load_weights(path: str, map_location="cpu"):
+    """Load a SHA-pinned checkpoint; prefer weights_only, fall back for legacy pickles."""
+    try:
+        return torch.load(path, map_location=map_location, weights_only=True)
+    except TypeError:
+        return torch.load(path, map_location=map_location)
+    except (RuntimeError, ValueError, pickle.UnpicklingError):
+        # SHA pin precedes this path; some vendor ckpts are full pickles.
+        return torch.load(path, map_location=map_location, weights_only=False)
 
 
 def load_norm(path, ctcol="cell_type"):
@@ -56,9 +92,12 @@ class FMReadout:
 
     def __init__(self, gsyms, batch=6):
         self.gsyms = list(gsyms); self.Ng = len(gsyms); self.batch = batch
-        self.gtok = pickle.load(open(f"{DCT}/token_dictionary_gc104M.pkl", "rb"))
-        self.gmed = pickle.load(open(f"{DCT}/gene_median_dictionary_gc104M.pkl", "rb"))
-        self.gn2i = pickle.load(open(f"{DCT}/gene_name_id_dict_gc104M.pkl", "rb"))
+        self.gtok = _load_pickle_sha(
+            f"{DCT}/token_dictionary_gc104M.pkl", EXPECTED_GF_TOKEN_SHA256, "Geneformer token dict")
+        self.gmed = _load_pickle_sha(
+            f"{DCT}/gene_median_dictionary_gc104M.pkl", EXPECTED_GF_MEDIAN_SHA256, "Geneformer median dict")
+        self.gn2i = _load_pickle_sha(
+            f"{DCT}/gene_name_id_dict_gc104M.pkl", EXPECTED_GF_NAME_ID_SHA256, "Geneformer name-id dict")
         self.svoc = json.load(open(f"{CK}/vocab.json"))
         for s in self.gsyms:                            # manifest guarantees membership; assert anyway
             assert s in self.gn2i and self.gn2i[s] in self.gtok and s in self.svoc, f"gene {s} not tokenizable"
@@ -114,7 +153,9 @@ class FMReadout:
                 s.transformer_encoder = nn.TransformerEncoder(nn.TransformerEncoderLayer(D, args["nheads"], args["d_hid"], dropout=0.0, batch_first=True), args["nlayers"])
             def encode(s, src, val, mask): return s.transformer_encoder(s.enc_norm(s.gene_emb(src)) + s.value_encoder(val), src_key_padding_mask=mask)
 
-        m = Model().eval(); sd = torch.load(f"{CK}/best_model.pt", map_location="cpu", weights_only=False)
+        ckpt = f"{CK}/best_model.pt"
+        _require_sha256(ckpt, EXPECTED_SCGPT_CKPT_SHA256, "scGPT best_model.pt")
+        m = Model().eval(); sd = _torch_load_weights(ckpt, map_location="cpu")
         if isinstance(sd, dict) and "model_state_dict" in sd: sd = sd["model_state_dict"]
         rm = {}
         for k, v in sd.items():

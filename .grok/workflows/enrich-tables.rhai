@@ -65,7 +65,7 @@ let verify_schema = #{
 
 let root = if args == () { () } else { args.root };
 if root == () {
-    root = "/home/zeyufu/Desktop/scfm-reg-audit";
+    root = ".";
 }
 log("enrich-tables root=" + root);
 

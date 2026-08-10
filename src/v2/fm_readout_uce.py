@@ -24,7 +24,7 @@ Deliberate deviation from the vendored code: mask is explicitly cast to bool bef
 nn.TransformerEncoder (the original repo relies on an implicit float-mask coercion whose semantics
 are torch-version-dependent — this repo is pinned to torch==2.1.1, we run torch 2.12).
 """
-import os, sys, json, pickle, time, numpy as np, pandas as pd, torch, torch.nn as nn
+import hashlib, os, sys, json, pickle, time, numpy as np, pandas as pd, torch, torch.nn as nn
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "uce_vendor"))
 from model import TransformerModel
 DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
@@ -35,6 +35,33 @@ ESM2_HUMAN = f"{ROOT}/data/uce/human_esm2.pt"
 CHROM_CSV = f"{ROOT}/data/uce/species_chrom.csv"
 OFFSETS_PKL = f"{ROOT}/data/uce/species_offsets.pkl"
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+# Pins from docs/FULL_RERUN.md §4 / pbmc_uce_eval_v2.py — FULL_RERUN trusted inputs only.
+EXPECTED_CHECKPOINT_SHA256 = "acb28f3f0a1d803e4a4ffe891b9bab38bf93c84762dc06b2452f0d515da91560"
+EXPECTED_ESM2_SHA256 = "a210e1cc7901513999b2bca3836ba9e2f203cd008be4e9a9d6412a2267de9748"
+
+
+def _sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _require_sha256(path: str, expected: str, label: str) -> None:
+    actual = _sha256_file(path)
+    if actual != expected:
+        raise ValueError(f"{label} SHA-256 mismatch: {actual} != {expected}")
+
+
+def _torch_load_weights(path: str, map_location="cpu"):
+    """Load a SHA-pinned checkpoint; prefer weights_only, fall back for legacy pickles."""
+    try:
+        return torch.load(path, map_location=map_location, weights_only=True)
+    except TypeError:
+        return torch.load(path, map_location=map_location)
+    except (RuntimeError, ValueError, pickle.UnpicklingError):
+        return torch.load(path, map_location=map_location, weights_only=False)
 
 PAD_TOK, CHROM_L_TOK, CHROM_R_TOK, CLS_TOK = 0, 1, 2, 3
 CHROM_TOKEN_OFFSET = 143574
@@ -48,10 +75,13 @@ class UCEReadout:
         self.rng = np.random.default_rng(seed)
 
         # ---- reconstruct spec_pe_genes (insertion order, uppercased) + offset ----
-        esm2 = torch.load(ESM2_HUMAN, map_location="cpu")
+        _require_sha256(ESM2_HUMAN, EXPECTED_ESM2_SHA256, "UCE human ESM2")
+        esm2 = _torch_load_weights(ESM2_HUMAN, map_location="cpu")
         spec_pe_genes = [str(k).upper() for k in esm2.keys()]
         self.sym2row_local = {s: i for i, s in enumerate(spec_pe_genes)}   # local index within human block
-        offsets = pickle.load(open(OFFSETS_PKL, "rb"))
+        # species_offsets.pkl is a small trusted FULL_RERUN input (not redistributed in capsule).
+        with open(OFFSETS_PKL, "rb") as fh:
+            offsets = pickle.load(fh)
         self.offset = int(offsets["human"])
         del esm2
 
@@ -82,7 +112,8 @@ class UCEReadout:
         self.model = TransformerModel(token_dim=5120, d_model=1280, nhead=20, d_hid=5120,
                                       nlayers=4, output_dim=1280, dropout=0.0)
         self.model.pe_embedding = nn.Embedding.from_pretrained(torch.zeros(N_ROWS, 5120))
-        sd = torch.load(CKPT, map_location="cpu")
+        _require_sha256(CKPT, EXPECTED_CHECKPOINT_SHA256, "UCE 4layer checkpoint")
+        sd = _torch_load_weights(CKPT, map_location="cpu")
         self.model.load_state_dict(sd, strict=True)
         self.model = self.model.to(DEV).eval()
         self.pe_weight = self.model.pe_embedding.weight.data  # [145469, 5120] on DEV

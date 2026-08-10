@@ -15,7 +15,7 @@ import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = "v0.3.1"
+VERSION = "v0.3.0"
 RELEASE_DATE = "2026-08-03"
 CAPSULE_NAME = f"scfm-reg-audit-audit-capsule-{VERSION}"
 RELEASE_DIR = ROOT / "release_candidate"
@@ -256,8 +256,16 @@ ATAC H5AD path. Provenance strings use `${{SCFM_PROJECT_ROOT}}`, `${{SCFM_DATA_R
 
 
 def install_validator():
-    src = Path(__file__).resolve().parent / "validate_capsule.py"
+    # Tip SoT is repo-root validate_artifacts.py; keep src/v2/validate_capsule.py
+    # as a synced mirror for older build scripts / offline copies.
+    tip = ROOT / "validate_artifacts.py"
+    mirror = Path(__file__).resolve().parent / "validate_capsule.py"
+    src = tip if tip.is_file() else mirror
     shutil.copy2(src, CAPSULE / "validate_artifacts.py")
+    if tip.is_file() and mirror.is_file():
+        tip_text = tip.read_text()
+        if mirror.read_text() != tip_text:
+            mirror.write_text(tip_text)
 
 
 def write_manifest():

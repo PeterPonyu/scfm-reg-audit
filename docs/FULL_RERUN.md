@@ -92,7 +92,13 @@ datasets portal ("10k PBMC from a healthy donor, multiome"). Download dates: 202
 | UCE protein emb. | same | `human_esm2.pt` | `a210e1cc7901513999b2bca3836ba9e2f203cd008be4e9a9d6412a2267de9748` | BSD-3 |
 
 The UCE checkpoint and ESM2 hashes are enforced at load time in
-`src/v2/pbmc_uce_eval_v2.py` (`EXPECTED_CHECKPOINT_SHA256`, `EXPECTED_ESM2_SHA256`).
+`src/v2/pbmc_uce_eval_v2.py` and `src/v2/fm_readout_uce.py`
+(`EXPECTED_CHECKPOINT_SHA256`, `EXPECTED_ESM2_SHA256`). Geneformer pickle
+dictionaries and the scGPT `best_model.pt` are SHA-pinned before unpickle /
+`torch.load` in `src/v2/fm_readout.py`. Remaining small pickles such as
+`data/uce/species_offsets.pkl` are **trusted FULL_RERUN inputs only** (not
+capsule content): obtain them from the pinned upstream UCE release and do not
+load untrusted pickles on the public audit path.
 
 ## 5. Ordered commands (experiment workspace)
 
