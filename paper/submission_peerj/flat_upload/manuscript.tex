@@ -89,7 +89,7 @@ instance.
 
 \section{Introduction}
 Single-cell RNA foundation models (scFMs) are increasingly used as frozen representations for
-network inference and perturbation analysis~\citep{theodoris2023geneformer,cui2024scgpt,kalfon2025scprint}.
+network inference and perturbation analysis~\citep{theodoris2023geneformer,cui2024scgpt}.
 A high score against a curated or transcriptome-derived regulatory network, however, need not imply
 that a model encodes regulation beyond co-expression~\citep{pratapa2020benchmarking,marbach2012wisdom,nourisa2025genernib}.
 Both the reference and the model can inherit gene abundance, detectability, hubness, and
@@ -114,7 +114,8 @@ controlling measured RNA and graph structure, and is that alignment unusual unde
 label and target-assignment randomizations? Negative benchmarks of foundation-model interpretability
 under careful controls have precedent~\citep{ahlmanneltze2025linear,boiarsky2023deepdive,kedzierska2023assessing};
 our aim is the audit protocol, software capsule, and reporting discipline rather than a global
-verdict that scFMs do or do not encode regulation.
+verdict that scFMs do or do not encode regulation. Failure to support a global capability claim
+on this panel equally cannot be read as a field-level negative beyond this protocol instance.
 
 The closest prior results show that foundation-model attention recovers co-expression rather than
 unique regulatory signal~\citep{kendiukhov2026scfm}, and that residual-stream features of Geneformer and scGPT
@@ -126,8 +127,9 @@ satisfy the reference through co-expression edges. That construction choice is w
 informative when alignments are small: residual agreement cannot be explained by shared expression
 edge weights alone, but it also cannot be read as causal TF--target truth. Within one model, we
 additionally find that two readouts of the same frozen network disagree in sign (Geneformer
-embedding $+0.0044$ versus attention $-0.0036$ in brain), a per-readout inconsistency that a
-model-level regulatory account does not predict and that single-readout studies cannot see.
+embedding $+0.0044$ versus attention $-0.0036$ in brain)---dual-null Support on both sides of
+zero that is not regulatory recovery and not a model-level capability claim---a per-readout
+inconsistency that single-readout studies cannot see.
 
 Our contributions are:
 \begin{enumerate}
@@ -419,11 +421,12 @@ its entries are uncorrected $p$-values (dashes mark where no family correction a
 \end{table}
 
 Dual-null Support is only one gate. Table~\ref{tab:protocol} and
-Fig.~\ref{fig:protocol} stack five predeclared protocol gates on the same thirteen FM rows:
-dual-null under full confounds, dual-null under non-degree, FM--co-expression concordance
+Fig.~\ref{fig:protocol} report six gate columns on the same thirteen FM rows
+(dual-null under full and under non-degree, FM--co-expression concordance
 (Spearman $>0$), non-degree same sign as the full estimate, multi-readout sign agreement within
-model family and tissue, and full-spec $\rho$ strictly above the tissue co-expression baseline.
-\textbf{Protocol-pass} requires dual-full, concordance, non-degree same sign, multi-readout sign
+model family and tissue, and full-spec $\rho$ strictly above the tissue co-expression baseline).
+\textbf{Protocol-pass} is the conjunction of five of those gates (Dual non-deg is reported but
+not required): dual-full, concordance, non-degree same sign, multi-readout sign
 agreement, and $\rho>$ baseline simultaneously. Under those gates,
 \textbf{$0/13$ rows protocol-pass}---including every dual-null positive---so dual-null Support is not
 treated as regulatory recovery (Fig.~\ref{fig:protocol}).
@@ -477,6 +480,9 @@ by naive independent double-dipping alone, yet still is not regulatory recovery
 \begin{table}[!tbp]\centering
 \resizebox{\linewidth}{!}{\input{table6_fm_vs_baseline.tex}}
 \caption{FM versus same-edge co-expression baseline under the full confound design.
+The $\rho_{\mathrm{FM}}$ column is the shared-null pipeline recompute
+(\texttt{method=shared\_mantel\_delta\_v1}); small differences from Table~\ref{tab:primary}
+reflect that recompute, not a second primary estimand.
 $\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$ is the observed contrast; $q_{\Delta}$ and
 Shared sig are one-sided shared-null Mantel tests of $\Delta>0$ ($N{=}999$, BH within tissue).
 Dual-null is the Table~\ref{tab:primary} Support gate. Dual$\wedge$beats counts rows that are
@@ -519,7 +525,8 @@ pass concordance include PBMC scGPT ($+0.01$), scFoundation ($+0.08$), and PBMC 
 attention ($+0.40$); the latter two are dual-null negative, so a concordance passer need not be
 dual-null supported (and conversely).
 We report the six positives as readout-specific geometry rather than as regulatory signal
-(Fig.~\ref{fig:concordance}); per-TF embedding-norm / cosine anisotropy versus degree is
+(Fig.~\ref{fig:concordance}). Randomization and knockout diagnostics for the same rows are
+summarized in Fig.~\ref{fig:nulls}; per-TF embedding-norm / cosine anisotropy versus degree is
 \emph{not} tested in this release and is not used as a mechanistic claim
 (SAP~\S8).
 
@@ -609,14 +616,6 @@ specification, dual-null Support is $0/13$; the predominant rejection pattern is
 Neither-null rows are not dual-null Support.}\label{tab:nondegree}
 \end{table}
 
-\begin{table}[!tbp]\centering
-\fitfig{\input{table8_tf_probe_numeric.tex}}
-\caption{TF-disjoint probe numeric contrasts on paired PBMC multiome only (eight brain rows
-omitted). Paired sign-flip $q_{\mathrm{flip}}$ includes the random-init floor in the BH family;
-the no-floor column recomputes BH on the $n=4$ FM contrasts excluding the floor
-(UCE moves to $q=0.052$).}\label{tab:probe}
-\end{table}
-
 \subsection{The implementation responds monotonically to aligned injection, and the observed
 effects sit at the bottom of that ladder}
 The axis-aligned diagnostic rises monotonically from approximately zero at $\alpha=0$ to mean
@@ -659,6 +658,14 @@ refutes the pooled rows. In particular, the floor result and the no-floor sensit
 the probe as confirmatory evidence that FMs beat co-expression.
 Table~\ref{tab:probe} reports the corresponding numeric family-level contrasts (PBMC only; brain
 omitted), including the no-floor BH column.
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{table8_tf_probe_numeric.tex}}
+\caption{TF-disjoint probe numeric contrasts on paired PBMC multiome only (eight brain rows
+omitted). Paired sign-flip $q_{\mathrm{flip}}$ includes the random-init floor in the BH family;
+the no-floor column recomputes BH on the $n=4$ FM contrasts excluding the floor
+(UCE moves to $q=0.052$).}\label{tab:probe}
+\end{table}
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure10.pdf}
@@ -715,27 +722,29 @@ claim therefore cannot be read as a field-level negative
 \section{Discussion}
 The audit finds six small positive fixed-panel alignments and one negative one, all supported by
 both randomization nulls under the full confound specification. Three features of that result
-restrain its interpretation. First, the co-expression baseline, tested on the same edge set outside
-FM BH families (uncorrected $p$; not FM-family ``Support''), meets both null thresholds in both
-tissues, and one of the six positives (PBMC Geneformer embedding) is
-smaller than its own baseline; the models do not separate from the confound they are adjusted
-against. Second, the two supported readouts of the same model in the same tissue (Geneformer
-embedding $+0.0044$, Geneformer attention $-0.0036$, both brain) have opposite signs, which is not
-the signature of a model-level regulatory capability. Third, three of the six positives are
-negative before conditioning on the proxy's own degree covariates, so they appear only in the
-specification that conditions on functions of the outcome. A supervised TF-disjoint probe,
-answering the distinct question of supervised recoverability on paired PBMC data (the probe does
-not cover the brain rows, whose RNA and ATAC come from unpaired sources), finds mixed contrasts: UCE and the
-random-init floor are supported against co-expression ($q=0.0325$ and $q=0.0300$), while Geneformer
-embedding, Geneformer attention, and scGPT are not ($q=0.5125$, $q=0.65$, and $q=0.255$).
-The random-init result cautions against reading the UCE contrast as model-specific regulatory
-recovery.
+restrain its interpretation. First, the co-expression baseline meets both uncorrected null
+thresholds on the same edge set, and a shared-null Mantel test of
+$\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{baseline}}>0$ supports multiplicity-controlled
+superiority for only $2/13$ rows (brain and PBMC scGPT; Table~\ref{tab:fmbase}). Four dual-null
+positives beat their tissue baseline on the observed contrast; the rest---including PBMC
+Geneformer embedding---do not. Dual-null Support therefore does not imply separation from the
+co-expression confound under the frozen $\Delta\rho$ gate. Second, the two supported readouts of
+the same model in the same tissue (Geneformer embedding $+0.0044$, Geneformer attention
+$-0.0036$, both brain) have opposite signs, which is not the signature of a model-level
+regulatory capability. Third, three of the six positives are negative before conditioning on the
+proxy's own degree covariates, so they appear only in the specification that conditions on
+functions of the outcome. A supervised TF-disjoint probe, answering the distinct question of
+supervised recoverability on paired PBMC data (brain rows are not probed), finds mixed contrasts:
+when the BH family includes the random-init floor, UCE and the floor are supported ($q=0.0325$,
+$q=0.0300$); excluding the floor as a peer FM moves UCE to $q=0.052$. Adjusted test correlations
+are near zero for UCE/floor and more negative for co-expression, so ``support'' marks relative
+over-correction of the baseline, not recovered regulatory signal.
 
-The most defensible reading is therefore not ``four models encode weak regulation.'' It is that
-small, readout-specific, specification-dependent alignments exist on this fixed panel, that they
-are concentrated in embedding-geometry readouts rather than attention readouts, and that under
-this audit they cannot be distinguished from residual confound structure
-(Sec.~\ref{sec:estimand}). A further observation points the same way: our own protocol
+The most defensible reading is not that four models encode weak regulation. It is that small,
+readout-specific, specification-dependent alignments exist on this panel; that protocol-pass is
+$0/13$; and that under the frozen estimand (Sec.~\ref{sec:estimand}) dual-null Support does not
+establish residual regulatory content after named confounds---especially once shared-null
+$\Delta\rho$ superiority is limited to $2/13$ rows. A further observation points the same way: our own protocol
 freezes a concordance (attention-likeness) check in-repo in which a co-expression-like readout
 should correlate with co-expression (attention $\approx$ co-expression is well established). Five of
 the six supported positives fail that check (FM--co-expression Spearman $-0.18$ to $-0.02$), while
@@ -768,6 +777,8 @@ condition on it, so the two nulls ask different questions there: several non-deg
 unusual only under the row shuffle (brain Geneformer attention at $q_D=0.003$ and the
 random-init floor at $q_D=0.045$), which we read
 as evidence that degree adjustment---not regulatory content---drives that null's rejections.
+Under non-degree, dual-null Support is $0/13$ with 9 D-only rejections
+(Table~\ref{tab:nondegree}); we do not treat D-only as Support.
 Third, replication depth differs by model: scGPT is supported in both tissues but not by the
 probe; UCE is supported in both tissues but its probe contrast depends on the family boundary;
 Geneformer is supported only through one of two readouts and its other readout is opposite-signed.
@@ -827,16 +838,17 @@ nulls, dual-null Support reporting, concordance checks, and baseline comparison 
 set. Applied to thirteen pooled model/readout rows against an accessibility/motif
 regulatory-potential proxy, it finds six small positive and one negative dual-null alignment under
 the full confound specification, a co-expression baseline that reaches the same order of alignment,
-sign-inconsistent readouts within the same model, and positives that depend on conditioning on
-outcome-derived covariates, of which five of six fail concordance (PBMC scGPT weakly passes yet
-fails protocol-pass). A supervised disjoint-TF probe gives mixed
-family-level contrasts, with the UCE and random-init floors distinguishing from co-expression but
-no model-specific regulatory recovery. These application-scene results neither support a global
-regulatory-capability claim for the audited graphs nor license a field-level negative conclusion
-beyond this protocol instance. The design complements living GRN benchmarks and standardized scFM
-task suites~\citep{nourisa2025genernib,qiu2025biollm} by building proxy edge weights without
-expression statistics while still disclosing panel and ATAC filters as expression-adjacent design
-choices.
+shared-null $\Delta\rho>0$ significance for only $2/13$ rows (brain and PBMC scGPT;
+Table~\ref{tab:fmbase}), protocol-pass $0/13$, sign-inconsistent readouts within the same model,
+and positives that depend on conditioning on outcome-derived covariates, of which five of six fail
+concordance (PBMC scGPT weakly passes yet fails protocol-pass). A supervised disjoint-TF probe
+gives mixed family-level contrasts, with the UCE and random-init floors distinguishing from
+co-expression but no model-specific regulatory recovery. These application-scene results neither
+support a global regulatory-capability claim for the audited graphs nor license a field-level
+negative conclusion beyond this protocol instance. The design complements living GRN benchmarks
+and standardized scFM task suites~\citep{nourisa2025genernib,qiu2025biollm} by building proxy edge
+weights without expression statistics while still disclosing panel and ATAC filters as
+expression-adjacent design choices.
 
 \FloatBarrier
 \section*{Data and code availability}
