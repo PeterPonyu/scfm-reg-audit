@@ -23,13 +23,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PAPER = ROOT / "paper"
 PKG = PAPER / "submission_peerj"
+# Order matches CURRENT_TABLES stems (validate_artifacts / validate_capsule /
+# build_release_capsule). Keep synchronized when appending wave tables.
 TABLE_FRAGMENTS = [
-    "table1_primary_fixed_panel",
-    "table2_cross_tissue_observed",
-    "table3_pertype_ranges",
-    "table4_protocol_pass",
     "table5_related_work",
+    "table2_cross_tissue_observed",
+    "table1_primary_fixed_panel",
+    "table4_protocol_pass",
     "table6_fm_vs_baseline",
+    "table3_pertype_ranges",
+    "table7_nondegree_null_pattern",
+    "table8_tf_probe_numeric",
 ]
 
 # Import typography contract (figure map, validation)
@@ -180,12 +184,8 @@ def build_flat(flat):
             rf"\\includegraphics[width=\1]{{{figure}.pdf}}",
             text,
         )
-    text = text.replace("figs/table1_primary_fixed_panel.tex", "table1_primary_fixed_panel.tex")
-    text = text.replace("figs/table2_cross_tissue_observed.tex", "table2_cross_tissue_observed.tex")
-    text = text.replace("figs/table3_pertype_ranges.tex", "table3_pertype_ranges.tex")
-    text = text.replace("figs/table4_protocol_pass.tex", "table4_protocol_pass.tex")
-    text = text.replace("figs/table5_related_work.tex", "table5_related_work.tex")
-    text = text.replace("figs/table6_fm_vs_baseline.tex", "table6_fm_vs_baseline.tex")
+    for name in TABLE_FRAGMENTS:
+        text = text.replace(f"figs/{name}.tex", f"{name}.tex")
     (flat / "manuscript.tex").write_text(text)
     shutil.copy2(PAPER / "references.bib", flat / "references.bib")
     shutil.copy2(PAPER / "wlpeerj.cls", flat / "wlpeerj.cls")

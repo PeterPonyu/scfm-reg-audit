@@ -70,11 +70,17 @@ class TestManuscriptConsistency:
                 f"Manuscript missing reference to {name}.tex"
 
     def test_manuscript_references_all_tables(self):
-        """Test that manuscript references all tables."""
+        """Manuscript table \\input stems must match TABLE_FRAGMENTS exactly."""
+        import re
         manuscript_text = (PAPER / "manuscript.tex").read_text()
-        for name in TABLE_FRAGMENTS:
-            assert f"figs/{name}.tex" in manuscript_text, \
-                f"Manuscript missing reference to {name}.tex"
+        referenced = set(
+            re.findall(r"figs/(table[0-9]+_[A-Za-z0-9_]+)\.tex", manuscript_text)
+        )
+        allowed = set(TABLE_FRAGMENTS)
+        orphans = referenced - allowed
+        assert not orphans, f"Manuscript references unlisted tables: {orphans}"
+        missing = allowed - referenced
+        assert not missing, f"Manuscript missing reference to {sorted(missing)}"
 
     def test_no_orphan_figure_references(self):
         """Test that manuscript doesn't reference unlisted figures."""

@@ -461,12 +461,12 @@ alignment as the supported FM rows. Second, the PBMC Geneformer-embedding positi
 ($\rho=0.00425$) is smaller than its own baseline ($\rho=0.00697$): on that row the model aligns
 with the proxy less than the confound it is adjusted against.
 Table~\ref{tab:fmbase} reports observed
-$\Delta\rho=\rho_{\mathrm{FM,full}}-\rho_{\mathrm{baseline}}$ for all 13 FM rows: only four dual-null
-full rows beat their tissue baseline on the observed contrast (brain Geneformer embed, UCE, scGPT;
-PBMC scGPT), so dual-null Support does not imply shared-null superiority to co-expression on the
-same edge set. These $\Delta\rho$ / beats-baseline values are \emph{observed-only} contrasts
-(\texttt{method=observed\_delta\_v1}); a shared-null randomization of
-$\Delta\rho$ would require monorepo graph caches and is not claimed here.
+$\Delta\rho=\rho_{\mathrm{FM,full}}-\rho_{\mathrm{baseline}}$ for all 13 FM rows and a shared-null
+Mantel test of $\Delta>0$ ($N{=}999$ gene-label draws, BH within tissue;
+\texttt{method=shared\_mantel\_delta\_v1}): only four dual-null full rows beat their tissue baseline
+on the observed contrast (brain Geneformer embed, UCE, scGPT; PBMC scGPT), and only
+$2/13$ rows are shared-null significant after BH (brain scGPT; PBMC scGPT), so dual-null Support
+does not imply multiplicity-controlled superiority to co-expression on the same edge set.
 Under an independence reference operating characteristic for dual-null Support (independent
 Uniform $p_M,p_D$, BH within each full-spec tissue family, $2\times10^{4}$ draws), the Monte Carlo
 rate of $\ge1$ dual-null row is $\approx2\times10^{-4}$ (brain) and $\approx3\times10^{-4}$ (PBMC),
@@ -476,11 +476,12 @@ by naive independent double-dipping alone, yet still is not regulatory recovery
 
 \begin{table}[!tbp]\centering
 \resizebox{\linewidth}{!}{\input{table6_fm_vs_baseline.tex}}
-\caption{Observed FM versus same-edge co-expression baseline under the full confound design.
-$\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$ is an observed-only contrast (not shared-null
-superiority). Dual-null is the Table~\ref{tab:primary} Support gate. Dual$\wedge$beats counts rows
-that are dual-null \emph{and} have observed $\Delta\rho>0$
-($4/7$ dual-null rows; $4/13$ FM rows overall).}\label{tab:fmbase}
+\caption{FM versus same-edge co-expression baseline under the full confound design.
+$\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$ is the observed contrast; $q_{\Delta}$ and
+Shared sig are one-sided shared-null Mantel tests of $\Delta>0$ ($N{=}999$, BH within tissue).
+Dual-null is the Table~\ref{tab:primary} Support gate. Dual$\wedge$beats counts rows that are
+dual-null \emph{and} have observed $\Delta\rho>0$ ($4/7$ dual-null rows; $4/13$ FM rows overall);
+shared-null significance is $2/13$ (brain/PBMC scGPT only).}\label{tab:fmbase}
 \end{table}
 
 Four completed enhancement-v1 checks qualify the fixed-panel interpretation without changing the
@@ -539,7 +540,7 @@ tissue; the brain effects have opposite signs.}
 \caption{Randomization and readout diagnostics. (A) Observed statistics against the row-shuffle
 null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and
 co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout both
-align with the proxy after partialling co-expression alone ($p=0.001$ and $p=0.004$); the audit's
+align with the proxy after partialling co-expression alone ($p<0.001$ and $p=0.004$); the audit's
 full confound specification removes that alignment (Table~\ref{tab:primary}). (D) Joint-null
 support decisions are identical between the authoritative audit and the attention-omission
 guard.}\label{fig:nulls}
@@ -559,6 +560,7 @@ rejects alone. Dual-Support is therefore never granted under non-degree. Those D
 must not be read as dual-null Support: the row-shuffle still preserves TF out-degree while the
 non-degree design does not condition on degree, so the two nulls do not address the same estimand
 (SAP~\S3; \texttt{results/nondegree\_null\_pattern\_v2.public.json}).
+Table~\ref{tab:nondegree} enumerates that non-degree pattern row by row (0 dual; D-only majority).
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure7.pdf}
@@ -597,6 +599,22 @@ or population-uncertainty interpretation.}\label{fig:pertype}
 confound specifications (brain: 15 exploratory FM$\times$type rows; PBMC: 14). Min/max/median
 across those rows only; no randomization $p$-values, BH correction, or population-uncertainty
 interpretation.}\label{tab:pertype_ranges}
+\end{table}
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{table7_nondegree_null_pattern.tex}}
+\caption{Non-degree dual-null pattern for all 13 FM rows. Under the co-primary non-degree
+specification, dual-null Support is $0/13$; the predominant rejection pattern is D-only
+(row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$), matching Fig.~\ref{fig:spec}.
+Neither-null rows are not dual-null Support.}\label{tab:nondegree}
+\end{table}
+
+\begin{table}[!tbp]\centering
+\fitfig{\input{table8_tf_probe_numeric.tex}}
+\caption{TF-disjoint probe numeric contrasts on paired PBMC multiome only (eight brain rows
+omitted). Paired sign-flip $q_{\mathrm{flip}}$ includes the random-init floor in the BH family;
+the no-floor column recomputes BH on the $n=4$ FM contrasts excluding the floor
+(UCE moves to $q=0.052$).}\label{tab:probe}
 \end{table}
 
 \subsection{The implementation responds monotonically to aligned injection, and the observed
@@ -639,6 +657,8 @@ audit's---it contains neither co-expression nor the proxy-derived degree covaria
 different question (supervised recoverability, not raw-readout alignment) and neither confirms nor
 refutes the pooled rows. In particular, the floor result and the no-floor sensitivity prevent reading
 the probe as confirmatory evidence that FMs beat co-expression.
+Table~\ref{tab:probe} reports the corresponding numeric family-level contrasts (PBMC only; brain
+omitted), including the no-floor BH column.
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure10.pdf}
