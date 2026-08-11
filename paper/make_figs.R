@@ -49,6 +49,9 @@ panel <- fromJSON(file.path(base, "paper", "panel_data.json"), simplifyVector = 
 
 BLUE <- "#2a78d6"; AQUA <- "#1b8f75"; YELLOW <- "#d99a00"
 VIOLET <- "#5946b2"; RED <- "#d84a4a"; MUTED <- "grey45"; LIGHT <- "#d9e8f8"
+# Calm reference accent for Fig.~2 panel C (expected-random guide); avoid
+# high-chroma red callouts that dominate PeerJ downscale.
+REF_MUTED <- "#7a6e68"
 
 # Figure text must survive the \fitfig downscale to the ~6.5in PeerJ text block:
 # design near that width with an 11pt base so the smallest rendered text stays
@@ -66,6 +69,11 @@ d_title_nudge <- theme(
   plot.title = element_text(hjust = 0, margin = margin(b = 3, l = 10)))
 
 emit <- function(name, plot, width, height, tags = LETTERS[1:4]) {
+  only <- Sys.getenv("SCFM_FIG_ONLY", "")
+  if (nzchar(only) && !identical(only, name)) {
+    cat(name, "skip\n")
+    return(invisible(NULL))
+  }
   path <- file.path(figs, paste0(name, ".tex"))
   tikz(path, width = width, height = height, standAlone = FALSE, sanitize = FALSE)
   print(plot)
@@ -190,13 +198,8 @@ f1a <- ggplot(flow, aes(x, y)) +
            color = arrow_col, linewidth = 0.6) +
   annotate("text", x = 2.02, y = 0.96, label = "restrict to panel",
            size = 2.45, color = MUTED) +
-  # disclaimer as integrated footer chip (edge weights without expression stats; not RNA-structure-independent overall)
-  annotate("label", x = 2.0, y = 0.38,
-           label = "edge weights without expression stats; regulatory-potential proxy, not causal ground truth",
-           size = 2.75, color = RED, fill = "#fdeeee",
-           label.size = 0.35, label.r = unit(0.12, "lines"),
-           label.padding = unit(0.26, "lines")) +
-  coord_cartesian(xlim = c(0.15, 3.85), ylim = c(0.18, 2.62), clip = "off") +
+  # Caveat lives in the fig:proxy caption (not an in-panel red banner).
+  coord_cartesian(xlim = c(0.15, 3.85), ylim = c(0.72, 2.62), clip = "off") +
   labs(title = "Accessibility and motif evidence define the audited proxy") +
   theme_void(base_size = 11) +
   theme(plot.title = element_text(size = 11, hjust = 0),
@@ -218,10 +221,11 @@ motif <- bind_rows(lapply(names(panel$motif_evidence), function(tn) {
 motif$tissue <- factor(motif$tissue, levels = c("Brain", "PBMC", "Fibroblast mix"))
 f1c <- ggplot(motif, aes(tissue, hits_per_peak)) +
   geom_col(fill = VIOLET, width = 0.6) +
-  geom_hline(yintercept = 5.5, linetype = "dashed", color = RED) +
+  geom_hline(yintercept = 5.5, linetype = "dashed", color = REF_MUTED,
+             linewidth = 0.55) +
   geom_text(aes(label = sprintf("%.1f", hits_per_peak)), vjust = -0.5, size = 3.3) +
-  annotate("text", x = 2, y = 26.5, label = "expected random = 5.5", size = 3.1,
-           color = RED) +
+  annotate("text", x = 2, y = 26.5, label = "expected random = 5.5", size = 3.0,
+           color = REF_MUTED) +
   coord_cartesian(ylim = c(0, 28)) +
   labs(x = NULL, y = "motif hits per peak",
        title = "Expected-random motif share") +
@@ -249,6 +253,8 @@ emit("fig1_truth_construct",
      ((free(f1a) | f1b) + plot_layout(widths = c(1.06, 0.94))) / (f1c | f1d) +
        plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"), 6.8, 5.8)
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig1_truth_construct"))
+  quit(save = "no", status = 0)
 
 # ============== Figure 2: cross-tissue additive decomposition ==============
 dec <- bind_rows(lapply(decomp$rows, function(x) {
@@ -429,10 +435,11 @@ f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
 # into that column (too short); free()+plot_spacer() still clips the right edge
 # to the forest panel. cowplot (align="none") lets C|D span nearly full width
 # under the A/B y-tick column (spacer 1.28 -> none). wrap_elements keeps tags.
+# label_size 13.2 matches patchwork A/B tag scale 1.20 at 11pt base (11 → 1.00).
 f3_bottom <- cowplot::plot_grid(
   f3c, f3d, nrow = 1,
   rel_widths = c(1.0, 1.1),
-  labels = c("C", "D"), label_size = 11, label_fontface = "plain",
+  labels = c("C", "D"), label_size = 13.2, label_fontface = "plain",
   hjust = 0, vjust = 1.1
 )
 emit("fig3_primary_audit",
@@ -558,9 +565,12 @@ f5a <- ggplot(dn, aes(label)) +
        title = "Row-shuffle null 95\\% band vs observed") +
   # Title over the panel (not the full plot) so long y-ticks do not pull it
   # into the left gutter; free(..., side="t") still lets the panel rise.
+  # Small right nudge on A (PeerJ Fig.~6 left column): default tag sits in the
+  # empty title-band gutter left of the panel spine.
   theme(axis.ticks.y = element_blank(),
         plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)))
+        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
+        plot.tag.position = c(0.08, 1))
 
 att_obs <- attn_readout$observed
 att_df <- data.frame(
@@ -585,7 +595,10 @@ f5b <- ggplot(att_df, aes(variant, rho, fill = kind)) +
         legend.key.size = unit(0.28, "cm"),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
-        axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5))
+        axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5),
+        # Small right nudge toward the panel spine (default sits in the
+        # left gutter of the right-column package).
+        plot.tag.position = c(0.10, 1))
 
 ko_null <- bind_rows(lapply(c("mantel_ko_partial", "mantel_ko_ctrl_partial"), function(k) {
   m <- ko_stat[[k]]
@@ -607,9 +620,11 @@ f5c <- ggplot(ko_null, aes(readout)) +
   # lives in the figure caption (panel C).
   labs(x = NULL, y = "partial $\\rho$ $|$ co-expression",
        title = "KO aligns after co-expression alone") +
+  # Match A: small right nudge into the left-column title-band gutter.
   theme(axis.ticks.y = element_blank(),
         plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)))
+        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
+        plot.tag.position = c(0.08, 1))
 
 # The omission guard is a parallel brain analysis with its own seed stream; its
 # q-values differ from the authoritative audit, so the panel compares DECISIONS,
@@ -636,12 +651,14 @@ f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
         legend.key.size = unit(0.28, "cm"),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
-        axis.ticks = element_blank()) +
+        axis.ticks = element_blank(),
+        # Match B: small right nudge toward the heatmap spine / packaged plot.
+        plot.tag.position = c(0.10, 1)) +
   d_title_nudge
 
 # free(A/C, side="t"): B/D keep a legend band above the panel; without freeing,
 # A/C titles stay level with B/D while their panels drop, leaving a blank under
-# the title. Tags stay on the default aligned corners (do not move).
+# the title. A/C/B/D each use plot.tag.position (A/C 0.08; B/D 0.10).
 emit("fig5_null_diagnostics",
      (free(f5a, type = "panel", side = "t") | f5b) /
        (free(f5c, type = "panel", side = "t") | f5d) +
@@ -671,11 +688,14 @@ pair6 <- full6 %>% left_join(nd6, by = "display")
 pair6$sign_flip <- pair6$rho_Full * pair6$rho_nd < 0
 stopifnot(nrow(pair6) == 13L, sum(pair6$dual_Full) == 7L, sum(pair6$dual_nd) == 0L)
 n_flip <- sum(pair6$sign_flip)
+# Softened sign-flip stroke: same red family as RED but lower chroma so the
+# six flip segments do not dominate PeerJ downscale (science encoding unchanged).
+FLIP_STROKE <- "#b86f6f"
 
 f6a <- ggplot(pair6, aes(y = display)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_segment(aes(x = rho_Full, xend = rho_nd, yend = display,
-                   color = sign_flip), linewidth = 0.55) +
+                   color = sign_flip), linewidth = 0.5) +
   geom_point(aes(x = rho_Full, shape = "Full", fill = dual_Full),
              size = 2.5, color = "black", stroke = 0.3) +
   geom_point(aes(x = rho_nd, shape = "Non-degree", fill = dual_nd),
@@ -684,22 +704,31 @@ f6a <- ggplot(pair6, aes(y = display)) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "white"),
                     labels = c(`TRUE` = "dual-null", `FALSE` = "not dual-null"),
                     name = NULL) +
-  scale_color_manual(values = c(`TRUE` = RED, `FALSE` = "grey70"),
+  scale_color_manual(values = c(`TRUE` = FLIP_STROKE, `FALSE` = "grey70"),
                      labels = c(`TRUE` = "sign flip", `FALSE` = "same sign"),
                      name = NULL) +
+  # Short title + subtitle: the prior single-line title overran into panel B
+  # ("…6 sign flips" colliding with "Sign-flip map"). plot.title.position =
+  # "plot" pulls the title into the unused left y-label band.
   labs(x = "partial Spearman $\\rho$", y = NULL,
-       title = sprintf(
-         "Paired full$\\leftrightarrow$non-degree: dual-null $7\\rightarrow 0$; %d sign flips",
-         n_flip)) +
-  guides(fill = guide_legend(override.aes = list(shape = 21)),
+       title = "Paired full$\\leftrightarrow$non-degree",
+       subtitle = sprintf("dual-null $7\\rightarrow 0$; %d sign flips", n_flip)) +
+  guides(fill = guide_legend(override.aes = list(shape = 21), order = 2),
          shape = guide_legend(order = 1),
          color = guide_legend(order = 3)) +
   theme(legend.position = "top",
         legend.box = "vertical",
         legend.margin = margin(0, 0, 0, 0),
         legend.spacing.y = unit(1, "pt"),
-        legend.text = element_text(size = 7.5),
-        axis.ticks.y = element_blank())
+        legend.text = element_text(size = 7),
+        legend.key.size = unit(0.28, "cm"),
+        axis.ticks.y = element_blank(),
+        plot.title.position = "plot",
+        plot.title = element_text(hjust = 0, margin = margin(b = 1)),
+        plot.subtitle = element_text(size = 9, hjust = 0, margin = margin(b = 3)),
+        # Extra right pad separates A legends from B title; tighten left so the
+        # forest expands into the former left whitespace.
+        plot.margin = margin(4, 14, 3, 0))
 
 # A discrete binned fill is used instead of a continuous gradient so tikzDevice
 # emits a vector legend rather than a rasterized colorbar PNG (which would create
@@ -716,7 +745,11 @@ f6b <- ggplot(f6b_dat, aes(spec_label, display, fill = rho_bin)) +
   labs(x = NULL, y = NULL, title = "Sign-flip map") +
   theme(legend.position = "top", axis.ticks = element_blank(),
         axis.text.y = element_blank(), legend.text = element_text(size = 7),
-        legend.key.size = unit(8, "pt"))
+        legend.key.size = unit(8, "pt"),
+        plot.title.position = "plot",
+        plot.title = element_text(hjust = 0, margin = margin(b = 3)),
+        # Left pad keeps B title clear of A's legend/title block.
+        plot.margin = margin(4, 6, 3, 10))
 
 pm <- bind_rows(lapply(spec_sens$rows, function(x) {
   data.frame(tissue = ifelse(x$tissue == "brain", "Brain", "PBMC"),
@@ -803,12 +836,18 @@ f6d <- ggplot(lad_long, aes(rung, rho, group = model, color = display_model)) +
 
 # free(f6c): A/B y-ticks otherwise panel-align C's axis box far right of its
 # ylab; D keeps a right legend column and a slightly wider share.
+# Wider A share + A/B margins above keep the long y-tick forest from crowding
+# the Sign-flip map title (PeerJ Figure 7 / manuscript fig:spec).
 emit("fig6_spec_sensitivity",
-     ((f6a | f6b) + plot_layout(widths = c(1.6, 1))) /
+     ((f6a | f6b) + plot_layout(widths = c(1.75, 1))) /
        ((free(f6c) | f6d) + plot_layout(widths = c(0.95, 1.15))) +
        plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"),
-     6.8, 7.0)
+     6.8, 7.2)
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig6_spec_sensitivity")) {
+  cat("SCFM_FIG_ONLY: stopping after fig6_spec_sensitivity\n")
+  quit(save = "no", status = 0)
+}
 
 # ==================== Figure 7: per-cell-type descriptive ====================
 pertype_rows <- function(tissue) {
@@ -897,7 +936,9 @@ f7c <- ggplot(ptf_long, aes(cell_type, rho, color = series, group = series)) +
         legend.key.spacing.x = unit(4, "pt"),
         legend.margin = margin(0, 0, 0, 0),
         plot.title.position = "plot",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
+        # Small right nudge (~8pt ≈ 0.03 panel fraction) so C sits under the
+        # series/plot band rather than the y-label gutter; do not overshoot.
+        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2, l = 8)),
         plot.margin = margin(4, 4, 3, 2))
 
 cells <- bind_rows(lapply(names(panel$pertype_n_cells), function(tn) {
@@ -928,8 +969,9 @@ f7d <- ggplot(cells, aes(reorder(cell_type, n_cells), n_cells, fill = tissue)) +
         legend.box.spacing = unit(2, "pt"),
         # Reserve a clear header band above the top spine (matches C).
         plot.title.position = "plot",
-        # Long D title: shift right of the D tag (tag itself nudged right too).
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2, l = 10)),
+        # Long D title: modest right nudge (l 10→16, +6pt) to track C; keep
+        # short of slamming into the bar frame. Tag stays at 0.24.
+        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2, l = 16)),
         plot.margin = margin(4, 6, 3, 2),
         # Nudge panel tag D further right toward the plot spine / title start
         # (deep y-tick gutter otherwise leaves D too far left of the title).
@@ -1083,35 +1125,26 @@ pa <- bind_rows(lapply(names(probe_stats$families), function(fam) {
              stringsAsFactors = FALSE)
 }))
 pa$family <- factor(pa$family, levels = rev(unname(probe_fam_label)))
-  q_labels <- ifelse(pa$status == "co-expression baseline",
-                     sprintf("$q_M=%.3f$", pa$q),
-                     sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", pa$q, pa$flip_q))
-  # Thin left gutter + tighter right pad so the forest spans more of the 6.8in width.
-  f9a_margin <- compute_measured_panel_margin(
-    ytick_labels = pa$family,
-    right_labels = q_labels,
-    base_left_pt = 0,
-    normal_ytick_envelope_pt = 160,
-    padding_pt = 6
-  )
-  f9a <- ggplot(pa, aes(rho, family, color = status)) +
+# Keep q-labels inside the panel x-range (no clip="off" right gutter). A large
+# outer right margin on A was patchwork-aligned onto B and left B's white hole.
+f9a <- ggplot(pa, aes(rho, family, color = status)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey55") +
   geom_point(size = 2.4) +
   geom_text(aes(x = 0.0075,
                 label = ifelse(status == "co-expression baseline",
                                sprintf("$q_M=%.3f$", q),
                                sprintf("$q_M=%.3f;\\ q_{\\mathrm{flip}}=%.3f$", q, flip_q))),
-            hjust = 0, size = 4.0, color = "black") +
+            hjust = 0, size = 3.6, color = "black") +
   scale_color_manual(values = c("supported vs baseline" = AQUA,
                                 "not supported" = MUTED,
                                 "co-expression baseline" = "black")) +
-  coord_cartesian(xlim = c(-0.021, 0.0062), clip = "off") +
+  coord_cartesian(xlim = c(-0.021, 0.030), clip = "on") +
   labs(x = "adjusted test $\\rho$", y = NULL, color = NULL,
        title = "Supervised probe on held-out TFs (edge features only)") +
   theme(legend.position = "top",
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
-        plot.margin = f9a_margin)
+        plot.margin = margin(4, 6, 3, 2))
 
 pb <- bind_rows(lapply(names(probe_sens$grid), function(fam) {
   g <- probe_sens$grid[[fam]]
@@ -1123,26 +1156,51 @@ pb <- bind_rows(lapply(names(probe_sens$grid), function(fam) {
   }))
 }))
 pb$family <- factor(pb$family, levels = unname(probe_fam_label))
-f9b <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
+# Panel B: one-column legend on the right. With A's gutter gone, B's axes can
+# span the full row; collapse guide-box 0.5null spacers so they don't reopen a hole.
+f9b_gg <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
   geom_line(linewidth = 0.5) + geom_point(size = 1.5) +
   annotate("segment", x = 2, xend = 2, y = -0.025, yend = 0.073,
-           linetype = "dotted", color = RED, linewidth = 0.4) +
+           linetype = "dotted", color = REF_MUTED, linewidth = 0.4) +
   annotate("text", x = 2.15, y = 0.055, label = "construction\ncovariates",
-           hjust = 0, size = 2.8, color = RED) +
+           hjust = 0, size = 2.7, color = REF_MUTED) +
   scale_color_manual(values = c("Co-expression" = "black", "Geneformer embed" = BLUE,
                                 "Geneformer attention" = AQUA, "scGPT encoder" = VIOLET,
                                 "UCE encoder" = YELLOW, "Random-init floor" = MUTED)) +
   labs(x = NULL, y = "adjusted test $\\rho$", color = NULL,
        title = "Recovery collapses at the construction covariates") +
-  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
-  theme(legend.position = "top",
-        legend.text = element_text(size = 8.5),
-        legend.key.size = unit(0.28, "cm"),
+  guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+  theme(legend.position = "right",
+        legend.justification = c(0, 0.5),
+        legend.text = element_text(size = 7.6),
+        legend.key.size = unit(0.24, "cm"),
+        legend.spacing.y = unit(1.2, "pt"),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
+        axis.title.y = element_text(margin = margin(r = 2)),
         axis.text.x = element_text(angle = 28, hjust = 1, size = 9),
-        plot.margin = margin(4, 8, 3, 4))
+        plot.margin = margin(4, 2, 3, 2))
+f9b_g <- ggplot2::ggplotGrob(f9b_gg)
+# Pin ylab/axis absolute widths: axis-l embeds a 1null that expands under
+# wrap_elements and floats the y-label; guide-box 0.5nulls open a right hole.
+f9b_ylab <- unique(f9b_g$layout$l[f9b_g$layout$name == "ylab-l"])
+if (length(f9b_ylab))
+  f9b_g$widths[[f9b_ylab[1]]] <- grid::unit(0.55, "cm")
+f9b_axis <- unique(f9b_g$layout$l[f9b_g$layout$name == "axis-l"])
+if (length(f9b_axis))
+  f9b_g$widths[[f9b_axis[1]]] <- grid::unit(1.05, "cm")
+f9b_guide <- which(f9b_g$layout$name == "guide-box-right")
+if (length(f9b_guide)) {
+  gb <- f9b_g$grobs[[f9b_guide]]
+  if (inherits(gb, "gtable") && length(gb$widths) >= 3) {
+    gb$widths[1] <- grid::unit(0, "pt")
+    gb$widths[length(gb$widths)] <- grid::unit(0, "pt")
+    f9b_g$grobs[[f9b_guide]] <- gb
+    f9b_g$widths[f9b_g$layout$l[f9b_guide]] <- grid::unit(1, "grobwidth", gb)
+  }
+}
+f9b <- wrap_elements(full = f9b_g)
 
 arms <- bind_rows(lapply(names(probe_fam_label), function(fam) {
   eo <- probe_eval$results$edge_only[[fam]]
@@ -1185,8 +1243,9 @@ f9d <- ggplot(dist, aes(family)) +
         plot.margin = margin(4, 6, 3, 2)) +
   d_title_nudge
 
-# A/B stay full-width. C|D share one row via cowplot: plain patchwork (C|D)
-# nested under A/B used to squeeze the bottom plot regions (~59pt).
+# A and B now share a full-width panel column (q-labels live inside A's xlim).
+# C|D share one row via cowplot: plain patchwork (C|D) nested under A/B used to
+# squeeze the bottom plot regions (~59pt).
 f9_bottom <- cowplot::plot_grid(
   f9c, f9d, nrow = 1,
   rel_widths = c(1.05, 0.95),
@@ -1196,8 +1255,10 @@ f9_bottom <- cowplot::plot_grid(
 emit("fig9_tf_probe",
      (f9a / f9b / wrap_elements(full = f9_bottom)) +
        plot_annotation(tag_levels = list(c("A", "B", ""))) +
-       plot_layout(heights = c(1.1, 1.0, 1.15)),
+       plot_layout(heights = c(1.1, 1.05, 1.15)),
      6.8, 7.6)
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig9_tf_probe"))
+  quit(save = "no", status = 0)
 
 # ==================== Figure 10: coverage, scope, QC ====================
 cov <- bind_rows(lapply(names(panel$readout_qc$manifest_gene_coverage), function(k) {
@@ -1319,7 +1380,9 @@ f11a <- ggplot(cov11, aes(reorder(tissue, frac), frac, fill = tissue)) +
   coord_flip(ylim = c(0, 0.075)) +
   scale_fill_manual(values = TISSUE_COL) +
   labs(x = NULL, y = "peaks linked",
-       title = "$\\pm$2 kb linkage admits 4--6\\% of peaks")
+       title = "$\\pm$2 kb linkage admits 4--6\\% of peaks") +
+  # Tiny left nudge vs B/D (0.28): a little more air between A tag and title.
+  theme(plot.tag.position = c(0.26, 1))
 
 ov <- bind_rows(lapply(tt$edge_overlap$regions, function(r) {
   data.frame(region = paste(unlist(r$combo), collapse = " + "), n = r$n)
@@ -1332,7 +1395,8 @@ f11b <- ggplot(ov, aes(reorder(region, n), n, fill = shared)) +
   coord_flip(ylim = c(0, 47000)) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey70")) +
   labs(x = NULL, y = "TF--gene edges",
-       title = "A shared 38k-edge core")
+       title = "A shared 38k-edge core") +
+  theme(plot.tag.position = c(0.28, 1))
 
 deg <- bind_rows(lapply(names(tt$degree_tf_out), function(tn) {
   data.frame(tissue = tn, degree = unlist(tt$degree_tf_out[[tn]]))
@@ -1342,7 +1406,12 @@ f11c <- ggplot(deg, aes(degree, color = tissue)) +
   scale_color_manual(values = TISSUE_COL) +
   labs(x = "supported targets per TF", y = "ECDF", color = NULL,
        title = "TF out-degree marginals are similar") +
-  theme(legend.position = "top")
+  theme(legend.position = "top",
+        # free(label,"l") below keeps ECDF next to C's ticks; modest r margin
+        # leaves a few pt of air from the numerals.
+        axis.title.y = element_text(margin = margin(r = 4)),
+        # Same tiny A/C tag nudge (B/D stay at 0.28).
+        plot.tag.position = c(0.26, 1))
 
 rp <- bind_rows(lapply(tt$rho_phi, function(r) {
   data.frame(pair = r$pair, observed = r$observed, phi = r$phi)
@@ -1357,15 +1426,17 @@ f11d <- ggplot(rp, aes(y = reorder(pair, observed))) +
   coord_cartesian(xlim = c(0.40, 0.60)) +
   labs(x = "cross-tissue agreement", y = NULL, color = NULL,
        title = "Rank agreement tracks support") +
-  theme(legend.position = "top") +
+  theme(legend.position = "top",
+        plot.tag.position = c(0.28, 1)) +
   d_title_nudge
 
-# Tags default to the outer y-tick margin; nudge right toward each panel spine.
+# Per-panel tags: A/C at 0.26 (slightly left of prior 0.28); B/D keep 0.28.
+# free(label,"l"): keep C's ECDF next to its short ticks (A's long y-text
+# otherwise parks the collected ylab in a wide left gutter).
 emit("fig11_third_tissue_transfer",
-     ((f11a | f11b) / (f11c | f11d) +
+     ((f11a | f11b) / (free(f11c, type = "label", side = "l") | f11d) +
         plot_annotation(tag_levels = "A") +
-        plot_layout(axis_titles = "collect")) &
-       theme(plot.tag.position = c(0.28, 1)),
+        plot_layout(axis_titles = "collect")),
      6.8, 5.8)
 
 # ==================== tables (locked enrichment SPEC) ====================
@@ -1560,7 +1631,10 @@ writeLines(c(
   "\\midrule", pp_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table4_protocol_pass.tex"))
 
-# Binary heatmap (rows × gates) as Fig.12 companion to Table 4.
+# ==================== Figure 12: protocol-pass (A) + scope card (B) ====================
+# Formerly separate Fig.12 / Fig.13 (each tagged "A" alone). Merged so the wide
+# gate heatmap and the scope card share one float; vertical stack keeps the
+# 13×7 heatmap readable at design width 6.8in (0x10 + 0x15).
 gate_levels <- c("Dual full", "Dual non-deg", "Concordance",
                  "ND same sign", "Multi-RO sign", "$\\rho>$ baseline",
                  "Protocol-pass")
@@ -1582,86 +1656,125 @@ pp_long <- bind_rows(
 )
 pp_long$display <- factor(pp_long$display, levels = rev(unique(pp_long$display)))
 pp_long$gate <- factor(pp_long$gate, levels = gate_levels)
-f12 <- ggplot(pp_long, aes(gate, display, fill = pass)) +
-  geom_tile(color = "white", linewidth = 0.4) +
-  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85"),
+# Emphasize the conjunction column without a garish red (muted slate border).
+pp_long$is_final <- pp_long$gate == "Protocol-pass"
+f12a <- ggplot(pp_long, aes(gate, display, fill = pass)) +
+  geom_tile(color = "white", linewidth = 0.55, width = 0.96, height = 0.92) +
+  geom_tile(data = pp_long %>% filter(is_final),
+            aes(gate, display), fill = NA, color = "#5a6570",
+            linewidth = 0.7, width = 0.96, height = 0.92) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey88"),
                     labels = c(`TRUE` = "pass", `FALSE` = "fail"),
-                    name = NULL) +
+                    name = NULL,
+                    guide = guide_legend(override.aes = list(color = "white",
+                                                            linewidth = 0.4),
+                                        nrow = 1)) +
+  scale_x_discrete(expand = c(0.012, 0)) +
+  scale_y_discrete(expand = c(0.012, 0)) +
   labs(x = NULL, y = NULL,
        title = "Protocol-pass gates: $0/13$ rows pass all predeclared checks") +
-  theme(axis.text.x = element_text(angle = 28, hjust = 1, size = 8.5),
-        axis.text.y = element_text(size = 8),
+  theme(axis.text.x = element_text(angle = 32, hjust = 1, size = 8.2,
+                                   margin = margin(t = 2)),
+        axis.text.y = element_text(size = 8.0),
+        axis.ticks = element_blank(),
         legend.position = "top",
-        panel.grid = element_blank())
-# Single-panel heatmap: stamp an "A" tag so figure-contract composites stay honest.
-f12 <- f12 + plot_annotation(tag_levels = "A") +
-  theme(plot.tag.position = c(0.02, 0.98))
-emit("fig12_protocol_pass_matrix", f12, 6.8, 5.2, tags = "A")
+        legend.justification = "right",
+        legend.direction = "horizontal",
+        legend.margin = margin(0, 0, 0, 0),
+        legend.box.margin = margin(-2, 0, -4, 0),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "grey70", fill = NA, linewidth = 0.4),
+        plot.title.position = "plot",
+        plot.margin = margin(2, 4, 2, 2))
 
-
-# ==================== Figure 13: protocol scope card (0x15) ====================
+# Panel B: full-width in-scope / out-of-scope bands (fills former empty gutter).
 scope_nodes <- data.frame(
-  x = c(1, 2, 3, 4),
-  y = c(1.2, 1.2, 1.2, 1.2),
-  lab = c("$\\pm$2 kb\nwindow", "JASPAR\nmotif", "ATAC peak\npresence", "fixed 446$\\times$1{,}200\npanel"),
+  x = c(1.05, 2.15, 3.25, 4.35),
+  y = 1.42,
+  lab = c("$\\pm$2 kb\nwindow", "JASPAR\nmotif", "ATAC peak\npresence",
+          "fixed 446$\\times$1{,}200\npanel"),
   stringsAsFactors = FALSE
 )
 scope_out <- data.frame(
-  x = c(1.5, 2.5, 3.5),
-  y = c(0.35, 0.35, 0.35),
-  lab = c("distal / 3D\nexcluded", "ChIP / causal\nTF--target not claimed", "cell-type near-invariant\nproxy"),
+  x = c(1.4, 2.7, 4.0),
+  y = 0.42,
+  lab = c("distal / 3D\nexcluded", "ChIP / causal\nTF--target not claimed",
+          "cell-type near-invariant\nproxy"),
   stringsAsFactors = FALSE
 )
-f13 <- ggplot() +
-  geom_segment(aes(x = 1, xend = 4, y = 1.2, yend = 1.2),
-               color = MUTED, linewidth = 0.6,
-               arrow = arrow(length = unit(0.08, "in"), type = "closed")) +
+f12b <- ggplot() +
+  annotate("rect", xmin = 0.3, xmax = 4.7, ymin = 1.02, ymax = 1.92,
+           fill = LIGHT, color = "grey78", linewidth = 0.35) +
+  annotate("rect", xmin = 0.3, xmax = 4.7, ymin = 0.02, ymax = 0.92,
+           fill = "grey96", color = "grey78", linewidth = 0.35) +
+  annotate("text", x = 0.42, y = 1.78, label = "In scope",
+           hjust = 0, size = 3.05, color = BLUE) +
+  annotate("text", x = 0.42, y = 0.78, label = "Out of scope",
+           hjust = 0, size = 3.05, color = MUTED) +
   geom_label(data = scope_nodes, aes(x, y, label = lab),
-             size = 2.8, label.size = 0.4, fill = LIGHT, color = BLUE,
-             label.padding = unit(0.25, "lines"), lineheight = 0.95) +
+             size = 2.65, linewidth = 0.35, fill = "white", color = BLUE,
+             label.padding = unit(0.22, "lines"), lineheight = 0.95) +
   geom_label(data = scope_out, aes(x, y, label = lab),
-             size = 2.4, label.size = 0.3, fill = "grey96", color = MUTED,
-             label.padding = unit(0.2, "lines"), lineheight = 0.95) +
-  annotate("text", x = 2.5, y = 1.85,
-           label = "Protocol instance scope (what the audit asks)",
-           size = 3.2, color = "black") +
-  annotate("text", x = 2.5, y = -0.15,
-           label = "Out of scope for this instance --- not a claim that models lack regulation elsewhere",
-           size = 2.4, color = MUTED) +
-  coord_cartesian(xlim = c(0.5, 4.5), ylim = c(-0.35, 2.1)) +
+             size = 2.35, linewidth = 0.28, fill = "white", color = MUTED,
+             label.padding = unit(0.18, "lines"), lineheight = 0.95) +
+  annotate("text", x = 2.5, y = 2.16,
+           label = "Protocol-instance scope (what this audit asks)",
+           size = 3.15, color = "black") +
+  annotate("text", x = 2.5, y = -0.14,
+           label = paste0("Failure here cannot be read as a field-level negative --- ",
+                          "other panels, tissues, or GRN-informed models could differ"),
+           size = 2.3, color = MUTED) +
+  coord_cartesian(xlim = c(0.2, 4.8), ylim = c(-0.32, 2.32), expand = FALSE) +
   theme_void() +
-  theme(plot.margin = margin(6, 8, 4, 8))
-f13 <- f13 + plot_annotation(tag_levels = "A") +
-  theme(plot.tag.position = c(0.02, 0.98))
-emit("fig13_scope_card", f13, 6.8, 2.6, tags = "A")
+  theme(plot.margin = margin(4, 6, 2, 4))
+
+emit("fig12_protocol_pass_matrix",
+     f12a / f12b +
+       plot_annotation(tag_levels = "A") +
+       plot_layout(heights = c(1.65, 1.0)),
+     6.8, 7.4, tags = c("A", "B"))
+# Retired standalone fig13_scope_card.tex (content now panel B above).
+fig13_path <- file.path(figs, "fig13_scope_card.tex")
+if (file.exists(fig13_path))
+  file.remove(fig13_path)
 
 # ==================== Table 5: related-work comparison (0x14) ====================
 # Qualitative protocol axes only; complement-not-compete framing (PeerJ #4).
+# Use \small + tabularx (no \resizebox) so PeerJ body type stays readable.
 writeLines(c(
-  "\\begin{tabular}{lccccc}",
+  "{\\small",
+  paste0("\\begin{tabularx}{\\linewidth}{@{}",
+         ">{\\raggedright\\arraybackslash}p{2.15cm}",
+         ">{\\centering\\arraybackslash}X",
+         ">{\\centering\\arraybackslash}X",
+         ">{\\centering\\arraybackslash}X",
+         ">{\\centering\\arraybackslash}X",
+         ">{\\centering\\arraybackslash}X",
+         "@{}}"),
   "\\toprule",
   paste0("Resource & Expression in reference? & Degree / confound control? & ",
-         "Explicit null semantics? & Multi-readout? & Hash-pinned capsule? \\\\ "),
+         "Explicit null semantics? & Multi-readout? & Hash-pinned capsule? \\\\"),
   "\\midrule",
   paste0("scReg-Eval (this work) & No (edge weights motif+ATAC) & ",
          "Yes (coexp + 6 structural) & Yes (two MC nulls + BH families) & ",
-         "Yes & Yes \\\\ "),
+         "Yes & Yes \\\\"),
   paste0("Kendiukhov et al.\\ scFM interpretability & ",
          "Yes (co-expression / pathways) & Partial & ",
-         "Varies & Attention-focused & No \\\\ "),
+         "Varies & Attention-focused & No \\\\"),
   paste0("Kendiukhov et al.\\ SAE residual stream & ",
          "Pathway/interaction features & Partial & ",
-         "Varies & Feature-level & No \\\\ "),
+         "Varies & Feature-level & No \\\\"),
   paste0("GeneRNIB living GRN benchmark & ",
          "Often literature / expression GRNs & Task-dependent & ",
-         "Benchmark scores & Multi-method & Community leaderboard \\\\ "),
+         "Benchmark scores & Multi-method & Community leaderboard \\\\"),
   paste0("BioLLM / scFM task suites & ",
          "Task labels from biology & Task-dependent & ",
-         "Standard ML splits & Multi-task & Code releases \\\\ "),
+         "Standard ML splits & Multi-task & Code releases \\\\"),
   "\\bottomrule",
-  "\\end{tabular}"
+  "\\end{tabularx}",
+  "}"
 ), file.path(figs, "table5_related_work.tex"))
 
 
-cat("protocol-pass 0/13 confirmed; table4 + fig12 written\n")
+cat("protocol-pass 0/13 confirmed; table4 + fig12 (A+B) written\n")
 cat("all authoritative figures and tables written to", figs, "\n")
