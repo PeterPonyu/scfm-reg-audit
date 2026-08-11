@@ -32,7 +32,7 @@ cd paper && latexmk -pdf -interaction=nonstopmode manuscript.tex
 | Mirror | Role |
 | --- | --- |
 | `paper/submission_peerj/source/` | Editable TikZ source package |
-| `paper/submission_peerj/flat_upload/` | Upload: `manuscript.pdf` + `Figure1.pdf`…`Figure13.pdf` + six `table*.tex` |
+| `paper/submission_peerj/flat_upload/` | Upload: `manuscript.pdf` + `Figure1.pdf`…`Figure12.pdf` + table fragments |
 | `paper/submission_peerj/internal/figure_build/` | Standalone figure wrappers |
 | `paper/submission_peerj/upload.zip` | Zip of flat_upload checksum set |
 | `paper/submission_peerj/SHA256SUMS.txt` | Hashes for flat_upload |

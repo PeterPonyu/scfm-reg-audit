@@ -164,6 +164,11 @@ def build_figures():
         run(["latexmk", "-pdf", "-interaction=nonstopmode", f"{figure}.tex"], wrappers,
             pdf_name=f"{figure}.pdf")
         shutil.copy2(wrappers / f"{figure}.pdf", flat / f"{figure}.pdf")
+    # Drop retired FigureN.pdf left from a prior larger FIGURE_MAP (e.g. fig13).
+    expected_pdfs = {f"{figure}.pdf" for _, figure in FIG_NAMES}
+    for stale in flat.glob("Figure*.pdf"):
+        if stale.name not in expected_pdfs:
+            stale.unlink()
     return flat
 
 
