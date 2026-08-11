@@ -13,10 +13,13 @@ ROOT = EXT_DIR.parents[2]
 DEFAULT_TISSUES = EXT_DIR / "configs" / "tissues.json"
 DEFAULT_METHODS = EXT_DIR / "configs" / "methods.json"
 FORBIDDEN_G_ATAC_ROLES = frozenset({"out_of_scope", "rna_lake_only"})
-# Logical root for heavy extension NPZ (gitignored via results/v2/); claim-pack
-# SI tables use docs/reports/extension-claim-pack/ so MANIFEST stays frozen.
-HEAVY_ARTIFACT_ROOT = "results/v2/extension/"
-CLAIM_PACK_ROOT = "docs/reports/extension-claim-pack/"
+# Heavy extension artifacts under results/v2/extension/ (PeerJ freeze untouched).
+# SI claim-pack tables use docs/reports/extension-claim-pack/ so MANIFEST stays frozen.
+try:
+    from paths import CLAIM_PACK_ROOT, HEAVY_ARTIFACT_ROOT
+except ImportError:  # pragma: no cover - script/module dual import
+    HEAVY_ARTIFACT_ROOT = "results/v2/extension/"
+    CLAIM_PACK_ROOT = "docs/reports/extension-claim-pack/"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -98,6 +101,13 @@ class ExtensionRegistry:
                 tid
                 for tid in self.extension_tissues()
                 if self.tissues[tid].get("role") == "primary_audit"
+            ],
+            # construct_candidate (e.g. BMMC) is intentionally excluded until re-SAP
+            "extension_construct_candidates": [
+                tid
+                for tid in self.extension_tissues()
+                if self.tissues[tid].get("role")
+                in {"construct", "construct_candidate"}
             ],
             "forbidden_g_atac": sorted(
                 tid

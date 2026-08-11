@@ -28,15 +28,15 @@ methods:
     tier: A
     estimand: topology_null
     bh_membership: outside_fm_bh
-    status: stub
-    notes: Extension baseline hook — score matrix + panel mask + seed.
+    status: emitter_ready
+    notes: Degree-matched random edges from local G_ATAC; extension baseline.
 
   motif_only_rp:
     tier: C
     estimand: motif_without_ATAC_gate
     bh_membership: outside_fm_bh
-    status: stub
-    notes: Ablate ATAC weights on frozen panel; simple-method SI.
+    status: emitter_ready
+    notes: Binary G_ATAC support (ATAC magnitude ablated); simple-method SI.
 
   encode_chip_binding:
     tier: C
@@ -51,8 +51,8 @@ methods:
     tier: C
     estimand: literature_prior
     bh_membership: outside_fm_bh
-    status: stub
-    notes: Only if OmniPath/CollecTRI already cached locally.
+    status: skipped_no_local_cache
+    notes: No OmniPath/CollecTRI cache locally; skip until cache present (documented).
 
   scenic_plus:
     tier: D

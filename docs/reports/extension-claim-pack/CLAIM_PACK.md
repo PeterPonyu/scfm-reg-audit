@@ -1,6 +1,6 @@
 # Local claim pack (JSON-only, zero download)
 
-Generated: 2026-08-11T14:02Z
+Generated: 2026-08-11T15:03Z
 
 Extension SI numbers from existing `results/*.public.json`. Does **not** change PeerJ Support denominators.
 

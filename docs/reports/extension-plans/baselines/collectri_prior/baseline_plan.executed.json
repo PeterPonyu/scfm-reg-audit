@@ -1,0 +1,27 @@
+{
+  "method_id": "collectri_prior",
+  "tier": "C",
+  "estimand": "literature_prior",
+  "bh_membership": "outside_fm_bh",
+  "status": "skipped_no_local_cache",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/collectri_prior/scores.npz",
+    "summary": "results/v2/extension/baselines/collectri_prior/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "use local CollecTRI cache if present; else skip",
+  "notes": "No OmniPath/CollecTRI cache locally; skip until cache present (documented).",
+  "run_status": "skipped_no_local_cache",
+  "summary_path": "results/v2/extension/baselines/collectri_prior/summary.json",
+  "result": {
+    "method_id": "collectri_prior",
+    "status": "skipped_no_local_cache",
+    "searched": [
+      "${DESKTOP_DATA}/datasets/extension_pilots/collectri",
+      "data/collectri",
+      "results/v2/extension/baselines/collectri_prior/cache"
+    ],
+    "note": "No CollecTRI/OmniPath cache locally \u2014 approval-only until cache present."
+  }
+}

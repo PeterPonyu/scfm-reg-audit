@@ -1,0 +1,33 @@
+{
+  "method_id": "degree_matched_random",
+  "tier": "A",
+  "estimand": "topology_null",
+  "bh_membership": "outside_fm_bh",
+  "status": "emitter_ready",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/degree_matched_random/scores.npz",
+    "summary": "results/v2/extension/baselines/degree_matched_random/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "degree-matched random edges on panel from local G_ATAC",
+  "notes": "Degree-matched random edges from local G_ATAC; extension baseline.",
+  "run_status": "emitted",
+  "summary_path": "results/v2/extension/baselines/degree_matched_random/summary.json",
+  "result": {
+    "method_id": "degree_matched_random",
+    "status": "emitted",
+    "proxy_tag": "GSE174367",
+    "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz",
+    "seed": 0,
+    "shape": [
+      446,
+      1200
+    ],
+    "n_edges": 85809,
+    "mean_out_degree": 192.3968609865471,
+    "mean_in_degree_targets": 71.5075,
+    "binary_phi_vs_proxy": 0.155961,
+    "score_matrix_relpath": "results/v2/extension/baselines/degree_matched_random/scores.npz"
+  }
+}

@@ -256,11 +256,18 @@ def emit(out_dir: Path) -> dict[str, Path]:
     paths["fm_baseline"].write_text(json.dumps(fm_base, indent=2) + "\n")
     paths["protocol"].write_text(json.dumps(protocol, indent=2) + "\n")
     paths["markdown"].write_text(build_markdown(dual, fm_base, protocol))
+
+    def _rel(path: Path) -> str:
+        try:
+            return path.relative_to(ROOT).as_posix()
+        except ValueError:
+            return path.as_posix()
+
     index = {
         "schema_version": 1,
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "peerj_support_rows_touched": False,
-        "files": {k: v.relative_to(ROOT).as_posix() for k, v in paths.items() if k != "index"},
+        "files": {k: _rel(v) for k, v in paths.items() if k != "index"},
         "counts": {
             "dual_null_full": dual["n_dual_null_full"],
             "beats_baseline": fm_base.get("n_beats_baseline"),

@@ -15,7 +15,7 @@
 | Disk | **~0.2 GB** | RDS + derived peaks/cache |
 | 5090 hours | **~0.5–2 h** | motif scan + `G_ATAC` + Mantel vs locked proxies (CPU-heavy motifs; GPU lightly used) |
 | Remote GPU | **N/A** | Local sufficient |
-| PeerJ risk | Low if SI-only under `results/extension/` | |
+| PeerJ risk | Low if SI-only under `results/v2/extension/` | |
 
 ### S2 — One multiome tissue（BMMC；已在本地）
 

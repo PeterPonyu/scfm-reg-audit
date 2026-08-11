@@ -47,7 +47,7 @@
       "accession": "GSE194122",
       "modality": "multiome",
       "lane": "construct",
-      "role": "primary_audit",
+      "role": "construct_candidate",
       "genome": "hg38",
       "peerj_freeze": false,
       "panel_policy": "pending_written_decision",
@@ -55,7 +55,7 @@
       "local_path_env": "SCREG_BMMC_H5AD",
       "local_path_hint": "${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/",
       "g_atac_tag": "GSE194122",
-      "notes": "Already local (~5.7G). Dry-run construct registration only. Full FM audit (Option C) blocked until panel policy memo + re-SAP. Gene cov ~0.897 / TF cov ~0.765 on frozen panel (remeasure before C).\n"
+      "notes": "Already local (~5.7G). Construct-candidate only until panel policy + re-SAP. Full FM audit (Option C) gated. Gene cov ~0.897 / TF cov ~0.765 on frozen panel (remeasure before C).\n"
     },
     "descartes_spleen": {
       "accession": "GSE149683",

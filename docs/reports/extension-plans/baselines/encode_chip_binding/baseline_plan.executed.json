@@ -1,0 +1,83 @@
+{
+  "method_id": "encode_chip_binding",
+  "tier": "C",
+  "estimand": "orthogonal_tf_chip",
+  "bh_membership": "outside_fm_bh",
+  "status": "calibration_shipped",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/encode_chip_binding/scores.npz",
+    "summary": "results/v2/extension/baselines/encode_chip_binding/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "summarize results/encode_proxy_calibration_v1.public.json",
+  "notes": "Orthogonal binding; not G_ATAC. Deepen SI without causal language.",
+  "run_status": "emitted",
+  "summary_path": "results/v2/extension/baselines/encode_chip_binding/summary.json",
+  "result": {
+    "method_id": "encode_chip_binding",
+    "status": "emitted",
+    "source_public_json": "results/encode_proxy_calibration_v1.public.json",
+    "local_metadata_present": true,
+    "local_metadata": "${DESKTOP_DATA}/datasets/extension_pilots/encode_chip/encode_tf_chip_human_hg38_metadata.json",
+    "schema_version": 1,
+    "job": "0x40",
+    "coverage_gate": {
+      "minimum_experiment_support_per_edge": 2,
+      "minimum_passing_tf_count": 100,
+      "minimum_positive_targets_per_tf": 5,
+      "minimum_total_positive_edges": 1000,
+      "observed_passing_tf_count": 204,
+      "observed_total_positive_edges": 114467,
+      "status": "passed",
+      "passing_tfs_n": 204,
+      "passing_tfs_head": [
+        "ARID3A",
+        "ARNT",
+        "ATF1",
+        "ATF2",
+        "ATF3",
+        "ATF4",
+        "ATF6",
+        "BACH1",
+        "BCL11A",
+        "BCL6"
+      ]
+    },
+    "n_panel_genes": 1200,
+    "n_panel_tfs": 446,
+    "tissue_summaries": [
+      {
+        "tissue": "brain",
+        "keys": [
+          "interpretation_bound",
+          "mean_ap_over_tfs_with_ge5_pos",
+          "n_edges_on_panel",
+          "n_perm",
+          "n_tfs_in_ap",
+          "null_mean",
+          "null_sd",
+          "observed_spearman_encode_vs_proxy",
+          "row_shuffle_p_plusone"
+        ],
+        "n_keys": 9
+      },
+      {
+        "tissue": "pbmc",
+        "keys": [
+          "interpretation_bound",
+          "mean_ap_over_tfs_with_ge5_pos",
+          "n_edges_on_panel",
+          "n_perm",
+          "n_tfs_in_ap",
+          "null_mean",
+          "null_sd",
+          "observed_spearman_encode_vs_proxy",
+          "row_shuffle_p_plusone"
+        ],
+        "n_keys": 9
+      }
+    ],
+    "note": "Reuses shipped ENCODE calibration JSON; no new download."
+  }
+}
