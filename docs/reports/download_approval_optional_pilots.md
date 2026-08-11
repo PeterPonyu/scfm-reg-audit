@@ -2,6 +2,7 @@
 
 **Date:** 2026-08-11  
 **Status:** Approval / policy only — **no automated download constructor**  
+**Hard stop (2026-08-11):** User/leader revoked fetch execution — **D0 local-only**. Do not curl/wget/aria2.  
 **Related:** `optional_cancer_dev_download_costs.md`, `bmmc-panel-policy-memo.md`
 
 ---

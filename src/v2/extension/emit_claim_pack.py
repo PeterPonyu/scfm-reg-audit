@@ -291,7 +291,11 @@ def main(argv: list[str] | None = None) -> int:
     paths = emit(args.out_dir)
     print("claim pack emitted:")
     for key, path in paths.items():
-        print(f"  {key}: {path.relative_to(ROOT)}")
+        try:
+            shown = path.relative_to(ROOT)
+        except ValueError:
+            shown = path
+        print(f"  {key}: {shown}")
     return 0
 
 
