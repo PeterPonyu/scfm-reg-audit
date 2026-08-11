@@ -79,6 +79,34 @@ See full tables in `optional_cancer_dev_download_costs.md`.
 
 ---
 
+## Post-approve local steps (no CLI fetch)
+
+### D1 — DESCARTES spleen (after human go-ahead + manual fetch)
+
+1. Place RDS (and/or converted h5ad) under  
+   `${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/`.  
+   Preferred peaks file: `descartes_spleen_peaks.h5ad` with `var_names` as `chrom:start-end`.
+2. Validate bridge (fail-closed if absent; **never downloads**):  
+   `python src/v2/extension/cli.py descartes-bridge`
+3. Build overlay `G_ATAC` (honors `SCREG_EXTENSION_OUT`; PeerJ lock on):  
+   `TAG=DESCARTES_spleen ATAC_FILE=<h5ad> SCREG_EXTENSION_OUT=results/v2/extension/construct/DESCARTES_spleen SCREG_PEERJ_SUPPORT_LOCK=1 python src/v2/build_atac_graph_v2.py`
+4. Mantel/decomp:  
+   `python src/v2/extension/cli.py construct --tissue descartes_spleen --execute --write`
+
+### D2 — BMMC (already local; P3 = no FM Support)
+
+1. Confirm h5ad under `${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/` (or `SCREG_BMMC_H5AD`).
+2. Extract/rename ATAC peaks into the extension overlay:  
+   `python src/v2/extension/cli.py prepare-bmmc --execute --write`
+3. Run the `build_command` printed by prepare-bmmc / construct dry-run  
+   (`SCREG_EXTENSION_OUT=results/v2/extension/construct/GSE194122`, `SCREG_PEERJ_SUPPORT_LOCK=1`).  
+   Do **not** overwrite locked `results/v2/G_ATAC_v2_*.npz`.
+4. Mantel/decomp:  
+   `python src/v2/extension/cli.py construct --tissue bmmc --execute --write`  
+   Full FM Support remains gated (`bmmc-panel-policy-memo.md` **P3**).
+
+---
+
 ## 中文摘要（审批用）
 
 - **本阶段不需要“下载构建代码”**；只要这份审批文档 + 成本估计。  

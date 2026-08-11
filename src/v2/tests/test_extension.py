@@ -332,5 +332,146 @@ class TestCliEntrypoint(unittest.TestCase):
         self.assertIn("approval", proc.stdout.lower() + proc.stderr.lower())
 
 
+class TestBuilderOutResolution(unittest.TestCase):
+    def test_default_out_when_unset(self):
+        out = pathmod.resolve_builder_out_dir(
+            extension_out=None,
+            peerj_lock=False,
+            env={},
+            create=False,
+        )
+        self.assertEqual(out, pathmod.CANONICAL_V2_RESULTS.resolve())
+
+    def test_extension_out_honored(self):
+        # Use repo-relative overlay path (confinement allowlist).
+        rel = f"results/v2/extension/_pytest_out_{uuid4().hex}"
+        target = ROOT / rel
+        try:
+            out = pathmod.resolve_builder_out_dir(
+                extension_out=rel,
+                peerj_lock=True,
+                create=True,
+            )
+            self.assertEqual(out, target.resolve())
+            self.assertTrue(out.is_dir())
+            self.assertTrue(pathmod.under_extension_overlay(out))
+        finally:
+            _wipe_dir(target)
+
+    def test_peerj_lock_refuses_canonical_without_extension_out(self):
+        with self.assertRaises(ValueError) as ctx:
+            pathmod.resolve_builder_out_dir(
+                extension_out=None,
+                peerj_lock=True,
+                env={"SCREG_PEERJ_SUPPORT_LOCK": "1"},
+                create=False,
+            )
+        self.assertIn("SCREG_EXTENSION_OUT", str(ctx.exception))
+
+    def test_peerj_lock_refuses_canonical_explicit_out(self):
+        with self.assertRaises(ValueError):
+            pathmod.resolve_builder_out_dir(
+                extension_out="results/v2",
+                peerj_lock=True,
+                create=False,
+            )
+
+    def test_peak_name_normalize(self):
+        self.assertEqual(
+            pathmod.normalize_peak_name("chr1-9776-10668"), "chr1:9776-10668"
+        )
+        self.assertTrue(pathmod.peak_name_is_builder_ready("chr1:9776-10668"))
+        self.assertFalse(pathmod.peak_name_is_builder_ready("chr1-9776-10668"))
+
+
+class TestDescartesBridge(unittest.TestCase):
+    def test_absent_fail_closed(self):
+        import descartes_bridge as db
+
+        with tempfile.TemporaryDirectory() as td:
+            status = db.bridge_status(pilot_dir=Path(td))
+            self.assertEqual(status["status"], "absent_local")
+            self.assertFalse(status["network_fetch_performed"])
+            self.assertIn("place", status["message"].lower())
+
+    def test_ready_h5ad(self):
+        import anndata as ad
+        import descartes_bridge as db
+        import numpy as np
+        import pandas as pd
+        import scipy.sparse as sp
+
+        with tempfile.TemporaryDirectory() as td:
+            pilot = Path(td)
+            X = sp.csr_matrix(np.ones((4, 3), dtype=np.float32))
+            A = ad.AnnData(
+                X=X,
+                obs=pd.DataFrame(index=[f"c{i}" for i in range(4)]),
+                var=pd.DataFrame(
+                    index=["chr1:100-200", "chr1:300-400", "chr2:50-80"]
+                ),
+            )
+            h5 = pilot / db.EXPECTED_H5AD_NAME
+            A.write_h5ad(h5)
+            status = db.bridge_status(pilot_dir=pilot)
+            self.assertEqual(status["status"], "ready_atac_file")
+            self.assertIn("build_command", status)
+            self.assertIn("SCREG_EXTENSION_OUT", status["build_command"])
+            self.assertIn("SCREG_PEERJ_SUPPORT_LOCK=1", status["build_command"])
+
+
+class TestBmmcPrepareTiny(unittest.TestCase):
+    def test_extract_renames_peaks(self):
+        import anndata as ad
+        import bmmc_prepare as bp
+        import numpy as np
+        import pandas as pd
+        import scipy.sparse as sp
+
+        with tempfile.TemporaryDirectory() as td:
+            td_path = Path(td)
+            X = sp.csr_matrix(np.ones((5, 4), dtype=np.float32))
+            var = pd.DataFrame(
+                {
+                    "feature_types": ["GEX", "ATAC", "ATAC", "GEX"],
+                },
+                index=["GENEA", "chr1-10-20", "chr2-30-40", "GENEB"],
+            )
+            obs = pd.DataFrame(
+                {"cell_type": ["T", "T", "B", "B", "Mono"]},
+                index=[f"bc{i}" for i in range(5)],
+            )
+            src = td_path / "multiome_tiny.h5ad"
+            ad.AnnData(X=X, obs=obs, var=var).write_h5ad(src)
+            out_atac = td_path / "peaks.h5ad"
+            out_meta = td_path / "meta.csv.gz"
+            written = bp.extract_atac_peak_matrix(
+                src, out_atac=out_atac, out_meta=out_meta
+            )
+            self.assertEqual(written["n_peaks"], 2)
+            B = ad.read_h5ad(out_atac)
+            self.assertEqual(list(B.var_names), ["chr1:10-20", "chr2:30-40"])
+            self.assertTrue(out_meta.exists())
+
+
+class TestConstructBmmcDryRun(unittest.TestCase):
+    def test_bmmc_next_steps_mention_prepare_or_build(self):
+        import construct_hooks as ch
+
+        plan = ch.run_construct("bmmc", execute=False)
+        self.assertEqual(plan["status"], "awaiting_g_atac")
+        joined = " ".join(plan["next_steps"])
+        self.assertIn("P3", joined)
+        # Either prepare path (raw multiome) or build path (prepared peaks).
+        self.assertTrue(
+            "prepare-bmmc" in joined or "build overlay G_ATAC" in joined,
+            joined,
+        )
+        self.assertEqual(plan["env"]["SCREG_PEERJ_SUPPORT_LOCK"], "1")
+        self.assertTrue(
+            plan["env"]["SCREG_EXTENSION_OUT"].startswith("results/v2/extension/")
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

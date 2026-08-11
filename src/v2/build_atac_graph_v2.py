@@ -14,7 +14,9 @@ with a SEQUENCE-GROUNDED, co-expression-orthogonal regulatory truth:
 
 Edges come from DNA motif presence in accessible peaks, NOT from cross-cell covariation ->
 orthogonal to co-expression by construction. Asymmetric (TF rows only). Per brain cell type.
-Env: SAMPLE_PEAKS (test), CELL_CAP (accessibility subsample), MOTIF_P.
+Env: SAMPLE_PEAKS (test), CELL_CAP (accessibility subsample), MOTIF_P,
+SCREG_EXTENSION_OUT (redirect NPZ/meta; mkdir), SCREG_PEERJ_SUPPORT_LOCK=1
+(refuse canonical results/v2/ writes — require extension overlay).
 """
 import os, sys, json, time, gzip, hashlib, numpy as np, anndata as ad, scipy.sparse as sp
 import multiprocessing as mp
@@ -47,7 +49,15 @@ HG38 = f"{ROOT}/data/genome/hg38.fa"
 ATAC = os.environ.get("ATAC_FILE", f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad")
 META = os.environ.get("META_FILE", os.path.join(ROOT, "../../research/sc-fm-benchmark/raw_pulls/scatac/atac_cell_meta.csv.gz"))
 TAG = os.environ.get("TAG", "GSE174367")
-OUT = f"{ROOT}/results/v2"; os.makedirs(OUT, exist_ok=True)
+# Honor SCREG_EXTENSION_OUT; with SCREG_PEERJ_SUPPORT_LOCK=1 refuse canonical results/v2/.
+_EXT = os.path.join(os.path.dirname(__file__), "extension")
+if _EXT not in sys.path:
+    sys.path.insert(0, _EXT)
+from paths import resolve_builder_out_dir  # noqa: E402
+try:
+    OUT = str(resolve_builder_out_dir(create=True))
+except ValueError as _out_exc:
+    raise SystemExit(f"build_atac_graph_v2 OUT refused: {_out_exc}") from _out_exc
 CACHE = f"{ROOT}/data/motifs"
 PROMOTER = 2000; CELL_CAP = int(os.environ.get("CELL_CAP", "8000")); MIN_CELLS = 300
 MOTIF_P = float(os.environ.get("MOTIF_P", "1e-5")); SAMPLE = int(os.environ.get("SAMPLE_PEAKS", "0"))

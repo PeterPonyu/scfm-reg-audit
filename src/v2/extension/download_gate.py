@@ -62,7 +62,11 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
             "Record exact GEO/URL in the approval checklist.",
             "Fetch manually (outside this CLI) into ${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/.",
             "Expected compressed size gate: < 2 GB (target ~0.1 GB).",
-            "Then point construct via --atac-file / SCREG_* env; never write into PeerJ Support JSON.",
+            "Convert RDS → peak h5ad (var_names chrom:start-end) as descartes_spleen_peaks.h5ad in that dir.",
+            "Validate: python src/v2/extension/cli.py descartes-bridge",
+            "Build overlay: TAG=DESCARTES_spleen ATAC_FILE=<h5ad> SCREG_EXTENSION_OUT=results/v2/extension/construct/DESCARTES_spleen SCREG_PEERJ_SUPPORT_LOCK=1 python src/v2/build_atac_graph_v2.py",
+            "Then: python src/v2/extension/cli.py construct --tissue descartes_spleen --execute --write",
+            "Never write into PeerJ Support JSON / canonical results/v2/ G_ATAC locks.",
         ],
     },
     "D2": {
@@ -72,7 +76,10 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
         "rejected": False,
         "manual_recipe": [
             "No new download — BMMC h5ad should already be under ${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/.",
-            "Set SCREG_BMMC_H5AD to the local path; construct lane only until panel policy (P1/P2/P3).",
+            "Set SCREG_BMMC_H5AD if needed; P3 = construct only (no FM Support).",
+            "Prepare peaks: python src/v2/extension/cli.py prepare-bmmc --execute --write",
+            "Build overlay G_ATAC via the build_command emitted by prepare-bmmc (SCREG_EXTENSION_OUT + SCREG_PEERJ_SUPPORT_LOCK=1).",
+            "Then: python src/v2/extension/cli.py construct --tissue bmmc --execute --write",
         ],
     },
     "D3": {

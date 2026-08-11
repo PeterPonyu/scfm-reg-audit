@@ -30,12 +30,105 @@ from paths import (  # noqa: E402
     ROOT,
     assert_confined_write_path,
     assert_safe_tag,
+    builder_env_command,
     local_asset_report,
     redact_path,
     resolve_g_atac_npz,
     resolve_local_atac,
 )
 from registry import load_extension_registry  # noqa: E402
+
+
+def _awaiting_g_atac_next_steps(
+    tissue_id: str,
+    tag: str,
+    machine_env: dict[str, str],
+    assets: dict[str, Any],
+) -> list[str]:
+    """Exact follow-ups when Mantel cannot run yet (no download)."""
+    out_rel = machine_env.get(
+        "SCREG_EXTENSION_OUT", f"{HEAVY_ARTIFACT_ROOT}construct/{tag}"
+    )
+    steps = [
+        "No local G_ATAC NPZ for this tag — Mantel/decomp cannot run yet.",
+        "PeerJ freeze: keep SCREG_PEERJ_SUPPORT_LOCK=1; write only under "
+        f"{HEAVY_ARTIFACT_ROOT}.",
+    ]
+    atac_machine = machine_env.get("ATAC_FILE") or ""
+    if tissue_id == "bmmc":
+        steps.append(
+            "P3 panel gate: construct-lane only — do not claim FM Support / "
+            "PeerJ 13-row SAP."
+        )
+        prepared = (
+            EXTENSION_ROOT / "construct" / tag / "GSE194122_atac_peaks.h5ad"
+        )
+        if prepared.exists():
+            meta = EXTENSION_ROOT / "construct" / tag / "GSE194122_cell_meta.csv.gz"
+            cmd = builder_env_command(
+                tag=tag,
+                atac_file=str(prepared.resolve()),
+                extension_out=out_rel,
+                meta_file=str(meta.resolve()) if meta.exists() else "none",
+            )
+            steps.append(f"Prepared ATAC present — build overlay G_ATAC: {cmd}")
+        elif assets.get("local_atac_present"):
+            steps.append(
+                "Local BMMC multiome h5ad present but peaks need extract/rename "
+                "(chr-start-end → chr:start-end)."
+            )
+            steps.append(
+                "Prepare ATAC_FILE: python src/v2/extension/cli.py prepare-bmmc "
+                "--execute --write"
+            )
+            steps.append(
+                "Then run the build_command emitted by prepare-bmmc "
+                "(SCREG_EXTENSION_OUT + SCREG_PEERJ_SUPPORT_LOCK=1)."
+            )
+        else:
+            steps.append(
+                "Set SCREG_BMMC_H5AD to the local OpenProblems h5ad "
+                "(D2 — no new download)."
+            )
+        steps.append(
+            "After NPZ exists: python src/v2/extension/cli.py construct "
+            f"--tissue {tissue_id} --execute --write"
+        )
+        return steps
+
+    if tissue_id == "descartes_spleen":
+        steps.append(
+            "Check D1 bridge: python src/v2/extension/cli.py descartes-bridge"
+        )
+        steps.append(
+            "If absent: approve D1 in download_approval_optional_pilots.md, "
+            "manual fetch only, then re-run bridge (CLI never downloads)."
+        )
+        return steps
+
+    if atac_machine and Path(atac_machine).exists():
+        cmd = builder_env_command(
+            tag=tag,
+            atac_file=atac_machine,
+            extension_out=out_rel,
+            meta_file=machine_env.get("META_FILE") or None,
+        )
+        steps.append(f"Local ATAC present — build overlay G_ATAC: {cmd}")
+        steps.append(
+            "Then: python src/v2/extension/cli.py construct "
+            f"--tissue {tissue_id} --execute --write"
+        )
+        return steps
+
+    steps.extend(
+        [
+            "Provide ATAC_FILE (builder-ready peak h5ad, chrom:start-end) via "
+            "--atac-file or SCREG_* path env.",
+            "See docs/reports/download_approval_optional_pilots.md for any future "
+            "human-approved data step; never write into PeerJ Support JSON.",
+        ]
+    )
+    return steps
 
 COMPARE_TAGS = ("GSE174367", "PBMC10k", "GSE206767")
 N_ADDITIVE_ITER = 50
@@ -193,13 +286,32 @@ def run_construct(
     g_path = resolve_g_atac_npz(tag)
     if g_path is None:
         plan["status"] = "awaiting_g_atac"
-        plan["next_steps"] = [
-            "No local G_ATAC NPZ for this tag — Mantel/decomp cannot run yet.",
-            "This wave does NOT treat build_atac_graph_v2.py as a success path.",
-            "See docs/reports/download_approval_optional_pilots.md for any future "
-            "human-approved data step; then place NPZ under results/v2/extension/construct/{tag}/ "
-            "or reuse a locked results/v2/G_ATAC_v2_*.npz before --execute.",
-        ]
+        plan["next_steps"] = _awaiting_g_atac_next_steps(
+            tissue_id, tag, machine_env, assets
+        )
+        # Only emit build_command when ATAC_FILE is already builder-shaped.
+        # BMMC OpenProblems multiome needs prepare-bmmc first.
+        prepared_bmmc = (
+            EXTENSION_ROOT / "construct" / tag / "GSE194122_atac_peaks.h5ad"
+        )
+        if tissue_id == "bmmc" and prepared_bmmc.exists():
+            meta = EXTENSION_ROOT / "construct" / tag / "GSE194122_cell_meta.csv.gz"
+            plan["build_command"] = builder_env_command(
+                tag=tag,
+                atac_file=str(prepared_bmmc.resolve()),
+                extension_out=machine_env["SCREG_EXTENSION_OUT"],
+                meta_file=str(meta.resolve()) if meta.exists() else "none",
+            )
+        elif (
+            tissue_id != "bmmc"
+            and machine_env.get("ATAC_FILE")
+            and Path(machine_env["ATAC_FILE"]).exists()
+        ):
+            plan["build_command"] = builder_env_command(
+                tag=tag,
+                atac_file=machine_env["ATAC_FILE"],
+                extension_out=machine_env["SCREG_EXTENSION_OUT"],
+            )
         return plan
 
     if not execute:

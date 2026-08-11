@@ -57,6 +57,21 @@ def main(argv: list[str] | None = None) -> int:
         help="Skip writing dry-run JSON under results/v2/extension/download-plans/",
     )
 
+    p_d1 = sub.add_parser(
+        "descartes-bridge",
+        help="D1 local RDS/h5ad → ATAC_FILE readiness (no fetch)",
+    )
+    p_d1.add_argument("--pilot-dir", default="")
+    p_d1.add_argument("--write", action="store_true")
+
+    p_bmmc = sub.add_parser(
+        "prepare-bmmc",
+        help="Extract BMMC ATAC peaks into extension overlay (no fetch / no G_ATAC)",
+    )
+    p_bmmc.add_argument("--src", default="")
+    p_bmmc.add_argument("--execute", action="store_true")
+    p_bmmc.add_argument("--write", action="store_true")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "registry":
@@ -101,6 +116,26 @@ def main(argv: list[str] | None = None) -> int:
         if args.no_write:
             argv2.append("--no-write")
         return dg.main(argv2)
+    if args.cmd == "descartes-bridge":
+        import descartes_bridge as db
+
+        argv2: list[str] = []
+        if args.pilot_dir:
+            argv2.extend(["--pilot-dir", args.pilot_dir])
+        if args.write:
+            argv2.append("--write")
+        return db.main(argv2)
+    if args.cmd == "prepare-bmmc":
+        import bmmc_prepare as bp
+
+        argv2 = []
+        if args.src:
+            argv2.extend(["--src", args.src])
+        if args.execute:
+            argv2.append("--execute")
+        if args.write:
+            argv2.append("--write")
+        return bp.main(argv2)
     raise AssertionError(f"unhandled cmd: {args.cmd}")
 
 

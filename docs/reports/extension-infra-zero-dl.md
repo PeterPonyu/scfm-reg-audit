@@ -10,13 +10,16 @@
 |------|------|
 | `src/v2/extension/configs/{tissues,methods}.json` | Registry (BMMC=`construct_candidate`) |
 | `src/v2/extension/registry.py` | load + dry-run + RNA-lake deny |
-| `src/v2/extension/paths.py` | local ATAC / locked `G_ATAC` resolve |
-| `src/v2/extension/cli.py` | first-class CLI |
+| `src/v2/extension/paths.py` | local ATAC / locked `G_ATAC` / `SCREG_EXTENSION_OUT` resolve |
+| `src/v2/build_atac_graph_v2.py` | honors `SCREG_EXTENSION_OUT` + PeerJ lock |
+| `src/v2/extension/cli.py` | first-class CLI (+ descartes-bridge / prepare-bmmc) |
 | `src/v2/extension/emit_claim_pack.py` | JSON claim pack from public JSON |
 | `docs/reports/extension-claim-pack/` | SI tables (docs overlay) |
 | `src/v2/extension/construct_hooks.py` | Mantel/decomp on **existing** local NPZ |
+| `src/v2/extension/descartes_bridge.py` | D1 local RDS/h5ad → ATAC_FILE readiness |
+| `src/v2/extension/bmmc_prepare.py` | BMMC multiome → peak ATAC under extension |
 | `src/v2/extension/baseline_stubs.py` | runnable Tier A–C emitters |
-| `docs/reports/download_approval_optional_pilots.md` | download approval only |
+| `docs/reports/download_approval_optional_pilots.md` | download approval + post-approve steps |
 | `src/v2/extension/scripts/fetch_optional_pilots.sh` | demoted pointer (no curl) |
 | `src/v2/tests/test_extension.py` | hard merge gate |
 
