@@ -1,0 +1,31 @@
+{
+  "method_id": "motif_only_rp",
+  "tier": "C",
+  "estimand": "motif_without_ATAC_gate",
+  "bh_membership": "outside_fm_bh",
+  "status": "emitter_ready",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/motif_only_rp/scores.npz",
+    "summary": "results/v2/extension/baselines/motif_only_rp/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "binary G_ATAC support (ATAC magnitude ablated)",
+  "notes": "Binary G_ATAC support (ATAC magnitude ablated); simple-method SI.",
+  "run_status": "emitted",
+  "summary_path": "results/v2/extension/baselines/motif_only_rp/summary.json",
+  "result": {
+    "method_id": "motif_only_rp",
+    "status": "emitted",
+    "proxy_tag": "GSE174367",
+    "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz",
+    "shape": [
+      446,
+      1200
+    ],
+    "n_edges": 85809,
+    "spearman_weighted_vs_binary_on_edges": 0.994936,
+    "note": "Binary support from local G_ATAC; ATAC magnitude ablated (simple-method SI).",
+    "score_matrix_relpath": "results/v2/extension/baselines/motif_only_rp/scores.npz"
+  }
+}

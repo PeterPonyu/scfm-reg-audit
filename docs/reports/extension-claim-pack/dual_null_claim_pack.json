@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "source": "results/fixed_panel_audit_v2.public.json",
+  "oc_source": "results/dual_null_oc_independence_v2.public.json",
+  "n_full_rows": 13,
+  "n_dual_null_full": 7,
+  "n_dual_null_positive_rho": 6,
+  "observed_dual_null_full_counts": {
+    "brain": 4,
+    "pbmc": 3
+  },
+  "independence_oc": {
+    "brain": {
+      "rate_at_least_one_dual_null_row": 0.0002,
+      "n_sims": 20000,
+      "n_rows_in_family": 8
+    },
+    "pbmc": {
+      "rate_at_least_one_dual_null_row": 0.0003,
+      "n_sims": 20000,
+      "n_rows_in_family": 5
+    }
+  },
+  "interpretation": "If independence OC rate of \u22651 dual-null row is far below the event of observing 7 dual-null rows across tissues, dual-null Support is not explained by naive independent double-dipping alone \u2014 still not causal recovery.",
+  "rows": [
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "rho_full": 0.00442,
+      "q_mantel": 0.006,
+      "q_degree": 0.002667,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "rho_full": 0.000619,
+      "q_mantel": 0.633,
+      "q_degree": 0.643,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "rho_full": 0.004612,
+      "q_mantel": 0.004,
+      "q_degree": 0.002667,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "rho_full": 0.012407,
+      "q_mantel": 0.004,
+      "q_degree": 0.002667,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_attn",
+      "rho_full": -0.003616,
+      "q_mantel": 0.005333,
+      "q_degree": 0.016,
+      "dual_null_full": true,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "random_init_floor",
+      "rho_full": 0.001873,
+      "q_mantel": 0.242667,
+      "q_degree": 0.233333,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "rho_full": -0.000933,
+      "q_mantel": 0.465143,
+      "q_degree": 0.418286,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "rho_full": -0.001887,
+      "q_mantel": 0.16,
+      "q_degree": 0.1456,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "rho_full": 0.004254,
+      "q_mantel": 0.001667,
+      "q_degree": 0.003333,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "rho_full": -0.000176,
+      "q_mantel": 0.866,
+      "q_degree": 0.839,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "rho_full": 0.001115,
+      "q_mantel": 0.49125,
+      "q_degree": 0.44875,
+      "dual_null_full": false,
+      "dual_null_positive_rho": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scGPT_encoder",
+      "rho_full": 0.010981,
+      "q_mantel": 0.001667,
+      "q_degree": 0.0025,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "UCE_encoder",
+      "rho_full": 0.005927,
+      "q_mantel": 0.001667,
+      "q_degree": 0.0025,
+      "dual_null_full": true,
+      "dual_null_positive_rho": true
+    }
+  ]
+}

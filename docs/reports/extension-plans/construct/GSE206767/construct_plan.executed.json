@@ -1,0 +1,69 @@
+{
+  "tissue_id": "fibroblast",
+  "lane": "construct",
+  "g_atac_tag": "GSE206767",
+  "compare_to_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "outputs": {
+    "g_atac": "results/v2/extension/construct/GSE206767/G_ATAC_v2_GSE206767.npz",
+    "mantel": "results/v2/extension/construct/GSE206767/mantel_vs_locked.json",
+    "decomp": "results/v2/extension/construct/GSE206767/additive_decomp_row.json",
+    "summary": "results/v2/extension/construct/GSE206767/construct_summary.json"
+  },
+  "peerj_decomp_rows_unchanged": 3,
+  "peerj_support_rows_unchanged": 13,
+  "assets": {
+    "tissue_id": "fibroblast",
+    "g_atac_tag": "GSE206767",
+    "local_atac": "${DESKTOP_DATA}/datasets/ATAC_data/GSE206767_filtered_peak_bc_matrix.h5ad",
+    "local_atac_present": true,
+    "g_atac_npz": "results/v2/G_ATAC_v2_GSE206767.npz",
+    "g_atac_present": true,
+    "extension_root": "results/v2/extension/",
+    "desktop_data": "${DESKTOP_DATA}"
+  },
+  "env": {
+    "TAG": "GSE206767",
+    "ATAC_FILE": "${DESKTOP_DATA}/datasets/ATAC_data/GSE206767_filtered_peak_bc_matrix.h5ad",
+    "SCREG_EXTENSION_OUT": "results/v2/extension/construct/GSE206767",
+    "SCREG_EXTENSION_LANE": "construct",
+    "SCREG_PEERJ_SUPPORT_LOCK": "1"
+  },
+  "panel_policy": "frozen_brain_pinned_446x1200",
+  "notes": "Construct-transfer only; no FM Support rows.",
+  "generated_utc": "2026-08-11T15:04Z",
+  "status": "executed",
+  "g_atac_source": "results/v2/G_ATAC_v2_GSE206767.npz",
+  "n_pairs_ok": 2,
+  "mantel_pairs": [
+    {
+      "pair": [
+        "GSE206767",
+        "GSE174367"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.524496,
+      "additive_pred_spearman": 0.418333,
+      "residual_spearman_after_own_additive_fits": 0.550213,
+      "fraction_explained_by_additive_marginals": 0.7976,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "pair": [
+        "GSE206767",
+        "PBMC10k"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.462325,
+      "additive_pred_spearman": 0.405669,
+      "residual_spearman_after_own_additive_fits": 0.411683,
+      "fraction_explained_by_additive_marginals": 0.8775,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    }
+  ]
+}

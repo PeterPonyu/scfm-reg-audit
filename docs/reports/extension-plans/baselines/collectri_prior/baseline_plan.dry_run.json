@@ -1,0 +1,15 @@
+{
+  "method_id": "collectri_prior",
+  "tier": "C",
+  "estimand": "literature_prior",
+  "bh_membership": "outside_fm_bh",
+  "status": "stub",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/collectri_prior/scores.npz",
+    "summary": "results/v2/extension/baselines/collectri_prior/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "load cached CollecTRI/OmniPath if present; else skip",
+  "notes": "Only if OmniPath/CollecTRI already cached locally."
+}

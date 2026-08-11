@@ -1,0 +1,15 @@
+{
+  "method_id": "motif_only_rp",
+  "tier": "C",
+  "estimand": "motif_without_ATAC_gate",
+  "bh_membership": "outside_fm_bh",
+  "status": "stub",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/motif_only_rp/scores.npz",
+    "summary": "results/v2/extension/baselines/motif_only_rp/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "reuse motif hits; ablate ATAC accessibility weights",
+  "notes": "Ablate ATAC weights on frozen panel; simple-method SI."
+}

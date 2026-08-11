@@ -1,0 +1,15 @@
+{
+  "method_id": "degree_matched_random",
+  "tier": "A",
+  "estimand": "topology_null",
+  "bh_membership": "outside_fm_bh",
+  "status": "stub",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/degree_matched_random/scores.npz",
+    "summary": "results/v2/extension/baselines/degree_matched_random/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "sample edges with degree-matched null on panel mask",
+  "notes": "Extension baseline hook \u2014 score matrix + panel mask + seed."
+}
