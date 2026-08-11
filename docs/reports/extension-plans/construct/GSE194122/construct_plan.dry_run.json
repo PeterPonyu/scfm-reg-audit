@@ -1,0 +1,32 @@
+{
+  "tissue_id": "bmmc",
+  "lane": "construct",
+  "g_atac_tag": "GSE194122",
+  "compare_to_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "outputs": {
+    "g_atac": "results/v2/extension/construct/GSE194122/G_ATAC_v2_GSE194122.npz",
+    "mantel": "results/v2/extension/construct/GSE194122/mantel_vs_locked.json",
+    "decomp": "results/v2/extension/construct/GSE194122/additive_decomp_row.json"
+  },
+  "peerj_decomp_rows_unchanged": 3,
+  "peerj_support_rows_unchanged": 13,
+  "status": "stub",
+  "next_steps": [
+    "Provide ATAC_FILE + cell-type META_FILE for the tissue",
+    "Run build_atac_graph_v2.py with TAG set; redirect NPZ under results/v2/extension/",
+    "Emit Mantel/decomp into results/v2/extension/ only (do not rewrite cross_tissue_additive_decomp_v2.public.json)"
+  ],
+  "panel_policy": "pending_written_decision",
+  "notes": "Already local (~5.7G). Dry-run construct registration only. Full FM audit (Option C) blocked until panel policy memo + re-SAP. Gene cov ~0.897 / TF cov ~0.765 on frozen panel (remeasure before C).\n",
+  "env": {
+    "TAG": "GSE194122",
+    "ATAC_FILE": "",
+    "SCREG_EXTENSION_OUT": "results/v2/extension/construct/GSE194122",
+    "SCREG_EXTENSION_LANE": "construct",
+    "SCREG_PEERJ_SUPPORT_LOCK": "1"
+  }
+}

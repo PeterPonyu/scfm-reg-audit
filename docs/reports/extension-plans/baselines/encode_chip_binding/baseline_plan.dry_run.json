@@ -1,0 +1,15 @@
+{
+  "method_id": "encode_chip_binding",
+  "tier": "C",
+  "estimand": "orthogonal_tf_chip",
+  "bh_membership": "outside_fm_bh",
+  "status": "calibration_shipped",
+  "panel": "frozen_446x1200",
+  "outputs": {
+    "score_matrix": "results/v2/extension/baselines/encode_chip_binding/scores.npz",
+    "summary": "results/v2/extension/baselines/encode_chip_binding/summary.json"
+  },
+  "peerj_bh_families_unchanged": 8,
+  "hooks": "project local ENCODE peaks onto panel; extend 0x40 SI",
+  "notes": "Orthogonal binding; not G_ATAC. Deepen SI without causal language."
+}

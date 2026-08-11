@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "comparison_tiers": {
+    "A": "topology_null",
+    "B": "simple_rna",
+    "C": "prior_motif",
+    "D": "multiome_egrn_optional",
+    "E": "foundation_model_under_audit"
+  },
+  "methods": {
+    "g_atac_motif_proxy": {
+      "tier": "E",
+      "estimand": "motif_plus_ATAC_proxy",
+      "bh_membership": "fm_families",
+      "peerj_freeze": true,
+      "notes": "Primary truth construct for brain/PBMC/fibroblast."
+    },
+    "coexpression_baseline": {
+      "tier": "B",
+      "estimand": "rna_coexpression",
+      "bh_membership": "outside_fm_bh",
+      "peerj_freeze": true,
+      "artifact": "results/*_coexp_baseline_null_v2.public.json",
+      "notes": "Tissue co-expression baseline; outside FM BH families."
+    },
+    "degree_matched_random": {
+      "tier": "A",
+      "estimand": "topology_null",
+      "bh_membership": "outside_fm_bh",
+      "status": "stub",
+      "notes": "Extension baseline hook \u2014 score matrix + panel mask + seed."
+    },
+    "motif_only_rp": {
+      "tier": "C",
+      "estimand": "motif_without_ATAC_gate",
+      "bh_membership": "outside_fm_bh",
+      "status": "stub",
+      "notes": "Ablate ATAC weights on frozen panel; simple-method SI."
+    },
+    "encode_chip_binding": {
+      "tier": "C",
+      "estimand": "orthogonal_tf_chip",
+      "bh_membership": "outside_fm_bh",
+      "status": "calibration_shipped",
+      "artifact": "results/encode_proxy_calibration_v1.public.json",
+      "local_peaks_hint": "${DESKTOP_DATA}/external/scfm-reg-audit/encode/",
+      "notes": "Orthogonal binding; not G_ATAC. Deepen SI without causal language."
+    },
+    "collectri_prior": {
+      "tier": "C",
+      "estimand": "literature_prior",
+      "bh_membership": "outside_fm_bh",
+      "status": "stub",
+      "notes": "Only if OmniPath/CollecTRI already cached locally."
+    },
+    "scenic_plus": {
+      "tier": "D",
+      "estimand": "egrn_not_g_atac",
+      "bh_membership": "outside_fm_bh",
+      "status": "optional_si",
+      "notes": "Different estimand; collapse to TF\u2013gene on panel if used."
+    },
+    "celloracle": {
+      "tier": "D",
+      "estimand": "egrn_not_g_atac",
+      "bh_membership": "outside_fm_bh",
+      "status": "optional_si",
+      "notes": "Different estimand; high effort; SI disclaimer required."
+    }
+  }
+}
