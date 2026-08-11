@@ -94,5 +94,45 @@ class TestConstructFibroSmoke(unittest.TestCase):
         self.assertEqual(plan.get("peerj_support_rows_unchanged"), 13)
 
 
+class TestBaselineEmitters(unittest.TestCase):
+    def test_motif_only_and_degree_emit(self):
+        locked = ROOT / "results" / "v2" / "G_ATAC_v2_GSE174367.npz"
+        if not locked.exists():
+            self.skipTest("locked brain G_ATAC not present in this checkout")
+        import baseline_stubs as bs
+
+        motif = bs.run_baseline("motif_only_rp", execute=True, proxy_tag="GSE174367")
+        deg = bs.run_baseline("degree_matched_random", execute=True, proxy_tag="GSE174367")
+        self.assertEqual(motif["run_status"], "emitted")
+        self.assertEqual(deg["run_status"], "emitted")
+        encode = bs.run_baseline("encode_chip_binding", execute=True)
+        self.assertEqual(encode["run_status"], "emitted")
+
+
+class TestCliEntrypoint(unittest.TestCase):
+    def test_cli_registry_and_claim_pack(self):
+        cli = EXT / "cli.py"
+        reg = subprocess.run(
+            [sys.executable, str(cli), "registry", "--json"],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(reg.returncode, 0, reg.stderr)
+        payload = json.loads(reg.stdout)
+        self.assertIn("cancer_rna_lakes", payload["summary"]["forbidden_g_atac"])
+        with tempfile.TemporaryDirectory() as tmp:
+            pack = subprocess.run(
+                [sys.executable, str(cli), "claim-pack", "--out-dir", tmp],
+                cwd=str(ROOT),
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(pack.returncode, 0, pack.stderr)
+            self.assertTrue((Path(tmp) / "index.json").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

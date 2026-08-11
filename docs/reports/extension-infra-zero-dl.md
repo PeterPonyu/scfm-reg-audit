@@ -22,17 +22,44 @@
 
 Heavy runtime target: `results/v2/extension/` (local overlay; already MANIFEST-safe via `results/v2/`).
 
-## Commands
+## Commands (local-only; **no download**)
+
+Do **not** run dataset fetches. `fetch_optional_pilots.sh` is an approval pointer
+and exits without network I/O. Approval docs under `docs/reports/download_approval_*.md`
+remain documentation only until explicit human sign-off.
 
 ```bash
+# 1) registry + deny-lake policy
 python src/v2/extension/cli.py registry --json
+
+# 2) SI claim-pack from frozen public JSON (zero recompute)
 python src/v2/extension/cli.py claim-pack
-python src/v2/extension/construct_hooks.py --tissue fibroblast --execute --write
-python src/v2/extension/baseline_stubs.py --all --execute --write
-python -m unittest src.v2.tests.test_extension
+
+# 3) construct Mantel/decomp on locked local NPZ (fibro / brain / PBMC)
+python src/v2/extension/cli.py construct --tissue fibroblast --execute --write
+
+# 4) Tier A–C baseline emitters from local G_ATAC / ENCODE JSON
+python src/v2/extension/cli.py baselines --all --execute --write --proxy-tag GSE174367
+
+# 5) tests + PeerJ freeze gate
+python -m pytest src/v2/tests/test_extension.py -q
 python validate_artifacts.py
-./src/v2/extension/scripts/fetch_optional_pilots.sh   # approval pointer only
+
+# approval pointer only (must print DISABLED; never curls)
+./src/v2/extension/scripts/fetch_optional_pilots.sh
 ```
+
+## 100% carry-out checklist (extension lane)
+
+| Facility | Status |
+|----------|--------|
+| Registry + CLI | **complete** |
+| Claim-pack emit | **complete** |
+| Construct `--execute` on local NPZ / fibro | **complete** |
+| Baseline emitters (Tier A–C) | **complete** (CollecTRI skips without local cache) |
+| Extension tests + `validate_artifacts.py` | **complete** |
+| Download constructor | **intentionally absent** (docs-only) |
+| BMMC full FM / PeerJ 13-row rewrite | **out of scope / blocked** |
 
 ## Explicit non-claims
 
@@ -40,6 +67,7 @@ python validate_artifacts.py
 - BMMC ≠ PeerJ `primary_audit` until panel policy + re-SAP  
 - No 27/28 → Support / `G_ATAC`  
 - No multi-GB download constructor in this package  
+- **No fetch execution** without a filled approval row + human go-ahead
 
 ## Non-goals
 
