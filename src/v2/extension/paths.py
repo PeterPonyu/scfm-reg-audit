@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,13 @@ EXTENSION_ROOT = ROOT / "results" / "v2" / "extension"
 HEAVY_ARTIFACT_ROOT = "results/v2/extension/"
 CLAIM_PACK_ROOT = "docs/reports/extension-claim-pack/"
 PLAN_ROOT = ROOT / "docs" / "reports" / "extension-plans"
+
+# Fail-closed write confinement for tags / --out-dir (no .. / no escape).
+WRITE_CONFINEMENT_ROOTS: tuple[Path, ...] = (
+    ROOT / "docs" / "reports" / "extension-claim-pack",
+    ROOT / "results" / "v2" / "extension",
+)
+_SAFE_TAG_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 # Locked construct-valid proxies (read-only for Mantel/decomp).
 LOCKED_G_ATAC = {
@@ -103,6 +111,38 @@ def redact_path(path: Path | str | None) -> str | None:
         pass
     # Last resort: basename only (never emit /home/...)
     return p.name
+
+
+def assert_safe_tag(tag: str, *, label: str = "tag") -> str:
+    """Reject path separators and ``..`` in construct / baseline tags."""
+    if not tag or ".." in tag or "/" in tag or "\\" in tag:
+        raise ValueError(f"{label} rejects path separators or '..': {tag!r}")
+    if not _SAFE_TAG_RE.match(tag):
+        raise ValueError(f"{label} must match {_SAFE_TAG_RE.pattern}: {tag!r}")
+    return tag
+
+
+def assert_confined_write_path(path: Path | str, *, label: str = "path") -> Path:
+    """Resolve ``path`` and require it under allowlisted write roots.
+
+    Rejects ``..`` components and absolute/relative escapes outside
+    ``docs/reports/extension-claim-pack/`` and ``results/v2/extension/``.
+    """
+    raw = Path(path)
+    if ".." in raw.parts:
+        raise ValueError(f"{label} rejects '..' path components: {path}")
+    resolved = raw.resolve() if raw.is_absolute() else (ROOT / raw).resolve()
+    for root in WRITE_CONFINEMENT_ROOTS:
+        root_r = root.resolve()
+        try:
+            if resolved == root_r or resolved.is_relative_to(root_r):
+                return resolved
+        except (ValueError, OSError):
+            continue
+    allowed = ", ".join(
+        r.relative_to(ROOT).as_posix() + "/" for r in WRITE_CONFINEMENT_ROOTS
+    )
+    raise ValueError(f"{label} outside allowlisted roots ({allowed}): {path}")
 
 
 def local_asset_report(tissue_id: str, g_atac_tag: str) -> dict[str, Any]:

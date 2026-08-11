@@ -15,7 +15,10 @@ if str(_EXT) not in sys.path:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="extension",
-        description="scReg-Eval extension infra (registry / claim-pack / construct / baselines)",
+        description=(
+            "scReg-Eval extension infra "
+            "(registry / claim-pack / construct / baselines / fail-closed download)"
+        ),
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
 
@@ -38,6 +41,21 @@ def main(argv: list[str] | None = None) -> int:
     p_base.add_argument("--execute", action="store_true")
     p_base.add_argument("--proxy-tag", default="GSE174367")
     p_base.add_argument("--write", action="store_true")
+
+    p_dl = sub.add_parser(
+        "download",
+        help=(
+            "Fail-closed download gate (no network). "
+            "Exit 0 = recipe/dry-run only, never download success. "
+            "SCREG_DOWNLOAD_* env is checklist ceremony, not auth."
+        ),
+    )
+    p_dl.add_argument("--plan-id", required=True, help="Approval matrix id (D0–D5)")
+    p_dl.add_argument(
+        "--no-write",
+        action="store_true",
+        help="Skip writing dry-run JSON under results/v2/extension/download-plans/",
+    )
 
     args = parser.parse_args(argv)
 
@@ -76,6 +94,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.write:
             argv2.append("--write")
         return bs.main(argv2)
+    if args.cmd == "download":
+        import download_gate as dg
+
+        argv2 = ["--plan-id", args.plan_id]
+        if args.no_write:
+            argv2.append("--no-write")
+        return dg.main(argv2)
     raise AssertionError(f"unhandled cmd: {args.cmd}")
 
 

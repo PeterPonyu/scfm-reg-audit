@@ -5,13 +5,31 @@
 **Hard stop (2026-08-11):** User/leader revoked fetch execution — **D0 local-only**. Do not curl/wget/aria2.  
 **Related:** `optional_cancer_dev_download_costs.md`, `bmmc-panel-policy-memo.md`
 
+**Phase-2 seam (fail-closed stub):** `src/v2/extension/download_gate.py` +
+`cli.py download --plan-id …` refuse without `SCREG_DOWNLOAD_APPROVED=1` and a
+matching `SCREG_DOWNLOAD_PLAN_ID`. Even when those env gates pass, the CLI **does
+not fetch** — it only prints a manual recipe / writes a dry-run plan under
+`results/v2/extension/download-plans/`. `fetch_optional_pilots.sh` exits **2**.
+Training / foundation-model (FM) Support work remains **out of scope** for the
+extension CLI.
+
+**Ceremony vs capability:** `SCREG_DOWNLOAD_*` is an operator checklist ceremony
+(filled approval row + matching plan id), **not** a security/auth boundary. Exit
+**0** means recipe/dry-run emitted only — never “download succeeded.” Do not wire
+a real fetch behind these env vars without a stronger binder.
+
+**Data-root fallback:** Extension path resolution (`src/v2/extension/paths.py`)
+uses `DESKTOP_DATA` → `SCREG_DATA_ROOT` → `~/Desktop/data`. Core v2 tooling may
+still fall back to repo `data/` in some paths — do not assume the same default.
+
 ---
 
 ## Purpose
 
 Record **what may be fetched later**, under what size/policy gates, and who must approve.
 This wave builds **executable extension code on local assets**. Download tooling is
-intentionally **not** a deliverable (`fetch_optional_pilots.sh` is demoted to a pointer).
+intentionally **not** a deliverable (`fetch_optional_pilots.sh` is demoted to a
+fail-closed pointer; exit 2).
 
 ---
 

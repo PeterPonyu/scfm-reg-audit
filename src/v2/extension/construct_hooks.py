@@ -28,6 +28,8 @@ from paths import (  # noqa: E402
     HEAVY_ARTIFACT_ROOT,
     PLAN_ROOT,
     ROOT,
+    assert_confined_write_path,
+    assert_safe_tag,
     local_asset_report,
     redact_path,
     resolve_g_atac_npz,
@@ -40,21 +42,46 @@ N_ADDITIVE_ITER = 50
 
 
 def fibro_style_env(tissue_id: str, atac_file: str | None = None) -> dict[str, str]:
-    """Return env vars mirroring the GSE206767 construct seam."""
+    """Return env vars mirroring the GSE206767 construct seam.
+
+    ``ATAC_FILE`` is the machine-usable absolute path for builders.
+    ``ATAC_FILE_REDACTED`` is the PeerJ-safe display path (no home leaks).
+    Use :func:`log_safe_env` when embedding env into printed/written plans.
+    """
     reg = load_extension_registry()
     reg.assert_may_emit_g_atac(tissue_id)
     meta = reg.get_tissue(tissue_id)
-    tag = str(meta.get("g_atac_tag") or tissue_id)
+    tag = assert_safe_tag(str(meta.get("g_atac_tag") or tissue_id), label="g_atac_tag")
     resolved = resolve_local_atac(tissue_id, explicit=atac_file)
-    atac_redacted = redact_path(resolved) if resolved else redact_path(atac_file) or ""
-    env = {
+    if resolved is not None:
+        atac_machine = str(resolved.resolve())
+        atac_redacted = redact_path(resolved) or ""
+    elif atac_file:
+        explicit = Path(atac_file).expanduser()
+        atac_machine = str(explicit.resolve()) if explicit.exists() else str(explicit)
+        atac_redacted = redact_path(explicit) or explicit.name
+    else:
+        atac_machine = ""
+        atac_redacted = ""
+    out_rel = f"results/v2/extension/construct/{tag}"
+    assert_confined_write_path(out_rel, label="SCREG_EXTENSION_OUT")
+    return {
         "TAG": tag,
-        "ATAC_FILE": atac_redacted,
-        "SCREG_EXTENSION_OUT": f"results/v2/extension/construct/{tag}",
+        "ATAC_FILE": atac_machine,
+        "ATAC_FILE_REDACTED": atac_redacted,
+        "SCREG_EXTENSION_OUT": out_rel,
         "SCREG_EXTENSION_LANE": "construct",
         "SCREG_PEERJ_SUPPORT_LOCK": "1",
     }
-    return env
+
+
+def log_safe_env(env: dict[str, str]) -> dict[str, str]:
+    """Copy env for PeerJ logs: ``ATAC_FILE`` replaced by redacted display path."""
+    out = dict(env)
+    redacted = out.get("ATAC_FILE_REDACTED")
+    if redacted is not None:
+        out["ATAC_FILE"] = redacted
+    return out
 
 
 def _load_consensus(path: Path) -> tuple[np.ndarray, np.ndarray]:
@@ -135,12 +162,13 @@ def run_construct(
     reg = load_extension_registry()
     reg.assert_may_emit_g_atac(tissue_id)
     meta = reg.get_tissue(tissue_id)
-    tag = str(meta.get("g_atac_tag") or tissue_id)
+    tag = assert_safe_tag(str(meta.get("g_atac_tag") or tissue_id), label="g_atac_tag")
     assets = local_asset_report(tissue_id, tag)
     if atac_file:
         assets["local_atac"] = redact_path(atac_file)
         assets["local_atac_present"] = Path(atac_file).exists()
 
+    machine_env = fibro_style_env(tissue_id, atac_file=atac_file)
     plan: dict[str, Any] = {
         "tissue_id": tissue_id,
         "lane": "construct",
@@ -155,7 +183,8 @@ def run_construct(
         "peerj_decomp_rows_unchanged": 3,
         "peerj_support_rows_unchanged": 13,
         "assets": assets,
-        "env": fibro_style_env(tissue_id, atac_file=atac_file),
+        # PeerJ-safe: ATAC_FILE redacted in plan JSON; builders call fibro_style_env().
+        "env": log_safe_env(machine_env),
         "panel_policy": meta.get("panel_policy"),
         "notes": meta.get("notes"),
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
@@ -198,7 +227,10 @@ def run_construct(
         row["proxy_path"] = str(other_path.relative_to(ROOT))
         pairs.append(row)
 
-    out_dir = EXTENSION_ROOT / "construct" / tag
+    out_dir = assert_confined_write_path(
+        EXTENSION_ROOT / "construct" / tag,
+        label="construct out_dir",
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
     mantel_doc = {
         "schema_version": 1,
@@ -255,7 +287,10 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps(plan, indent=2))
 
     if args.write:
-        out = PLAN_ROOT / "construct" / str(plan["g_atac_tag"])
+        tag = assert_safe_tag(str(plan["g_atac_tag"]), label="g_atac_tag")
+        # Plans under docs/reports/extension-plans are documentation-only (not
+        # the heavy write confine roots); still reject traversal in the tag.
+        out = PLAN_ROOT / "construct" / tag
         out.mkdir(parents=True, exist_ok=True)
         name = "construct_plan.executed.json" if args.execute else "construct_plan.dry_run.json"
         path = out / name

@@ -22,10 +22,13 @@ if str(_EXT) not in sys.path:
     sys.path.insert(0, str(_EXT))
 
 from paths import (  # noqa: E402
+    DESKTOP_DATA,
     EXTENSION_ROOT,
     HEAVY_ARTIFACT_ROOT,
     PLAN_ROOT,
     ROOT,
+    assert_confined_write_path,
+    assert_safe_tag,
     redact_path,
     resolve_g_atac_npz,
 )
@@ -57,6 +60,7 @@ def _tf_submatrix(g: np.ndarray, tf_rows: np.ndarray) -> np.ndarray:
 
 
 def emit_degree_matched_random(proxy_tag: str = DEFAULT_PROXY_TAG, seed: int = 0) -> dict[str, Any]:
+    proxy_tag = assert_safe_tag(proxy_tag, label="proxy-tag")
     path = resolve_g_atac_npz(proxy_tag)
     if path is None:
         return {"method_id": "degree_matched_random", "status": "skipped_missing_g_atac", "proxy_tag": proxy_tag}
@@ -106,6 +110,7 @@ def emit_degree_matched_random(proxy_tag: str = DEFAULT_PROXY_TAG, seed: int = 0
 
 def emit_motif_only_rp(proxy_tag: str = DEFAULT_PROXY_TAG) -> dict[str, Any]:
     """Ablate ATAC magnitude: binary motif/support mask from G_ATAC > 0."""
+    proxy_tag = assert_safe_tag(proxy_tag, label="proxy-tag")
     path = resolve_g_atac_npz(proxy_tag)
     if path is None:
         return {"method_id": "motif_only_rp", "status": "skipped_missing_g_atac", "proxy_tag": proxy_tag}
@@ -136,9 +141,7 @@ def emit_motif_only_rp(proxy_tag: str = DEFAULT_PROXY_TAG) -> dict[str, Any]:
 def emit_encode_chip_binding() -> dict[str, Any]:
     pub = ROOT / "results" / "encode_proxy_calibration_v1.public.json"
     meta = (
-        Path.home()
-        / "Desktop"
-        / "data"
+        DESKTOP_DATA
         / "datasets"
         / "extension_pilots"
         / "encode_chip"
@@ -177,7 +180,7 @@ def emit_encode_chip_binding() -> dict[str, Any]:
 
 def emit_collectri_prior() -> dict[str, Any]:
     candidates = [
-        Path.home() / "Desktop" / "data" / "datasets" / "extension_pilots" / "collectri",
+        DESKTOP_DATA / "datasets" / "extension_pilots" / "collectri",
         ROOT / "data" / "collectri",
         ROOT / "results" / "v2" / "extension" / "baselines" / "collectri_prior" / "cache",
     ]
@@ -232,6 +235,7 @@ def baseline_plan(method_id: str) -> dict[str, Any]:
 
 
 def run_baseline(method_id: str, *, execute: bool = False, proxy_tag: str = DEFAULT_PROXY_TAG) -> dict[str, Any]:
+    proxy_tag = assert_safe_tag(proxy_tag, label="proxy-tag")
     plan = baseline_plan(method_id)
     if not execute:
         plan["run_status"] = "dry_run"
@@ -244,7 +248,10 @@ def run_baseline(method_id: str, *, execute: bool = False, proxy_tag: str = DEFA
         "collectri_prior": emit_collectri_prior,
     }
     payload = emitters[method_id]()
-    out_dir = EXTENSION_ROOT / "baselines" / method_id
+    out_dir = assert_confined_write_path(
+        EXTENSION_ROOT / "baselines" / method_id,
+        label="baseline out_dir",
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
     scores = payload.pop("scores", None)
     tf_rows = payload.pop("tf_rows", None)

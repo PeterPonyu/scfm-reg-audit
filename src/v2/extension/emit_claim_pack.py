@@ -10,16 +10,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 EXT_DIR = Path(__file__).resolve().parent
+if str(EXT_DIR) not in sys.path:
+    sys.path.insert(0, str(EXT_DIR))
+
 ROOT = EXT_DIR.parents[2]
 RESULTS = ROOT / "results"
 PANEL_DATA = ROOT / "paper" / "panel_data.json"
 OUT_DIR = ROOT / "docs" / "reports" / "extension-claim-pack"
+
+from paths import assert_confined_write_path  # noqa: E402
 
 
 def load_json(path: Path) -> Any:
@@ -226,6 +232,7 @@ def build_markdown(
 
 
 def emit(out_dir: Path) -> dict[str, Path]:
+    out_dir = assert_confined_write_path(out_dir, label="--out-dir")
     audit = load_json(RESULTS / "fixed_panel_audit_v2.public.json")
     oc = load_json(RESULTS / "dual_null_oc_independence_v2.public.json")
     fm = load_json(RESULTS / "fm_vs_baseline_observed_v2.public.json")
