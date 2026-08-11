@@ -1,5 +1,5 @@
-% scReg-Eval fixed-panel manuscript. Numerical claims derive from
-% results/v2/fixed_panel_audit_v2.json and fixed_panel_signal_injection_v2.json.
+% scReg-Eval fixed-panel manuscript. Numerical claims derive from the
+% release-capsule fixed-panel audit artifacts (digests in the deposit MANIFEST).
 % Build from paper/: Rscript make_figs.R; pdflatex manuscript; bibtex manuscript;
 % pdflatex manuscript; pdflatex manuscript.
 \documentclass[fleqn,10pt,lineno]{wlpeerj}
@@ -9,6 +9,7 @@
 \usepackage[breaklinks=true]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=color1,citecolor=color1,urlcolor=color1}
 \usepackage{orcidlink}
+\usepackage{tabularx}
 % PeerJ CS: Name-Year citations + alphabetical reference list (not numbered).
 \setcitestyle{authoryear,round,semicolon,aysep={,},yysep={;}}
 \captionsetup{font=small,labelfont=bf}
@@ -167,7 +168,7 @@ audit and the co-primary non-degree sensitivity; Discussion and the final figure
 alignments can and cannot claim.
 
 \begin{table}[!tbp]\centering
-\resizebox{\linewidth}{!}{\input{table5_related_work.tex}}
+\input{table5_related_work.tex}
 \caption{Protocol axes versus related evaluation resources. Entries are qualitative design
 features, not performance ranks. scReg-Eval is a fixed-panel audit capsule; GeneRNIB and BioLLM-style
 suites score broader tasks against often expression-linked references.}\label{tab:related}
@@ -187,17 +188,13 @@ confound. Concordance checks against co-expression further bound whether a dual-
 attention-like co-expression geometry; they do not adjudicate residual regulatory truth. Discussion
 returns to this scope when interpreting Support counts. Reporting gates (dual-null Support,
 protocol-pass, FM-versus-baseline observed $\Delta\rho$, and probe contrast families) are frozen in
-the in-repo statistical analysis plan
-\texttt{docs/SCREG\_EVAL\_SAP.md}
-(SAP-v1.0; file SHA-256
-\texttt{3f4b8b3ceb1865d19a5b0da044994cce4ef5b31b638817e9b1f76c17931911ae}).
+the in-repo statistical analysis plan (SAP-v1.0; shipped with the release capsule).
+Digests for that plan live in the online deposit, not in the main text.
 
 \subsection{Regulatory-potential proxy and fixed panel}\label{sec:proxy}
 The panel contains 1,200 genes, including 446 unique in-range transcription factors,
-protocol-frozen in-repo by a SHA-256 manifest
-(\texttt{manifest\_sha256=}\texttt{6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848};
-TF-panel hash
-\texttt{b07ae73888cd2e075cd1992f73b5fac9a2fa9c5d8f73c596eac653d259eae8da}).
+protocol-frozen in-repo by a hash-pinned panel manifest in the audit capsule
+(exact digests are recorded in the deposit \texttt{MANIFEST}, not repeated here).
 This is an in-repository protocol freeze, not an external preregistration
 (OSF/AsPredicted) link. Panel construction further requires each gene to have at least one brain
 snATAC peak in the same $\pm2$\,kb promoter-plus-gene-body window used for linkage, together with
@@ -228,7 +225,7 @@ and finiteness, and four pinned legacy-file hashes.
 \subsection{Foundation-model and baseline graphs}
 Gene graphs are read from cached, model-validated outputs over the same manifest. Available pooled
 readouts are Geneformer embedding, attention, and in-silico knockout; scFoundation encoder; UCE
-encoder (4-layer variant, checkpoint SHA-256 pinned by the pipeline); and scGPT encoder; plus a
+encoder (4-layer variant, checkpoint pinned by the pipeline); and scGPT encoder; plus a
 random-init Geneformer floor. Coverage differs by tissue because
 only precomputed, validated graphs are included: brain has eight FM/readout rows and PBMC has five.
 Co-expression is reported as a baseline on the same edge set and nulls, but is not included as an
@@ -475,7 +472,7 @@ Uniform $p_M,p_D$, BH within each full-spec tissue family, $2\times10^{4}$ draws
 rate of $\ge1$ dual-null row is $\approx2\times10^{-4}$ (brain) and $\approx3\times10^{-4}$ (PBMC),
 while the audit records 4 and 3 dual-null rows respectively---so dual-null Support is not explained
 by naive independent double-dipping alone, yet still is not regulatory recovery
-(\texttt{results/dual\_null\_oc\_independence\_v2.public.json}).
+(release-capsule dual-null independence diagnostic).
 
 \begin{table}[!tbp]\centering
 \resizebox{\linewidth}{!}{\input{table6_fm_vs_baseline.tex}}
@@ -511,7 +508,7 @@ External ENCODE pan-biosample TF-occupancy edges on the frozen panel (coverage g
 204 TFs, 114{,}467 positive edges) correlate with the pooled motif+ATAC proxy under a lightweight
 within-TF encode-shuffle null (brain Spearman $\rho=0.081$, PBMC $\rho=0.109$; plus-one
 $p=0.005$ at $N=199$; mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$ positives;
-\texttt{results/encode\_proxy\_calibration\_v1.public.json}). That association bounds the proxy as
+details archived in the release capsule). That association bounds the proxy as
 binding-proximal structure; it does \emph{not} convert FM dual-null Support into causal TF--target
 recovery.
  Our protocol freezes a readout
@@ -566,7 +563,7 @@ rejections (row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$); the gene-label
 rejects alone. Dual-Support is therefore never granted under non-degree. Those D-only rejections
 must not be read as dual-null Support: the row-shuffle still preserves TF out-degree while the
 non-degree design does not condition on degree, so the two nulls do not address the same estimand
-(SAP~\S3; \texttt{results/nondegree\_null\_pattern\_v2.public.json}).
+(SAP~\S3; release-capsule non-degree null-pattern summary).
 Table~\ref{tab:nondegree} enumerates that non-degree pattern row by row (0 dual; D-only majority).
 
 \begin{figure}[!tbp]\centering
@@ -647,7 +644,7 @@ attention ($q=0.65$), and scGPT ($q=0.255$) are not supported. As a sensitivity 
 the floor as a control rather than a peer FM, BH recomputed on the $n=4$ FM contrasts
 \emph{excluding} \texttt{random\_floor} moves UCE to $q=0.052$ (no longer $<0.05$) with the other
 three FM contrasts remaining non-significant
-(\texttt{results/tf\_probe\_contrasts\_no\_floor\_v2.public.json}). The sign-flip statistic compares how
+(release-capsule no-floor probe-contrast sensitivity). The sign-flip statistic compares how
 much each family is over-corrected, not how much it recovers: adjusted test correlations are
 essentially zero for UCE ($+0.0003$) and the floor ($+0.0023$) but negative for co-expression
 ($-0.0120$), so ``supported'' contrasts mean the baseline is over-corrected further below zero, not
@@ -705,18 +702,13 @@ three tissue pairs.}\label{fig:third_tissue}
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure12.pdf}
-\caption{Binary protocol-pass gate heatmap for the thirteen pooled FM/readout rows (green pass,
-grey fail), companion to Table~\ref{tab:protocol}. No row is green in the Protocol-pass
-column.}\label{fig:protocol}
-\end{figure}
-
-\begin{figure}[!tbp]\centering
-\includegraphics[width=\linewidth]{Figure13.pdf}
-\caption{Protocol-instance scope card: the audit scores motif matches in $\pm$2\,kb-linked ATAC
-peaks on a fixed panel. Distal/3D structure and ChIP-derived causal TF--target maps are out of
-scope; the proxy is cell-type near-invariant on this panel. Failure to support a global capability
-claim therefore cannot be read as a field-level negative
-(Sec.~\ref{sec:estimand}).}\label{fig:scope}
+\caption{Protocol-pass and instance scope. (A)~Binary gate heatmap for the thirteen pooled
+FM/readout rows (aqua pass, grey fail), companion to Table~\ref{tab:protocol}. Protocol-pass is
+the conjunction column (outlined); no row passes ($0/13$). (B)~Protocol-instance scope card: the
+audit scores motif matches in $\pm$2\,kb-linked ATAC peaks on a fixed panel. Distal/3D structure
+and ChIP-derived causal TF--target maps are out of scope; the proxy is cell-type near-invariant on
+this panel. Failure to support a global capability claim therefore cannot be read as a field-level
+negative (Sec.~\ref{sec:estimand}).}\label{fig:protocol}
 \end{figure}
 
 \section{Discussion}
@@ -760,7 +752,7 @@ benchmarks that find scFMs unreliable or only weakly structured relative to simp
 baselines~\citep{kedzierska2023assessing,wu2025biologydriven,qiu2025biollm}. Failure to support a
 global regulatory-capability claim on this panel equally cannot support a field-level negative
 conclusion: the probe is linear and operates on pairwise graph summaries, the proxy is a narrow
-accessibility/motif construct (Fig.~\ref{fig:scope}), and other panels, tissues, or GRN-informed
+accessibility/motif construct (Fig.~\ref{fig:protocol}B), and other panels, tissues, or GRN-informed
 models could differ.
 Models pretrained with explicit GRN inductive biases~\citep{yang2024genecompass,kalfon2025scprint,hu2026regformer}
 are outside the present multi-readout audit and remain a natural target for the same fixed-panel
@@ -790,7 +782,7 @@ coverage is narrow by construction. Panel membership further requires $\ge1$ bra
 linkage window (Sec.~\ref{sec:proxy}); a no-peak-filter manifest under the same $n=1200$ cap
 overlaps the frozen panel in 1167/1200 genes (Jaccard $0.946$) and enlarges the pre-cap universe
 from 12{,}382 to 12{,}690 genes
-(\texttt{results/no\_atac\_filter\_manifest\_sensitivity\_v1.public.json}). A full dual-null re-audit
+(release-capsule no-ATAC-filter panel-sensitivity analysis). A full dual-null re-audit
 on that alternate universe was not re-run (would require new proxy and FM graphs). The $\pm2$\,kb
 promoter-plus-gene-body rule retains 6{,}609 of
 111{,}743 accessible peaks in the PBMC data (5.91\%); distal enhancer elements, which carry most
