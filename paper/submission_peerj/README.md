@@ -10,7 +10,7 @@ pre-rendered as standalone PDFs.
 ## Layout
 
 - `source/`: self-contained editable article source, including the thirteen figure fragments and six tables. Its PDF and LaTeX intermediates are generated build outputs, not the human-review target.
-- `flat_upload/`: upload-ready package with `manuscript.pdf`, `Figure1.pdf` through `Figure13.pdf`, six table fragments, references, and checksums.
+- `flat_upload/`: upload-ready package with `manuscript.pdf`, `Figure1.pdf` through `Figure12.pdf`, table fragments, references, and checksums.
 - `internal/figure_build/`: temporary standalone wrappers used to export the figure PDFs; generated only.
 - `HUMAN_GATES.md`: remaining author decisions and external actions (DONE/OPEN status).
 - `PEERJ_FORM_TEMPLATE.md`: copy-ready scientific fields; repository DOI filled.

@@ -31,13 +31,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 class BuilderConstantShape(unittest.TestCase):
 
     def test_constants_consistent(self):
-        self.assertEqual(len(CURRENT_FIGURES), 13)
+        self.assertEqual(len(CURRENT_FIGURES), 12)
         self.assertEqual(len(CURRENT_TABLES), 8)
         self.assertEqual(CURRENT_FRAGMENTS, CURRENT_FIGURES + CURRENT_TABLES)
         self.assertEqual(CURRENT_FIGURES[0], "fig10_coverage_qc.tex")
-        self.assertEqual(CURRENT_FIGURES[-1], "fig13_scope_card.tex")
+        self.assertEqual(CURRENT_FIGURES[-1], "fig12_protocol_pass_matrix.tex")
         self.assertIn("fig12_protocol_pass_matrix.tex", CURRENT_FIGURES)
-        self.assertIn("fig13_scope_card.tex", CURRENT_FIGURES)
+        self.assertNotIn("fig13_scope_card.tex", CURRENT_FIGURES)
         self.assertEqual(CURRENT_TABLES[-2], "table7_nondegree_null_pattern.tex")
         self.assertEqual(CURRENT_TABLES[-1], "table8_tf_probe_numeric.tex")
         self.assertEqual(CURRENT_FIGURES, CAP_FIGS)  # builder + validator use the same allowlist
