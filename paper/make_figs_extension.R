@@ -174,36 +174,38 @@ f1c <- ggplot(rows, aes(y = pair_s)) +
        title = "Transfer rho (BMMC-PBMC highest)") +
   theme(legend.position = "top", legend.text = element_text(size = 8.5))
 
-# D: collapse air between title and panel top spine; D tag right+slightly down
+# D: title centered on full D column (plot, not inner panel only); closer to bars;
+#    D tag slightly further down (and a touch right) so it does not float above the title band.
 f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   geom_col(fill = BLUE, width = 0.65) +
   geom_text(aes(label = format(relevant_peaks, big.mark = ",")),
             hjust = -0.05, size = 2.9) +
-  coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.22)) +
+  coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.18)) +
   labs(x = NULL, y = "linked peaks",
        title = "Motif-linked peaks by tissue") +
   theme(
-    # title sits on the panel box (top spine), not floating in outer margin
-    plot.title.position = "panel",
+    # column-level centering (includes y-axis label width), not left-ragged
+    plot.title.position = "plot",
     plot.title = element_text(
       size = 9.5,
-      margin = margin(t = 1, r = 0, b = 2, l = 0),
-      hjust = 0, vjust = 1
+      margin = margin(t = 0, r = 0, b = 0, l = 0),
+      hjust = 0.5, vjust = 1
     ),
-    plot.margin = margin(t = 2, r = 8, b = 2, l = 2),
-    # D: slightly right and down vs A/B/C top-left tags
-    plot.tag.position = c(0.15, 0.94)
+    plot.margin = margin(t = 0, r = 12, b = 1, l = 2),
+    # D tag: lower + slightly right of the default NW corner
+    plot.tag.position = c(0.10, 0.86)
   )
 
 f1a <- f1a + theme(plot.tag.position = c(0.02, 1.0))
 f1b <- f1b + theme(plot.tag.position = c(0.02, 1.0))
 f1c <- f1c + theme(plot.tag.position = c(0.02, 1.0))
 
+# Shorter canvas eats large bottom whitespace on the preview page
 emit_ext("fig_ext1_construct_mantel",
          (f1a | f1b) / (f1c | f1d) +
            plot_annotation(tag_levels = "A") +
-           plot_layout(axis_titles = "collect"),
-         6.8, 5.8, tags = LETTERS[1:4])
+           plot_layout(axis_titles = "collect", heights = c(1, 1.08)),
+         6.8, 5.15, tags = LETTERS[1:4])
 
 # ============== E2: literature prior + construct transfer stats ONLY ==============
 # NO emitter status, freeze badges, file names, or inventory counts.
