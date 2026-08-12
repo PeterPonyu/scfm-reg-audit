@@ -106,6 +106,20 @@ def _awaiting_g_atac_next_steps(
         )
         return steps
 
+    if tissue_id == "htan_gbm_pilot":
+        steps.append(
+            "D3 local-only: python src/v2/extension/cli.py prepare-htan --write"
+        )
+        steps.append(
+            "Tar is fragments-only by default → structured blocked (E4.3b) is "
+            "wave-OK; do not call peaks or download --plan-id D3."
+        )
+        steps.append(
+            "If peak h5ad with chrom:start-end exists, run emitted build_command "
+            "then construct --tissue htan_gbm_pilot --execute --write."
+        )
+        return steps
+
     if atac_machine and Path(atac_machine).exists():
         cmd = builder_env_command(
             tag=tag,

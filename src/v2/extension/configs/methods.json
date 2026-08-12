@@ -50,8 +50,9 @@
       "tier": "C",
       "estimand": "literature_prior",
       "bh_membership": "outside_fm_bh",
-      "status": "skipped_no_local_cache",
-      "notes": "No OmniPath/CollecTRI cache locally; skip until cache present (documented)."
+      "status": "cache_present_not_parsed",
+      "local_cache_hint": "${DESKTOP_DATA}/datasets/extension_pilots/collectri/",
+      "notes": "Local CollecTRI CSV/TSV cache present under DESKTOP_DATA; emitter reports cache_present_not_parsed (panel projection parse deferred)."
     },
     "scenic_plus": {
       "tier": "D",

@@ -72,6 +72,15 @@ def main(argv: list[str] | None = None) -> int:
     p_bmmc.add_argument("--execute", action="store_true")
     p_bmmc.add_argument("--write", action="store_true")
 
+    p_htan = sub.add_parser(
+        "prepare-htan",
+        help="D3 HTAN pilot: local tar inventory / prepare (no fetch; dual-path blocked OK)",
+    )
+    p_htan.add_argument("--pilot-dir", default="")
+    p_htan.add_argument("--tar", default="")
+    p_htan.add_argument("--execute", action="store_true")
+    p_htan.add_argument("--write", action="store_true")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "registry":
@@ -136,6 +145,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.write:
             argv2.append("--write")
         return bp.main(argv2)
+    if args.cmd == "prepare-htan":
+        import htan_prepare as hp
+
+        argv2 = []
+        if args.pilot_dir:
+            argv2.extend(["--pilot-dir", args.pilot_dir])
+        if args.tar:
+            argv2.extend(["--tar", args.tar])
+        if args.execute:
+            argv2.append("--execute")
+        if args.write:
+            argv2.append("--write")
+        return hp.main(argv2)
     raise AssertionError(f"unhandled cmd: {args.cmd}")
 
 

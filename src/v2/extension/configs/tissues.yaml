@@ -69,10 +69,13 @@ tissues:
     genome: hg38
     peerj_freeze: false
     panel_policy: frozen_brain_pinned_446x1200
-    fetch_status: absent_local
+    fetch_status: present_local
     estimated_download_mb: 100
     g_atac_tag: DESCARTES_spleen
-    notes: Preferred first construct SI after PeerJ; needs ~100MB RDS fetch (not this session).
+    local_path_hint: ${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/
+    notes: >
+      D1 done: local peaks h5ad + overlay G_ATAC under
+      results/v2/extension/construct/DESCARTES_spleen/. Construct SI only; no FM Support.
 
   orphan_atac_placeholder:
     accession: TBD_after_meta_rescue
@@ -129,6 +132,23 @@ tissues:
     notes: >
       D4 pending_large: RAW~29GB + File_S6~4.3GB. Policy-gated (disk/PeerJ), not
       technically impossible. No Support / locked G_ATAC until future subset construct.
+
+  htan_gbm_pilot:
+    accession: GSM7710026
+    modality: snATAC
+    lane: construct
+    role: construct_candidate
+    genome: hg38
+    peerj_freeze: false
+    panel_policy: frozen_brain_pinned_446x1200
+    fetch_status: present_local
+    fetch_plan_id: D3
+    g_atac_tag: HTAN_GBM_C3N01334
+    local_path_hint: ${DESKTOP_DATA}/datasets/extension_pilots/htan/sample_pilot/
+    notes: >
+      D3 local tar (fragments-only Cell Ranger outs). prepare-htan dual-path:
+      blocked E4.3b default or overlay TAG=HTAN_GBM_C3N01334 if peak h5ad supplied.
+      Construct SI only; no FM Support / no D4 lake.
 
   htan_whole_lake:
     accession: HTAN_cohort

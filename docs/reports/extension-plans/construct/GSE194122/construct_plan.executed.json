@@ -1,0 +1,83 @@
+{
+  "tissue_id": "bmmc",
+  "lane": "construct",
+  "g_atac_tag": "GSE194122",
+  "compare_to_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "outputs": {
+    "g_atac": "results/v2/extension/construct/GSE194122/G_ATAC_v2_GSE194122.npz",
+    "mantel": "results/v2/extension/construct/GSE194122/mantel_vs_locked.json",
+    "decomp": "results/v2/extension/construct/GSE194122/additive_decomp_row.json",
+    "summary": "results/v2/extension/construct/GSE194122/construct_summary.json"
+  },
+  "peerj_decomp_rows_unchanged": 3,
+  "peerj_support_rows_unchanged": 13,
+  "assets": {
+    "tissue_id": "bmmc",
+    "g_atac_tag": "GSE194122",
+    "local_atac": "${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad",
+    "local_atac_present": true,
+    "g_atac_npz": "results/v2/extension/construct/GSE194122/G_ATAC_v2_GSE194122.npz",
+    "g_atac_present": true,
+    "extension_root": "results/v2/extension/",
+    "desktop_data": "${DESKTOP_DATA}"
+  },
+  "env": {
+    "TAG": "GSE194122",
+    "ATAC_FILE": "${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad",
+    "ATAC_FILE_REDACTED": "${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad",
+    "SCREG_EXTENSION_OUT": "results/v2/extension/construct/GSE194122",
+    "SCREG_EXTENSION_LANE": "construct",
+    "SCREG_PEERJ_SUPPORT_LOCK": "1"
+  },
+  "panel_policy": "pending_written_decision",
+  "notes": "Already local (~5.7G). Construct-candidate only until panel policy + re-SAP. Full FM audit (Option C) gated. Gene cov ~0.897 / TF cov ~0.765 on frozen panel (remeasure before C).\n",
+  "generated_utc": "2026-08-12T07:25Z",
+  "status": "executed",
+  "g_atac_source": "results/v2/extension/construct/GSE194122/G_ATAC_v2_GSE194122.npz",
+  "n_pairs_ok": 3,
+  "mantel_pairs": [
+    {
+      "pair": [
+        "GSE194122",
+        "GSE174367"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.529094,
+      "additive_pred_spearman": 0.321623,
+      "residual_spearman_after_own_additive_fits": 0.515491,
+      "fraction_explained_by_additive_marginals": 0.6079,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "pair": [
+        "GSE194122",
+        "PBMC10k"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.890248,
+      "additive_pred_spearman": 0.409802,
+      "residual_spearman_after_own_additive_fits": 0.950187,
+      "fraction_explained_by_additive_marginals": 0.4603,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    },
+    {
+      "pair": [
+        "GSE194122",
+        "GSE206767"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.472997,
+      "additive_pred_spearman": 0.325883,
+      "residual_spearman_after_own_additive_fits": 0.414122,
+      "fraction_explained_by_additive_marginals": 0.689,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+    }
+  ]
+}

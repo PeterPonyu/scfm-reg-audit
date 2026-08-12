@@ -76,6 +76,9 @@ class TestExtensionRegistry(unittest.TestCase):
         self.assertNotEqual(reg.get_method("degree_matched_random")["status"], "stub")
         self.assertNotEqual(reg.get_method("motif_only_rp")["status"], "stub")
         self.assertEqual(
+            reg.get_method("collectri_prior")["status"], "cache_present_not_parsed"
+        )
+        self.assertNotEqual(
             reg.get_method("collectri_prior")["status"], "skipped_no_local_cache"
         )
 
@@ -530,17 +533,79 @@ class TestConstructBmmcDryRun(unittest.TestCase):
         import construct_hooks as ch
 
         plan = ch.run_construct("bmmc", execute=False)
-        self.assertEqual(plan["status"], "awaiting_g_atac")
-        joined = " ".join(plan["next_steps"])
-        self.assertIn("P3", joined)
-        # Either prepare path (raw multiome) or build path (prepared peaks).
-        self.assertTrue(
-            "prepare-bmmc" in joined or "build overlay G_ATAC" in joined,
-            joined,
-        )
+        # Overlay may already exist after G006 (status=ready) or still awaiting build.
+        self.assertIn(plan["status"], ("awaiting_g_atac", "ready"))
         self.assertEqual(plan["env"]["SCREG_PEERJ_SUPPORT_LOCK"], "1")
         self.assertTrue(
             plan["env"]["SCREG_EXTENSION_OUT"].startswith("results/v2/extension/")
+        )
+        if plan["status"] == "awaiting_g_atac":
+            joined = " ".join(plan["next_steps"])
+            self.assertIn("P3", joined)
+            # Either prepare path (raw multiome) or build path (prepared peaks).
+            self.assertTrue(
+                "prepare-bmmc" in joined or "build overlay G_ATAC" in joined,
+                joined,
+            )
+        else:
+            # G_ATAC overlay present under extension construct root.
+            self.assertTrue(
+                str(plan.get("g_atac_source", "")).endswith("G_ATAC_v2_GSE194122.npz")
+                or "GSE194122" in str(plan.get("g_atac_source", "")),
+                plan.get("g_atac_source"),
+            )
+
+
+class TestHtanPrepareAndD3Gate(unittest.TestCase):
+    def test_d3_gate_no_new_download(self):
+        d3 = download_gate.PLAN_REGISTRY["D3"]
+        self.assertEqual(d3["decision"], "no_new_download")
+        self.assertFalse(d3["fetchable"])
+        self.assertEqual(d3["assets"], [])
+        recipe = " ".join(d3["manual_recipe"])
+        self.assertIn("prepare-htan", recipe)
+        self.assertIn("htan/sample_pilot", recipe)
+
+    def test_inventory_fragments_only_blocked(self):
+        import htan_prepare as hp
+        import tarfile
+        import gzip
+        import io
+
+        with tempfile.TemporaryDirectory() as td:
+            pilot = Path(td)
+            # Minimal tar with only fragments.tsv.gz member
+            frag_name = "sample/outs/fragments.tsv.gz"
+            buf = io.BytesIO()
+            with gzip.GzipFile(fileobj=buf, mode="wb") as gz:
+                gz.write(b"# cellranger-atac-2.0.0\n")
+                gz.write(b"chr1\t100\t200\tAAAC-1\t1\n")
+            tar_path = pilot / "GSM7710026_C3N-01334_fake_snATAC_GBM.tar.gz"
+            with tarfile.open(tar_path, "w:gz") as tf:
+                info = tarfile.TarInfo(name=frag_name)
+                payload = buf.getvalue()
+                info.size = len(payload)
+                tf.addfile(info, io.BytesIO(payload))
+
+            inv = hp.inventory_htan_tar(tar_path)
+            self.assertTrue(inv["has_fragments"])
+            self.assertEqual(inv["layout"], "fragments_only")
+
+            status = hp.prepare_status(pilot_dir=pilot, tar=tar_path, execute=False)
+            self.assertEqual(status["status"], "blocked")
+            self.assertEqual(status["block_reason"], "fragments_only_no_peak_matrix")
+            self.assertFalse(status["network_fetch_performed"])
+            self.assertIsNone(status.get("build_command"))
+            self.assertEqual(status["tissue_id"], "htan_gbm_pilot")
+            self.assertEqual(status["g_atac_tag"], "HTAN_GBM_C3N01334")
+
+    def test_registry_has_htan_pilot(self):
+        reg = regmod.load_extension_registry()
+        t = reg.get_tissue("htan_gbm_pilot")
+        self.assertEqual(t.get("g_atac_tag"), "HTAN_GBM_C3N01334")
+        self.assertEqual(t.get("role"), "construct_candidate")
+        self.assertNotEqual(
+            reg.get_tissue("descartes_spleen").get("fetch_status"), "absent_local"
         )
 
 

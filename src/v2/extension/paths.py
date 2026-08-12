@@ -69,6 +69,15 @@ LOCAL_ATAC_HINTS: dict[str, list[Path]] = {
         / "descartes_spleen_peaks.h5ad",
         DESKTOP_DATA / "datasets" / "extension_pilots" / "descartes_spleen",
     ],
+    "htan_gbm_pilot": [
+        DESKTOP_DATA
+        / "datasets"
+        / "extension_pilots"
+        / "htan"
+        / "sample_pilot"
+        / "HTAN_GBM_C3N01334_atac_peaks.h5ad",
+        DESKTOP_DATA / "datasets" / "extension_pilots" / "htan" / "sample_pilot",
+    ],
 }
 
 DESCARTES_PILOT_DIR = (

@@ -1,0 +1,83 @@
+{
+  "tissue_id": "descartes_spleen",
+  "lane": "construct",
+  "g_atac_tag": "DESCARTES_spleen",
+  "compare_to_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "outputs": {
+    "g_atac": "results/v2/extension/construct/DESCARTES_spleen/G_ATAC_v2_DESCARTES_spleen.npz",
+    "mantel": "results/v2/extension/construct/DESCARTES_spleen/mantel_vs_locked.json",
+    "decomp": "results/v2/extension/construct/DESCARTES_spleen/additive_decomp_row.json",
+    "summary": "results/v2/extension/construct/DESCARTES_spleen/construct_summary.json"
+  },
+  "peerj_decomp_rows_unchanged": 3,
+  "peerj_support_rows_unchanged": 13,
+  "assets": {
+    "tissue_id": "descartes_spleen",
+    "g_atac_tag": "DESCARTES_spleen",
+    "local_atac": "${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/descartes_spleen_peaks.h5ad",
+    "local_atac_present": true,
+    "g_atac_npz": "results/v2/extension/construct/DESCARTES_spleen/G_ATAC_v2_DESCARTES_spleen.npz",
+    "g_atac_present": true,
+    "extension_root": "results/v2/extension/",
+    "desktop_data": "${DESKTOP_DATA}"
+  },
+  "env": {
+    "TAG": "DESCARTES_spleen",
+    "ATAC_FILE": "${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/descartes_spleen_peaks.h5ad",
+    "ATAC_FILE_REDACTED": "${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/descartes_spleen_peaks.h5ad",
+    "SCREG_EXTENSION_OUT": "results/v2/extension/construct/DESCARTES_spleen",
+    "SCREG_EXTENSION_LANE": "construct",
+    "SCREG_PEERJ_SUPPORT_LOCK": "1"
+  },
+  "panel_policy": "frozen_brain_pinned_446x1200",
+  "notes": "Preferred first construct SI after PeerJ; needs ~100MB RDS fetch (not this session).",
+  "generated_utc": "2026-08-12T06:11Z",
+  "status": "executed",
+  "g_atac_source": "results/v2/extension/construct/DESCARTES_spleen/G_ATAC_v2_DESCARTES_spleen.npz",
+  "n_pairs_ok": 3,
+  "mantel_pairs": [
+    {
+      "pair": [
+        "DESCARTES_spleen",
+        "GSE174367"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.433944,
+      "additive_pred_spearman": 0.360196,
+      "residual_spearman_after_own_additive_fits": 0.340063,
+      "fraction_explained_by_additive_marginals": 0.8301,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "pair": [
+        "DESCARTES_spleen",
+        "PBMC10k"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.391066,
+      "additive_pred_spearman": 0.330908,
+      "residual_spearman_after_own_additive_fits": 0.235834,
+      "fraction_explained_by_additive_marginals": 0.8462,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    },
+    {
+      "pair": [
+        "DESCARTES_spleen",
+        "GSE206767"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.493373,
+      "additive_pred_spearman": 0.406695,
+      "residual_spearman_after_own_additive_fits": 0.382586,
+      "fraction_explained_by_additive_marginals": 0.8243,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+    }
+  ]
+}
