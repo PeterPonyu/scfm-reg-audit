@@ -449,8 +449,8 @@
     },
     {
       "path": "validate_artifacts.py",
-      "bytes": 15305,
-      "sha256": "9cccf45c3dd50932dbbc708afe3f4f5f1292de48564c4a2c8f24c9bf1091d68a"
+      "bytes": 15527,
+      "sha256": "c06436785116688d89ba02dfa75d52ad5df8dbffd2198e3c83a2796b496568dd"
     }
   ]
 }

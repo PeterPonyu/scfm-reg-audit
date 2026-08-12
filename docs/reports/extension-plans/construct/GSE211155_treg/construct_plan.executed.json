@@ -1,0 +1,83 @@
+{
+  "tissue_id": "orphan_treg_gse211155",
+  "lane": "construct",
+  "g_atac_tag": "GSE211155_treg",
+  "compare_to_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "outputs": {
+    "g_atac": "results/v2/extension/construct/GSE211155_treg/G_ATAC_v2_GSE211155_treg.npz",
+    "mantel": "results/v2/extension/construct/GSE211155_treg/mantel_vs_locked.json",
+    "decomp": "results/v2/extension/construct/GSE211155_treg/additive_decomp_row.json",
+    "summary": "results/v2/extension/construct/GSE211155_treg/construct_summary.json"
+  },
+  "peerj_decomp_rows_unchanged": 3,
+  "peerj_support_rows_unchanged": 13,
+  "assets": {
+    "tissue_id": "orphan_treg_gse211155",
+    "g_atac_tag": "GSE211155_treg",
+    "local_atac": null,
+    "local_atac_present": false,
+    "g_atac_npz": "results/v2/extension/construct/GSE211155_treg/G_ATAC_v2_GSE211155_treg.npz",
+    "g_atac_present": true,
+    "extension_root": "results/v2/extension/",
+    "desktop_data": "${DESKTOP_DATA}"
+  },
+  "env": {
+    "TAG": "GSE211155_treg",
+    "ATAC_FILE": "",
+    "ATAC_FILE_REDACTED": "",
+    "SCREG_EXTENSION_OUT": "results/v2/extension/construct/GSE211155_treg",
+    "SCREG_EXTENSION_LANE": "construct",
+    "SCREG_PEERJ_SUPPORT_LOCK": "1"
+  },
+  "panel_policy": "frozen_brain_pinned_446x1200",
+  "notes": "Orphan pilot: GSM6449881 sorted CD4CD25posT (filename-derived Cell.Type; obs empty). Construct SI only under extension; no FM Support. Meta is sample-title proxy not full multi-type atlas.",
+  "generated_utc": "2026-08-12T09:29Z",
+  "status": "executed",
+  "g_atac_source": "results/v2/extension/construct/GSE211155_treg/G_ATAC_v2_GSE211155_treg.npz",
+  "n_pairs_ok": 3,
+  "mantel_pairs": [
+    {
+      "pair": [
+        "GSE211155_treg",
+        "GSE174367"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.464455,
+      "additive_pred_spearman": 0.344581,
+      "residual_spearman_after_own_additive_fits": 0.494189,
+      "fraction_explained_by_additive_marginals": 0.7419,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "pair": [
+        "GSE211155_treg",
+        "PBMC10k"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.506009,
+      "additive_pred_spearman": 0.407352,
+      "residual_spearman_after_own_additive_fits": 0.525346,
+      "fraction_explained_by_additive_marginals": 0.805,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    },
+    {
+      "pair": [
+        "GSE211155_treg",
+        "GSE206767"
+      ],
+      "n_tf_common": 446,
+      "observed_spearman": 0.489878,
+      "additive_pred_spearman": 0.375193,
+      "residual_spearman_after_own_additive_fits": 0.481879,
+      "fraction_explained_by_additive_marginals": 0.7659,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+    }
+  ]
+}

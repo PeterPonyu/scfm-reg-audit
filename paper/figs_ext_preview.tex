@@ -1,0 +1,32 @@
+% Standalone preview for extension SI figures (R → TikZ).
+% Does NOT rebuild PeerJ Figures 1–12. Compile from paper/:
+%   latexmk -pdf -interaction=nonstopmode figs_ext_preview.tex
+\documentclass[11pt]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,newtxtext,newtxmath}
+\usepackage{tikz}
+\usepackage{graphicx}
+\graphicspath{{figs_extension/}}
+\title{Extension SI figures preview (construct wave)}
+\author{scReg-Eval local extension}
+\date{}
+\begin{document}
+\maketitle
+\noindent\textit{Statistical panels from \texttt{make\_figs\_extension.R}.
+PeerJ Support 13-row freeze untouched. Not part of upload.zip FIGURE\_MAP.}
+
+\section*{E1 Construct Mantel}
+\begin{center}
+\resizebox{\linewidth}{!}{\input{figs_extension/fig_ext1_construct_mantel.tex}}
+\end{center}
+
+\section*{E2 Baselines / CollecTRI}
+\begin{center}
+\resizebox{\linewidth}{!}{\input{figs_extension/fig_ext2_baselines_collectri.tex}}
+\end{center}
+
+\section*{E3 Honesty / policy}
+\begin{center}
+\resizebox{\linewidth}{!}{\input{figs_extension/fig_ext3_honesty_policy.tex}}
+\end{center}
+\end{document}

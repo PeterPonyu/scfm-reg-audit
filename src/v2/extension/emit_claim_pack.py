@@ -28,10 +28,15 @@ PANEL_DATA = ROOT / "paper" / "panel_data.json"
 OUT_DIR = ROOT / "docs" / "reports" / "extension-claim-pack"
 CONSTRUCT_ROOT = ROOT / "results" / "v2" / "extension" / "construct"
 
-# D1 spleen + BMMC construct SI tags (extension overlay only).
+# Construct SI tags (extension overlay only; PeerJ Support never inflated).
 CONSTRUCT_SI_TAGS: tuple[tuple[str, str, str], ...] = (
     ("descartes_spleen", "DESCARTES_spleen", "D1 DESCARTES spleen"),
     ("bmmc", "GSE194122", "BMMC OpenProblems multiome"),
+    (
+        "orphan_treg_gse211155",
+        "GSE211155_treg",
+        "Orphan Treg GSE211155 (filename sorted-population meta)",
+    ),
 )
 LOCKED_COMPARE_TAGS = ("GSE174367", "PBMC10k", "GSE206767")
 

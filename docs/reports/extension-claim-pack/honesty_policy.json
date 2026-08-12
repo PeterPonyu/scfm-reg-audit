@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-08-12T12:00Z",
+  "peerj_support_rows_touched": false,
+  "bmmc": {
+    "panel_policy": "frozen_brain_pinned_446x1200_disclosed_coverage",
+    "gene_overlap": 1076,
+    "gene_panel": 1200,
+    "gene_coverage": 0.8967,
+    "tf_overlap": 341,
+    "tf_panel": 446,
+    "tf_coverage": 0.7646,
+    "gate_threshold": 0.9,
+    "gate_status": "blocked",
+    "source": "docs/reports/bmmc-panel-policy-memo.md"
+  },
+  "orphan_lake": {
+    "n_h5ad": 115,
+    "n_with_celltype_obs": 0,
+    "pilot_gsm": "GSM6449881",
+    "pilot_tag": "GSE211155_treg",
+    "meta_source": "filename_sorted_population",
+    "source": "docs/reports/extension-plans/construct/orphan_atac_inventory.md"
+  },
+  "htan": {
+    "status": "blocked",
+    "block_reason": "fragments_only_no_peak_matrix",
+    "accepted_wave_completion": "E4.3b",
+    "source": "results/v2/extension/construct/HTAN_GBM_C3N01334/htan_prepare_status.json"
+  },
+  "freeze": {
+    "peerj_support_rows": 13,
+    "primary_g_atac_mutable": false
+  }
+}

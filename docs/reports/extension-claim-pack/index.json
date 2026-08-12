@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-08-12T07:38Z",
+  "generated_utc": "2026-08-12T09:30Z",
   "peerj_support_rows_touched": false,
   "files": {
     "dual_null": "docs/reports/extension-claim-pack/dual_null_claim_pack.json",
@@ -14,8 +14,8 @@
     "dual_null_full": 7,
     "beats_baseline": 4,
     "protocol_pass_frozen": 0,
-    "construct_si_tissues": 2,
-    "construct_si_pair_rows_ok": 6
+    "construct_si_tissues": 3,
+    "construct_si_pair_rows_ok": 9
   },
   "label_histogram": {
     "brain": 8,
@@ -25,7 +25,8 @@
     "peerj_support_rows_touched": false,
     "tags": [
       "DESCARTES_spleen",
-      "GSE194122"
+      "GSE194122",
+      "GSE211155_treg"
     ]
   }
 }

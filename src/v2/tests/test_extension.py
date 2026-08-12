@@ -136,10 +136,14 @@ class TestClaimPackSmoke(unittest.TestCase):
             # PeerJ dual-null counts unchanged when construct SI is present
             self.assertEqual(index["counts"]["dual_null_full"], 7)
             self.assertEqual(index["counts"]["protocol_pass_frozen"], 0)
-            self.assertEqual(si["n_tissues"], 2)
-            self.assertEqual(si["n_pair_rows_ok"], 6)
+            # At least D1+BMMC; orphan Treg may also be packed when local.
+            self.assertGreaterEqual(si["n_tissues"], 2)
+            self.assertGreaterEqual(si["n_pair_rows_ok"], 6)
             tags = {t["g_atac_tag"] for t in si["tissues"]}
-            self.assertEqual(tags, {"DESCARTES_spleen", "GSE194122"})
+            self.assertTrue(
+                {"DESCARTES_spleen", "GSE194122"}.issubset(tags), tags
+            )
+            self.assertEqual(si["n_pair_rows_ok"], 3 * si["n_tissues"])
             for row in si["rows"]:
                 self.assertIn(row["locked_proxy"], ("GSE174367", "PBMC10k", "GSE206767"))
                 self.assertIsNotNone(row["observed_spearman"])

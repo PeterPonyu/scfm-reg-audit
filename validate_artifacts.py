@@ -21,6 +21,7 @@ LOCAL_WORKTREE_PREFIXES = (
     "src/v2/",
     "paper/submission_peerj/",
     "paper/docs/",
+    "paper/figs_extension/",  # post-PeerJ SI R+TikZ (not FIGURE_MAP / upload.zip)
     "results/v2/",
     "paper/.tikz",
     ".cursor/",
@@ -33,6 +34,8 @@ LOCAL_WORKTREE_PREFIXES = (
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",
     "make_figures.py",
+    "make_figs_extension.R",  # SI extension figure driver (R→TikZ)
+    "figs_ext_preview.tex",  # standalone SI preview; not manuscript
     "wlpeerj.cls",
     "manuscript.bbl",
     "manuscript.docx",
