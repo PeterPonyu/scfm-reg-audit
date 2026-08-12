@@ -1,6 +1,6 @@
 # Local claim pack (JSON-only, zero download)
 
-Generated: 2026-08-12T07:28Z
+Generated: 2026-08-12T07:38Z
 
 Extension SI numbers from existing `results/*.public.json`. Does **not** change PeerJ Support denominators.
 
@@ -30,4 +30,20 @@ _If independence OC rate of ≥1 dual-null row is far below the event of observi
 - Gate counts: `{'dual_full': 7, 'dual_nondeg': 0, 'concordance': 5, 'nd_same_sign': 7, 'rho_gt_baseline': 4}`
 
 Frozen PeerJ claim remains 0/13 protocol-pass (SAP §4 / Table 4). Multi-RO sign is not reconstructed here (null). Partial conjunction excluding Multi-RO is diagnostic only.
+
+## Construct SI Mantel (extension overlay)
+
+- See `CONSTRUCT_SI.md` / `construct_si_mantel.json`.
+- Tissues: **2** (DESCARTES_spleen, GSE194122)
+- OK pairs vs locked ['GSE174367', 'PBMC10k', 'GSE206767']: **6**
+- peerj_support_rows_touched: **False**
+
+| TAG | locked_proxy | observed Spearman | fraction additive |
+|---|---|---:|---:|
+| DESCARTES_spleen | GSE174367 | 0.433944 | 0.8301 |
+| DESCARTES_spleen | PBMC10k | 0.391066 | 0.8462 |
+| DESCARTES_spleen | GSE206767 | 0.493373 | 0.8243 |
+| GSE194122 | GSE174367 | 0.529094 | 0.6079 |
+| GSE194122 | PBMC10k | 0.890248 | 0.4603 |
+| GSE194122 | GSE206767 | 0.472997 | 0.689 |
 

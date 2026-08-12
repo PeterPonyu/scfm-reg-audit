@@ -1,20 +1,31 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-08-12T07:28Z",
+  "generated_utc": "2026-08-12T07:38Z",
   "peerj_support_rows_touched": false,
   "files": {
     "dual_null": "docs/reports/extension-claim-pack/dual_null_claim_pack.json",
     "fm_baseline": "docs/reports/extension-claim-pack/fm_vs_baseline_claim_pack.json",
     "protocol": "docs/reports/extension-claim-pack/protocol_pass_claim_pack.json",
-    "markdown": "docs/reports/extension-claim-pack/CLAIM_PACK.md"
+    "markdown": "docs/reports/extension-claim-pack/CLAIM_PACK.md",
+    "construct_si": "docs/reports/extension-claim-pack/construct_si_mantel.json",
+    "construct_si_md": "docs/reports/extension-claim-pack/CONSTRUCT_SI.md"
   },
   "counts": {
     "dual_null_full": 7,
     "beats_baseline": 4,
-    "protocol_pass_frozen": 0
+    "protocol_pass_frozen": 0,
+    "construct_si_tissues": 2,
+    "construct_si_pair_rows_ok": 6
   },
   "label_histogram": {
     "brain": 8,
     "pbmc": 5
+  },
+  "construct_si": {
+    "peerj_support_rows_touched": false,
+    "tags": [
+      "DESCARTES_spleen",
+      "GSE194122"
+    ]
   }
 }

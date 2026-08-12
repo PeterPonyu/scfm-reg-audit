@@ -3,20 +3,19 @@
   "tier": "C",
   "estimand": "literature_prior",
   "bh_membership": "outside_fm_bh",
-  "status": "cache_present_not_parsed",
+  "status": "emitter_ready",
   "panel": "frozen_446x1200",
   "outputs": {
     "score_matrix": "results/v2/extension/baselines/collectri_prior/scores.npz",
     "summary": "results/v2/extension/baselines/collectri_prior/summary.json"
   },
   "peerj_bh_families_unchanged": 8,
-  "hooks": "use local CollecTRI cache if present; else skip",
-  "notes": "Local CollecTRI CSV/TSV cache present under DESKTOP_DATA; emitter reports cache_present_not_parsed (panel projection parse deferred).",
-  "run_status": "cache_present_not_parsed",
+  "hooks": "project local CollecTRI edges onto frozen panel from G_ATAC",
+  "notes": "Local CollecTRI CSV projected onto frozen 446\u00d71200 panel (abs weight; coverage stats in summary). Status projected / projected_partial at emit time.",
+  "run_status": "projected_partial",
   "summary_path": "results/v2/extension/baselines/collectri_prior/summary.json",
   "result": {
     "method_id": "collectri_prior",
-    "status": "cache_present_not_parsed",
     "cache_root": "${DESKTOP_DATA}/datasets/extension_pilots/collectri",
     "n_files_seen": 3,
     "sample_files": [
@@ -24,6 +23,25 @@
       "CollecTRI_regulons.csv",
       "CollecTRI_source.tsv"
     ],
-    "note": "Cache detected; full prior\u2192panel projection left for a follow-up parse job."
+    "proxy_tag": "GSE174367",
+    "status": "projected_partial",
+    "edges_csv": "CollecTRI.csv",
+    "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz",
+    "shape": [
+      446,
+      1200
+    ],
+    "n_edges": 4592,
+    "n_edges_raw": 43536,
+    "n_edges_on_panel": 4592,
+    "n_unique_panel_edges": 4592,
+    "n_tf_hit": 327,
+    "n_gene_hit": 683,
+    "n_panel_tf": 446,
+    "n_panel_genes": 1200,
+    "tf_coverage": 0.733184,
+    "gene_coverage": 0.569167,
+    "score_matrix_relpath": "results/v2/extension/baselines/collectri_prior/scores.npz",
+    "note": "CollecTRI literature prior projected onto frozen 446\u00d71200 panel (abs weight; max over duplicate edges); status=projected_partial."
   }
 }

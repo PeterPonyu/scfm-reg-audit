@@ -178,12 +178,114 @@ def emit_encode_chip_binding() -> dict[str, Any]:
     }
 
 
-def emit_collectri_prior() -> dict[str, Any]:
-    candidates = [
+def _collectri_cache_candidates() -> list[Path]:
+    return [
         DESKTOP_DATA / "datasets" / "extension_pilots" / "collectri",
         ROOT / "data" / "collectri",
         ROOT / "results" / "v2" / "extension" / "baselines" / "collectri_prior" / "cache",
     ]
+
+
+def _resolve_collectri_edges_csv(cache_root: Path) -> Path | None:
+    """Prefer CollecTRI.csv (source,target,weight); fall back to regulons CSV."""
+    for name in ("CollecTRI.csv", "CollecTRI_regulons.csv"):
+        p = cache_root / name
+        if p.is_file():
+            return p
+    for p in sorted(cache_root.rglob("*.csv")):
+        if p.is_file():
+            return p
+    return None
+
+
+def _load_collectri_edges(csv_path: Path) -> list[tuple[str, str, float]]:
+    """Parse CollecTRI-style edges: source=TF, target=gene, weight=±1 (or float)."""
+    import csv
+
+    edges: list[tuple[str, str, float]] = []
+    with csv_path.open(newline="", encoding="utf-8", errors="replace") as fh:
+        reader = csv.DictReader(fh)
+        if not reader.fieldnames:
+            raise ValueError(f"empty or headerless CollecTRI CSV: {csv_path.name}")
+        fields = {f.lower(): f for f in reader.fieldnames if f}
+        src_key = fields.get("source") or fields.get("tf") or fields.get("src")
+        tgt_key = fields.get("target") or fields.get("gene") or fields.get("tg")
+        w_key = fields.get("weight") or fields.get("mor") or fields.get("score")
+        if src_key is None or tgt_key is None:
+            raise ValueError(
+                f"CollecTRI CSV missing source/target columns: {list(reader.fieldnames)}"
+            )
+        for row in reader:
+            src = (row.get(src_key) or "").strip()
+            tgt = (row.get(tgt_key) or "").strip()
+            if not src or not tgt:
+                continue
+            raw_w = (row.get(w_key) if w_key else None) or "1"
+            try:
+                w = float(raw_w)
+            except (TypeError, ValueError):
+                w = 1.0
+            edges.append((src, tgt, w))
+    return edges
+
+
+def project_collectri_to_panel(
+    edges: list[tuple[str, str, float]],
+    genes: list[str],
+    tf_rows: np.ndarray,
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """Map TF→gene prior edges onto frozen panel; return float32 scores + coverage.
+
+    Scores use abs(weight) (signed regulation strength → prior magnitude).
+    Duplicate edges keep the max absolute weight. Self-edges (TF→self) are zeroed.
+    """
+    tf_rows = np.asarray(tf_rows, dtype=int)
+    n_tf = int(len(tf_rows))
+    n_genes = int(len(genes))
+    gene_to_idx = {str(g): i for i, g in enumerate(genes)}
+    tf_symbols = [str(genes[int(r)]) for r in tf_rows]
+    tf_to_row = {sym: i for i, sym in enumerate(tf_symbols)}
+
+    scores = np.zeros((n_tf, n_genes), dtype=np.float32)
+    n_edges_raw = len(edges)
+    n_edges_on_panel = 0
+    tfs_hit: set[str] = set()
+    genes_hit: set[str] = set()
+    for src, tgt, w in edges:
+        ti = tf_to_row.get(src)
+        gj = gene_to_idx.get(tgt)
+        if ti is None or gj is None:
+            continue
+        if int(tf_rows[ti]) == int(gj):
+            continue
+        val = abs(float(w))
+        if val <= 0.0:
+            continue
+        n_edges_on_panel += 1
+        tfs_hit.add(src)
+        genes_hit.add(tgt)
+        if val > scores[ti, gj]:
+            scores[ti, gj] = np.float32(val)
+
+    n_unique = int((scores > 0).sum())
+    cov = {
+        "n_edges_raw": int(n_edges_raw),
+        "n_edges_on_panel": int(n_edges_on_panel),
+        "n_unique_panel_edges": n_unique,
+        "n_tf_hit": int(len(tfs_hit)),
+        "n_gene_hit": int(len(genes_hit)),
+        "n_panel_tf": n_tf,
+        "n_panel_genes": n_genes,
+        "tf_coverage": round(len(tfs_hit) / n_tf, 6) if n_tf else 0.0,
+        "gene_coverage": round(len(genes_hit) / n_genes, 6) if n_genes else 0.0,
+    }
+    return scores, cov
+
+
+def emit_collectri_prior(proxy_tag: str = DEFAULT_PROXY_TAG) -> dict[str, Any]:
+    """Project local CollecTRI edges onto the frozen 446×1200 panel from G_ATAC."""
+    proxy_tag = assert_safe_tag(proxy_tag, label="proxy-tag")
+    candidates = _collectri_cache_candidates()
     found = next((p for p in candidates if p.exists()), None)
     if found is None:
         return {
@@ -192,18 +294,84 @@ def emit_collectri_prior() -> dict[str, Any]:
             "searched": [redact_path(p) for p in candidates],
             "note": "No CollecTRI/OmniPath cache locally — approval-only until cache present.",
         }
-    files = sorted(found.rglob("*"))[:20]
-    return {
+
+    files = sorted(p for p in found.rglob("*") if p.is_file())[:20]
+    sample_files = [
+        f.relative_to(found).as_posix() if f.is_relative_to(found) else f.name
+        for f in files[:8]
+    ]
+    base_meta: dict[str, Any] = {
         "method_id": "collectri_prior",
-        "status": "cache_present_not_parsed",
         "cache_root": redact_path(found),
         "n_files_seen": len(files),
-        "sample_files": [
-            f.relative_to(found).as_posix() if f.is_relative_to(found) else f.name
-            for f in files[:8]
-        ],
-        "note": "Cache detected; full prior→panel projection left for a follow-up parse job.",
+        "sample_files": sample_files,
+        "proxy_tag": proxy_tag,
     }
+
+    try:
+        csv_path = _resolve_collectri_edges_csv(found)
+        if csv_path is None:
+            return {
+                **base_meta,
+                "status": "cache_present_not_parsed",
+                "note": "Cache present but no CollecTRI CSV with source/target edges found.",
+                "error": "no_edges_csv",
+            }
+
+        path = resolve_g_atac_npz(proxy_tag)
+        if path is None:
+            return {
+                **base_meta,
+                "status": "cache_present_not_parsed",
+                "edges_csv": csv_path.name,
+                "note": "CollecTRI cache present but frozen-panel G_ATAC proxy missing.",
+                "error": "missing_g_atac_proxy",
+            }
+
+        _g, tf_rows, genes = _load_consensus(path)
+        edges = _load_collectri_edges(csv_path)
+        scores, cov = project_collectri_to_panel(edges, genes, tf_rows)
+
+        if cov["n_edges_on_panel"] <= 0:
+            return {
+                **base_meta,
+                "status": "cache_present_not_parsed",
+                "edges_csv": csv_path.name,
+                "proxy_path": str(path.relative_to(ROOT)),
+                **cov,
+                "note": "Parsed CollecTRI but zero edges mapped onto frozen panel symbols.",
+                "error": "zero_panel_edges",
+            }
+
+        # Full panel TF coverage is rare for a literature prior → partial is expected.
+        status = (
+            "projected"
+            if cov["n_tf_hit"] >= cov["n_panel_tf"]
+            else "projected_partial"
+        )
+        return {
+            **base_meta,
+            "status": status,
+            "edges_csv": csv_path.name,
+            "proxy_path": str(path.relative_to(ROOT)),
+            "shape": [int(scores.shape[0]), int(scores.shape[1])],
+            "n_edges": int((scores > 0).sum()),
+            **cov,
+            "score_matrix_relpath": f"{HEAVY_ARTIFACT_ROOT}baselines/collectri_prior/scores.npz",
+            "note": (
+                "CollecTRI literature prior projected onto frozen 446×1200 panel "
+                f"(abs weight; max over duplicate edges); status={status}."
+            ),
+            "scores": scores,
+            "tf_rows": tf_rows,
+        }
+    except Exception as exc:  # noqa: BLE001 — fail soft for CLI baselines
+        return {
+            **base_meta,
+            "status": "cache_present_not_parsed",
+            "note": "CollecTRI cache present but panel projection failed.",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
 
 
 def baseline_plan(method_id: str) -> dict[str, Any]:
@@ -228,7 +396,7 @@ def baseline_plan(method_id: str) -> dict[str, Any]:
             "degree_matched_random": "degree-matched random edges on panel from local G_ATAC",
             "motif_only_rp": "binary G_ATAC support (ATAC magnitude ablated)",
             "encode_chip_binding": "summarize results/encode_proxy_calibration_v1.public.json",
-            "collectri_prior": "use local CollecTRI cache if present; else skip",
+            "collectri_prior": "project local CollecTRI edges onto frozen panel from G_ATAC",
         }.get(method_id, "implement score matrix on panel"),
         "notes": meta.get("notes"),
     }
@@ -245,7 +413,7 @@ def run_baseline(method_id: str, *, execute: bool = False, proxy_tag: str = DEFA
         "degree_matched_random": lambda: emit_degree_matched_random(proxy_tag=proxy_tag),
         "motif_only_rp": lambda: emit_motif_only_rp(proxy_tag=proxy_tag),
         "encode_chip_binding": emit_encode_chip_binding,
-        "collectri_prior": emit_collectri_prior,
+        "collectri_prior": lambda: emit_collectri_prior(proxy_tag=proxy_tag),
     }
     payload = emitters[method_id]()
     out_dir = assert_confined_write_path(

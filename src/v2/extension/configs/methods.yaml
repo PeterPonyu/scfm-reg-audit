@@ -51,9 +51,12 @@ methods:
     tier: C
     estimand: literature_prior
     bh_membership: outside_fm_bh
-    status: cache_present_not_parsed
+    status: emitter_ready
     local_cache_hint: ${DESKTOP_DATA}/datasets/extension_pilots/collectri/
-    notes: Local CollecTRI CSV/TSV cache present under DESKTOP_DATA; emitter reports cache_present_not_parsed (panel projection parse deferred).
+    artifact: results/v2/extension/baselines/collectri_prior/scores.npz
+    notes: >-
+      Local CollecTRI CSV projected onto frozen 446×1200 panel (abs weight;
+      coverage stats in summary). Status projected / projected_partial at emit time.
 
   scenic_plus:
     tier: D

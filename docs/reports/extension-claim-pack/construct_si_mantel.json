@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "analysis": "construct_si_mantel_vs_locked",
+  "generated_utc": "2026-08-12T07:38Z",
+  "peerj_support_rows_touched": false,
+  "locked_compare_tags": [
+    "GSE174367",
+    "PBMC10k",
+    "GSE206767"
+  ],
+  "sources": [
+    "results/v2/extension/construct/DESCARTES_spleen/mantel_vs_locked.json",
+    "results/v2/extension/construct/DESCARTES_spleen/additive_decomp_row.json",
+    "results/v2/extension/construct/GSE194122/mantel_vs_locked.json",
+    "results/v2/extension/construct/GSE194122/additive_decomp_row.json"
+  ],
+  "n_tissues": 2,
+  "n_pair_rows_ok": 6,
+  "note": "Construct-lane Mantel Spearman and additive-fraction vs locked GSE174367 / PBMC10k / GSE206767. Extension SI only \u2014 does not add PeerJ Support FM rows or mutate cross-tissue decomp denominators.",
+  "tissues": [
+    {
+      "tissue_id": "descartes_spleen",
+      "g_atac_tag": "DESCARTES_spleen",
+      "label": "D1 DESCARTES spleen",
+      "g_atac_source": "results/v2/extension/construct/DESCARTES_spleen/G_ATAC_v2_DESCARTES_spleen.npz",
+      "peerj_support_rows_touched": false,
+      "peerj_support_rows_unchanged": 13,
+      "peerj_decomp_rows_unchanged": 3,
+      "n_pairs_ok": 3,
+      "compare_to_tags": [
+        "GSE174367",
+        "PBMC10k",
+        "GSE206767"
+      ],
+      "pairs": [
+        {
+          "tissue_id": "descartes_spleen",
+          "g_atac_tag": "DESCARTES_spleen",
+          "label": "D1 DESCARTES spleen",
+          "pair": [
+            "DESCARTES_spleen",
+            "GSE174367"
+          ],
+          "locked_proxy": "GSE174367",
+          "n_tf_common": 446,
+          "observed_spearman": 0.433944,
+          "additive_pred_spearman": 0.360196,
+          "residual_spearman_after_own_additive_fits": 0.340063,
+          "fraction_explained_by_additive_marginals": 0.8301,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+        },
+        {
+          "tissue_id": "descartes_spleen",
+          "g_atac_tag": "DESCARTES_spleen",
+          "label": "D1 DESCARTES spleen",
+          "pair": [
+            "DESCARTES_spleen",
+            "PBMC10k"
+          ],
+          "locked_proxy": "PBMC10k",
+          "n_tf_common": 446,
+          "observed_spearman": 0.391066,
+          "additive_pred_spearman": 0.330908,
+          "residual_spearman_after_own_additive_fits": 0.235834,
+          "fraction_explained_by_additive_marginals": 0.8462,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+        },
+        {
+          "tissue_id": "descartes_spleen",
+          "g_atac_tag": "DESCARTES_spleen",
+          "label": "D1 DESCARTES spleen",
+          "pair": [
+            "DESCARTES_spleen",
+            "GSE206767"
+          ],
+          "locked_proxy": "GSE206767",
+          "n_tf_common": 446,
+          "observed_spearman": 0.493373,
+          "additive_pred_spearman": 0.406695,
+          "residual_spearman_after_own_additive_fits": 0.382586,
+          "fraction_explained_by_additive_marginals": 0.8243,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+        }
+      ],
+      "decomp_source": "results/v2/extension/construct/DESCARTES_spleen/additive_decomp_row.json",
+      "mantel_source": "results/v2/extension/construct/DESCARTES_spleen/mantel_vs_locked.json"
+    },
+    {
+      "tissue_id": "bmmc",
+      "g_atac_tag": "GSE194122",
+      "label": "BMMC OpenProblems multiome",
+      "g_atac_source": "results/v2/extension/construct/GSE194122/G_ATAC_v2_GSE194122.npz",
+      "peerj_support_rows_touched": false,
+      "peerj_support_rows_unchanged": 13,
+      "peerj_decomp_rows_unchanged": 3,
+      "n_pairs_ok": 3,
+      "compare_to_tags": [
+        "GSE174367",
+        "PBMC10k",
+        "GSE206767"
+      ],
+      "pairs": [
+        {
+          "tissue_id": "bmmc",
+          "g_atac_tag": "GSE194122",
+          "label": "BMMC OpenProblems multiome",
+          "pair": [
+            "GSE194122",
+            "GSE174367"
+          ],
+          "locked_proxy": "GSE174367",
+          "n_tf_common": 446,
+          "observed_spearman": 0.529094,
+          "additive_pred_spearman": 0.321623,
+          "residual_spearman_after_own_additive_fits": 0.515491,
+          "fraction_explained_by_additive_marginals": 0.6079,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+        },
+        {
+          "tissue_id": "bmmc",
+          "g_atac_tag": "GSE194122",
+          "label": "BMMC OpenProblems multiome",
+          "pair": [
+            "GSE194122",
+            "PBMC10k"
+          ],
+          "locked_proxy": "PBMC10k",
+          "n_tf_common": 446,
+          "observed_spearman": 0.890248,
+          "additive_pred_spearman": 0.409802,
+          "residual_spearman_after_own_additive_fits": 0.950187,
+          "fraction_explained_by_additive_marginals": 0.4603,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+        },
+        {
+          "tissue_id": "bmmc",
+          "g_atac_tag": "GSE194122",
+          "label": "BMMC OpenProblems multiome",
+          "pair": [
+            "GSE194122",
+            "GSE206767"
+          ],
+          "locked_proxy": "GSE206767",
+          "n_tf_common": 446,
+          "observed_spearman": 0.472997,
+          "additive_pred_spearman": 0.325883,
+          "residual_spearman_after_own_additive_fits": 0.414122,
+          "fraction_explained_by_additive_marginals": 0.689,
+          "status": "ok",
+          "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+        }
+      ],
+      "decomp_source": "results/v2/extension/construct/GSE194122/additive_decomp_row.json",
+      "mantel_source": "results/v2/extension/construct/GSE194122/mantel_vs_locked.json"
+    }
+  ],
+  "rows": [
+    {
+      "tissue_id": "descartes_spleen",
+      "g_atac_tag": "DESCARTES_spleen",
+      "label": "D1 DESCARTES spleen",
+      "pair": [
+        "DESCARTES_spleen",
+        "GSE174367"
+      ],
+      "locked_proxy": "GSE174367",
+      "n_tf_common": 446,
+      "observed_spearman": 0.433944,
+      "additive_pred_spearman": 0.360196,
+      "residual_spearman_after_own_additive_fits": 0.340063,
+      "fraction_explained_by_additive_marginals": 0.8301,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "tissue_id": "descartes_spleen",
+      "g_atac_tag": "DESCARTES_spleen",
+      "label": "D1 DESCARTES spleen",
+      "pair": [
+        "DESCARTES_spleen",
+        "PBMC10k"
+      ],
+      "locked_proxy": "PBMC10k",
+      "n_tf_common": 446,
+      "observed_spearman": 0.391066,
+      "additive_pred_spearman": 0.330908,
+      "residual_spearman_after_own_additive_fits": 0.235834,
+      "fraction_explained_by_additive_marginals": 0.8462,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    },
+    {
+      "tissue_id": "descartes_spleen",
+      "g_atac_tag": "DESCARTES_spleen",
+      "label": "D1 DESCARTES spleen",
+      "pair": [
+        "DESCARTES_spleen",
+        "GSE206767"
+      ],
+      "locked_proxy": "GSE206767",
+      "n_tf_common": 446,
+      "observed_spearman": 0.493373,
+      "additive_pred_spearman": 0.406695,
+      "residual_spearman_after_own_additive_fits": 0.382586,
+      "fraction_explained_by_additive_marginals": 0.8243,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+    },
+    {
+      "tissue_id": "bmmc",
+      "g_atac_tag": "GSE194122",
+      "label": "BMMC OpenProblems multiome",
+      "pair": [
+        "GSE194122",
+        "GSE174367"
+      ],
+      "locked_proxy": "GSE174367",
+      "n_tf_common": 446,
+      "observed_spearman": 0.529094,
+      "additive_pred_spearman": 0.321623,
+      "residual_spearman_after_own_additive_fits": 0.515491,
+      "fraction_explained_by_additive_marginals": 0.6079,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE174367.npz"
+    },
+    {
+      "tissue_id": "bmmc",
+      "g_atac_tag": "GSE194122",
+      "label": "BMMC OpenProblems multiome",
+      "pair": [
+        "GSE194122",
+        "PBMC10k"
+      ],
+      "locked_proxy": "PBMC10k",
+      "n_tf_common": 446,
+      "observed_spearman": 0.890248,
+      "additive_pred_spearman": 0.409802,
+      "residual_spearman_after_own_additive_fits": 0.950187,
+      "fraction_explained_by_additive_marginals": 0.4603,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_PBMC10k.npz"
+    },
+    {
+      "tissue_id": "bmmc",
+      "g_atac_tag": "GSE194122",
+      "label": "BMMC OpenProblems multiome",
+      "pair": [
+        "GSE194122",
+        "GSE206767"
+      ],
+      "locked_proxy": "GSE206767",
+      "n_tf_common": 446,
+      "observed_spearman": 0.472997,
+      "additive_pred_spearman": 0.325883,
+      "residual_spearman_after_own_additive_fits": 0.414122,
+      "fraction_explained_by_additive_marginals": 0.689,
+      "status": "ok",
+      "proxy_path": "results/v2/G_ATAC_v2_GSE206767.npz"
+    }
+  ]
+}

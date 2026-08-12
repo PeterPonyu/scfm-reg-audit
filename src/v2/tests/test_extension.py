@@ -76,6 +76,9 @@ class TestExtensionRegistry(unittest.TestCase):
         self.assertNotEqual(reg.get_method("degree_matched_random")["status"], "stub")
         self.assertNotEqual(reg.get_method("motif_only_rp")["status"], "stub")
         self.assertEqual(
+            reg.get_method("collectri_prior")["status"], "emitter_ready"
+        )
+        self.assertNotEqual(
             reg.get_method("collectri_prior")["status"], "cache_present_not_parsed"
         )
         self.assertNotEqual(
@@ -96,6 +99,56 @@ class TestClaimPackSmoke(unittest.TestCase):
             self.assertEqual(index["counts"]["dual_null_full"], 7)
             self.assertEqual(index["counts"]["protocol_pass_frozen"], 0)
             self.assertFalse(index["peerj_support_rows_touched"])
+        finally:
+            _wipe_dir(out)
+
+    def test_construct_si_mantel_when_local(self):
+        spleen = (
+            ROOT
+            / "results"
+            / "v2"
+            / "extension"
+            / "construct"
+            / "DESCARTES_spleen"
+            / "mantel_vs_locked.json"
+        )
+        bmmc = (
+            ROOT
+            / "results"
+            / "v2"
+            / "extension"
+            / "construct"
+            / "GSE194122"
+            / "mantel_vs_locked.json"
+        )
+        if not (spleen.is_file() and bmmc.is_file()):
+            self.skipTest("construct mantel JSON not present in this checkout")
+        out = ROOT / "results" / "v2" / "extension" / f"_pytest_claim_pack_si_{uuid4().hex}"
+        _wipe_dir(out)
+        try:
+            paths = emit_claim_pack.emit(out)
+            self.assertIn("construct_si", paths)
+            si = json.loads(paths["construct_si"].read_text())
+            index = json.loads(paths["index"].read_text())
+            self.assertFalse(si["peerj_support_rows_touched"])
+            self.assertFalse(index["peerj_support_rows_touched"])
+            self.assertFalse(index["construct_si"]["peerj_support_rows_touched"])
+            # PeerJ dual-null counts unchanged when construct SI is present
+            self.assertEqual(index["counts"]["dual_null_full"], 7)
+            self.assertEqual(index["counts"]["protocol_pass_frozen"], 0)
+            self.assertEqual(si["n_tissues"], 2)
+            self.assertEqual(si["n_pair_rows_ok"], 6)
+            tags = {t["g_atac_tag"] for t in si["tissues"]}
+            self.assertEqual(tags, {"DESCARTES_spleen", "GSE194122"})
+            for row in si["rows"]:
+                self.assertIn(row["locked_proxy"], ("GSE174367", "PBMC10k", "GSE206767"))
+                self.assertIsNotNone(row["observed_spearman"])
+                self.assertIsNotNone(row["fraction_explained_by_additive_marginals"])
+            self.assertTrue(paths["construct_si_md"].is_file())
+            md = paths["markdown"].read_text()
+            self.assertIn("Construct SI Mantel", md)
+            self.assertIn("DESCARTES_spleen", md)
+            self.assertIn("GSE194122", md)
         finally:
             _wipe_dir(out)
 
@@ -358,6 +411,55 @@ class TestBaselineEmitters(unittest.TestCase):
         self.assertEqual(deg["run_status"], "emitted")
         encode = bs.run_baseline("encode_chip_binding", execute=True)
         self.assertEqual(encode["run_status"], "emitted")
+
+    def test_collectri_project_synthetic_edges(self):
+        """Tiny panel projection: only on-panel TF→gene edges contribute."""
+        import numpy as np
+        import baseline_stubs as bs
+
+        genes = ["A", "B", "C", "D"]
+        tf_rows = np.array([0, 2], dtype=int)  # TF symbols A, C
+        edges = [
+            ("A", "B", 1.0),  # keep
+            ("A", "B", -1.0),  # same edge, abs max still 1
+            ("C", "D", 0.5),  # keep
+            ("C", "C", 1.0),  # self — drop
+            ("Z", "B", 1.0),  # TF off panel
+            ("A", "ZZ", 1.0),  # gene off panel
+            ("B", "D", 1.0),  # B is gene-only, not a panel TF row
+        ]
+        scores, cov = bs.project_collectri_to_panel(edges, genes, tf_rows)
+        self.assertEqual(scores.shape, (2, 4))
+        self.assertEqual(scores.dtype, np.float32)
+        self.assertEqual(float(scores[0, 1]), 1.0)  # A→B
+        self.assertEqual(float(scores[1, 3]), 0.5)  # C→D
+        self.assertEqual(float(scores[1, 2]), 0.0)  # self zero
+        self.assertEqual(cov["n_edges_raw"], 7)
+        self.assertEqual(cov["n_edges_on_panel"], 3)  # A-B, A-B, C-D (self excluded)
+        self.assertEqual(cov["n_unique_panel_edges"], 2)
+        self.assertEqual(cov["n_tf_hit"], 2)
+        self.assertEqual(cov["n_gene_hit"], 2)
+
+    def test_collectri_prior_emit_when_cache_present(self):
+        locked = ROOT / "results" / "v2" / "G_ATAC_v2_GSE174367.npz"
+        cache = pathmod.DESKTOP_DATA / "datasets" / "extension_pilots" / "collectri"
+        if not locked.exists():
+            self.skipTest("locked brain G_ATAC not present in this checkout")
+        if not cache.exists():
+            self.skipTest("CollecTRI local cache not present")
+        import baseline_stubs as bs
+
+        plan = bs.run_baseline("collectri_prior", execute=True, proxy_tag="GSE174367")
+        self.assertIn(plan["run_status"], ("projected", "projected_partial"))
+        result = plan["result"]
+        self.assertGreater(result["n_edges_on_panel"], 0)
+        self.assertGreater(result["n_tf_hit"], 0)
+        scores_path = ROOT / "results" / "v2" / "extension" / "baselines" / "collectri_prior" / "scores.npz"
+        self.assertTrue(scores_path.exists())
+        z = __import__("numpy").load(scores_path)
+        self.assertEqual(tuple(z["scores"].shape), (446, 1200))
+        self.assertEqual(z["scores"].dtype, __import__("numpy").float32)
+        self.assertEqual(len(z["tf_rows"]), 446)
 
 
 class TestCliEntrypoint(unittest.TestCase):
