@@ -174,6 +174,7 @@ f1c <- ggplot(rows, aes(y = pair_s)) +
        title = "Transfer rho (BMMC-PBMC highest)") +
   theme(legend.position = "top", legend.text = element_text(size = 8.5))
 
+# D: title tight to top spine; tag slightly right of default (plot.tag.position npc)
 f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   geom_col(fill = BLUE, width = 0.65) +
   geom_text(aes(label = format(relevant_peaks, big.mark = ",")),
@@ -181,10 +182,23 @@ f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.22)) +
   labs(x = NULL, y = "linked peaks",
        title = "Linked peaks (PeerJ ref ~7--12k)") +
-  theme(plot.title = element_text(size = 9.5))
+  theme(
+    # smaller bottom margin under title → title nearer top spine of panel
+    plot.title = element_text(size = 9.5, margin = margin(t = 0, r = 0, b = 0, l = 0),
+                              vjust = 1),
+    plot.margin = margin(0, 8, 3, 6),
+    # nudge D tag right within its panel (0=left, 1=right of panel)
+    plot.tag.position = c(0.12, 1.0)
+  )
+
+# A/B/C keep default tag left; D uses rightward tag above
+f1a <- f1a + theme(plot.tag.position = c(0.02, 1.0))
+f1b <- f1b + theme(plot.tag.position = c(0.02, 1.0))
+f1c <- f1c + theme(plot.tag.position = c(0.02, 1.0))
 
 emit_ext("fig_ext1_construct_mantel",
-         (f1a | f1b) / (f1c | f1d) + plot_annotation(tag_levels = "A") +
+         (f1a | f1b) / (f1c | f1d) +
+           plot_annotation(tag_levels = "A") +
            plot_layout(axis_titles = "collect"),
          6.8, 5.8, tags = LETTERS[1:4])
 
@@ -273,19 +287,21 @@ f3a <- ggplot(htan_df, aes(step, score, fill = factor(score))) +
   labs(x = NULL, y = NULL, title = "HTAN D3: blocked (fragments only)") +
   theme(axis.text.x = element_text(angle = 14, hjust = 1, size = 8.5))
 
-orphan_df <- data.frame(
-  metric = factor(c("h5ad files", "with CT obs", "pilot types"),
-                  levels = c("h5ad files", "with CT obs", "pilot types")),
-  value = c(as.numeric(hon$orphan_lake$n_h5ad),
-            as.numeric(hon$orphan_lake$n_with_celltype_obs), 1)
-)
-f3b <- ggplot(orphan_df, aes(metric, value, fill = metric)) +
-  geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.35, size = 3.1) +
-  scale_fill_manual(values = c(BLUE, RED, YELLOW)) +
-  labs(x = NULL, y = "count", title = "Orphan lake + filename-meta pilot") +
-  coord_cartesian(ylim = c(0, max(orphan_df$value) * 1.18)) +
-  theme(axis.text.x = element_text(angle = 12, hjust = 1, size = 8.5))
+# B: SCIENCE — Treg pilot Mantel rho vs locked proxies (not inventory packaging)
+treg_rows <- rows[rows$tissue_id == "orphan_treg_gse211155", , drop = FALSE]
+if (nrow(treg_rows) == 0) {
+  # fallback filter by short label if tissue_id naming differs
+  treg_rows <- rows[as.character(rows$tissue_s) == "Treg", , drop = FALSE]
+}
+treg_rows$proxy_s <- factor(as.character(treg_rows$proxy_s), levels = c("Brain", "PBMC", "Fibro"))
+f3b <- ggplot(treg_rows, aes(proxy_s, rho, fill = proxy_s)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f", rho)), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(Brain = BLUE, PBMC = YELLOW, Fibro = VIOLET)) +
+  coord_cartesian(ylim = c(0, max(treg_rows$rho, na.rm = TRUE) * 1.18)) +
+  labs(x = "locked proxy", y = "Mantel rho",
+       title = "Treg pilot G-ATAC transfer rho") +
+  theme(axis.text.x = element_text(size = 9))
 
 bmc <- data.frame(
   axis = factor(c("Genes", "TFs"), levels = c("Genes", "TFs")),
@@ -302,18 +318,17 @@ f3c <- ggplot(bmc, aes(axis, coverage)) +
   labs(x = NULL, y = "coverage",
        title = "BMMC P3 coverage (0.90 gate fail; construct only)")
 
-fr <- data.frame(
-  item = factor(c("Support rows", "rows touched", "GATAC mutable", "ext tissues"),
-                levels = c("Support rows", "rows touched", "GATAC mutable", "ext tissues")),
-  value = c(13, 0, 0, 3)
-)
-f3d <- ggplot(fr, aes(item, value, fill = item)) +
-  geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.35, size = 3.0) +
-  scale_fill_manual(values = c(BLUE, AQUA, MUTED, YELLOW)) +
-  labs(x = NULL, y = "value", title = "Freeze: Support=13; rows touched=false") +
-  coord_cartesian(ylim = c(0, 16)) +
-  theme(axis.text.x = element_text(angle = 16, hjust = 1, size = 8))
+# D: SCIENCE — Treg additive fraction vs same proxies (not freeze double-zero badge)
+# The previous "two zeros" were process flags (rows touched=0, GATAC mutable=0),
+# not scientific estimands; keep freeze as caption only.
+f3d <- ggplot(treg_rows, aes(proxy_s, frac_add, fill = proxy_s)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f", frac_add)), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(Brain = AQUA, PBMC = YELLOW, Fibro = VIOLET)) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  labs(x = "locked proxy", y = "additive fraction",
+       title = "Treg additive fraction (Support still 13)") +
+  theme(axis.text.x = element_text(size = 9))
 
 emit_ext("fig_ext3_honesty_policy",
          (f3a | f3b) / (f3c | f3d) + plot_annotation(tag_levels = "A") +
