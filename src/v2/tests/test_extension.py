@@ -55,7 +55,12 @@ def _restore_download_env(backup: dict[str, str | None]) -> None:
 class TestExtensionRegistry(unittest.TestCase):
     def test_rna_lakes_denied(self):
         reg = regmod.load_extension_registry()
-        for tid in ("cancer_rna_lakes", "development_rna_lakes"):
+        for tid in (
+            "cancer_rna_lakes",
+            "development_rna_lakes",
+            "descartes_whole_lake",
+            "htan_whole_lake",
+        ):
             with self.assertRaises(PermissionError):
                 reg.assert_may_emit_g_atac(tid)
 
@@ -197,15 +202,81 @@ class TestDownloadGate(unittest.TestCase):
                 plans_dir.rmdir()
             _restore_download_env(env_backup)
 
-    def test_rejected_plan_fails_closed(self):
+    def test_pending_large_requires_approval(self):
+        env_backup = _backup_download_env()
+        for k in (download_gate.APPROVAL_ENV, download_gate.PLAN_MATCH_ENV):
+            os.environ.pop(k, None)
+        try:
+            for plan_id in ("D4", "D5"):
+                code, payload = download_gate.run_download_gate(
+                    plan_id, write_plan=False
+                )
+                self.assertEqual(code, 2)
+                self.assertEqual(payload["status"], "approval_required")
+                self.assertEqual(
+                    download_gate.PLAN_REGISTRY[plan_id]["decision"], "pending_large"
+                )
+                self.assertFalse(download_gate.PLAN_REGISTRY[plan_id]["rejected"])
+                self.assertFalse(payload["network_fetch_performed"])
+        finally:
+            _restore_download_env(env_backup)
+
+    def test_pending_large_approved_dry_run_no_network(self):
+        env_backup = _backup_download_env()
+        try:
+            for plan_id in ("D4", "D5"):
+                os.environ[download_gate.APPROVAL_ENV] = "1"
+                os.environ[download_gate.PLAN_MATCH_ENV] = plan_id
+                with unittest.mock.patch("urllib.request.urlopen") as urlopen:
+                    with unittest.mock.patch("subprocess.run") as sprout:
+                        code, payload = download_gate.run_download_gate(
+                            plan_id, write_plan=False
+                        )
+                        self.assertEqual(code, 0)
+                        self.assertEqual(payload["status"], "approved_dry_run_no_fetch")
+                        self.assertEqual(payload["decision"], "pending_large")
+                        self.assertFalse(payload["network_fetch_performed"])
+                        self.assertTrue(payload.get("assets"))
+                        urlopen.assert_not_called()
+                        sprout.assert_not_called()
+        finally:
+            _restore_download_env(env_backup)
+
+    def test_fetch_approved_plan_refuses_without_env(self):
+        script = EXT / "scripts" / "fetch_approved_plan.py"
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in (download_gate.APPROVAL_ENV, download_gate.PLAN_MATCH_ENV)
+        }
+        proc = subprocess.run(
+            [sys.executable, str(script), "--plan-id", "D4"],
+            cwd=str(ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 2)
+        payload = json.loads(proc.stdout)
+        self.assertEqual(payload["status"], "approval_required")
+        self.assertFalse(payload["network_fetch_performed"])
+
+    def test_fetch_approved_plan_dry_run_no_network(self):
+        sys.path.insert(0, str(EXT / "scripts"))
+        import fetch_approved_plan as fap  # noqa: E402
+
         env_backup = _backup_download_env()
         os.environ[download_gate.APPROVAL_ENV] = "1"
         os.environ[download_gate.PLAN_MATCH_ENV] = "D4"
         try:
-            code, payload = download_gate.run_download_gate("D4", write_plan=False)
-            self.assertEqual(code, 2)
-            self.assertEqual(payload["status"], "rejected_plan")
-            self.assertFalse(payload["network_fetch_performed"])
+            with unittest.mock.patch("urllib.request.urlopen") as urlopen:
+                code, payload = fap.run_fetch("D4", execute=False)
+                self.assertEqual(code, 0)
+                self.assertEqual(payload["status"], "approved_fetch_dry_run")
+                self.assertFalse(payload["network_fetch_performed"])
+                self.assertFalse(payload.get("execute"))
+                urlopen.assert_not_called()
         finally:
             _restore_download_env(env_backup)
 

@@ -16,9 +16,10 @@ echo "[extension-fetch] Approval document: ${APPROVAL}"
 echo "[extension-fetch] Cost / policy model: ${COSTS}"
 echo
 echo "No network fetch will be performed from this script."
-echo "Fail-closed: use src/v2/extension/cli.py download --plan-id D1"
+echo "Fail-closed dry-run: src/v2/extension/cli.py download --plan-id D1|D3|D4|D5"
 echo "only after SCREG_DOWNLOAD_APPROVED=1 + SCREG_DOWNLOAD_PLAN_ID match"
-echo "(still dry-run / manual recipe — no network fetch from this tree)."
-echo "After human approval, fetch manually outside the PeerJ freeze path;"
+echo "(CLI still dry-run only)."
+echo "Real fetch (after verbal approve): scripts/fetch_approved_plan.py --execute"
+echo "D4/D5 are pending_large (policy-gated infra), not permanently impossible."
 echo "construct code lives in src/v2/extension/ (local G_ATAC assets only)."
 exit 2

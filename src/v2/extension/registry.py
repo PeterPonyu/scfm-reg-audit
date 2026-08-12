@@ -12,7 +12,9 @@ EXT_DIR = Path(__file__).resolve().parent
 ROOT = EXT_DIR.parents[2]
 DEFAULT_TISSUES = EXT_DIR / "configs" / "tissues.json"
 DEFAULT_METHODS = EXT_DIR / "configs" / "methods.json"
-FORBIDDEN_G_ATAC_ROLES = frozenset({"out_of_scope", "rna_lake_only"})
+FORBIDDEN_G_ATAC_ROLES = frozenset(
+    {"out_of_scope", "rna_lake_only", "lake_blocked"}
+)
 # Heavy extension artifacts under results/v2/extension/ (PeerJ freeze untouched).
 # SI claim-pack tables use docs/reports/extension-claim-pack/ so MANIFEST stays frozen.
 try:
@@ -138,7 +140,12 @@ def main(argv: list[str] | None = None) -> int:
         "dry_run": reg.dry_run_register(args.dry_run_tissue),
     }
     blocked = []
-    for tid in ("cancer_rna_lakes", "development_rna_lakes"):
+    for tid in (
+        "cancer_rna_lakes",
+        "development_rna_lakes",
+        "descartes_whole_lake",
+        "htan_whole_lake",
+    ):
         try:
             reg.assert_may_emit_g_atac(tid)
             blocked.append({"tissue_id": tid, "policy": "UNEXPECTED_ALLOW"})

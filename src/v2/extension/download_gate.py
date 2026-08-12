@@ -5,6 +5,9 @@ Requires ``SCREG_DOWNLOAD_APPROVED=1`` and a matching plan id. Even when
 approved, this module never fetches; it only prints a manual recipe or writes
 a dry-run plan JSON under ``results/v2/extension/download-plans/``.
 
+Real network fetch (when later approved) lives in
+``src/v2/extension/scripts/fetch_approved_plan.py`` — never in this CLI path.
+
 The env gate is an **operator checklist ceremony**, not a security or auth
 boundary: any local process can set the same variables. Do not add a real
 network fetch behind these env vars without a stronger binder (e.g. signed
@@ -13,6 +16,10 @@ cannot be forged by env alone).
 
 Exit code **0** means “recipe emitted / dry-run only” — never “download
 succeeded”. Exit code **2** means the gate refused or the plan id was invalid.
+
+D4/D5 are **pending_large** (approval-gated infrastructure), not permanently
+impossible. Prior “cannot download” language was **policy** (PeerJ freeze /
+disk / G_ATAC identity), not a technical block.
 """
 
 from __future__ import annotations
@@ -40,6 +47,9 @@ APPROVAL_ENV = "SCREG_DOWNLOAD_APPROVED"
 PLAN_MATCH_ENV = "SCREG_DOWNLOAD_PLAN_ID"
 APPROVAL_DOC = ROOT / "docs" / "reports" / "download_approval_optional_pilots.md"
 COSTS_DOC = ROOT / "docs" / "reports" / "optional_cancer_dev_download_costs.md"
+FETCH_LOG_HINT = (
+    "${DESKTOP_DATA}/datasets/extension_pilots/manifests/FETCH_LOG.md"
+)
 
 # Keep in sync with the approval matrix in download_approval_optional_pilots.md.
 PLAN_REGISTRY: dict[str, dict[str, Any]] = {
@@ -48,6 +58,7 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
         "decision": "default",
         "fetchable": False,
         "rejected": False,
+        "assets": [],
         "manual_recipe": [
             "No network fetch — use existing local fibro/brain/PBMC G_ATAC under results/v2/.",
             "Construct / baselines / claim-pack only via src/v2/extension/cli.py.",
@@ -58,6 +69,25 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
         "decision": "pending",
         "fetchable": True,
         "rejected": False,
+        "assets": [
+            {
+                "id": "GSM4508940_spleen_rds_gz",
+                "url": (
+                    "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4508nnn/"
+                    "GSM4508940/suppl/GSM4508940_spleen_filtered.seurat.RDS.gz"
+                ),
+                "dest": (
+                    "${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/"
+                    "GSM4508940_spleen_filtered.seurat.RDS.gz"
+                ),
+                "bytes_estimate": 99_397_382,
+                "size_label": "~0.1 GB",
+                "checksum_sha256": (
+                    "c024a30868e511e1dc7b2e72efe1700bf7033a2af85ee2c341dd4ee1b950e397"
+                ),
+                "checksum_note": "Recorded in FETCH_LOG after 2026-08-12 D1 fetch.",
+            }
+        ],
         "manual_recipe": [
             "Record exact GEO/URL in the approval checklist.",
             "Fetch manually (outside this CLI) into ${DESKTOP_DATA}/datasets/extension_pilots/descartes_spleen/.",
@@ -74,6 +104,7 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
         "decision": "no_new_download",
         "fetchable": False,
         "rejected": False,
+        "assets": [],
         "manual_recipe": [
             "No new download — BMMC h5ad should already be under ${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/.",
             "Set SCREG_BMMC_H5AD if needed; P3 = construct only (no FM Support).",
@@ -87,6 +118,7 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
         "decision": "pending",
         "fetchable": True,
         "rejected": False,
+        "assets": [],
         "manual_recipe": [
             "Confirm Synapse/open access + exact sample ID in the approval checklist.",
             "Fetch manually into ${DESKTOP_DATA}/datasets/extension_pilots/htan_pilot/.",
@@ -96,18 +128,122 @@ PLAN_REGISTRY: dict[str, dict[str, Any]] = {
     },
     "D4": {
         "title": "Whole HTAN / DESCARTES RAW / File_S6 lakes",
-        "decision": "rejected",
-        "fetchable": False,
-        "rejected": True,
-        "manual_recipe": ["Rejected — must refuse lake-scale fetch for Support / G_ATAC."],
+        "decision": "pending_large",
+        "fetchable": True,
+        "rejected": False,
+        "policy_risk": [
+            "Unbounded lake / exceeds pilot hard gates (was policy-rejected, not technically impossible).",
+            "PeerJ freeze narrative + disk risk (~29 GB RAW + ~4.3 GB File_S6; HTAN cohort TB-scale).",
+            "Must not inflate PeerJ Support / locked G_ATAC; extension overlay only after subsetting.",
+        ],
+        "assets": [
+            {
+                "id": "GSE149683_RAW",
+                "url": (
+                    "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE149nnn/"
+                    "GSE149683/suppl/GSE149683_RAW.tar"
+                ),
+                "dest": (
+                    "${DESKTOP_DATA}/datasets/extension_pilots/descartes_lake/"
+                    "GSE149683_RAW.tar"
+                ),
+                "bytes_estimate": 31_177_328_640,
+                "size_label": "~29.0 GB",
+                "checksum_note": (
+                    "No published sha256 in FETCH_LOG; verify size == 31177328640 "
+                    "(GEO filelist / descartes/filelist.txt) after fetch."
+                ),
+            },
+            {
+                "id": "GSE149683_File_S6",
+                "url": (
+                    "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE149nnn/"
+                    "GSE149683/suppl/"
+                    "GSE149683_File_S6.Cicero_gene_activity_scores_by_cell_type.csv.gz"
+                ),
+                "dest": (
+                    "${DESKTOP_DATA}/datasets/extension_pilots/descartes_lake/"
+                    "GSE149683_File_S6.Cicero_gene_activity_scores_by_cell_type.csv.gz"
+                ),
+                "bytes_estimate": 4_618_000_000,
+                "size_label": "~4.3 GB",
+                "checksum_note": (
+                    "GEO lists ~4.3 Gb; no sha256 in FETCH_LOG — record sha256 after fetch."
+                ),
+            },
+            {
+                "id": "HTAN_cohort_wide",
+                "url": None,
+                "dest": (
+                    "${DESKTOP_DATA}/datasets/extension_pilots/htan_lake/"
+                ),
+                "bytes_estimate": None,
+                "size_label": "TB-scale (Synapse cohort)",
+                "checksum_note": (
+                    "No single HTTP URL. Shortlist open synIDs from "
+                    "${DESKTOP_DATA}/datasets/extension_pilots/htan/"
+                    "Sample_ID_Lookup_table_in_repositories.xlsx then "
+                    "`synapse get <synID>` — never auto-dump cohort-wide."
+                ),
+                "fetch_via": "synapse_manual",
+            },
+        ],
+        "manual_recipe": [
+            "POLICY: previously blocked as unbounded lake (not technical impossibility).",
+            "Dual gate: (1) verbal approve D4 + SCREG_DOWNLOAD_* env; (2) disk ≥ ~40 GB free for RAW+S6.",
+            "Dry-run recipe only via CLI; real fetch via scripts/fetch_approved_plan.py --execute.",
+            "Destinations under ${DESKTOP_DATA}/datasets/extension_pilots/descartes_lake/ (not PeerJ package).",
+            "Optional File_S5 (~392 MB) is NOT in default D4 asset list — add only if explicitly requested.",
+            "HTAN whole-lake is Synapse/TB — not emitted as an auto-URL; keep to shortlisted open samples.",
+            "After fetch: construct-only / lake_blocked registry roles; never PeerJ Support / G_ATAC identity.",
+            f"Log bytes+sha256 into {FETCH_LOG_HINT}.",
+        ],
     },
     "D5": {
         "title": "Cancer 28 / Dev 27 RNA lakes",
-        "decision": "rejected",
-        "fetchable": False,
-        "rejected": True,
+        "decision": "pending_large",
+        "fetchable": True,
+        "rejected": False,
+        "policy_risk": [
+            "RNA∩ATAC empty — forbidden for Support / G_ATAC identity even after download.",
+            "Largely already local (~90 GB class); re-fetch usually pointless.",
+            "PeerJ freeze: do not wire lakes into capsule validation or Support JSON.",
+        ],
+        "assets": [
+            {
+                "id": "cancer28_local",
+                "url": None,
+                "dest": "${DESKTOP_DATA}/datasets/CancerDatasets/",
+                "bytes_estimate": 60_000_000_000,
+                "size_label": "~60 GB already local (28 h5ads + CancerDatasets2)",
+                "local_dirs": [
+                    "${DESKTOP_DATA}/datasets/CancerDatasets",
+                    "${DESKTOP_DATA}/datasets/CancerDatasets2",
+                ],
+                "checksum_note": "Inventory-only; no GEO re-fetch by default.",
+                "fetch_via": "local_inventory",
+            },
+            {
+                "id": "dev27_local",
+                "url": None,
+                "dest": "${DESKTOP_DATA}/datasets/DevelopmentDatasets/",
+                "bytes_estimate": 31_000_000_000,
+                "size_label": "~31 GB already local (27 h5ads + DevelopmentDatasets2)",
+                "local_dirs": [
+                    "${DESKTOP_DATA}/datasets/DevelopmentDatasets",
+                    "${DESKTOP_DATA}/datasets/DevelopmentDatasets2",
+                ],
+                "checksum_note": "Inventory-only; no GEO re-fetch by default.",
+                "fetch_via": "local_inventory",
+            },
+        ],
         "manual_recipe": [
-            "Rejected — RNA∩ATAC empty; forbidden for Support / G_ATAC."
+            "POLICY: blocked from Support/G_ATAC (RNA-only estimand mismatch), not because files cannot exist locally.",
+            "Default action after approve: inventory local lakes (no network).",
+            "Paths: ${DESKTOP_DATA}/datasets/CancerDatasets{,2}/ and DevelopmentDatasets{,2}/.",
+            "EVEN AFTER DOWNLOAD/INVENTORY: must not enter Support / G_ATAC construction.",
+            "Coexpression-side / Limitations use only; registry roles remain out_of_scope / rna_lake_only.",
+            f"Append inventory summary to {FETCH_LOG_HINT} if desired.",
         ],
     },
 }
@@ -135,14 +271,18 @@ def build_dry_run_plan(plan_id: str) -> dict[str, Any]:
         "decision": meta["decision"],
         "fetchable": meta["fetchable"],
         "rejected": meta["rejected"],
+        "policy_risk": list(meta.get("policy_risk") or []),
+        "assets": list(meta.get("assets") or []),
         "network_fetch_performed": False,
         "approval_doc": str(APPROVAL_DOC.relative_to(ROOT)),
         "costs_doc": str(COSTS_DOC.relative_to(ROOT)),
+        "fetch_log_hint": FETCH_LOG_HINT,
         "manual_recipe": list(meta["manual_recipe"]),
+        "fetch_script": "src/v2/extension/scripts/fetch_approved_plan.py",
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "note": (
-            "Fail-closed stub: no urllib/wget/curl. After human approval + env gates, "
-            "execute the manual_recipe outside this CLI."
+            "Fail-closed stub: no urllib/wget/curl in this CLI. After human approval + env gates, "
+            "execute assets via scripts/fetch_approved_plan.py --execute (still requires env match)."
         ),
     }
 
@@ -194,15 +334,22 @@ def run_download_gate(plan_id: str, *, write_plan: bool = True) -> tuple[int, di
         payload = {
             "status": "approval_required",
             "plan_id": plan_id,
+            "decision": meta.get("decision"),
             "message": (
                 "Download gate closed. Set SCREG_DOWNLOAD_APPROVED=1 and "
                 f"SCREG_DOWNLOAD_PLAN_ID={plan_id} after filling "
                 f"{APPROVAL_DOC.relative_to(ROOT)}. This CLI never fetches."
+                + (
+                    " Plan is pending_large (policy-gated infrastructure; not permanently impossible)."
+                    if meta.get("decision") == "pending_large"
+                    else ""
+                )
             ),
             "required_env": {
                 APPROVAL_ENV: "1",
                 PLAN_MATCH_ENV: plan_id,
             },
+            "policy_risk": list(meta.get("policy_risk") or []),
             "network_fetch_performed": False,
         }
         return 2, payload
@@ -219,9 +366,15 @@ def run_download_gate(plan_id: str, *, write_plan: bool = True) -> tuple[int, di
         plan_path.write_text(json.dumps(plan, indent=2) + "\n")
         plan["dry_run_plan_path"] = str(plan_path.relative_to(ROOT))
 
+    fetch_cmd = (
+        f"SCREG_DOWNLOAD_APPROVED=1 SCREG_DOWNLOAD_PLAN_ID={plan_id} "
+        f"python src/v2/extension/scripts/fetch_approved_plan.py "
+        f"--plan-id {plan_id} --execute"
+    )
     plan["next_manual_commands"] = [
-        f"# Approved dry-run only — execute manually if still desired:",
+        "# Approved dry-run only — CLI performed no network I/O.",
         *[f"#   {step}" for step in plan["manual_recipe"]],
+        f"# Real fetch (only after verbal approve + env): {fetch_cmd}",
         f"# Approval docs: {APPROVAL_DOC.relative_to(ROOT)}",
     ]
     return 0, plan

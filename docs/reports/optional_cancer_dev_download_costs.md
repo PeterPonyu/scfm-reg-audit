@@ -38,15 +38,25 @@
 | Remote GPU | Usually **N/A** | |
 | PeerJ risk | Extension-only | |
 
-### S3b — Whole cancer/dev lake（对照：不要做）
+### S3b — Whole DESCARTES / HTAN lakes（D4 — `pending_large`）
 
 | Resource | Estimate | Notes |
 |----------|----------|-------|
-| Network | **10s–100s GB** | DESCARTES RAW / File_S6 / HTAN cohort |
-| Disk | **same order** | Desktop lakes already ~90 GB RNA-only |
-| 5090 hours | **weeks** if naively FM’d | Estimand mismatch for RNA lakes |
+| Network | **~33 GB** GEO default | `GSE149683_RAW.tar` ~29 GB + File_S6 ~4.3 GB; HTAN cohort TB (Synapse, not auto) |
+| Disk | **same order** | Dest: `${DESKTOP_DATA}/datasets/extension_pilots/descartes_lake/` |
+| 5090 hours | **days–weeks** if naively FM’d | Prefer subset construct; never PeerJ Support |
 | Remote GPU | Costly + transfer | |
-| Policy | **Forbidden** for Support / `G_ATAC` | RNA∩ATAC empty |
+| Policy | Approval-gated; **Forbidden** for locked Support / `G_ATAC` identity | Was policy-rejected; infra now ready |
+
+### S3c — Cancer28 / Dev27 RNA lakes（D5 — `pending_large` inventory）
+
+| Resource | Estimate | Notes |
+|----------|----------|-------|
+| Network | **0 GB** default | Already local (~60 GB cancer + ~31 GB dev) |
+| Disk | **~90 GB** | `CancerDatasets{,2}` / `DevelopmentDatasets{,2}` |
+| 5090 hours | **N/A for `G_ATAC`** | RNA∩ATAC empty; coexp-side / Limitations only |
+| Remote GPU | N/A | |
+| Policy | Inventory OK after approve; **still Forbidden** for Support / `G_ATAC` | Re-fetch usually pointless |
 
 ## Rough compute decomposition（5090 24 GB）
 
@@ -62,7 +72,7 @@
 
 1. **Need SI construct numbers soon?** → S1 (~0.1 GB network) after PeerJ freeze.  
 2. **Need 3rd-tissue same-estimand story?** → S2 compute-only + panel policy; still not PeerJ Support.  
-3. **Cancer narrative?** → S3a one sample max; never S3b into Support.
+3. **Cancer narrative?** → S3a one sample max; S3b/S3c only after verbal D4/D5 approve — never into Support.
 
 ---
 
@@ -70,5 +80,7 @@
 
 - **小下载（脾脏 DESCARTES RDS）**：流量约 **0.1 GB**，本地 5090 大约 **0.5–2 小时**做 construct；远程 GPU 一般不需要。  
 - **BMMC**：已经在硬盘上，**再下载 = 0**；只算算力。Construct 约 **1–4 小时**；完整 FM 审计大约 **几十小时**量级，且会动 SAP/BH，**当前论文冻结期内不做**。  
-- **HTAN 级小试点**：流量大约 **0.5–5 GB**；整湖/整队列是 **几十到上百 GB**，且 RNA lake **不能**进 Support/`G_ATAC`。  
+- **HTAN 级小试点（D3）**：流量大约 **0.5–5 GB**。  
+- **D4 整湖 GEO**：约 **33 GB**（RAW+S6），需口头批准；HTAN 全队列仍是 TB/Synapse。  
+- **D5 RNA 湖**：多半已在本地（~90 GB），批准后默认只做盘点；**永远不能**进 Support/`G_ATAC`。  
 - **远程 GPU**：本机 5090 够用时通常 **N/A**；若上云，传输大 h5ad/缓存往往比算力更贵。

@@ -7,7 +7,8 @@
   },
   "forbidden_roles_for_g_atac": [
     "out_of_scope",
-    "rna_lake_only"
+    "rna_lake_only",
+    "lake_blocked"
   ],
   "tissues": {
     "brain": {
@@ -85,19 +86,51 @@
       "accession": "CancerDatasets_bundle",
       "modality": "RNA",
       "lane": "none",
-      "role": "out_of_scope",
+      "role": "rna_lake_only",
       "peerj_freeze": false,
       "allow_g_atac": false,
-      "notes": "Forbidden for Support / G_ATAC (RNA\u2229ATAC empty). Limitations / coexp-side only."
+      "fetch_plan_id": "D5",
+      "fetch_status": "largely_local_pending_large",
+      "local_path_hint": "${DESKTOP_DATA}/datasets/CancerDatasets/",
+      "notes": "D5 pending_large inventory. Forbidden for Support / G_ATAC (RNA\u2229ATAC empty) even after approve. Limitations / coexp-side only."
     },
     "development_rna_lakes": {
       "accession": "DevelopmentDatasets_bundle",
       "modality": "RNA",
       "lane": "none",
-      "role": "out_of_scope",
+      "role": "rna_lake_only",
       "peerj_freeze": false,
       "allow_g_atac": false,
-      "notes": "Forbidden for Support / G_ATAC. Limitations / coexp-side only."
+      "fetch_plan_id": "D5",
+      "fetch_status": "largely_local_pending_large",
+      "local_path_hint": "${DESKTOP_DATA}/datasets/DevelopmentDatasets/",
+      "notes": "D5 pending_large inventory. Forbidden for Support / G_ATAC even after approve."
+    },
+    "descartes_whole_lake": {
+      "accession": "GSE149683_RAW_File_S6",
+      "modality": "scATAC",
+      "lane": "none",
+      "role": "lake_blocked",
+      "genome": "hg19",
+      "peerj_freeze": false,
+      "allow_g_atac": false,
+      "fetch_plan_id": "D4",
+      "fetch_status": "pending_large",
+      "estimated_download_gb": 33.3,
+      "local_path_hint": "${DESKTOP_DATA}/datasets/extension_pilots/descartes_lake/",
+      "notes": "D4 pending_large: RAW~29GB + File_S6~4.3GB. Policy-gated (disk/PeerJ), not technically impossible. No Support / locked G_ATAC until future subset construct job."
+    },
+    "htan_whole_lake": {
+      "accession": "HTAN_cohort",
+      "modality": "multiome",
+      "lane": "none",
+      "role": "lake_blocked",
+      "peerj_freeze": false,
+      "allow_g_atac": false,
+      "fetch_plan_id": "D4",
+      "fetch_status": "pending_large_synapse",
+      "local_path_hint": "${DESKTOP_DATA}/datasets/extension_pilots/htan_lake/",
+      "notes": "D4 HTAN cohort-wide is Synapse/TB — no auto-URL. Shortlist open samples only (see D3). Forbidden for PeerJ Support inflation."
     }
   }
 }
