@@ -181,7 +181,7 @@ f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
             hjust = -0.05, size = 2.9) +
   coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.22)) +
   labs(x = NULL, y = "linked peaks",
-       title = "Linked peaks (PeerJ ref ~7--12k)") +
+       title = "Motif-linked peaks by tissue") +
   theme(
     # smaller bottom margin under title → title nearer top spine of panel
     plot.title = element_text(size = 9.5, margin = margin(t = 0, r = 0, b = 0, l = 0),
@@ -202,10 +202,14 @@ emit_ext("fig_ext1_construct_mantel",
            plot_layout(axis_titles = "collect"),
          6.8, 5.8, tags = LETTERS[1:4])
 
-# ============== E2: CollecTRI + baselines ==============
+# ============== E2: literature prior + construct transfer stats ONLY ==============
+# NO emitter status, freeze badges, file names, or inventory counts.
 coll <- J("results/v2/extension/baselines/collectri_prior/summary.json")
 cr <- coll$result
 stopifnot(!is.null(cr$tf_coverage))
+motif <- J("results/v2/extension/baselines/motif_only_rp/summary.json")$result
+
+# A: CollecTRI fraction of panel TFs/genes hit + edge keep rate (scientific coverage)
 cov_df <- data.frame(
   metric = factor(c("TF hit", "Gene hit", "Edge keep"),
                   levels = c("TF hit", "Gene hit", "Edge keep")),
@@ -218,116 +222,111 @@ f2a <- ggplot(cov_df, aes(metric, value, fill = metric)) +
   geom_text(aes(label = sprintf("%.3f", value)), vjust = -0.35, size = 3.1) +
   scale_fill_manual(values = c(BLUE, AQUA, YELLOW)) +
   coord_cartesian(ylim = c(0, 1.08)) +
-  labs(x = NULL, y = "fraction", title = "CollecTRI panel coverage")
+  labs(x = NULL, y = "fraction", title = "CollecTRI panel hit rates")
 
-base_methods <- c("motif_only_rp", "degree_matched_random", "encode_chip_binding", "collectri_prior")
-base_rows <- bind_rows(lapply(base_methods, function(mid) {
-  s <- J(file.path("results/v2/extension/baselines", mid, "summary.json"))
-  st <- as.character(s$result$status %||% s$status %||% "unknown")
-  data.frame(method = mid, status = st, stringsAsFactors = FALSE)
-}))
-base_rows$label <- c(
-  motif_only_rp = "motif-only",
-  degree_matched_random = "degree-matched",
-  encode_chip_binding = "ENCODE",
-  collectri_prior = "CollecTRI"
-)[base_rows$method]
-base_rows$ready <- as.numeric(grepl("emit|project|ready|summary", base_rows$status, ignore.case = TRUE))
-base_rows$label <- factor(base_rows$label, levels = rev(base_rows$label))
-base_rows$status_tex <- gsub("_", " ", base_rows$status, fixed = TRUE)
-f2b <- ggplot(base_rows, aes(label, ready, fill = factor(ready))) +
-  geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = status_tex), vjust = -0.3, size = 2.6) +
-  scale_fill_manual(values = c(`0` = RED, `1` = AQUA)) +
-  scale_y_continuous(limits = c(0, 1.4), breaks = c(0, 1), labels = c("fail", "ready")) +
-  labs(x = NULL, y = NULL, title = "Baseline emitter status") +
-  theme(axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5))
-
-edge_df <- data.frame(
-  kind = factor(c("raw", "on panel"), levels = c("raw", "on panel")),
-  n = c(as.numeric(cr$n_edges_raw), as.numeric(cr$n_edges_on_panel))
+# B: edge support scale — motif binary vs literature prior on panel (scientific)
+edge_cmp <- data.frame(
+  source = factor(c("Motif binary", "CollecTRI prior"),
+                  levels = c("Motif binary", "CollecTRI prior")),
+  n = c(as.numeric(motif$n_edges), as.numeric(cr$n_edges_on_panel))
 )
-f2c <- ggplot(edge_df, aes(kind, n, fill = kind)) +
-  geom_col(width = 0.55, show.legend = FALSE) +
-  geom_text(aes(label = format(as.integer(n), big.mark = ",")), vjust = -0.35, size = 3.0) +
-  scale_fill_manual(values = c(raw = MUTED, `on panel` = BLUE)) +
-  labs(x = NULL, y = "edges", title = "Prior edges: raw vs panel") +
-  coord_cartesian(ylim = c(0, max(edge_df$n) * 1.14))
-
-freeze_df <- data.frame(
-  item = factor(c("Support=13", "rows touched=0", "GATAC mutable=0", "ext tissues=3"),
-                levels = c("Support=13", "rows touched=0", "GATAC mutable=0", "ext tissues=3")),
-  value = c(13, 0, 0, 3)
-)
-f2d <- ggplot(freeze_df, aes(item, value, fill = item)) +
+f2b <- ggplot(edge_cmp, aes(source, n, fill = source)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.35, size = 3.0) +
-  scale_fill_manual(values = c(BLUE, AQUA, MUTED, YELLOW)) +
-  labs(x = NULL, y = "value", title = "Freeze badge (Support untouched)") +
-  coord_cartesian(ylim = c(0, 16)) +
-  theme(axis.text.x = element_text(angle = 18, hjust = 1, size = 8))
+  geom_text(aes(label = format(as.integer(n), big.mark = ",")), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(`Motif binary` = MUTED, `CollecTRI prior` = BLUE)) +
+  labs(x = NULL, y = "TF-gene edges on panel",
+       title = "Edge support: motif vs literature prior") +
+  coord_cartesian(ylim = c(0, max(edge_cmp$n) * 1.14))
+
+# C: mean observed Mantel rho per extension tissue (scientific transfer)
+mean_rho <- rows %>%
+  group_by(tissue_s) %>%
+  summarise(rho = mean(rho), .groups = "drop")
+f2c <- ggplot(mean_rho, aes(tissue_s, rho, fill = tissue_s)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f", rho)), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(Spleen = VIOLET, BMMC = YELLOW, Treg = BLUE)) +
+  coord_cartesian(ylim = c(0, max(mean_rho$rho) * 1.18)) +
+  labs(x = NULL, y = "mean Mantel rho",
+       title = "Mean transfer rho (3 locked proxies)")
+
+# D: mean residual rho after additive (scientific decomp remainder)
+mean_res <- rows %>%
+  group_by(tissue_s) %>%
+  summarise(resid = mean(residual), .groups = "drop")
+f2d <- ggplot(mean_res, aes(tissue_s, resid, fill = tissue_s)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f", resid)), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(Spleen = VIOLET, BMMC = YELLOW, Treg = BLUE)) +
+  coord_cartesian(ylim = c(0, max(mean_res$resid) * 1.18)) +
+  labs(x = NULL, y = "mean residual rho",
+       title = "Residual after additive fit")
 
 emit_ext("fig_ext2_baselines_collectri",
          (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A") +
            plot_layout(axis_titles = "collect"),
          6.8, 5.6, tags = LETTERS[1:4])
 
-# ============== E3: honesty / policy ==============
-htan_df <- data.frame(
-  step = factor(c("Local tar", "Inventory", "Peak matrix", "SI outcome"),
-                levels = c("Local tar", "Inventory", "Peak matrix", "SI outcome")),
-  score = c(1, 1, 0, 0),
-  state = c("present", "fragments only", "absent", "blocked")
-)
-f3a <- ggplot(htan_df, aes(step, score, fill = factor(score))) +
-  geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = state), vjust = -0.3, size = 2.7) +
-  scale_fill_manual(values = c(`0` = RED, `1` = AQUA)) +
-  scale_y_continuous(limits = c(0, 1.3), breaks = c(0, 1), labels = c("no", "yes")) +
-  labs(x = NULL, y = NULL, title = "HTAN D3: blocked (fragments only)") +
-  theme(axis.text.x = element_text(angle = 14, hjust = 1, size = 8.5))
-
-# B: SCIENCE — Treg pilot Mantel rho vs locked proxies (not inventory packaging)
+# ============== E3: tissue-level scientific stats ONLY ==============
+# NO tar/inventory/filename/lake/freeze-badge packaging content.
 treg_rows <- rows[rows$tissue_id == "orphan_treg_gse211155", , drop = FALSE]
-if (nrow(treg_rows) == 0) {
-  # fallback filter by short label if tissue_id naming differs
+if (nrow(treg_rows) == 0)
   treg_rows <- rows[as.character(rows$tissue_s) == "Treg", , drop = FALSE]
-}
 treg_rows$proxy_s <- factor(as.character(treg_rows$proxy_s), levels = c("Brain", "PBMC", "Fibro"))
+
+# A: residual Spearman for all tissues x proxies (scientific)
+f3a <- ggplot(rows, aes(proxy_s, tissue_s, fill = residual)) +
+  geom_tile(color = "white", linewidth = 0.7) +
+  geom_text(aes(label = sprintf("%.2f", residual)), size = 3.0) +
+  scale_fill_gradient(low = LIGHT, high = VIOLET, name = NULL) +
+  # continuous residual heatmap risks raster; use identity hex
+  labs(x = "locked proxy", y = NULL, title = "Residual rho after additive") +
+  theme(legend.position = "none", axis.text.x = element_text(size = 9))
+
+# rebuild residual with vector fills (no continuous gradient raster)
+rows$fill_res <- fill_hex(rows$residual, 0.20, 0.96, LIGHT, VIOLET)
+f3a <- ggplot(rows, aes(proxy_s, tissue_s, fill = fill_res)) +
+  geom_tile(color = "white", linewidth = 0.7) +
+  geom_text(aes(label = sprintf("%.2f", residual)), size = 3.0) +
+  scale_fill_identity() +
+  labs(x = "locked proxy", y = NULL, title = "Residual rho after additive") +
+  theme(axis.text.x = element_text(size = 9))
+
+# B: Treg Mantel rho vs locked proxies
 f3b <- ggplot(treg_rows, aes(proxy_s, rho, fill = proxy_s)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = sprintf("%.2f", rho)), vjust = -0.35, size = 3.0) +
   scale_fill_manual(values = c(Brain = BLUE, PBMC = YELLOW, Fibro = VIOLET)) +
   coord_cartesian(ylim = c(0, max(treg_rows$rho, na.rm = TRUE) * 1.18)) +
   labs(x = "locked proxy", y = "Mantel rho",
-       title = "Treg pilot G-ATAC transfer rho") +
+       title = "Treg transfer rho vs locked proxies") +
   theme(axis.text.x = element_text(size = 9))
 
+# C: BMMC frozen-panel gene/TF overlap fractions (estimand coverage, not ops)
 bmc <- data.frame(
   axis = factor(c("Genes", "TFs"), levels = c("Genes", "TFs")),
   coverage = c(as.numeric(hon$bmmc$gene_coverage), as.numeric(hon$bmmc$tf_coverage)),
-  lab = c("1076/1200", "341/446")
+  lab = c(
+    sprintf("%d/%d", hon$bmmc$gene_overlap, hon$bmmc$gene_panel),
+    sprintf("%d/%d", hon$bmmc$tf_overlap, hon$bmmc$tf_panel)
+  )
 )
 f3c <- ggplot(bmc, aes(axis, coverage)) +
   geom_col(fill = BLUE, width = 0.55) +
-  geom_hline(yintercept = as.numeric(hon$bmmc$gate_threshold),
-             color = RED, linetype = 2, linewidth = 0.7) +
   geom_text(aes(label = sprintf("%s (%.3f)", lab, coverage)),
             vjust = -0.35, size = 2.8) +
-  coord_cartesian(ylim = c(0, 1.15)) +
-  labs(x = NULL, y = "coverage",
-       title = "BMMC P3 coverage (0.90 gate fail; construct only)")
+  coord_cartesian(ylim = c(0, 1.12)) +
+  labs(x = NULL, y = "panel overlap",
+       title = "BMMC overlap with frozen 446 x 1200 panel")
 
-# D: SCIENCE — Treg additive fraction vs same proxies (not freeze double-zero badge)
-# The previous "two zeros" were process flags (rows touched=0, GATAC mutable=0),
-# not scientific estimands; keep freeze as caption only.
+# D: Treg additive fraction
 f3d <- ggplot(treg_rows, aes(proxy_s, frac_add, fill = proxy_s)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = sprintf("%.2f", frac_add)), vjust = -0.35, size = 3.0) +
   scale_fill_manual(values = c(Brain = AQUA, PBMC = YELLOW, Fibro = VIOLET)) +
   coord_cartesian(ylim = c(0, 1.05)) +
   labs(x = "locked proxy", y = "additive fraction",
-       title = "Treg additive fraction (Support still 13)") +
+       title = "Treg additive fraction of rho") +
   theme(axis.text.x = element_text(size = 9))
 
 emit_ext("fig_ext3_honesty_policy",
