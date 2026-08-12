@@ -174,7 +174,7 @@ f1c <- ggplot(rows, aes(y = pair_s)) +
        title = "Transfer rho (BMMC-PBMC highest)") +
   theme(legend.position = "top", legend.text = element_text(size = 8.5))
 
-# D: title tight to top spine; tag slightly right of default (plot.tag.position npc)
+# D: title closer to panel top spine; D tag slightly right and down vs A/C
 f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   geom_col(fill = BLUE, width = 0.65) +
   geom_text(aes(label = format(relevant_peaks, big.mark = ",")),
@@ -183,17 +183,26 @@ f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   labs(x = NULL, y = "linked peaks",
        title = "Motif-linked peaks by tissue") +
   theme(
-    # smaller bottom margin under title → title nearer top spine of panel
-    plot.title = element_text(size = 9.5, margin = margin(t = 0, r = 0, b = 0, l = 0),
-                              vjust = 1),
-    plot.margin = margin(0, 8, 3, 6),
-    # nudge D tag right within its panel (0=left, 1=right of panel)
-    plot.tag.position = c(0.12, 1.0)
+    # pull title down toward the panel frame (less air under the outer tag row)
+    plot.title = element_text(
+      size = 9.5,
+      margin = margin(t = 0, r = 0, b = 0, l = 2),
+      vjust = 1, hjust = 0
+    ),
+    # negative top margin collapses gap between outer tag band and title
+    plot.margin = margin(t = -2, r = 8, b = 3, l = 4),
+    # D tag: right of default left gutter, slightly below A/B/C baseline
+    plot.tag.position = c(0.14, 0.96)
   )
 
-# A/B/C keep default tag left; D uses rightward tag above
-f1a <- f1a + theme(plot.tag.position = c(0.02, 1.0))
-f1b <- f1b + theme(plot.tag.position = c(0.02, 1.0))
+f1a <- f1a + theme(
+  plot.tag.position = c(0.02, 1.0),
+  plot.title = element_text(margin = margin(t = 0, b = 2))
+)
+f1b <- f1b + theme(
+  plot.tag.position = c(0.02, 1.0),
+  plot.title = element_text(margin = margin(t = 0, b = 2))
+)
 f1c <- f1c + theme(plot.tag.position = c(0.02, 1.0))
 
 emit_ext("fig_ext1_construct_mantel",
