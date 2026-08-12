@@ -127,52 +127,61 @@ peerj_peaks <- bind_rows(lapply(tt_cov, function(c) {
 # normalize PeerJ labels already Brain/PBMC/Fibroblast mix
 
 # ============== E1: construct Mantel ==============
-f1a <- ggplot(rows, aes(proxy, tissue, fill = rho)) +
-  geom_tile(color = "white", linewidth = 0.6) +
-  geom_text(aes(label = sprintf("%.3f", rho)), size = 3.2) +
-  scale_fill_gradient(low = LIGHT, high = BLUE, limits = c(0.35, 0.92),
-                      name = "Spearman $\\rho$") +
-  labs(x = "locked proxy", y = NULL,
-       title = "Construct SI Mantel vs locked $G_{\\mathrm{ATAC}}$") +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 18, hjust = 1))
+# Short labels for PeerJ-scale panels
+rows$proxy_s <- factor(
+  dplyr::recode(as.character(rows$proxy),
+                Brain = "Brain", PBMC = "PBMC", `Fibroblast mix` = "Fibro"),
+  levels = c("Brain", "PBMC", "Fibro"))
+rows$tissue_s <- factor(
+  dplyr::recode(as.character(rows$tissue),
+                `DESCARTES spleen` = "Spleen", BMMC = "BMMC", `Treg pilot` = "Treg"),
+  levels = c("Spleen", "BMMC", "Treg"))
 
-f1b <- ggplot(rows, aes(proxy, tissue, fill = frac_add)) +
-  geom_tile(color = "white", linewidth = 0.6) +
-  geom_text(aes(label = sprintf("%.2f", frac_add)), size = 3.1) +
-  scale_fill_gradient(low = "#f0f0f0", high = AQUA, limits = c(0.4, 0.9),
-                      name = "additive frac.") +
-  labs(x = "locked proxy", y = NULL,
-       title = "Fraction explained by additive marginals") +
-  theme(legend.position = "right",
-        axis.text.x = element_text(angle = 18, hjust = 1))
+# Continuous geom_tile fill → tikzDevice raster (leaks .png paths into view).
+# Precompute hex colors; scale_fill_identity keeps vector tiles.
+fill_hex <- function(x, lo, hi, c_lo, c_hi) {
+  t <- pmin(1, pmax(0, (as.numeric(x) - lo) / (hi - lo)))
+  a <- grDevices::col2rgb(c_lo)[, 1] / 255
+  b <- grDevices::col2rgb(c_hi)[, 1] / 255
+  grDevices::rgb((1 - t) * a[1] + t * b[1],
+                 (1 - t) * a[2] + t * b[2],
+                 (1 - t) * a[3] + t * b[3])
+}
+rows$fill_rho <- fill_hex(rows$rho, 0.35, 0.92, LIGHT, BLUE)
+rows$fill_add <- fill_hex(rows$frac_add, 0.40, 0.90, "#f0f0f0", AQUA)
 
-rows$pair_lab <- paste(rows$tissue, rows$proxy, sep = " vs ")
-# order by rho
-rows$pair_lab <- factor(rows$pair_lab, levels = rows$pair_lab[order(rows$rho)])
-f1c <- ggplot(rows, aes(y = pair_lab)) +
-  geom_segment(aes(x = 0.35, xend = rho, yend = pair_lab), color = "grey70",
-               linewidth = 0.5) +
-  geom_point(aes(x = rho, color = tissue), size = 2.4) +
-  scale_color_manual(values = c(`DESCARTES spleen` = VIOLET, BMMC = YELLOW,
-                                `Treg pilot` = BLUE)) +
-  labs(x = "observed Spearman $\\rho$", y = NULL, color = NULL,
-       title = "Transfer strength (BMMC--PBMC stands out)") +
-  theme(legend.position = "top")
+f1a <- ggplot(rows, aes(proxy_s, tissue_s, fill = fill_rho)) +
+  geom_tile(color = "white", linewidth = 0.7) +
+  geom_text(aes(label = sprintf("%.2f", rho)), size = 3.0) +
+  scale_fill_identity() +
+  labs(x = "locked proxy", y = NULL, title = "Mantel rho vs locked G-ATAC") +
+  theme(axis.text.x = element_text(size = 9))
 
-peak_plot <- bind_rows(
-  peak_df %>% mutate(tissue = factor(tissue, levels = levels(rows$tissue))),
-  peerj_peaks %>% mutate(tissue = factor(tissue, levels = c("Brain", "PBMC", "Fibroblast mix")))
-)
-# two-panel: extension only for D to avoid scale confusion; PeerJ as ref annotation
+f1b <- ggplot(rows, aes(proxy_s, tissue_s, fill = fill_add)) +
+  geom_tile(color = "white", linewidth = 0.7) +
+  geom_text(aes(label = sprintf("%.2f", frac_add)), size = 3.0) +
+  scale_fill_identity() +
+  labs(x = "locked proxy", y = NULL, title = "Additive fraction of rho") +
+  theme(axis.text.x = element_text(size = 9))
+
+rows$pair_s <- paste(as.character(rows$tissue_s), as.character(rows$proxy_s), sep = "-")
+rows$pair_s <- factor(rows$pair_s, levels = rows$pair_s[order(rows$rho)])
+f1c <- ggplot(rows, aes(y = pair_s)) +
+  geom_segment(aes(x = 0.35, xend = rho, yend = pair_s), color = "grey70", linewidth = 0.5) +
+  geom_point(aes(x = rho, color = tissue_s), size = 2.5) +
+  scale_color_manual(values = c(Spleen = VIOLET, BMMC = YELLOW, Treg = BLUE)) +
+  labs(x = "observed rho", y = NULL, color = NULL,
+       title = "Transfer rho (BMMC-PBMC highest)") +
+  theme(legend.position = "top", legend.text = element_text(size = 8.5))
+
 f1d <- ggplot(peak_df, aes(reorder(tissue, relevant_peaks), relevant_peaks)) +
   geom_col(fill = BLUE, width = 0.65) +
   geom_text(aes(label = format(relevant_peaks, big.mark = ",")),
-            hjust = -0.08, size = 3.0) +
-  coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.18)) +
-  labs(x = NULL, y = "motif-linked peaks (extension meta)",
-       title = "Linkage peaks (extension); PeerJ ref: 6.6k--11.6k") +
-  theme(plot.title = element_text(size = 10))
+            hjust = -0.05, size = 2.9) +
+  coord_flip(ylim = c(0, max(peak_df$relevant_peaks) * 1.22)) +
+  labs(x = NULL, y = "linked peaks",
+       title = "Linked peaks (PeerJ ref ~7--12k)") +
+  theme(plot.title = element_text(size = 9.5))
 
 emit_ext("fig_ext1_construct_mantel",
          (f1a | f1b) / (f1c | f1d) + plot_annotation(tag_levels = "A") +
@@ -182,26 +191,21 @@ emit_ext("fig_ext1_construct_mantel",
 # ============== E2: CollecTRI + baselines ==============
 coll <- J("results/v2/extension/baselines/collectri_prior/summary.json")
 cr <- coll$result
-stopifnot(identical(cr$status, "projected_partial") || identical(cr$status, "emitter_ready") ||
-            !is.null(cr$tf_coverage))
+stopifnot(!is.null(cr$tf_coverage))
 cov_df <- data.frame(
-  metric = c("TF hit rate", "Gene hit rate", "Edge keep rate"),
+  metric = factor(c("TF hit", "Gene hit", "Edge keep"),
+                  levels = c("TF hit", "Gene hit", "Edge keep")),
   value = c(as.numeric(cr$tf_coverage),
             as.numeric(cr$gene_coverage),
-            as.numeric(cr$n_edges_on_panel) / as.numeric(cr$n_edges_raw)),
-  stringsAsFactors = FALSE
+            as.numeric(cr$n_edges_on_panel) / as.numeric(cr$n_edges_raw))
 )
-cov_df$metric <- factor(cov_df$metric, levels = cov_df$metric)
 f2a <- ggplot(cov_df, aes(metric, value, fill = metric)) +
   geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = sprintf("%.3f", value)), vjust = -0.4, size = 3.2) +
+  geom_text(aes(label = sprintf("%.3f", value)), vjust = -0.35, size = 3.1) +
   scale_fill_manual(values = c(BLUE, AQUA, YELLOW)) +
-  coord_cartesian(ylim = c(0, 1.05)) +
-  labs(x = NULL, y = "fraction",
-       title = "CollecTRI panel projection (edge keep / TF / gene hit rates)") +
-  theme(axis.text.x = element_text(angle = 12, hjust = 1))
+  coord_cartesian(ylim = c(0, 1.08)) +
+  labs(x = NULL, y = "fraction", title = "CollecTRI panel coverage")
 
-# baseline status as bar of "ready score" 1=ok 0=not
 base_methods <- c("motif_only_rp", "degree_matched_random", "encode_chip_binding", "collectri_prior")
 base_rows <- bind_rows(lapply(base_methods, function(mid) {
   s <- J(file.path("results/v2/extension/baselines", mid, "summary.json"))
@@ -209,50 +213,45 @@ base_rows <- bind_rows(lapply(base_methods, function(mid) {
   data.frame(method = mid, status = st, stringsAsFactors = FALSE)
 }))
 base_rows$label <- c(
-  motif_only_rp = "motif-only RP",
+  motif_only_rp = "motif-only",
   degree_matched_random = "degree-matched",
-  encode_chip_binding = "ENCODE ChIP",
-  collectri_prior = "CollecTRI prior"
+  encode_chip_binding = "ENCODE",
+  collectri_prior = "CollecTRI"
 )[base_rows$method]
 base_rows$ready <- as.numeric(grepl("emit|project|ready|summary", base_rows$status, ignore.case = TRUE))
 base_rows$label <- factor(base_rows$label, levels = rev(base_rows$label))
-# tikzDevice cannot measure unescaped underscores in text labels
 base_rows$status_tex <- gsub("_", " ", base_rows$status, fixed = TRUE)
 f2b <- ggplot(base_rows, aes(label, ready, fill = factor(ready))) +
   geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = status_tex), vjust = -0.35, size = 2.7) +
+  geom_text(aes(label = status_tex), vjust = -0.3, size = 2.6) +
   scale_fill_manual(values = c(`0` = RED, `1` = AQUA)) +
-  scale_y_continuous(limits = c(0, 1.35), breaks = c(0, 1),
-                     labels = c("fail", "ready")) +
-  labs(x = NULL, y = NULL,
-       title = "Tier-A/C baseline emitter status (extension)") +
-  theme(axis.text.x = element_text(angle = 18, hjust = 1))
+  scale_y_continuous(limits = c(0, 1.4), breaks = c(0, 1), labels = c("fail", "ready")) +
+  labs(x = NULL, y = NULL, title = "Baseline emitter status") +
+  theme(axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5))
 
 edge_df <- data.frame(
-  kind = factor(c("raw edges", "on panel"), levels = c("raw edges", "on panel")),
+  kind = factor(c("raw", "on panel"), levels = c("raw", "on panel")),
   n = c(as.numeric(cr$n_edges_raw), as.numeric(cr$n_edges_on_panel))
 )
 f2c <- ggplot(edge_df, aes(kind, n, fill = kind)) +
   geom_col(width = 0.55, show.legend = FALSE) +
-  geom_text(aes(label = format(n, big.mark = ",")), vjust = -0.4, size = 3.1) +
-  scale_fill_manual(values = c(`raw edges` = MUTED, `on panel` = BLUE)) +
-  labs(x = NULL, y = "edges",
-       title = "Literature prior: raw vs frozen-panel support") +
-  coord_cartesian(ylim = c(0, max(edge_df$n) * 1.12))
+  geom_text(aes(label = format(as.integer(n), big.mark = ",")), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(raw = MUTED, `on panel` = BLUE)) +
+  labs(x = NULL, y = "edges", title = "Prior edges: raw vs panel") +
+  coord_cartesian(ylim = c(0, max(edge_df$n) * 1.14))
 
 freeze_df <- data.frame(
-  item = factor(c("Support rows", "BH families", "Panel TFs", "Panel genes"),
-                levels = c("Support rows", "BH families", "Panel TFs", "Panel genes")),
-  value = c(as.numeric(hon$freeze$peerj_support_rows), 8, 446, 1200)
+  item = factor(c("Support=13", "rows touched=0", "GATAC mutable=0", "ext tissues=3"),
+                levels = c("Support=13", "rows touched=0", "GATAC mutable=0", "ext tissues=3")),
+  value = c(13, 0, 0, 3)
 )
 f2d <- ggplot(freeze_df, aes(item, value, fill = item)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.35, size = 3.1) +
-  scale_fill_manual(values = c(BLUE, AQUA, YELLOW, VIOLET)) +
-  labs(x = NULL, y = "count",
-       title = "Freeze badge: Support=13; rows\\_touched=false") +
-  coord_cartesian(ylim = c(0, max(freeze_df$value) * 1.15)) +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  geom_text(aes(label = value), vjust = -0.35, size = 3.0) +
+  scale_fill_manual(values = c(BLUE, AQUA, MUTED, YELLOW)) +
+  labs(x = NULL, y = "value", title = "Freeze badge (Support untouched)") +
+  coord_cartesian(ylim = c(0, 16)) +
+  theme(axis.text.x = element_text(angle = 18, hjust = 1, size = 8))
 
 emit_ext("fig_ext2_baselines_collectri",
          (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A") +
@@ -264,67 +263,57 @@ htan_df <- data.frame(
   step = factor(c("Local tar", "Inventory", "Peak matrix", "SI outcome"),
                 levels = c("Local tar", "Inventory", "Peak matrix", "SI outcome")),
   score = c(1, 1, 0, 0),
-  state = c("present", "fragments-only", "absent", "blocked")
+  state = c("present", "fragments only", "absent", "blocked")
 )
 f3a <- ggplot(htan_df, aes(step, score, fill = factor(score))) +
   geom_col(width = 0.65, show.legend = FALSE) +
-  geom_text(aes(label = state), vjust = -0.35, size = 2.9) +
+  geom_text(aes(label = state), vjust = -0.3, size = 2.7) +
   scale_fill_manual(values = c(`0` = RED, `1` = AQUA)) +
-  scale_y_continuous(limits = c(0, 1.25), breaks = c(0, 1),
-                     labels = c("no", "yes")) +
-  labs(x = NULL, y = NULL,
-       title = "HTAN D3 dual-path: blocked (fragments only)") +
-  theme(axis.text.x = element_text(angle = 12, hjust = 1))
+  scale_y_continuous(limits = c(0, 1.3), breaks = c(0, 1), labels = c("no", "yes")) +
+  labs(x = NULL, y = NULL, title = "HTAN D3: blocked (fragments only)") +
+  theme(axis.text.x = element_text(angle = 14, hjust = 1, size = 8.5))
 
 orphan_df <- data.frame(
-  metric = factor(c("h5ad matrices", "with cell-type obs", "pilot types"),
-                  levels = c("h5ad matrices", "with cell-type obs", "pilot types")),
+  metric = factor(c("h5ad files", "with CT obs", "pilot types"),
+                  levels = c("h5ad files", "with CT obs", "pilot types")),
   value = c(as.numeric(hon$orphan_lake$n_h5ad),
-            as.numeric(hon$orphan_lake$n_with_celltype_obs),
-            1)
+            as.numeric(hon$orphan_lake$n_with_celltype_obs), 1)
 )
 f3b <- ggplot(orphan_df, aes(metric, value, fill = metric)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.4, size = 3.2) +
+  geom_text(aes(label = value), vjust = -0.35, size = 3.1) +
   scale_fill_manual(values = c(BLUE, RED, YELLOW)) +
-  labs(x = NULL, y = "count",
-       title = "Orphan lake + GSM6449881 filename meta pilot") +
-  coord_cartesian(ylim = c(0, max(orphan_df$value) * 1.15)) +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  labs(x = NULL, y = "count", title = "Orphan lake + filename-meta pilot") +
+  coord_cartesian(ylim = c(0, max(orphan_df$value) * 1.18)) +
+  theme(axis.text.x = element_text(angle = 12, hjust = 1, size = 8.5))
 
 bmc <- data.frame(
   axis = factor(c("Genes", "TFs"), levels = c("Genes", "TFs")),
   coverage = c(as.numeric(hon$bmmc$gene_coverage), as.numeric(hon$bmmc$tf_coverage)),
-  label = c(
-    sprintf("%d/%d", hon$bmmc$gene_overlap, hon$bmmc$gene_panel),
-    sprintf("%d/%d", hon$bmmc$tf_overlap, hon$bmmc$tf_panel)
-  )
+  lab = c("1076/1200", "341/446")
 )
 f3c <- ggplot(bmc, aes(axis, coverage)) +
   geom_col(fill = BLUE, width = 0.55) +
-  geom_hline(yintercept = as.numeric(hon$bmmc$gate_threshold), color = RED,
-             linetype = 2, linewidth = 0.7) +
-  geom_text(aes(label = sprintf("%s (%.3f)", label, coverage)),
-            vjust = -0.35, size = 2.9) +
-  annotate("text", x = 1.5, y = as.numeric(hon$bmmc$gate_threshold) + 0.04,
-           label = "0.8967 / 0.7646 vs 0.90 gate", color = RED, size = 2.8) +
-  coord_cartesian(ylim = c(0, 1.12)) +
-  labs(x = NULL, y = "frozen-panel coverage",
-       title = "BMMC P3: disclosed coverage (construct SI only)")
+  geom_hline(yintercept = as.numeric(hon$bmmc$gate_threshold),
+             color = RED, linetype = 2, linewidth = 0.7) +
+  geom_text(aes(label = sprintf("%s (%.3f)", lab, coverage)),
+            vjust = -0.35, size = 2.8) +
+  coord_cartesian(ylim = c(0, 1.15)) +
+  labs(x = NULL, y = "coverage",
+       title = "BMMC P3 coverage (0.90 gate fail; construct only)")
 
 fr <- data.frame(
-  item = factor(c("Support rows", "rows touched", "primary GATAC mutable", "ext tissues"),
-                levels = c("Support rows", "rows touched", "primary GATAC mutable", "ext tissues")),
+  item = factor(c("Support rows", "rows touched", "GATAC mutable", "ext tissues"),
+                levels = c("Support rows", "rows touched", "GATAC mutable", "ext tissues")),
   value = c(13, 0, 0, 3)
 )
 f3d <- ggplot(fr, aes(item, value, fill = item)) +
   geom_col(width = 0.6, show.legend = FALSE) +
-  geom_text(aes(label = value), vjust = -0.35, size = 3.1) +
+  geom_text(aes(label = value), vjust = -0.35, size = 3.0) +
   scale_fill_manual(values = c(BLUE, AQUA, MUTED, YELLOW)) +
-  labs(x = NULL, y = "count / flag",
-       title = "Freeze: Support=13; peerj rows touched=false") +
-  coord_cartesian(ylim = c(0, 15)) +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  labs(x = NULL, y = "value", title = "Freeze: Support=13; rows touched=false") +
+  coord_cartesian(ylim = c(0, 16)) +
+  theme(axis.text.x = element_text(angle = 16, hjust = 1, size = 8))
 
 emit_ext("fig_ext3_honesty_policy",
          (f3a | f3b) / (f3c | f3d) + plot_annotation(tag_levels = "A") +
