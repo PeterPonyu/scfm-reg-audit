@@ -1,0 +1,23 @@
+baseURL = "https://PeterPonyu.github.io/scfm-reg-audit/"
+title = "scReg-Eval"
+locale = "en-US"
+canonifyURLs = false
+relativeURLs = false
+disableKinds = ["taxonomy", "term", "RSS"]
+enableRobotsTXT = true
+disableHugoGeneratorInject = true
+publishDir = "public"
+
+[params]
+  github = "https://github.com/PeterPonyu/scfm-reg-audit"
+  zenodo = "https://doi.org/10.5281/zenodo.21724336"
+  capsule = "v0.3.0"
+  protocolPass = "0/13"
+
+[outputs]
+  home = ["HTML"]
+  section = ["HTML"]
+  page = ["HTML"]
+
+[markup.goldmark.renderer]
+  unsafe = false

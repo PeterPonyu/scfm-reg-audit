@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}scReg-Eval{{ else }}{{ .Title }} — scReg-Eval{{ end }}</title>
+  <meta name="description" content="Fixed-panel audit of regulatory alignment in scRNA foundation-model gene graphs. Protocol-pass 0/13. Dual-null Support is not protocol-pass and is not recovery.">
+  {{ $css := resources.Get "css/main.css" | resources.ExecuteAsTemplate "css/main.css" . | minify }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+</head>
+<body class="{{ block "bodyclass" . }}{{ end }}">
+  <a class="skip" href="#content">Skip to content</a>
+  {{ partial "header.html" . }}
+  {{ block "main" . }}{{ end }}
+  {{ partial "footer.html" . }}
+  {{ $js := resources.Get "js/main.js" | minify }}
+  <script src="{{ $js.RelPermalink }}" defer></script>
+</body>
+</html>

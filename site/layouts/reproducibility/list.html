@@ -1,0 +1,39 @@
+{{ define "main" }}
+<main id="content">
+  <div class="wrap prose">
+    <p class="eyebrow">Capsule</p>
+    <h1>Reproducibility</h1>
+    <p>This GitHub tree is an audit <strong>capsule</strong>. Cloning it and running the validator is not a full production rerun. Dual-null Support ≠ protocol-pass ≠ recovery. Protocol-pass is <strong>0/13</strong>.</p>
+    <h2>Three layers</h2>
+    <ol class="layers">
+      <li><span class="n">1.</span> <strong>Artifact validation</strong> — no downloads. From a capsule clone: <code>python validate_artifacts.py</code> and <code>python -m unittest discover -s src/tests</code>.</li>
+      <li><span class="n">2.</span> <strong>Statistical reruns</strong> — needs the datasets below plus cached FM graphs in <code>results/v2/*.npz</code> (not redistributed).</li>
+      <li><span class="n">3.</span> <strong>Full pipeline</strong> — datasets + model weights + vendor code. Experiment workspace only. See <a href="{{ site.Params.github }}/blob/main/docs/FULL_RERUN.md">docs/FULL_RERUN.md</a>.</li>
+    </ol>
+    <h2>Pointers</h2>
+    <ul>
+      <li>Zenodo: <a href="{{ site.Params.zenodo }}">doi.org/10.5281/zenodo.21724336</a></li>
+      <li>GEO brain snATAC: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE174367">GSE174367</a></li>
+      <li>GEO fibroblast mix (construct-only): <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE206767">GSE206767</a></li>
+      <li>10x Genomics 10k PBMC multiome (datasets portal)</li>
+      <li>Public JSON derivatives: <a href="{{ site.Params.github }}/tree/main/results">results/*.public.json</a></li>
+      <li>Validator: <a href="{{ site.Params.github }}/blob/main/validate_artifacts.py">validate_artifacts.py</a> · <a href="{{ site.Params.github }}/blob/main/MANIFEST.json">MANIFEST.json</a></li>
+      <li>Protocol / SAP (on GitHub, not a site route): <a href="{{ site.Params.github }}/blob/main/docs/SCREG_EVAL_PROTOCOL.md">SCREG_EVAL_PROTOCOL.md</a>, <a href="{{ site.Params.github }}/blob/main/docs/SCREG_EVAL_SAP.md">SCREG_EVAL_SAP.md</a></li>
+    </ul>
+    <h2>Cite the capsule</h2>
+    <div class="cite">
+      <p>Fu, Z. (2026). scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs (v0.3.0). Zenodo. <a href="{{ site.Params.zenodo }}">https://doi.org/10.5281/zenodo.21724336</a></p>
+      <pre id="cite-block">cff-version: 1.2.0
+title: "scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs"
+doi: "10.5281/zenodo.21724336"
+url: "https://github.com/PeterPonyu/scfm-reg-audit"
+version: "0.3.0"</pre>
+      <p>
+        <button type="button" class="btn btn-ghost" data-copy="#cite-block">Copy citation</button>
+        <span class="copy-status" data-copy-status hidden>Copied citation.</span>
+      </p>
+      <p><a href="{{ site.Params.github }}/blob/main/CITATION.cff">CITATION.cff</a> · <a href="{{ site.Params.github }}/blob/main/LICENSING.md">LICENSING.md</a></p>
+    </div>
+  </div>
+</main>
+{{ end }}

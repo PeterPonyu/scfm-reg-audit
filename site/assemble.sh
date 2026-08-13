@@ -1,90 +1,78 @@
 #!/usr/bin/env bash
-# Assemble the GitHub Pages artifact from site/ source + two product PDFs.
-# Output: site/_site/ (gitignored). Fail closed if a SoT PDF is missing.
+# Build the Hugo site and copy the two SoT manuscript PDFs into the publish dir.
+# Fail closed if a PDF is missing. Do not copy FigureN.pdf.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SITE="${ROOT}/site"
-OUT="${ASSEMBLE_OUT:-${SITE}/_site}"
-ALLOWLIST="${SITE}/allowlist.json"
+OUT="${ASSEMBLE_OUT:-${SITE}/public}"
+HUGO_BIN="${HUGO:-hugo}"
 
 die() {
   printf 'assemble: %s\n' "$*" >&2
   exit 1
 }
 
-[[ -f "${ALLOWLIST}" ]] || die "missing ${ALLOWLIST}"
+command -v "${HUGO_BIN}" >/dev/null 2>&1 || die "hugo not on PATH (set HUGO=)"
+ver="$("${HUGO_BIN}" version)"
+printf '%s\n' "${ver}" | grep -q 'extended' || die "need Hugo extended, got: ${ver}"
 
 PEERJ_SRC="${ROOT}/paper/manuscript.pdf"
 FRONTIERS_SRC="${ROOT}/paper/submission_frontiers_genetics/manuscript.pdf"
 [[ -f "${PEERJ_SRC}" ]] || die "missing ${PEERJ_SRC}"
 [[ -f "${FRONTIERS_SRC}" ]] || die "missing ${FRONTIERS_SRC}"
+[[ -f "${SITE}/hugo.toml" ]] || die "missing ${SITE}/hugo.toml"
 
 rm -rf "${OUT}"
 mkdir -p "${OUT}"
 
-python3 - "${SITE}" "${OUT}" "${ROOT}" "${ALLOWLIST}" "${PEERJ_SRC}" "${FRONTIERS_SRC}" <<'PY'
-import json
+(
+  cd "${SITE}"
+  "${HUGO_BIN}" --minify --destination "${OUT}"
+)
+
+python3 - "${OUT}" "${PEERJ_SRC}" "${FRONTIERS_SRC}" <<'PY'
 import shutil
 import sys
 from pathlib import Path
 
-site = Path(sys.argv[1])
-out = Path(sys.argv[2])
-root = Path(sys.argv[3])
-allow = json.loads(Path(sys.argv[4]).read_text())
-peerj_src = Path(sys.argv[5])
-frontiers_src = Path(sys.argv[6])
-
-for rel in allow["copy"]:
-    src = site / rel
-    if not src.is_file():
-        sys.exit(f"assemble: missing source {rel}")
-    dest = out / rel
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(src, dest)
-
-pdfs = allow["pdfs"]
-if len(pdfs) != 2:
-    sys.exit("assemble: allowlist must name exactly two PDFs")
-expected = [
-    ("paper/manuscript.pdf", "products/peerj-manuscript.pdf"),
-    ("paper/submission_frontiers_genetics/manuscript.pdf", "products/frontiers-manuscript.pdf"),
-]
-got = [(item["src"], item["dest"]) for item in pdfs]
-if got != expected:
-    sys.exit(f"assemble: PDF copy-set mismatch: {got}")
-
-dest_peerj = out / "products/peerj-manuscript.pdf"
-dest_frontiers = out / "products/frontiers-manuscript.pdf"
-dest_peerj.parent.mkdir(parents=True, exist_ok=True)
-shutil.copy2(peerj_src, dest_peerj)
-shutil.copy2(frontiers_src, dest_frontiers)
-if dest_peerj.stat().st_size != (root / "paper/manuscript.pdf").stat().st_size:
+out = Path(sys.argv[1])
+peerj_src = Path(sys.argv[2])
+frontiers_src = Path(sys.argv[3])
+dest_dir = out / "products"
+dest_dir.mkdir(parents=True, exist_ok=True)
+peerj = dest_dir / "peerj-manuscript.pdf"
+frontiers = dest_dir / "frontiers-manuscript.pdf"
+shutil.copy2(peerj_src, peerj)
+shutil.copy2(frontiers_src, frontiers)
+if peerj.stat().st_size != peerj_src.stat().st_size:
     sys.exit("assemble: PeerJ PDF size mismatch after copy")
-if dest_frontiers.stat().st_size != (
-    root / "paper/submission_frontiers_genetics/manuscript.pdf"
-).stat().st_size:
+if frontiers.stat().st_size != frontiers_src.stat().st_size:
     sys.exit("assemble: Frontiers PDF size mismatch after copy")
 
-pdf_files = sorted(p for p in out.rglob("*") if p.is_file() and p.suffix.lower() == ".pdf")
-if len(pdf_files) != 2:
-    sys.exit(f"assemble: expected exactly 2 PDFs in artifact, found {len(pdf_files)}")
-names = {p.name for p in pdf_files}
+pdfs = sorted(p for p in out.rglob("*") if p.is_file() and p.suffix.lower() == ".pdf")
+if len(pdfs) != 2:
+    sys.exit(f"assemble: expected exactly 2 PDFs, found {len(pdfs)}")
+names = {p.name for p in pdfs}
 if names != {"peerj-manuscript.pdf", "frontiers-manuscript.pdf"}:
     sys.exit(f"assemble: unexpected PDF names {sorted(names)}")
 
-deny_sub = allow["deny_substrings"]
-deny_suf = tuple(allow["deny_suffixes"])
+deny_sub = (
+    "docs/reports",
+    "results/v2",
+    "visual_qa",
+    "flat_upload",
+    ".omx/",
+    ".omc/",
+)
+deny_suf = (".h5ad", ".h5", ".npz")
+deny_names = tuple(f"Figure{i}.pdf" for i in range(1, 13))
 for path in out.rglob("*"):
     if not path.is_file():
         continue
     rel = path.relative_to(out).as_posix()
-    for needle in deny_sub:
-        if needle in rel:
-            sys.exit(f"assemble: denylist hit {rel!r} ({needle})")
-    if rel.endswith(deny_suf):
-        sys.exit(f"assemble: denylist suffix {rel!r}")
+    if any(n in rel for n in deny_sub) or rel.endswith(deny_suf) or path.name in deny_names:
+        sys.exit(f"assemble: denylist hit {rel!r}")
 
 print(f"assemble output: {out}")
 files = [p for p in out.rglob("*") if p.is_file()]

@@ -12,3 +12,6 @@ results/v2/
 
 # GitHub Pages assemble output (copied product PDFs; not capsule source)
 site/_site/
+site/public/
+site/resources/_gen/
+site/.hugo_build.lock

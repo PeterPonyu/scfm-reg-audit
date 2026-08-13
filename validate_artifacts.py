@@ -30,7 +30,7 @@ LOCAL_WORKTREE_PREFIXES = (
     "docs/reports/",
     "archive/",
     ".github/",  # Pages workflow YAML (not capsule payload)
-    "site/_site/",  # assemble output with copied product PDFs
+    "site/",  # Hugo Pages source, fonts, and publish dir (not capsule payload)
 )
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",

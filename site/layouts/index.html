@@ -1,0 +1,61 @@
+{{ define "bodyclass" }}page-hub{{ end }}
+{{ define "main" }}
+<main id="content">
+  <section class="problem">
+    <div class="wrap">
+      <p class="eyebrow">Fixed-panel audit</p>
+      <h1>scReg-Eval</h1>
+      <p class="lede">scRNA foundation-model gene graphs, scored on a frozen 446 TF × 1,200 gene panel against a two-tissue regulatory-potential proxy. The object is the audit, not a manuscript.</p>
+      <ul class="facts">
+        <li>
+          <span class="fact-k">Panel</span>
+          <span class="fact-v">446 TFs × 1,200 genes</span>
+          <span class="fact-s">Brain snATAC (GSE174367) + 10x PBMC multiome. Fibroblast mix (GSE206767) is construct-only.</span>
+        </li>
+        <li>
+          <span class="fact-k">Dual-null</span>
+          <span class="fact-v">Gene-label Mantel-style + degree-preserving shuffle, N=999</span>
+          <span class="fact-s">Dual-null Support ≠ protocol-pass ≠ recovery.</span>
+        </li>
+        <li>
+          <span class="fact-k">Protocol-pass</span>
+          <span class="fact-v fact-pass">0/13</span>
+          <span class="fact-s">Predeclared conjunction. Frozen. Support under the full spec is not a pass.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="materials" aria-labelledby="materials-heading">
+    <div class="wrap">
+      <h2 id="materials-heading">Materials</h2>
+      <p class="materials-lede">Two assembled PDFs of the same audit. Venue names are file labels, not this site’s identity.</p>
+      <div class="doors" role="list">
+        <a class="door" role="listitem" href="{{ "products/peerj-manuscript.pdf" | relURL }}">
+          <span class="door-kicker">Assembled product</span>
+          <span class="door-title">PeerJ CS PDF</span>
+          <span class="door-meta">Open the PeerJ Computer Science report</span>
+          <span class="door-go" aria-hidden="true">Open</span>
+        </a>
+        <a class="door" role="listitem" href="{{ "products/frontiers-manuscript.pdf" | relURL }}">
+          <span class="door-kicker">Assembled product</span>
+          <span class="door-title">Frontiers Genetics PDF</span>
+          <span class="door-meta">Open the Frontiers conversion PDF</span>
+          <span class="door-go" aria-hidden="true">Open</span>
+        </a>
+      </div>
+      <div class="doors doors-secondary" role="list">
+        <a class="door door-quiet" role="listitem" href="{{ "figures/" | relURL }}">
+          <span class="door-kicker">Catalog</span>
+          <span class="door-title">Figures</span>
+          <span class="door-meta">Stems, not upload FigureN.pdf names</span>
+        </a>
+        <a class="door door-quiet" role="listitem" href="{{ "reproducibility/" | relURL }}">
+          <span class="door-kicker">Capsule</span>
+          <span class="door-title">Reproducibility</span>
+          <span class="door-meta">Validate artifacts; full rerun is out of capsule</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+{{ end }}
