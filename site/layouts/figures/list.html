@@ -1,0 +1,39 @@
+{{ define "main" }}
+<main id="content">
+  <div class="wrap">
+    <p class="eyebrow">Catalog</p>
+    <h1>Figures</h1>
+    <p class="lede">Durable identity is the TikZ stem. Both PDFs print Figures 1–13 plus Appendix A1–A3. Coverage QC (<code>fig10_coverage_qc</code>) is Figure 13, not Figure 1. Protocol-pass (Fig. 12) is 0/13. Source links point at files on <code>origin/main</code>.</p>
+    <div class="table-well">
+      <table class="catalog">
+        <thead>
+          <tr>
+            <th>Display</th>
+            <th>Stem</th>
+            <th>Label</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range hugo.Data.figures.main }}
+          <tr>
+            <td>{{ .display }}</td>
+            <td><code>{{ .stem }}</code></td>
+            <td>{{ .label }}</td>
+            <td><a href="{{ site.Params.github }}/blob/main/{{ .source }}">{{ path.Base .source }}</a></td>
+          </tr>
+          {{ end }}
+          {{ range hugo.Data.figures.appendix }}
+          <tr>
+            <td>{{ .display }}</td>
+            <td><code>{{ .stem }}</code></td>
+            <td>{{ .label }}</td>
+            <td><a href="{{ site.Params.github }}/blob/main/{{ .source }}">{{ path.Base .source }}</a></td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{{ end }}

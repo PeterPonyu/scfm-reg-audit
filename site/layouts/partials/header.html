@@ -1,0 +1,30 @@
+{{ $home := site.Home.RelPermalink }}
+{{ $peerj := "peerj/" | relURL }}
+{{ $frontiers := "frontiers/" | relURL }}
+{{ $figures := "figures/" | relURL }}
+{{ $repro := "reproducibility/" | relURL }}
+{{ $here := .RelPermalink }}
+<header class="site-header" data-header>
+  <div class="wrap header-row">
+    <a class="wordmark" href="{{ $home }}">scReg-Eval</a>
+    <details class="nav-menu">
+      <summary>Menu</summary>
+      <nav class="nav-primary" aria-label="Primary">
+        <a href="{{ $home }}"{{ if eq $here $home }} aria-current="page"{{ end }}>Hub</a>
+        <a href="{{ $peerj }}"{{ if eq $here $peerj }} aria-current="page"{{ end }}>PeerJ CS</a>
+        <a href="{{ $frontiers }}"{{ if eq $here $frontiers }} aria-current="page"{{ end }}>Frontiers Genetics</a>
+        <a href="{{ $figures }}"{{ if eq $here $figures }} aria-current="page"{{ end }}>Figures</a>
+        <a href="{{ $repro }}"{{ if eq $here $repro }} aria-current="page"{{ end }}>Reproducibility</a>
+        <a href="{{ site.Params.github }}" rel="noopener">GitHub</a>
+      </nav>
+    </details>
+    <nav class="nav-primary nav-wide" aria-label="Primary">
+      <a href="{{ $home }}"{{ if eq $here $home }} aria-current="page"{{ end }}>Hub</a>
+      <a href="{{ $peerj }}"{{ if eq $here $peerj }} aria-current="page"{{ end }}>PeerJ CS</a>
+      <a href="{{ $frontiers }}"{{ if eq $here $frontiers }} aria-current="page"{{ end }}>Frontiers Genetics</a>
+      <a href="{{ $figures }}"{{ if eq $here $figures }} aria-current="page"{{ end }}>Figures</a>
+      <a href="{{ $repro }}"{{ if eq $here $repro }} aria-current="page"{{ end }}>Reproducibility</a>
+      <a href="{{ site.Params.github }}" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>

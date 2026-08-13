@@ -1,41 +1,26 @@
-# GitHub Pages source (`site/`)
+# GitHub Pages source (`site/`) — Hugo project
 
-H1+G1 static materials site. Public routes: `/` `/peerj/` `/frontiers/` `/figures/` `/reproducibility/`. Visual tokens follow `DESIGN.md`; routes follow `.omx/specs/github-pages-ia.md`.
+Public routes: `/` `/peerj/` `/frontiers/` `/figures/` `/reproducibility/`.
+Production URL: `https://PeterPonyu.github.io/scfm-reg-audit/`.
 
-Intended production URL (after a human enables Pages): `https://PeterPonyu.github.io/scfm-reg-audit/`. That URL is **not** live until Settings → Pages → Source = GitHub Actions succeeds. Do not set `homepageUrl` before the first 200.
+Hugo extended **0.165.0** (pinned in `.github/workflows/pages.yml`). The hub is a door into the audit object and a door to materials (two PDFs, figure catalog, capsule). Venue names are file labels.
 
-Header may also include outbound GitHub blob links labeled Protocol and Cite (approved hub raster); those are not Pages routes.
-
-## Local assemble (PR-review path)
+## Local
 
 ```bash
-bash site/assemble.sh
-python3 -m http.server 4173 --directory site/_site
+# needs Hugo extended (CI pins 0.165.0)
+export HUGO=/path/to/hugo   # optional
+bash site/test.sh
+python3 -m http.server 4173 --directory site/public
 ```
 
-Output directory is `site/_site/` (gitignored). It must contain `.nojekyll`, the five HTML routes, `styles.css`, and **exactly two** PDFs:
+`site/test.sh` runs `site/assemble.sh` then `site/test.py`. Assemble fail-closes unless both SoT PDFs exist:
 
 - `products/peerj-manuscript.pdf` ← `paper/manuscript.pdf`
 - `products/frontiers-manuscript.pdf` ← `paper/submission_frontiers_genetics/manuscript.pdf`
 
-Missing SoT PDF → non-zero exit. Do not commit PDFs under `site/`.
+Do not commit `site/public/` or the product PDFs. Fonts are self-hosted woff2 under `static/fonts/` (Geist SIL OFL; no Google Fonts CDN).
 
-Hub screenshot (1280×800):
+## CI
 
-```bash
-npx --yes playwright screenshot --viewport-size=1280,800 \
-  http://127.0.0.1:4173/ \
-  .omx/artifacts/visual-ralph/github-pages-hub/screenshot-1280x800.png
-```
-
-## Human enablement (not done by git)
-
-1. Merge `site/` + `.github/workflows/pages.yml` to `main` (user commit/push).
-2. Settings → Pages → Source = **GitHub Actions**.
-3. Approve the `github-pages` environment if GitHub requires reviewers. Restrict it to default branch `main`.
-4. Confirm `GET https://PeterPonyu.github.io/scfm-reg-audit/` → 200.
-5. Then optionally set repo `homepageUrl` to that URL.
-
-## H2 fallback (not v1)
-
-If Actions cannot be enabled: run `bash site/assemble.sh` and publish the contents of `site/_site/` as the root of a `gh-pages` branch. Do not mix `deploy-pages` with a force-push to `gh-pages`.
+Push to `main` or `workflow_dispatch` builds with pinned Hugo extended, `hugo --minify`, copies the two PDFs, runs `site/test.sh`, uploads `site/public/` via `upload-pages-artifact`, deploys with `deploy-pages`.

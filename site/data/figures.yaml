@@ -1,0 +1,67 @@
+main:
+  - display: "Fig. 1"
+    stem: fig_study_design
+    label: study design
+    source: paper/figs/fig_study_design.tex
+  - display: "Fig. 2"
+    stem: fig1_truth_construct
+    label: proxy construct
+    source: paper/figs/fig1_truth_construct.tex
+  - display: "Fig. 3"
+    stem: fig2_cross_tissue_decomp
+    label: cross-tissue proxy
+    source: paper/figs/fig2_cross_tissue_decomp.tex
+  - display: "Fig. 4"
+    stem: fig3_primary_audit
+    label: primary audit
+    source: paper/figs/fig3_primary_audit.tex
+  - display: "Fig. 5"
+    stem: fig4_usability_check
+    label: usability / concordance
+    source: paper/figs/fig4_usability_check.tex
+  - display: "Fig. 6"
+    stem: fig5_null_diagnostics
+    label: null diagnostics
+    source: paper/figs/fig5_null_diagnostics.tex
+  - display: "Fig. 7"
+    stem: fig6_spec_sensitivity
+    label: spec sensitivity
+    source: paper/figs/fig6_spec_sensitivity.tex
+  - display: "Fig. 8"
+    stem: fig7_pertype_descriptive
+    label: per-cell-type descriptive
+    source: paper/figs/fig7_pertype_descriptive.tex
+  - display: "Fig. 9"
+    stem: fig8_injection_ladder
+    label: injection ladder
+    source: paper/figs/fig8_injection_ladder.tex
+  - display: "Fig. 10"
+    stem: fig9_tf_probe
+    label: TF-disjoint probe
+    source: paper/figs/fig9_tf_probe.tex
+  - display: "Fig. 11"
+    stem: fig11_third_tissue_transfer
+    label: third-tissue transfer
+    source: paper/figs/fig11_third_tissue_transfer.tex
+  - display: "Fig. 12"
+    stem: fig12_protocol_pass_matrix
+    label: protocol-pass matrix (0/13)
+    source: paper/figs/fig12_protocol_pass_matrix.tex
+  - display: "Fig. 13"
+    stem: fig10_coverage_qc
+    label: coverage QC
+    source: paper/figs/fig10_coverage_qc.tex
+
+appendix:
+  - display: "A1"
+    stem: fig_ext1_construct_mantel
+    label: construct-lane Mantel
+    source: paper/submission_frontiers_genetics/fig_ext1_construct_mantel.tex
+  - display: "A2"
+    stem: fig_ext2_baselines_collectri
+    label: CollecTRI prior
+    source: paper/submission_frontiers_genetics/fig_ext2_baselines_collectri.tex
+  - display: "A3"
+    stem: fig_ext3_honesty_policy
+    label: honesty / inclusion limits
+    source: paper/submission_frontiers_genetics/fig_ext3_honesty_policy.tex
