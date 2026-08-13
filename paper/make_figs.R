@@ -63,8 +63,13 @@ theme_set(theme_bw(base_size = 11) + theme(
   legend.text = element_text(size = 9.5), axis.title = element_text(size = 10),
   axis.text = element_text(size = 9.5), plot.margin = margin(4, 6, 3, 4)))
 
-# Bottom-right D panels often carry longer titles that crowd the D tag when
-# left-flush; a small left margin shifts the title right of the tag.
+# Center titles over the geom panel; keep letter tags in the corner so
+# hjust = 0.5 does not drag the A/B/C/D tag into the middle.
+center_panel_title <- theme(
+  plot.title = element_text(hjust = 0.5, margin = margin(b = 3)),
+  plot.title.position = "panel",
+  plot.tag.position = c(0.02, 1))
+# Later figures still left-nudge D titles off the tag; keep that helper.
 d_title_nudge <- theme(
   plot.title = element_text(hjust = 0, margin = margin(b = 3, l = 10)))
 
@@ -146,6 +151,168 @@ cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, fun
              rho = x$observed_spearman)
 }))
 
+# ===== Study-design schematic (Frontiers opening Fig. 1; PeerJ does not input) =====
+# Two-tissue pairing + ±2 kb locus from existing panel$third_tissue / pooled counts.
+# Does not redraw the four-box proxy recipe (fig1_truth_construct A) or Fig. 12B.
+n_fm_brain <- sum(pooled$tissue == "Brain" & pooled$spec == "full")
+n_fm_pbmc <- sum(pooled$tissue == "PBMC" & pooled$spec == "full")
+stopifnot(n_fm_brain == 8L, n_fm_pbmc == 5L)
+sd_cov <- bind_rows(lapply(panel$third_tissue$coverage, function(c) {
+  data.frame(tissue = c$tissue, tag = c$tag,
+             relevant = c$relevant_peaks, total = c$total_peaks,
+             pct = 100 * c$relevant_peaks / c$total_peaks,
+             stringsAsFactors = FALSE)
+}))
+sd_cov$tissue <- factor(sd_cov$tissue, levels = c("Brain", "PBMC", "Fibroblast mix"))
+sd_ink <- "#1a1a1a"
+sd_arrow <- "#5c6770"
+sd_cards <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 2.48, ymax = 3.92,
+  x = c(1.15, 3.35, 5.55),
+  fill = c(LIGHT, "#d9efe8", "#f2f2f2"),
+  border = c(BLUE, AQUA, MUTED),
+  title = c("Brain", "PBMC", "Fibroblast mix"),
+  src = c("GSE174367", "10x multiome", "GSE206767"),
+  pair = c("unpaired", "paired", "construct-only"),
+  assay = c("snATAC + cross-study RNA",
+            "RNA and ATAC, same cells",
+            "ATAC pool; no FM rows"),
+  fm = c(sprintf("%d FM / readout rows", n_fm_brain),
+         sprintf("%d FM / readout rows", n_fm_pbmc),
+         "no FM rows"),
+  stringsAsFactors = FALSE
+)
+sd_flow <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 0.28, ymax = 1.58,
+  x = c(1.15, 3.35, 5.55), y = 0.93,
+  fill = c("#f2f2f2", LIGHT, "#ebe6f6"),
+  border = c(MUTED, BLUE, VIOLET),
+  title = c("frozen panel", "two graphs", "dual-null audit"),
+  body = c("446$\\times$1{,}200\nTF $\\times$ gene",
+           "proxy (ATAC + motif)\nvs FM gene graph",
+           "Mantel / partial $\\rho$\ngene-label + row-shuffle"),
+  stringsAsFactors = FALSE
+)
+f_sd_a <- ggplot() +
+  geom_rect(data = sd_cards,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.55) +
+  geom_text(data = sd_cards, aes(x = x, y = 3.74, label = title, color = border),
+            size = 3.45, fontface = "bold") +
+  geom_text(data = sd_cards, aes(x = x, y = 3.48, label = src),
+            size = 2.70, color = sd_ink) +
+  geom_label(data = sd_cards, aes(x = x, y = 3.18, label = pair, color = border),
+             size = 2.55, fill = "white", label.size = 0.35,
+             label.padding = unit(0.10, "lines"), label.r = unit(0.08, "lines")) +
+  geom_text(data = sd_cards, aes(x = x, y = 2.88, label = assay),
+            size = 2.45, color = sd_ink) +
+  geom_text(data = sd_cards, aes(x = x, y = 2.62, label = fm),
+            size = 2.45, color = MUTED) +
+  annotate("segment", x = sd_cards$x, xend = sd_cards$x,
+           y = 2.48, yend = 2.12, color = sd_arrow, linewidth = 0.55) +
+  annotate("segment", x = 1.15, xend = 5.55, y = 2.12, yend = 2.12,
+           color = sd_arrow, linewidth = 0.55) +
+  annotate("segment", x = 3.35, xend = 3.35, y = 2.12, yend = 1.58,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.55) +
+  geom_rect(data = sd_flow,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.55) +
+  geom_text(data = sd_flow, aes(x = x, y = 1.38, label = title, color = border),
+            size = 3.15, fontface = "bold") +
+  geom_text(data = sd_flow, aes(x = x, y = 0.78, label = body),
+            size = 2.55, color = sd_ink, lineheight = 1.08) +
+  annotate("segment", x = 2.08, xend = 2.42, y = 0.93, yend = 0.93,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.6) +
+  annotate("segment", x = 4.28, xend = 4.62, y = 0.93, yend = 0.93,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.6) +
+  scale_fill_identity() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0.08, 6.62), ylim = c(0.12, 4.08), clip = "off") +
+  labs(title = "Two-tissue design, one frozen panel") +
+  theme_void(base_size = 11) +
+  theme(plot.title = element_text(size = 11, hjust = 0),
+        plot.title.position = "plot",
+        plot.margin = margin(4, 10, 2, 2))
+
+# Locus cartoon: promoter + gene body ±2 kb. Peak boxes, not ChIP tracks / loops.
+sd_peaks <- data.frame(
+  xmin = c(0.28, 0.58, 1.28, 1.52, 2.05, 2.55, 3.35, 4.55, 5.42, 5.78),
+  xmax = c(0.46, 0.76, 1.44, 1.70, 2.22, 2.78, 3.58, 4.78, 5.60, 5.96),
+  ymin = 2.52, ymax = 2.88,
+  admitted = c(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
+)
+sd_cov$lab <- sprintf("%s\n%s/%s (%.2f\\%%)",
+                      sd_cov$tissue,
+                      prettyNum(sd_cov$relevant, big.mark = ","),
+                      prettyNum(sd_cov$total, big.mark = ","),
+                      sd_cov$pct)
+sd_chip <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 0.22, ymax = 1.22,
+  x = c(1.15, 3.35, 5.55),
+  fill = c(LIGHT, "#d9efe8", "#f2f2f2"),
+  border = c(BLUE, AQUA, MUTED),
+  lab = sd_cov$lab[match(c("Brain", "PBMC", "Fibroblast mix"), sd_cov$tissue)],
+  stringsAsFactors = FALSE
+)
+f_sd_b <- ggplot() +
+  annotate("rect", xmin = 1.15, xmax = 5.05, ymin = 1.92, ymax = 2.28,
+           fill = "#eef2f5", color = NA) +
+  annotate("rect", xmin = 1.78, xmax = 4.42, ymin = 1.98, ymax = 2.22,
+           fill = BLUE, color = NA, alpha = 0.85) +
+  annotate("segment", x = 1.78, xend = 1.78, y = 1.88, yend = 2.42,
+           color = sd_ink, linewidth = 0.55) +
+  geom_rect(data = sd_peaks,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = ifelse(admitted, BLUE, "grey70")),
+            color = NA) +
+  annotate("segment", x = 1.15, xend = 5.05, y = 3.08, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("segment", x = 1.15, xend = 1.15, y = 2.98, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("segment", x = 5.05, xend = 5.05, y = 2.98, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("text", x = 3.10, y = 3.28, label = "promoter + gene body $\\pm$2\\,kb",
+           size = 3.05, color = sd_ink) +
+  annotate("text", x = 1.78, y = 1.72, label = "TSS",
+           size = 2.55, color = sd_ink, hjust = 0.5) +
+  annotate("text", x = 3.10, y = 1.72, label = "gene body",
+           size = 2.55, color = MUTED) +
+  annotate("text", x = 0.52, y = 3.28, label = "not admitted",
+           size = 2.40, color = MUTED) +
+  annotate("text", x = 5.70, y = 3.28, label = "not admitted",
+           size = 2.40, color = MUTED) +
+  annotate("text", x = 3.10, y = 2.38, label = "linked peaks",
+           size = 2.40, color = BLUE) +
+  geom_rect(data = sd_chip,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.50) +
+  geom_text(data = sd_chip, aes(x = x, y = 0.72, label = lab, color = border),
+            size = 2.70, lineheight = 1.10) +
+  scale_fill_identity() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0.08, 6.62), ylim = c(0.08, 3.48), clip = "off") +
+  labs(title = "Linkage rule admits 4--6\\% of peaks") +
+  theme_void(base_size = 11) +
+  theme(plot.title = element_text(size = 11, hjust = 0),
+        plot.title.position = "plot",
+        plot.margin = margin(4, 10, 2, 2))
+
+emit("fig_study_design",
+     f_sd_a / f_sd_b + plot_annotation(tag_levels = "A") +
+       plot_layout(heights = c(1.18, 1.00)),
+     6.8, 5.4, tags = c("A", "B"))
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig_study_design"))
+  quit(save = "no", status = 0)
+
 # ==================== Figure 1: construct, evidence, panel ====================
 # A: S-shaped construction schematic matching Methods: ATAC peak → peak–gene
 # link + JASPAR/MOODS motif → directed TF→target weight → restrict to the
@@ -200,18 +367,20 @@ f1a <- ggplot(flow, aes(x, y)) +
            size = 2.45, color = MUTED) +
   # Caveat lives in the fig:proxy caption (not an in-panel red banner).
   coord_cartesian(xlim = c(0.15, 3.85), ylim = c(0.72, 2.62), clip = "off") +
-  labs(title = "Accessibility and motif evidence define the audited proxy") +
+  labs(title = "ATAC and motif define the proxy") +
   theme_void(base_size = 11) +
   theme(plot.title = element_text(size = 11, hjust = 0),
-        plot.margin = margin(4, 10, 3, 0))
+        plot.title.position = "plot",
+        plot.margin = margin(4, 14, 3, 0))
 
 f1b <- ggplot(cross, aes(reorder(pair, rho), rho)) +
   geom_col(fill = BLUE, width = 0.62) +
   geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.58)) +
-  labs(x = NULL, y = "observed Spearman $\\rho$", title = "Proxy structure is reproducible across tissues") +
+  labs(x = NULL, y = "observed Spearman $\\rho$", title = "Reproducible across tissues") +
   theme(axis.text.x = element_text(angle = 12, hjust = 0.95),
-        plot.margin = margin(4, 8, 3, 6))
+        plot.margin = margin(4, 8, 3, 8)) +
+  center_panel_title
 
 motif <- bind_rows(lapply(names(panel$motif_evidence), function(tn) {
   m <- panel$motif_evidence[[tn]]
@@ -229,7 +398,8 @@ f1c <- ggplot(motif, aes(tissue, hits_per_peak)) +
   coord_cartesian(ylim = c(0, 28)) +
   labs(x = NULL, y = "motif hits per peak",
        title = "Expected-random motif share") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  theme(axis.text.x = element_text(angle = 15, hjust = 1)) +
+  center_panel_title
 
 comp <- bind_rows(lapply(c("brain", "pbmc"), function(tn) {
   cc <- panel$panel_composition[[tn]]
@@ -244,8 +414,12 @@ f1d <- ggplot(comp, aes(tissue, n, fill = metric)) +
   coord_cartesian(ylim = c(0, 160)) +
   labs(x = NULL, y = "TFs (of 446)", fill = NULL,
        title = "The fixed panel is composition-biased") +
-  theme(legend.position = "top") +
-  d_title_nudge
+  theme(legend.position = "top",
+        legend.key.size = unit(0.35, "lines"),
+        legend.key.width = unit(0.35, "lines"),
+        legend.key.height = unit(0.35, "lines"),
+        legend.text = element_text(size = 7.5)) +
+  center_panel_title
 
 # free(f1a): A is theme_void, so default panel-align with C leaves a large
 # left blank under C's y-axis; releasing it shifts A left and opens air to B.
@@ -277,7 +451,7 @@ f2a <- ggplot(dec_long, aes(pair, rho, fill = metric)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(values = c(BLUE, YELLOW, AQUA)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
-       title = "Most apparent reproducibility is marginal structure") +
+       title = "Most reproducibility is marginal") +
   # One-row legend is wider than the panel and clips the left key; two
   # compact rows keep all three entries inside the figure box.
   guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
@@ -285,16 +459,20 @@ f2a <- ggplot(dec_long, aes(pair, rho, fill = metric)) +
         legend.text = element_text(size = 8.5),
         legend.key.size = unit(0.28, "cm"),
         legend.margin = margin(0, 0, 0, 0),
-        plot.margin = margin(4, 6, 3, 6),
-        axis.text.x = element_text(angle = 15, hjust = 1))
+        plot.margin = margin(4, 14, 3, 6),
+        axis.text.x = element_text(angle = 15, hjust = 1)) +
+  center_panel_title
 
 f2b <- ggplot(dec, aes(reorder(pair, frac), frac)) +
   geom_col(fill = BLUE, width = 0.6) +
   geom_text(aes(label = sprintf("%.0f\\%%", 100 * frac)), vjust = -0.5, size = 3.3) +
-  coord_cartesian(ylim = c(0, 0.9)) +
+  scale_x_discrete(expand = expansion(mult = c(0.22, 0.22))) +
+  coord_cartesian(ylim = c(0, 0.9), clip = "off") +
   labs(x = NULL, y = "fraction explained",
        title = "Additive marginals explain 69--78\\%") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  theme(axis.text.x = element_text(angle = 15, hjust = 1),
+        plot.margin = margin(4, 6, 3, 8)) +
+  center_panel_title
 
 f2c <- ggplot(dec, aes(reorder(pair, residual - observed), residual - observed)) +
   geom_col(aes(fill = (residual - observed) > 0), width = 0.6, show.legend = FALSE) +
@@ -302,7 +480,8 @@ f2c <- ggplot(dec, aes(reorder(pair, residual - observed), residual - observed))
   scale_fill_manual(values = c(`TRUE` = RED, `FALSE` = MUTED)) +
   labs(x = NULL, y = "residual $-$ observed $\\rho$",
        title = "One pair is net-subtractive") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  theme(axis.text.x = element_text(angle = 15, hjust = 1)) +
+  center_panel_title
 
 inv <- bind_rows(lapply(c("brain", "pbmc"), function(tn) {
   t <- invariance$tissues[[tn]]
@@ -316,9 +495,10 @@ f2d <- ggplot(inv, aes(tissue, mean)) +
   geom_point(size = 2.6, color = BLUE) +
   coord_cartesian(ylim = c(0.95, 1.0)) +
   labs(x = NULL, y = "cell-type consensus $\\rho$",
-       title = "Proxy is near cell-type-invariant") +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1)) +
-  d_title_nudge
+       title = "Near cell-type-invariant") +
+  theme(axis.text.x = element_text(angle = 15, hjust = 1),
+        plot.margin = margin(4, 10, 3, 6)) +
+  center_panel_title
 
 emit("fig2_cross_tissue_decomp", (f2a | f2b) / (f2c | f2d) + plot_annotation(tag_levels = "A") +
        plot_layout(axis_titles = "collect"), 6.8, 5.8)
@@ -381,12 +561,13 @@ f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = 
   scale_x_log10() + scale_y_log10() +
   labs(x = "gene-label $q_M$", y = "row-shuffle $q_D$",
        color = NULL, title = "Both nulls below 0.05") +
-  theme(legend.position = "none")  # colors defined by panel A's legend; no room here
+  theme(legend.position = "none") +  # colors defined by panel A's legend; no room here
+  center_panel_title
 
 # 0x12: dual-null positives vs same-edge co-expression baseline, with r^2 notes.
 # Also mark rows below their tissue baseline (e.g. PBMC Geneformer embed).
-short_model <- c("Geneformer embed" = "GF emb", "scGPT encoder" = "scGPT",
-                 "UCE encoder" = "UCE", "Geneformer attention" = "GF attn",
+short_model <- c("Geneformer embed" = "GFe", "scGPT encoder" = "scGPT",
+                 "UCE encoder" = "UCE", "Geneformer attention" = "GFa",
                  "scFoundation encoder" = "scF", "Random-init floor" = "rand",
                  "Geneformer KO" = "KO", "Artifact-corrected KO" = "KO+")
 supp <- primary %>% filter(status == "supported by both nulls")
@@ -403,18 +584,24 @@ base_cmp <- bind_rows(lapply(seq_len(nrow(supp)), function(i) {
   )
 }))
 base_cmp$label <- factor(base_cmp$label, levels = unique(base_cmp$label))
-# r^2 annotation only on FM bars (tiny effects: scientific notation avoided).
-r2_lab <- base_cmp %>% filter(kind == "FM dual-null") %>%
-  mutate(lab = sprintf("$r^{2}\\!=\\!%.2e$", r2))
+# r^2 on FM bars only; dodge with geom_col so labels sit on the teal bars.
+# Caption states r^2 = rho^2. Empty string on baseline avoids a second column of text.
+base_cmp$r2_txt <- ifelse(
+  base_cmp$kind == "FM dual-null",
+  sprintf("$r^{2}\\!=\\!%.1e$", base_cmp$r2),
+  "")
 f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  geom_text(data = r2_lab, aes(x = label, y = rho, label = lab),
-            vjust = -0.35, size = 2.0, color = MUTED, inherit.aes = FALSE) +
+  geom_text(aes(label = r2_txt, vjust = ifelse(rho >= 0, -0.45, 1.45)),
+            position = position_dodge(width = 0.8),
+            size = 1.65, color = MUTED) +
   scale_fill_manual(values = c("FM dual-null" = AQUA, "co-expression baseline" = "black")) +
+  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) +
   labs(x = NULL, y = "partial Spearman $\\rho$", fill = NULL,
-       title = "Dual-null rows vs baseline ($r^{2}=\\rho^{2}$ on FM bars)") +
-  coord_cartesian(ylim = c(min(0, min(base_cmp$rho) - 0.001),
-                           max(base_cmp$rho) * 1.22)) +
+       title = "Dual-null rows vs baseline") +
+  coord_cartesian(ylim = c(min(0, min(base_cmp$rho) - 0.0028),
+                           max(base_cmp$rho) * 1.32),
+                  clip = "off") +
   guides(fill = guide_legend(ncol = 1,
                              keywidth = unit(0.5, "lines"),
                              keyheight = unit(0.4, "lines"))) +
@@ -427,8 +614,11 @@ f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
         legend.background = element_rect(fill = "white", color = NA),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.margin = margin(0, 0, 0, 0),
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 1, l = 10)),
-        axis.text.x = element_text(size = 7.5, angle = 40, hjust = 1))
+        plot.title.position = "panel",
+        plot.title = element_text(hjust = 0.5, margin = margin(t = 0, b = 1)),
+        plot.tag.position = c(0.02, 1),
+        plot.margin = margin(4, 8, 3, 14),
+        axis.text.x = element_text(size = 6.5, angle = 35, hjust = 1))
 
 # Bottom row: A/B forests keep a narrow *panel* (data box ~176-354 of 491 pt)
 # with y-tick / q-label text in the margins. Plain patchwork panel-aligns C|D
@@ -438,7 +628,7 @@ f3d <- ggplot(base_cmp, aes(label, rho, fill = kind)) +
 # label_size 13.2 matches patchwork A/B tag scale 1.20 at 11pt base (11 → 1.00).
 f3_bottom <- cowplot::plot_grid(
   f3c, f3d, nrow = 1,
-  rel_widths = c(1.0, 1.1),
+  rel_widths = c(1.0, 1.22),
   labels = c("C", "D"), label_size = 13.2, label_fontface = "plain",
   hjust = 0, vjust = 1.1
 )
@@ -482,9 +672,11 @@ f4a <- ggplot(usa, aes(fm_vs_coexp, primary_rho)) +
   scale_shape_manual(values = c(`TRUE` = 21, `FALSE` = 22), guide = "none") +
   labs(x = "FM--co-expression concordance $\\rho$",
        y = "full-confound partial $\\rho$",
-       title = "All readouts: concordance vs dual-null (ring: GF attn passer)") +
+       title = "Concordance vs dual-null") +
   theme(legend.position = "top",
-        legend.text = element_text(size = 7.5))
+        legend.text = element_text(size = 7.5),
+        plot.margin = margin(4, 14, 3, 4)) +
+  center_panel_title
 
 tile <- usa %>% transmute(display,
                           `supported positive` =
@@ -502,7 +694,8 @@ f4b <- ggplot(tile_long, aes(check, display, fill = pass)) +
   # Nudge only the B tag right; title stays on the plot title grob.
   theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1),
         axis.ticks = element_blank(),
-        plot.tag.position = c(0.10, 1))
+        plot.margin = margin(4, 6, 3, 10)) +
+  center_panel_title
 
 ko_df <- data.frame(
   readout = rep(c("KO raw", "KO artifact-corrected"), each = 3),
@@ -517,8 +710,9 @@ f4c <- ggplot(ko_df, aes(metric, rho, fill = readout)) +
   geom_hline(yintercept = 0, color = "grey55") +
   scale_fill_manual(values = c("grey20", BLUE)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
-       title = "Knockout readout and its position-shift control") +
-  theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1))
+       title = "KO vs shift control") +
+  theme(legend.position = "top", axis.text.x = element_text(angle = 12, hjust = 1)) +
+  center_panel_title
 
 gf <- primary %>% filter(!is_baseline, model %in% c("Geneformer embed", "Geneformer attention"))
 f4d <- ggplot(gf, aes(rho, model, group = tissue, color = tissue)) +
@@ -527,9 +721,10 @@ f4d <- ggplot(gf, aes(rho, model, group = tissue, color = tissue)) +
   geom_point(size = 2.6) +
   scale_color_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   labs(x = "partial $\\rho$ (full confounds)", y = NULL, color = NULL,
-       title = "Same-model readouts disagree") +
-  theme(legend.position = "top", axis.ticks.y = element_blank()) +
-  d_title_nudge
+       title = "Same-model readout signs") +
+  theme(legend.position = "top", axis.ticks.y = element_blank(),
+        plot.margin = margin(4, 12, 3, 8)) +
+  center_panel_title
 
 # Bottom row: A/B share long y-tick labels, so plain patchwork panel-aligns
 # C|D into the short data column (large blank under the ticks). cowplot
@@ -554,23 +749,19 @@ dn <- bind_rows(lapply(deg_null, function(x) {
              null_mean = x$null_mean, null_sd = x$null_sd, z = x$z, p = x$p_perm)
 }))
 dn$label <- factor(dn$label, levels = rev(dn$label))
-f5a <- ggplot(dn, aes(label)) +
-  geom_errorbar(aes(ymin = null_mean - 1.96 * null_sd, ymax = null_mean + 1.96 * null_sd),
+f5a <- ggplot(dn, aes(x = observed, y = label)) +
+  geom_errorbar(aes(xmin = null_mean - 1.96 * null_sd, xmax = null_mean + 1.96 * null_sd),
                 width = 0.3, color = MUTED) +
-  geom_point(aes(y = null_mean), size = 2.0, color = MUTED) +
-  geom_point(aes(y = observed), size = 2.6, color = AQUA) +
-  geom_text(aes(y = observed, label = sprintf("$z=%.2f$", z)), hjust = -0.15, size = 3.1) +
-  coord_flip(ylim = c(-0.0032, 0.0062)) +
-  labs(x = NULL, y = "partial $\\rho$",
-       title = "Row-shuffle null 95\\% band vs observed") +
-  # Title over the panel (not the full plot) so long y-ticks do not pull it
-  # into the left gutter; free(..., side="t") still lets the panel rise.
-  # Small right nudge on A (PeerJ Fig.~6 left column): default tag sits in the
-  # empty title-band gutter left of the panel spine.
+  geom_point(aes(x = null_mean), size = 2.0, color = MUTED) +
+  geom_point(size = 2.6, color = AQUA) +
+  geom_text(aes(label = sprintf("$z=%.2f$", z)), hjust = -0.15, size = 3.1) +
+  coord_cartesian(xlim = c(-0.0032, 0.0062)) +
+  labs(x = "partial $\\rho$", y = NULL,
+       title = "Row-shuffle null 95\\% band") +
   theme(axis.ticks.y = element_blank(),
-        plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
-        plot.tag.position = c(0.08, 1))
+        axis.title.x = element_text(margin = margin(t = 2)),
+        plot.margin = margin(4, 10, 4, 4)) +
+  center_panel_title
 
 att_obs <- attn_readout$observed
 att_df <- data.frame(
@@ -595,10 +786,8 @@ f5b <- ggplot(att_df, aes(variant, rho, fill = kind)) +
         legend.key.size = unit(0.28, "cm"),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
-        axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5),
-        # Small right nudge toward the panel spine (default sits in the
-        # left gutter of the right-column package).
-        plot.tag.position = c(0.10, 1))
+        axis.text.x = element_text(angle = 18, hjust = 1, size = 8.5)) +
+  center_panel_title
 
 ko_null <- bind_rows(lapply(c("mantel_ko_partial", "mantel_ko_ctrl_partial"), function(k) {
   m <- ko_stat[[k]]
@@ -619,12 +808,9 @@ f5c <- ggplot(ko_null, aes(readout)) +
   # "KO raw + artifact-corrected both align after co-expression alone" wording
   # lives in the figure caption (panel C).
   labs(x = NULL, y = "partial $\\rho$ $|$ co-expression",
-       title = "KO aligns after co-expression alone") +
-  # Match A: small right nudge into the left-column title-band gutter.
-  theme(axis.ticks.y = element_blank(),
-        plot.title.position = "panel",
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 2)),
-        plot.tag.position = c(0.08, 1))
+       title = "KO after co-expression only") +
+  theme(axis.ticks.y = element_blank()) +
+  center_panel_title
 
 # The omission guard is a parallel brain analysis with its own seed stream; its
 # q-values differ from the authoritative audit, so the panel compares DECISIONS,
@@ -638,12 +824,13 @@ audit_dec <- primary %>% filter(!is_baseline, tissue == "Brain") %>%
   transmute(model, authoritative = status == "supported by both nulls")
 om <- om %>% left_join(audit_dec, by = "model")
 om_long <- bind_rows(
-  om %>% transmute(model, analysis = "authoritative\naudit", supported = authoritative),
-  om %>% transmute(model, analysis = "attention-omission\nguard", supported = guard))
+  om %>% transmute(model, analysis = "audit", supported = authoritative),
+  om %>% transmute(model, analysis = "attn-omit guard", supported = guard))
 om_long$model <- factor(om_long$model, levels = rev(unique(om_long$model)))
 f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
   geom_tile(color = "white") +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
+  scale_x_discrete(expand = expansion(mult = c(0.15, 0.15))) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Support decisions agree") +
   theme(legend.position = "top",
@@ -652,18 +839,18 @@ f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
         legend.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(2, "pt"),
         axis.ticks = element_blank(),
-        # Match B: small right nudge toward the heatmap spine / packaged plot.
-        plot.tag.position = c(0.10, 1)) +
-  d_title_nudge
+        axis.text.x = element_text(size = 8, angle = 15, hjust = 1),
+        plot.margin = margin(4, 10, 3, 12)) +
+  center_panel_title
 
 # free(A/C, side="t"): B/D keep a legend band above the panel; without freeing,
 # A/C titles stay level with B/D while their panels drop, leaving a blank under
-# the title. A/C/B/D each use plot.tag.position (A/C 0.08; B/D 0.10).
+# the title. Titles are centered on the geom panel; tags stay in the corner.
 emit("fig5_null_diagnostics",
      (free(f5a, type = "panel", side = "t") | f5b) /
        (free(f5c, type = "panel", side = "t") | f5d) +
        plot_annotation(tag_levels = "A") +
-       plot_layout(axis_titles = "collect"),
+       plot_layout(widths = c(1, 1.08)),
      6.8, 6.0)
 
 # ==================== Figure 6: specification dependence ====================
@@ -711,24 +898,29 @@ f6a <- ggplot(pair6, aes(y = display)) +
   # ("…6 sign flips" colliding with "Sign-flip map"). plot.title.position =
   # "plot" pulls the title into the unused left y-label band.
   labs(x = "partial Spearman $\\rho$", y = NULL,
-       title = "Paired full$\\leftrightarrow$non-degree",
-       subtitle = sprintf("dual-null $7\\rightarrow 0$; %d sign flips", n_flip)) +
-  guides(fill = guide_legend(override.aes = list(shape = 21), order = 2),
-         shape = guide_legend(order = 1),
-         color = guide_legend(order = 3)) +
-  theme(legend.position = "top",
-        legend.box = "vertical",
-        legend.margin = margin(0, 0, 0, 0),
+       title = "Paired full vs non-degree") +
+  # One-row shape/fill/color keys overflow panel A and collide with B's
+  # "partial ρ" swatches. Stack each guide as a 2-row column, left-justify
+  # the block, and keep a right box margin so "same sign" stays clear of B.
+  guides(fill = guide_legend(override.aes = list(shape = 21), order = 2,
+                             nrow = 2, byrow = FALSE),
+         shape = guide_legend(order = 1, nrow = 2, byrow = FALSE),
+         color = guide_legend(order = 3, nrow = 2, byrow = FALSE)) +
+  theme(legend.position = "bottom",
+        legend.justification = "left",
+        legend.box = "horizontal",
+        legend.box.just = "left",
+        legend.margin = margin(0, 8, 0, 0),
+        legend.box.margin = margin(0, 10, 0, 0),
+        legend.spacing.x = unit(10, "pt"),
         legend.spacing.y = unit(1, "pt"),
-        legend.text = element_text(size = 7),
-        legend.key.size = unit(0.28, "cm"),
+        legend.text = element_text(size = 6.5),
+        legend.key.size = unit(0.25, "cm"),
         axis.ticks.y = element_blank(),
+        axis.title.x = element_text(margin = margin(t = 2)),
         plot.title.position = "plot",
-        plot.title = element_text(hjust = 0, margin = margin(b = 1)),
-        plot.subtitle = element_text(size = 9, hjust = 0, margin = margin(b = 3)),
-        # Extra right pad separates A legends from B title; tighten left so the
-        # forest expands into the former left whitespace.
-        plot.margin = margin(4, 14, 3, 0))
+        plot.title = element_text(hjust = 0, margin = margin(b = 3)),
+        plot.margin = margin(4, 16, 3, 0))
 
 # A discrete binned fill is used instead of a continuous gradient so tikzDevice
 # emits a vector legend rather than a rasterized colorbar PNG (which would create
@@ -743,13 +935,17 @@ f6b <- ggplot(f6b_dat, aes(spec_label, display, fill = rho_bin)) +
                     name = "partial $\\rho$", drop = FALSE) +
   guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(x = NULL, y = NULL, title = "Sign-flip map") +
-  theme(legend.position = "top", axis.ticks = element_blank(),
+  # 2×2 tiles are wider than panel B; left-justify so overflow goes into the
+  # right plot margin instead of covering A's "same sign" / "sign flip".
+  theme(legend.position = "bottom",
+        legend.justification = "left",
+        legend.box.just = "left",
+        axis.ticks = element_blank(),
         axis.text.y = element_blank(), legend.text = element_text(size = 7),
         legend.key.size = unit(8, "pt"),
         plot.title.position = "plot",
         plot.title = element_text(hjust = 0, margin = margin(b = 3)),
-        # Left pad keeps B title clear of A's legend/title block.
-        plot.margin = margin(4, 6, 3, 10))
+        plot.margin = margin(4, 6, 3, 12))
 
 pm <- bind_rows(lapply(spec_sens$rows, function(x) {
   data.frame(tissue = ifelse(x$tissue == "brain", "Brain", "PBMC"),
@@ -841,8 +1037,7 @@ f6d <- ggplot(lad_long, aes(rung, rho, group = model, color = display_model)) +
 emit("fig6_spec_sensitivity",
      ((f6a | f6b) + plot_layout(widths = c(1.75, 1))) /
        ((free(f6c) | f6d) + plot_layout(widths = c(0.95, 1.15))) +
-       plot_annotation(tag_levels = "A") +
-       plot_layout(axis_titles = "collect"),
+       plot_annotation(tag_levels = "A"),
      6.8, 7.2)
 if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig6_spec_sensitivity")) {
   cat("SCFM_FIG_ONLY: stopping after fig6_spec_sensitivity\n")
@@ -1050,7 +1245,7 @@ f8c <- ggplot() +
   scale_color_manual(values = c(Brain = BLUE, PBMC = AQUA)) +
   scale_x_log10() +
   labs(x = "$\\alpha$-equivalent", y = "observed partial $\\rho$", color = NULL,
-       title = "Observed effects sit at the bottom of the ladder") +
+       title = "Observed effects at ladder bottom") +
   theme(legend.position = "top",
         legend.justification = "left",
         legend.text = element_text(size = 8),
@@ -1058,8 +1253,10 @@ f8c <- ggplot() +
         legend.margin = margin(t = 0, r = 0, b = 0, l = 0),
         legend.box.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(0, "pt"),
-        plot.title = element_text(margin = margin(t = 0, b = 0)),
-        plot.margin = margin(1, 4, 3, 2))
+        plot.title.position = "panel",
+        plot.title = element_text(hjust = 0.5, margin = margin(t = 0, b = 0)),
+        plot.margin = margin(1, 8, 3, 2),
+        plot.tag.position = c(0.02, 1))
 
 supp_keys <- primary %>% filter(status == "supported by both nulls") %>%
   mutate(key = paste(tolower(tissue), model_key, sep = "|")) %>% pull(key)
@@ -1096,12 +1293,18 @@ f8d <- ggplot(eff_supp, aes(reorder(display, alpha_equiv), alpha_equiv, fill = t
         legend.margin = margin(t = 0, r = 0, b = 0, l = 0),
         legend.box.margin = margin(0, 0, 0, 0),
         legend.box.spacing = unit(0, "pt"),
-        plot.title = element_text(hjust = 0, margin = margin(t = 0, b = 0, l = 10)),
-        plot.margin = margin(1, 4, 3, 2),
+        plot.title.position = "panel",
+        plot.title = element_text(hjust = 0.5, margin = margin(t = 0, b = 0)),
+        plot.margin = margin(1, 6, 3, 18),
+        plot.tag.position = c(0.02, 1),
         axis.text.y = element_text(size = 8))
 
 emit("fig8_injection_ladder", (f8a | f8b) / (f8c | f8d) + plot_annotation(tag_levels = "A") +
-       plot_layout(axis_titles = "collect"), 6.8, 6.4)
+       plot_layout(widths = c(1, 1.08)), 6.8, 6.4)
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig8_injection_ladder")) {
+  cat("SCFM_FIG_ONLY: stopping after fig8_injection_ladder\n")
+  quit(save = "no", status = 0)
+}
 
 # ==================== Figure 9: TF-disjoint probe ====================
 probe_fam_label <- c(
@@ -1658,81 +1861,119 @@ pp_long$display <- factor(pp_long$display, levels = rev(unique(pp_long$display))
 pp_long$gate <- factor(pp_long$gate, levels = gate_levels)
 # Emphasize the conjunction column without a garish red (muted slate border).
 pp_long$is_final <- pp_long$gate == "Protocol-pass"
-f12a <- ggplot(pp_long, aes(gate, display, fill = pass)) +
-  geom_tile(color = "white", linewidth = 0.55, width = 0.96, height = 0.92) +
+# tikzDevice draws ggplot legend.position="top" on the panel (overlaps row 1).
+# Title + fail/pass live in a separate header plot, outside the heatmap coord.
+f12a_heat <- ggplot(pp_long, aes(gate, display, fill = pass)) +
+  geom_tile(color = "white", linewidth = 0.4, width = 0.96, height = 0.92) +
   geom_tile(data = pp_long %>% filter(is_final),
             aes(gate, display), fill = NA, color = "#5a6570",
-            linewidth = 0.7, width = 0.96, height = 0.92) +
+            linewidth = 0.55, width = 0.90, height = 0.86) +
   scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey88"),
-                    labels = c(`TRUE` = "pass", `FALSE` = "fail"),
-                    name = NULL,
-                    guide = guide_legend(override.aes = list(color = "white",
-                                                            linewidth = 0.4),
-                                        nrow = 1)) +
-  scale_x_discrete(expand = c(0.012, 0)) +
-  scale_y_discrete(expand = c(0.012, 0)) +
-  labs(x = NULL, y = NULL,
-       title = "Protocol-pass gates: $0/13$ rows pass all predeclared checks") +
+                    guide = "none") +
+  scale_x_discrete(expand = expansion(add = c(0.06, 0.08))) +
+  scale_y_discrete(expand = expansion(add = c(0.08, 0.08))) +
+  coord_cartesian(xlim = c(0.40, 7.56), expand = FALSE, clip = "off") +
+  labs(x = NULL, y = NULL, title = NULL) +
   theme(axis.text.x = element_text(angle = 32, hjust = 1, size = 8.2,
-                                   margin = margin(t = 2)),
-        axis.text.y = element_text(size = 8.0),
+                                   margin = margin(t = 1)),
+        axis.text.y = element_text(size = 8.0, margin = margin(r = 2)),
         axis.ticks = element_blank(),
-        legend.position = "top",
-        legend.justification = "right",
-        legend.direction = "horizontal",
-        legend.margin = margin(0, 0, 0, 0),
-        legend.box.margin = margin(-2, 0, -4, 0),
+        legend.position = "none",
         panel.grid = element_blank(),
-        panel.border = element_rect(color = "grey70", fill = NA, linewidth = 0.4),
-        plot.title.position = "plot",
-        plot.margin = margin(2, 4, 2, 2))
+        panel.border = element_rect(color = "grey80", fill = NA, linewidth = 0.3),
+        plot.tag = element_blank(),
+        plot.margin = margin(8, 8, 2, 2))
+f12a_head <- ggplot() +
+  annotate("text", x = 0.00, y = 0.50, label = "Protocol-pass gates",
+           hjust = 0, vjust = 0.5, size = 3.90, color = "#1a1a1a") +
+  annotate("rect", xmin = 0.40, xmax = 0.435, ymin = 0.22, ymax = 0.78,
+           fill = "grey88", color = "white", linewidth = 0.35) +
+  annotate("text", x = 0.445, y = 0.50, label = "fail",
+           hjust = 0, vjust = 0.5, size = 3.20, color = "#1a1a1a") +
+  annotate("rect", xmin = 0.545, xmax = 0.580, ymin = 0.22, ymax = 0.78,
+           fill = AQUA, color = "white", linewidth = 0.35) +
+  annotate("text", x = 0.590, y = 0.50, label = "pass",
+           hjust = 0, vjust = 0.5, size = 3.20, color = "#1a1a1a") +
+  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE, clip = "off") +
+  theme_void() +
+  theme(plot.tag = element_blank(),
+        plot.margin = margin(4, 8, 4, 2))
+f12a <- wrap_elements(full = f12a_head / f12a_heat +
+                        plot_layout(heights = c(0.24, 1)))
 
-# Panel B: full-width in-scope / out-of-scope bands (fills former empty gutter).
+# Panel B: pack chips with a fixed gutter (cluster, not equal-space across
+# the box). Each band is only as wide as its chip row + padding. Titles sit
+# on their own y above the chips. Dark type; ~3.5 mm survives \fitfig.
+scope_ink <- "#1a1a1a"
+chip_h <- 0.54
+chip_gutter <- 0.10
+xmid <- 2.50
+w_in <- c(0.60, 0.58, 0.76, 0.74)
+w_out <- c(0.76, 1.26, 1.10)
+span_in <- sum(w_in) + chip_gutter * (length(w_in) - 1)
+span_out <- sum(w_out) + chip_gutter * (length(w_out) - 1)
+in_left <- xmid - span_in / 2
+out_left <- xmid - span_out / 2
+in_xmin <- in_left + cumsum(c(0, utils::head(w_in, -1) + chip_gutter))
+out_xmin <- out_left + cumsum(c(0, utils::head(w_out, -1) + chip_gutter))
+band_pad <- 0.16
 scope_nodes <- data.frame(
-  x = c(1.05, 2.15, 3.25, 4.35),
-  y = 1.42,
+  xmin = in_xmin, xmax = in_xmin + w_in,
+  ymin = 1.78 - chip_h / 2, ymax = 1.78 + chip_h / 2,
+  x = in_xmin + w_in / 2, y = 1.78,
   lab = c("$\\pm$2 kb\nwindow", "JASPAR\nmotif", "ATAC peak\npresence",
-          "fixed 446$\\times$1{,}200\npanel"),
+          "fixed panel\n446$\\times$1{,}200"),
   stringsAsFactors = FALSE
 )
 scope_out <- data.frame(
-  x = c(1.4, 2.7, 4.0),
-  y = 0.42,
+  xmin = out_xmin, xmax = out_xmin + w_out,
+  ymin = 0.46 - chip_h / 2, ymax = 0.46 + chip_h / 2,
+  x = out_xmin + w_out / 2, y = 0.46,
   lab = c("distal / 3D\nexcluded", "ChIP / causal\nTF--target not claimed",
-          "cell-type near-invariant\nproxy"),
+          "cell-type\nnear-invariant proxy"),
   stringsAsFactors = FALSE
 )
+in_band <- c(xmid - max(span_in, span_out) / 2 - band_pad,
+             xmid + max(span_in, span_out) / 2 + band_pad)
+out_band <- in_band
 f12b <- ggplot() +
-  annotate("rect", xmin = 0.3, xmax = 4.7, ymin = 1.02, ymax = 1.92,
-           fill = LIGHT, color = "grey78", linewidth = 0.35) +
-  annotate("rect", xmin = 0.3, xmax = 4.7, ymin = 0.02, ymax = 0.92,
-           fill = "grey96", color = "grey78", linewidth = 0.35) +
-  annotate("text", x = 0.42, y = 1.78, label = "In scope",
-           hjust = 0, size = 3.05, color = BLUE) +
-  annotate("text", x = 0.42, y = 0.78, label = "Out of scope",
-           hjust = 0, size = 3.05, color = MUTED) +
-  geom_label(data = scope_nodes, aes(x, y, label = lab),
-             size = 2.65, linewidth = 0.35, fill = "white", color = BLUE,
-             label.padding = unit(0.22, "lines"), lineheight = 0.95) +
-  geom_label(data = scope_out, aes(x, y, label = lab),
-             size = 2.35, linewidth = 0.28, fill = "white", color = MUTED,
-             label.padding = unit(0.18, "lines"), lineheight = 0.95) +
-  annotate("text", x = 2.5, y = 2.16,
+  annotate("rect", xmin = in_band[1], xmax = in_band[2], ymin = 1.38, ymax = 2.70,
+           fill = "#eef2f5", color = "grey50", linewidth = 0.28) +
+  annotate("rect", xmin = out_band[1], xmax = out_band[2], ymin = 0.06, ymax = 1.28,
+           fill = "grey97", color = "grey50", linewidth = 0.28) +
+  annotate("text", x = in_band[1] + 0.10, y = 2.54, label = "In scope",
+           hjust = 0, size = 3.55, color = scope_ink, fontface = "bold") +
+  annotate("text", x = out_band[1] + 0.10, y = 1.14, label = "Out of scope",
+           hjust = 0, size = 3.55, color = scope_ink, fontface = "bold") +
+  geom_rect(data = scope_nodes,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            fill = "white", color = scope_ink, linewidth = 0.28) +
+  geom_rect(data = scope_out,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            fill = "white", color = scope_ink, linewidth = 0.28) +
+  geom_text(data = scope_nodes, aes(x, y, label = lab),
+            size = 3.35, color = scope_ink, lineheight = 1.08, vjust = 0.5) +
+  geom_text(data = scope_out, aes(x, y, label = lab),
+            size = 3.35, color = scope_ink, lineheight = 1.08, vjust = 0.5) +
+  annotate("text", x = xmid, y = 2.88,
            label = "Protocol-instance scope (what this audit asks)",
-           size = 3.15, color = "black") +
-  annotate("text", x = 2.5, y = -0.14,
-           label = paste0("Failure here cannot be read as a field-level negative --- ",
+           size = 3.45, color = scope_ink) +
+  annotate("text", x = xmid, y = -0.34,
+           label = paste0("Failure here cannot be read as a field-level negative ---\n",
                           "other panels, tissues, or GRN-informed models could differ"),
-           size = 2.3, color = MUTED) +
-  coord_cartesian(xlim = c(0.2, 4.8), ylim = c(-0.32, 2.32), expand = FALSE) +
+           size = 3.15, color = scope_ink, lineheight = 1.10) +
+  coord_cartesian(xlim = c(0.12, 4.88), ylim = c(-0.72, 3.06),
+                  expand = FALSE, clip = "off") +
   theme_void() +
-  theme(plot.margin = margin(4, 6, 2, 4))
+  theme(plot.margin = margin(6, 10, 4, 8))
 
+# wrap_elements: B spans the full design width (under A's y-tick column).
+# Chips stay a centered cluster; empty canvas is outside the bands.
 emit("fig12_protocol_pass_matrix",
-     f12a / f12b +
+     f12a / wrap_elements(full = f12b) +
        plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.65, 1.0)),
-     6.8, 7.4, tags = c("A", "B"))
+       plot_layout(heights = c(1.18, 1.30)),
+     6.8, 7.05, tags = c("A", "B"))
 # Retired standalone fig13_scope_card.tex (content now panel B above).
 fig13_path <- file.path(figs, "fig13_scope_card.tex")
 if (file.exists(fig13_path))

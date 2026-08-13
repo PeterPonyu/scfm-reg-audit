@@ -478,11 +478,11 @@ by naive independent double-dipping alone, yet still is not regulatory recovery
 \resizebox{\linewidth}{!}{\input{table6_fm_vs_baseline.tex}}
 \caption{FM versus same-edge co-expression baseline under the full confound design.
 The $\rho_{\mathrm{FM}}$ column is the shared-null pipeline recompute
-(\texttt{method=shared\_mantel\_delta\_v1}); small differences from Table~\ref{tab:primary}
+(\texttt{method=shared\_mantel\_delta\_v1}); small differences from the primary fixed-panel $\rho$ values
 reflect that recompute, not a second primary estimand.
 $\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$ is the observed contrast; $q_{\Delta}$ and
 Shared sig are one-sided shared-null Mantel tests of $\Delta>0$ ($N{=}999$, BH within tissue).
-Dual-null is the Table~\ref{tab:primary} Support gate. Dual$\wedge$beats counts rows that are
+Dual-null is the primary Support gate (both within-family BH $q_M<0.05$ and $q_D<0.05$). Dual$\wedge$beats counts rows that are
 dual-null \emph{and} have observed $\Delta\rho>0$ ($4/7$ dual-null rows; $4/13$ FM rows overall);
 shared-null significance is $2/13$ (brain/PBMC scGPT only).}\label{tab:fmbase}
 \end{table}
@@ -545,7 +545,7 @@ tissue; the brain effects have opposite signs.}
 null mean and 95\% null band for representative rows. (B) Brain Geneformer-attention marginal and
 co-expression-adjusted directions. (C) Geneformer knockout and artifact-corrected knockout both
 align with the proxy after partialling co-expression alone ($p<0.001$ and $p=0.004$); the audit's
-full confound specification removes that alignment (Table~\ref{tab:primary}). (D) Joint-null
+full confound specification removes that alignment. (D) Joint-null
 support decisions are identical between the authoritative audit and the attention-omission
 guard.}\label{fig:nulls}
 \end{figure}
@@ -609,7 +609,7 @@ interpretation.}\label{tab:pertype_ranges}
 \fitfig{\input{table7_nondegree_null_pattern.tex}}
 \caption{Non-degree dual-null pattern for all 13 FM rows. Under the co-primary non-degree
 specification, dual-null Support is $0/13$; the predominant rejection pattern is D-only
-(row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$), matching Fig.~\ref{fig:spec}.
+(row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$).
 Neither-null rows are not dual-null Support.}\label{tab:nondegree}
 \end{table}
 
@@ -703,12 +703,12 @@ three tissue pairs.}\label{fig:third_tissue}
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure12.pdf}
 \caption{Protocol-pass and instance scope. (A)~Binary gate heatmap for the thirteen pooled
-FM/readout rows (aqua pass, grey fail), companion to Table~\ref{tab:protocol}. Protocol-pass is
+FM/readout rows (aqua pass, grey fail). Protocol-pass is
 the conjunction column (outlined); no row passes ($0/13$). (B)~Protocol-instance scope card: the
 audit scores motif matches in $\pm$2\,kb-linked ATAC peaks on a fixed panel. Distal/3D structure
 and ChIP-derived causal TF--target maps are out of scope; the proxy is cell-type near-invariant on
 this panel. Failure to support a global capability claim therefore cannot be read as a field-level
-negative (Sec.~\ref{sec:estimand}).}\label{fig:protocol}
+negative.}\label{fig:protocol}
 \end{figure}
 
 \section{Discussion}
