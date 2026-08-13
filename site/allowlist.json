@@ -1,0 +1,43 @@
+{
+  "copy": [
+    ".nojekyll",
+    "404.html",
+    "index.html",
+    "styles.css",
+    "figures/index.html",
+    "frontiers/index.html",
+    "peerj/index.html",
+    "reproducibility/index.html"
+  ],
+  "pdfs": [
+    {
+      "src": "paper/manuscript.pdf",
+      "dest": "products/peerj-manuscript.pdf"
+    },
+    {
+      "src": "paper/submission_frontiers_genetics/manuscript.pdf",
+      "dest": "products/frontiers-manuscript.pdf"
+    }
+  ],
+  "deny_substrings": [
+    "docs/reports",
+    "results/v2",
+    "visual_qa",
+    "flat_upload",
+    ".omx/",
+    ".omc/",
+    "Figure1.pdf",
+    "Figure2.pdf",
+    "Figure3.pdf",
+    "Figure4.pdf",
+    "Figure5.pdf",
+    "Figure6.pdf",
+    "Figure7.pdf",
+    "Figure8.pdf",
+    "Figure9.pdf",
+    "Figure10.pdf",
+    "Figure11.pdf",
+    "Figure12.pdf"
+  ],
+  "deny_suffixes": [".h5ad", ".h5", ".npz"]
+}

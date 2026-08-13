@@ -29,6 +29,8 @@ LOCAL_WORKTREE_PREFIXES = (
     ".omx/",
     "docs/reports/",
     "archive/",
+    ".github/",  # Pages workflow YAML (not capsule payload)
+    "site/_site/",  # assemble output with copied product PDFs
 )
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",
@@ -45,6 +47,7 @@ LOCAL_WORKTREE_NAMES = {
     "manuscript.fdb_latexmk",
     "manuscript.blg",
     "Rplots.pdf",
+    "DESIGN.md",  # Pages visual contract; not capsule payload
 }
 
 # Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.

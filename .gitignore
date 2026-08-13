@@ -9,3 +9,6 @@ archive/
 
 # Local result symlink forest
 results/v2/
+
+# GitHub Pages assemble output (copied product PDFs; not capsule source)
+site/_site/

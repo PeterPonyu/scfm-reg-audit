@@ -368,6 +368,61 @@
       "sha256": "be771c70a12898da3998a161f7bca4e7b773e1615cc9451188c917358a3276f9"
     },
     {
+      "path": "site/.nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "site/404.html",
+      "bytes": 1800,
+      "sha256": "374d1faeb5c7c1d081b9fd1d9e63071d44563cc1b580eed60f6883b244a5363c"
+    },
+    {
+      "path": "site/README.md",
+      "bytes": 1906,
+      "sha256": "ea9e77a5312955d599cf9c7d0969173002e0a545700f7cfe72a3716ac13004f3"
+    },
+    {
+      "path": "site/allowlist.json",
+      "bytes": 845,
+      "sha256": "6890b4b103882de0535afff3465084b66383f6f0e630f5e86ed367520e90edb8"
+    },
+    {
+      "path": "site/assemble.sh",
+      "bytes": 3239,
+      "sha256": "70cb3258d7517e9f71765b4568d961caee371cc84e648ac67c90037b8d54827b"
+    },
+    {
+      "path": "site/figures/index.html",
+      "bytes": 8293,
+      "sha256": "0390bb3acfdccd91c19341f195232e1265e87d34626098ffb97a7e5e286c6d7e"
+    },
+    {
+      "path": "site/frontiers/index.html",
+      "bytes": 2853,
+      "sha256": "2620be34c79d684125def9fcc8323a888e74bf2fbdf700d1073911c7c3fc98be"
+    },
+    {
+      "path": "site/index.html",
+      "bytes": 3269,
+      "sha256": "704f8ba7453d66e5b8d66355ce6b6962e968a96160738ff25ecc55fdf326be65"
+    },
+    {
+      "path": "site/peerj/index.html",
+      "bytes": 3063,
+      "sha256": "473401cb31e1704bb8910a3c2131dcd218f3ee41e989796acb20852cff5b20af"
+    },
+    {
+      "path": "site/reproducibility/index.html",
+      "bytes": 4562,
+      "sha256": "00aebf94a0707e2b4e1b3c8d056a5964a112e1f2e9e3bde93e162247bf63d34f"
+    },
+    {
+      "path": "site/styles.css",
+      "bytes": 7565,
+      "sha256": "983d787842372fd897e56e4b3554761c71c115d9d48e236d597b25259a2d328d"
+    },
+    {
       "path": "src/benchmark_n99.py",
       "bytes": 3737,
       "sha256": "e14bc11d016eb854a0ad6af52ec1506a12bbb34bf9064904e02ecd526246e7f1"
@@ -449,8 +504,8 @@
     },
     {
       "path": "validate_artifacts.py",
-      "bytes": 15305,
-      "sha256": "9cccf45c3dd50932dbbc708afe3f4f5f1292de48564c4a2c8f24c9bf1091d68a"
+      "bytes": 15492,
+      "sha256": "1c52ce747e146dd17a5d0113f75e486502d9c39b7be07d13ae6516e6f5d0e266"
     }
   ]
 }
