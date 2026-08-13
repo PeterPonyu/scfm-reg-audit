@@ -1,0 +1,13 @@
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.15cm}>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
+\toprule
+Resource & Expression in reference? & Degree / confound control? & Explicit null semantics? & Multi-readout? & Hash-pinned capsule? \\
+\midrule
+scReg-Eval (this work) & No (edge weights motif+ATAC) & Yes (coexp + 6 structural) & Yes (two MC nulls + BH families) & Yes & Yes \\
+Kendiukhov et al.\ scFM interpretability & Yes (co-expression / pathways) & Partial & Varies & Attention-focused & No \\
+Kendiukhov et al.\ SAE residual stream & Pathway/interaction features & Partial & Varies & Feature-level & No \\
+GeneRNIB living GRN benchmark & Often literature / expression GRNs & Task-dependent & Benchmark scores & Multi-method & Community leaderboard \\
+BioLLM / scFM task suites & Task labels from biology & Task-dependent & Standard ML splits & Multi-task & Code releases \\
+\bottomrule
+\end{tabularx}
+}
