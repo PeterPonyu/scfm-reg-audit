@@ -42,7 +42,7 @@
 \newcommand{\AuthorEmail}{fuzeyu99@126.com}
 % ---------------------------------------------------------------------------
 
-\newcommand{\NFigures}{12}
+\newcommand{\NFigures}{13}
 \newcommand{\NAppendixFigures}{3}
 \newcommand{\NTables}{8}
 
@@ -200,7 +200,8 @@ holds motif/ATAC edge weights free of expression statistics, freezes dual-null f
 a hash-pinned audit capsule rather than a leaderboard score.
 Methods define the panel, proxy, confounds, and nulls; Results report the primary full-confound
 audit and the co-primary non-degree sensitivity; Discussion and the final figure set bound what the
-alignments can and cannot claim.
+alignments can and cannot claim. Figure~\ref{fig:study} states the two-tissue pairing, the
+$\pm$2\,kb linkage rule, and the frozen panel before the audit heatmaps.
 
 \begin{table}[!htbp]
 \centering
@@ -252,7 +253,7 @@ every design choice. Accessibility, motif occurrence, and proximity still do not
 regulation or causality. We therefore call it a proxy throughout. The two evaluation tissues differ
 in pairing: the PBMC data are a paired multiome assay (RNA and ATAC from the same cells), whereas
 the brain analysis combines snATAC-seq with cross-study RNA, so the co-expression control is
-intrinsically stronger in PBMC than in brain.
+intrinsically stronger in PBMC than in brain (Fig.~\ref{fig:study}A).
 
 Brain analyses apply a prespecified neural marker mask to every brain readout; in this panel the
 mask removes 446 of 534{,}754 brain edges (0.08\%), a small fixed-panel exclusion because only one
@@ -411,16 +412,23 @@ steps are audited explicitly in Fig.~\ref{fig:coverage}; blank coverage cells de
 validated graphs, not negative results. The full audit therefore comprises 13 pooled FM/readout
 rows rather than a balanced model-by-tissue factorial design.
 
+\section{Results}\label{sec:results}
+The study compares unpaired brain snATAC plus cross-study RNA with paired PBMC multiome, holds a
+fibroblast ATAC mix as construct-only, and scores a frozen $446\times 1{,}200$ panel under a
+promoter-plus-gene-body $\pm$2\,kb linkage rule (Fig.~\ref{fig:study}).
+
 \begin{figure}[!tbp]\centering
-\fitfig{\input{fig10_coverage_qc.tex}}
-\caption{Coverage and fixed-panel quality control. (A) Manifest-gene coverage for encoder
-readouts. (B) Validated graph availability by tissue and analysis level; coverage is intentionally
-reported rather than assumed balanced. (C) Cell counts used by representative pooled inference
-runs. (D) Edge accounting from the $446\times1{,}200$ Cartesian panel through self-pair and brain
-marker-mask exclusions.}\label{fig:coverage}
+\fitfig{\input{fig_study_design.tex}}
+\caption{Two-tissue study design and the $\pm$2\,kb linkage rule. (A)~Unpaired brain snATAC
+(GSE174367) plus cross-study RNA versus paired PBMC 10x multiome RNA/ATAC; the fibroblast mix
+(GSE206767) is construct-only and contributes no foundation-model (FM) rows. All arms freeze the
+same $446\times 1{,}200$ panel, then compare an accessibility/motif proxy graph with each FM gene
+graph under dual-null Mantel/partial $\rho$. (B)~Peaks are admitted only inside a
+promoter-plus-gene-body $\pm$2\,kb window: 8{,}823/219{,}070 (4.03\%) in brain, 6{,}609/111{,}743
+(5.91\%) in PBMC, and 11{,}614/275{,}448 (4.22\%) in the fibroblast mix. Distal and
+three-dimensional contacts are excluded by this rule.}\label{fig:study}
 \end{figure}
 
-\section{Results}\label{sec:results}
 \subsection{The proxy is reproducible, but remains a proxy}
 The accessibility/motif construct shows moderate observed agreement across tissue consensus graphs:
 brain--PBMC $\rho=0.5249$, brain--fibroblast-mix $\rho=0.5245$, and PBMC--fibroblast-mix
@@ -780,6 +788,18 @@ three tissue pairs.}\label{fig:third_tissue}
 \begin{figure}[!tbp]\centering
 \fitfig{\input{fig12_protocol_pass_matrix.tex}}
 \caption{Protocol-pass gates and this audit instance's scope. (A)~Aqua pass / grey fail on thirteen foundation-model (FM) readout rows for six reporting gates plus their conjunction (rightmost column). Gates: dual-null under the full confound specification; dual-null under the non-degree specification (shown, not required); concordance (FM--co-expression Spearman $>0$); non-degree same sign as the full estimate; multi-readout sign agreement within model family and tissue; and full-spec $\rho$ strictly above the tissue co-expression baseline. Protocol-pass is that conjunction except dual non-degree; $0/13$ rows pass. (B)~What this instance asks---motif matches in $\pm$2\,kb-linked ATAC peaks on a fixed $446\times 1{,}200$ panel---not distal/3D structure and not ChIP-derived causal TF--target maps. This is instance scope, not a field-level negative.}\label{fig:protocol}
+\end{figure}
+
+Coverage, cell counts, and edge accounting for the same frozen panel are collected in
+Fig.~\ref{fig:coverage}.
+
+\begin{figure}[!tbp]\centering
+\fitfig{\input{fig10_coverage_qc.tex}}
+\caption{Coverage and fixed-panel quality control. (A) Manifest-gene coverage for encoder
+readouts. (B) Validated graph availability by tissue and analysis level; coverage is intentionally
+reported rather than assumed balanced. (C) Cell counts used by representative pooled inference
+runs. (D) Edge accounting from the $446\times1{,}200$ Cartesian panel through self-pair and brain
+marker-mask exclusions.}\label{fig:coverage}
 \end{figure}
 
 \section{Discussion}

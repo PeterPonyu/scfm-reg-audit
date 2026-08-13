@@ -151,6 +151,168 @@ cross <- bind_rows(lapply(audit$cross_tissue_construct_reproducibility$rows, fun
              rho = x$observed_spearman)
 }))
 
+# ===== Study-design schematic (Frontiers opening Fig. 1; PeerJ does not input) =====
+# Two-tissue pairing + ±2 kb locus from existing panel$third_tissue / pooled counts.
+# Does not redraw the four-box proxy recipe (fig1_truth_construct A) or Fig. 12B.
+n_fm_brain <- sum(pooled$tissue == "Brain" & pooled$spec == "full")
+n_fm_pbmc <- sum(pooled$tissue == "PBMC" & pooled$spec == "full")
+stopifnot(n_fm_brain == 8L, n_fm_pbmc == 5L)
+sd_cov <- bind_rows(lapply(panel$third_tissue$coverage, function(c) {
+  data.frame(tissue = c$tissue, tag = c$tag,
+             relevant = c$relevant_peaks, total = c$total_peaks,
+             pct = 100 * c$relevant_peaks / c$total_peaks,
+             stringsAsFactors = FALSE)
+}))
+sd_cov$tissue <- factor(sd_cov$tissue, levels = c("Brain", "PBMC", "Fibroblast mix"))
+sd_ink <- "#1a1a1a"
+sd_arrow <- "#5c6770"
+sd_cards <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 2.48, ymax = 3.92,
+  x = c(1.15, 3.35, 5.55),
+  fill = c(LIGHT, "#d9efe8", "#f2f2f2"),
+  border = c(BLUE, AQUA, MUTED),
+  title = c("Brain", "PBMC", "Fibroblast mix"),
+  src = c("GSE174367", "10x multiome", "GSE206767"),
+  pair = c("unpaired", "paired", "construct-only"),
+  assay = c("snATAC + cross-study RNA",
+            "RNA and ATAC, same cells",
+            "ATAC pool; no FM rows"),
+  fm = c(sprintf("%d FM / readout rows", n_fm_brain),
+         sprintf("%d FM / readout rows", n_fm_pbmc),
+         "no FM rows"),
+  stringsAsFactors = FALSE
+)
+sd_flow <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 0.28, ymax = 1.58,
+  x = c(1.15, 3.35, 5.55), y = 0.93,
+  fill = c("#f2f2f2", LIGHT, "#ebe6f6"),
+  border = c(MUTED, BLUE, VIOLET),
+  title = c("frozen panel", "two graphs", "dual-null audit"),
+  body = c("446$\\times$1{,}200\nTF $\\times$ gene",
+           "proxy (ATAC + motif)\nvs FM gene graph",
+           "Mantel / partial $\\rho$\ngene-label + row-shuffle"),
+  stringsAsFactors = FALSE
+)
+f_sd_a <- ggplot() +
+  geom_rect(data = sd_cards,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.55) +
+  geom_text(data = sd_cards, aes(x = x, y = 3.74, label = title, color = border),
+            size = 3.45, fontface = "bold") +
+  geom_text(data = sd_cards, aes(x = x, y = 3.48, label = src),
+            size = 2.70, color = sd_ink) +
+  geom_label(data = sd_cards, aes(x = x, y = 3.18, label = pair, color = border),
+             size = 2.55, fill = "white", label.size = 0.35,
+             label.padding = unit(0.10, "lines"), label.r = unit(0.08, "lines")) +
+  geom_text(data = sd_cards, aes(x = x, y = 2.88, label = assay),
+            size = 2.45, color = sd_ink) +
+  geom_text(data = sd_cards, aes(x = x, y = 2.62, label = fm),
+            size = 2.45, color = MUTED) +
+  annotate("segment", x = sd_cards$x, xend = sd_cards$x,
+           y = 2.48, yend = 2.12, color = sd_arrow, linewidth = 0.55) +
+  annotate("segment", x = 1.15, xend = 5.55, y = 2.12, yend = 2.12,
+           color = sd_arrow, linewidth = 0.55) +
+  annotate("segment", x = 3.35, xend = 3.35, y = 2.12, yend = 1.58,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.55) +
+  geom_rect(data = sd_flow,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.55) +
+  geom_text(data = sd_flow, aes(x = x, y = 1.38, label = title, color = border),
+            size = 3.15, fontface = "bold") +
+  geom_text(data = sd_flow, aes(x = x, y = 0.78, label = body),
+            size = 2.55, color = sd_ink, lineheight = 1.08) +
+  annotate("segment", x = 2.08, xend = 2.42, y = 0.93, yend = 0.93,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.6) +
+  annotate("segment", x = 4.28, xend = 4.62, y = 0.93, yend = 0.93,
+           arrow = arrow(length = unit(0.08, "in"), type = "closed"),
+           color = sd_arrow, linewidth = 0.6) +
+  scale_fill_identity() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0.08, 6.62), ylim = c(0.12, 4.08), clip = "off") +
+  labs(title = "Two-tissue design, one frozen panel") +
+  theme_void(base_size = 11) +
+  theme(plot.title = element_text(size = 11, hjust = 0),
+        plot.title.position = "plot",
+        plot.margin = margin(4, 10, 2, 2))
+
+# Locus cartoon: promoter + gene body ±2 kb. Peak boxes, not ChIP tracks / loops.
+sd_peaks <- data.frame(
+  xmin = c(0.28, 0.58, 1.28, 1.52, 2.05, 2.55, 3.35, 4.55, 5.42, 5.78),
+  xmax = c(0.46, 0.76, 1.44, 1.70, 2.22, 2.78, 3.58, 4.78, 5.60, 5.96),
+  ymin = 2.52, ymax = 2.88,
+  admitted = c(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
+)
+sd_cov$lab <- sprintf("%s\n%s/%s (%.2f\\%%)",
+                      sd_cov$tissue,
+                      prettyNum(sd_cov$relevant, big.mark = ","),
+                      prettyNum(sd_cov$total, big.mark = ","),
+                      sd_cov$pct)
+sd_chip <- data.frame(
+  xmin = c(0.22, 2.42, 4.62), xmax = c(2.08, 4.28, 6.48),
+  ymin = 0.22, ymax = 1.22,
+  x = c(1.15, 3.35, 5.55),
+  fill = c(LIGHT, "#d9efe8", "#f2f2f2"),
+  border = c(BLUE, AQUA, MUTED),
+  lab = sd_cov$lab[match(c("Brain", "PBMC", "Fibroblast mix"), sd_cov$tissue)],
+  stringsAsFactors = FALSE
+)
+f_sd_b <- ggplot() +
+  annotate("rect", xmin = 1.15, xmax = 5.05, ymin = 1.92, ymax = 2.28,
+           fill = "#eef2f5", color = NA) +
+  annotate("rect", xmin = 1.78, xmax = 4.42, ymin = 1.98, ymax = 2.22,
+           fill = BLUE, color = NA, alpha = 0.85) +
+  annotate("segment", x = 1.78, xend = 1.78, y = 1.88, yend = 2.42,
+           color = sd_ink, linewidth = 0.55) +
+  geom_rect(data = sd_peaks,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = ifelse(admitted, BLUE, "grey70")),
+            color = NA) +
+  annotate("segment", x = 1.15, xend = 5.05, y = 3.08, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("segment", x = 1.15, xend = 1.15, y = 2.98, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("segment", x = 5.05, xend = 5.05, y = 2.98, yend = 3.08,
+           color = MUTED, linewidth = 0.45) +
+  annotate("text", x = 3.10, y = 3.28, label = "promoter + gene body $\\pm$2\\,kb",
+           size = 3.05, color = sd_ink) +
+  annotate("text", x = 1.78, y = 1.72, label = "TSS",
+           size = 2.55, color = sd_ink, hjust = 0.5) +
+  annotate("text", x = 3.10, y = 1.72, label = "gene body",
+           size = 2.55, color = MUTED) +
+  annotate("text", x = 0.52, y = 3.28, label = "not admitted",
+           size = 2.40, color = MUTED) +
+  annotate("text", x = 5.70, y = 3.28, label = "not admitted",
+           size = 2.40, color = MUTED) +
+  annotate("text", x = 3.10, y = 2.38, label = "linked peaks",
+           size = 2.40, color = BLUE) +
+  geom_rect(data = sd_chip,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = fill, color = border),
+            linewidth = 0.50) +
+  geom_text(data = sd_chip, aes(x = x, y = 0.72, label = lab, color = border),
+            size = 2.70, lineheight = 1.10) +
+  scale_fill_identity() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0.08, 6.62), ylim = c(0.08, 3.48), clip = "off") +
+  labs(title = "Linkage rule admits 4--6\\% of peaks") +
+  theme_void(base_size = 11) +
+  theme(plot.title = element_text(size = 11, hjust = 0),
+        plot.title.position = "plot",
+        plot.margin = margin(4, 10, 2, 2))
+
+emit("fig_study_design",
+     f_sd_a / f_sd_b + plot_annotation(tag_levels = "A") +
+       plot_layout(heights = c(1.18, 1.00)),
+     6.8, 5.4, tags = c("A", "B"))
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig_study_design"))
+  quit(save = "no", status = 0)
+
 # ==================== Figure 1: construct, evidence, panel ====================
 # A: S-shaped construction schematic matching Methods: ATAC peak → peak–gene
 # link + JASPAR/MOODS motif → directed TF→target weight → restrict to the
