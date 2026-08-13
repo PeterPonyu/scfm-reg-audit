@@ -19,7 +19,7 @@ Figures 1–12 and Tables 1–8 live under `paper/figs/` and are `\input` with a
 
 This folder is a **complete conversion** of the original paper into a default-LaTeX `article` draft for *Frontiers in Genetics* (Original Research / Computational Genomics), **plus** three construct-lane ATAC overlays as an **Appendix** of the same unified `.tex`.
 
-It is **not** a three-figure-only paper. Main text keeps the original science (Figures 1–12, Tables 1–8, Methods, Results, Discussion). Appendix Figures A1–A3 are additional spleen / BMMC / Treg overlays.
+It is **not** a three-figure-only paper. Main text keeps the original science (Figures 1–13, Tables 1–8, Methods, Results, Discussion), with a study-design schematic as Figure 1 and coverage QC as Figure 13. Appendix Figures A1–A3 are additional spleen / BMMC / Treg overlays.
 
 ```bash
 cd paper/submission_frontiers_genetics
@@ -33,7 +33,7 @@ Output: `paper/submission_frontiers_genetics/manuscript.pdf`
 | Unified manuscript | `manuscript.tex` (this folder) |
 | Review PDF | `manuscript.pdf` |
 | Bibliography (copy) | `references.bib` |
-| Main TikZ (copies of `paper/figs/fig1`–`fig12`) | `fig1_truth_construct.tex` … `fig12_protocol_pass_matrix.tex` |
+| Main TikZ (copies of `paper/figs/`) | `fig_study_design.tex`, `fig1_truth_construct.tex` … `fig12_protocol_pass_matrix.tex` |
 | Tables (copies) | `table1_*.tex` … `table8_*.tex` |
 | Appendix TikZ (copies of `paper/figs_extension/`) | `fig_ext1_construct_mantel.tex`, `fig_ext2_baselines_collectri.tex`, `fig_ext3_honesty_policy.tex` |
 | Original PeerJ source (do not edit here) | `paper/manuscript.tex` |
@@ -61,7 +61,8 @@ Main-text figures/tables (only if `paper/make_figs.R` or panel JSON changed):
 ```bash
 # from repo root
 Rscript paper/make_figs.R
-cp -f paper/figs/fig{1,2,3,4,5,6,7,8,9,10,11,12}_*.tex \
+cp -f paper/figs/fig_study_design.tex \
+      paper/figs/fig{1,2,3,4,5,6,7,8,9,10,11,12}_*.tex \
       paper/figs/table{1,2,3,4,5,6,7,8}_*.tex \
       paper/submission_frontiers_genetics/
 ```
