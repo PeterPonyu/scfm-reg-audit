@@ -1,4 +1,5 @@
 .omc/
+.cursor/
 __pycache__/
 *.pyc
 archive/
