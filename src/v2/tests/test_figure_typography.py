@@ -10,8 +10,10 @@ from figure_typography import (
     TypographyContract,
     LayoutMeasurements,
     FigureComposite,
+    APPENDIX_MAP,
     FIGURE_MAP,
     FIGURE_COMPOSITES,
+    validate_appendix_map,
     validate_figure_map,
     compute_forest_plot_margin,
 )
@@ -143,11 +145,18 @@ class TestFigureMap:
 
     def test_figure_map_structure(self):
         """Test figure map has expected structure."""
-        assert len(FIGURE_MAP) == 12
+        assert len(FIGURE_MAP) == 13
+        assert FIGURE_MAP[0] == ("fig_study_design", "Figure1")
+        assert FIGURE_MAP[-1] == ("fig10_coverage_qc", "Figure13")
         for r_name, sub_name in FIGURE_MAP:
             assert r_name.startswith("fig")
             assert sub_name.startswith("Figure")
             assert sub_name[6:].isdigit()
+
+    def test_appendix_map_structure(self):
+        assert len(APPENDIX_MAP) == 3
+        assert APPENDIX_MAP[0] == ("fig_ext1_construct_mantel", "FigureA1")
+        assert APPENDIX_MAP[-1] == ("fig_ext3_honesty_policy", "FigureA3")
 
     def test_figure_map_unique_names(self):
         """Test figure map has unique R and submission names."""
@@ -163,10 +172,11 @@ class TestFigureMap:
         assert map_names == composite_names
 
     def test_all_composites_have_declared_panels(self):
-        """Most figures are 2x2 (A–D); fig12 is protocol-pass (A) + scope (B)."""
+        """Most figures are 2x2 (A–D); the study-design schematic is A+B."""
+        two_panel = {"fig_study_design"}
         for name, comp in FIGURE_COMPOSITES.items():
             assert len(comp.panels) >= 1
-            if name == "fig12_protocol_pass_matrix":
+            if name in two_panel:
                 assert comp.panels == ("A", "B")
             else:
                 assert comp.panels == ("A", "B", "C", "D")
@@ -207,6 +217,12 @@ class TestFigureMapValidation:
 
         # Should not raise
         validate_figure_map(str(manuscript))
+
+    def test_live_manuscript_matches_maps(self):
+        root = Path(__file__).resolve().parents[3]
+        manuscript = root / "paper" / "manuscript.tex"
+        validate_figure_map(str(manuscript))
+        validate_appendix_map(str(manuscript))
 
 
 if __name__ == "__main__":

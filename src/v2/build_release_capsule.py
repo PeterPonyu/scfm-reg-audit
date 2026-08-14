@@ -24,7 +24,7 @@ BRIDGE = ROOT / "release_private" / "ORIGINAL_TO_PUBLIC_HASH_BRIDGE.json"
 
 # Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.
 CURRENT_FIGURES = (
-    "fig10_coverage_qc.tex",
+    "fig_study_design.tex",
     "fig1_truth_construct.tex",
     "fig2_cross_tissue_decomp.tex",
     "fig3_primary_audit.tex",
@@ -36,6 +36,7 @@ CURRENT_FIGURES = (
     "fig9_tf_probe.tex",
     "fig11_third_tissue_transfer.tex",
     "fig12_protocol_pass_matrix.tex",
+    "fig10_coverage_qc.tex",
 )
 CURRENT_TABLES = (
     "table5_related_work.tex",
@@ -51,6 +52,7 @@ CURRENT_FRAGMENTS = CURRENT_FIGURES + CURRENT_TABLES
 FIGURE_INPUT_RE = re.compile(r"\\input\{figs/([^}]+\.tex)\}")
 WRAPPER_INPUT_RE = re.compile(r"\\input\{([^}/]+\.tex)\}")
 FLAT_FIGURE_RE = re.compile(r"\\includegraphics\[[^]]*\]\{(Figure\d+\.pdf)\}")
+FLAT_APPENDIX_RE = re.compile(r"\\includegraphics\[[^]]*\]\{(FigureA\d+\.pdf)\}")
 
 # (source relative to ROOT, destination relative to capsule)
 COPY_FILES = [
@@ -70,7 +72,8 @@ COPY_FILES = [
     ("results/v2/NOTICE.md", "results/NOTICE.md"),
     ("ENVIRONMENT.example", "ENVIRONMENT.example"),
     ("paper/manuscript.tex", "paper/manuscript.tex"),
-    ("paper/manuscript.pdf", "paper/manuscript.pdf"),
+    ("paper/submission_peerj/flat_upload/manuscript.pdf",
+     "paper/submission_peerj/flat_upload/manuscript.pdf"),
     ("paper/references.bib", "paper/references.bib"),
     ("paper/make_figs.R", "paper/make_figs.R"),
     ("paper/make_panel_data.py", "paper/make_panel_data.py"),
@@ -174,6 +177,9 @@ def validate_figure_contract(root):
     expected_flat = tuple(f"Figure{index}.pdf" for index in range(1, len(CURRENT_FIGURES) + 1))
     assert flat_figures == expected_flat, (
         f"PeerJ flat figure order mismatch: {flat_figures}")
+    flat_appendix = tuple(FLAT_APPENDIX_RE.findall(flat_tex.read_text()))
+    assert flat_appendix == ("FigureA1.pdf", "FigureA2.pdf", "FigureA3.pdf"), (
+        f"PeerJ flat appendix figure mismatch: {flat_appendix}")
 
 
 def write_citation():

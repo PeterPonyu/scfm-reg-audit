@@ -14,7 +14,12 @@ bash site/test.sh
 python3 -m http.server 4173 --directory site/public
 ```
 
-`site/test.sh` runs `site/assemble.sh` then `site/test.py`. Assemble fail-closes unless both SoT PDFs exist at the paths the script already pins. They are copied into the deploy artifact and are **not** linked from public pages.
+`site/test.sh` runs `site/assemble.sh` then `site/test.py`. Assemble fail-closes unless both SoT PDFs exist:
+
+- PeerJ: `paper/submission_peerj/flat_upload/manuscript.pdf`
+- Frontiers: `paper/submission_frontiers_genetics/manuscript.pdf`
+
+They are copied into the deploy artifact and are **not** linked from public pages.
 
 Do not commit `site/public/` or the product PDFs. Fonts are self-hosted woff2 under `static/fonts/` (Geist SIL OFL; no Google Fonts CDN).
 

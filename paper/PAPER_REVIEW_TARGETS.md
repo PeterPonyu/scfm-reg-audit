@@ -4,13 +4,16 @@ This directory is the active PeerJ Computer Science project for scReg-Eval. It i
 
 ## Human review target
 
-Inspect this PDF for the current PeerJ package:
+Canonical PeerJ CS PDF (source of truth for the compiled report):
 
-- `submission_peerj/flat_upload/manuscript.pdf` — 21-page flat-upload manuscript rebuilt from `paper/manuscript.tex`; its companion Figure1.pdf through Figure11.pdf and `SHA256SUMS.txt` are the upload package.
+- `submission_peerj/flat_upload/manuscript.pdf` — flat-upload manuscript with
+  `Figure1.pdf` (study design) through `Figure13.pdf` (coverage QC) plus
+  `FigureA1.pdf`–`FigureA3.pdf`. Checksums: `SHA256SUMS.txt`.
 
 The current editable source is:
 
-- `manuscript.tex` — canonical editable manuscript source.
+- `manuscript.tex` — canonical editable manuscript source. Do not leave a
+  competing `manuscript.pdf` in this directory.
 
 ## Package structure
 

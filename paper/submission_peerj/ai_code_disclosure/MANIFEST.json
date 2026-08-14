@@ -1,7 +1,7 @@
 {
  "package": "scReg-Eval AI-in-Code disclosure package",
  "scope": "representative curated set; covers AI-assisted engineering/refactoring of analysis code only",
- "ai_tools": "Anthropic Claude models accessed through an agentic coding assistant",
+ "ai_tools": "a large language model used as an auxiliary aid",
  "author_responsibility": "The author reviewed and edited all AI-assisted outputs and takes full responsibility for the manuscript and code.",
  "records": [
   {
@@ -57,8 +57,8 @@
    "role": "doc",
    "source_commit": "current",
    "description": "disclosure scope and usage",
-   "bytes": 2477,
-   "sha256": "61a36d4aca39c98d6e6388d209f374d433ba1960d111dc2965ee0f083b363b0a"
+   "bytes": 1936,
+   "sha256": "3685ce7ab7237f368d221beddfda6e9eab4438b695c8fa722217e3b53864dfc5"
   },
   {
    "path": "prompts/00_INDEX.md",

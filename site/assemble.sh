@@ -17,7 +17,7 @@ command -v "${HUGO_BIN}" >/dev/null 2>&1 || die "hugo not on PATH (set HUGO=)"
 ver="$("${HUGO_BIN}" version)"
 printf '%s\n' "${ver}" | grep -q 'extended' || die "need Hugo extended, got: ${ver}"
 
-PEERJ_SRC="${ROOT}/paper/manuscript.pdf"
+PEERJ_SRC="${ROOT}/paper/submission_peerj/flat_upload/manuscript.pdf"
 FRONTIERS_SRC="${ROOT}/paper/submission_frontiers_genetics/manuscript.pdf"
 [[ -f "${PEERJ_SRC}" ]] || die "missing ${PEERJ_SRC}"
 [[ -f "${FRONTIERS_SRC}" ]] || die "missing ${FRONTIERS_SRC}"
@@ -66,7 +66,11 @@ deny_sub = (
     ".omc/",
 )
 deny_suf = (".h5ad", ".h5", ".npz")
-deny_names = tuple(f"Figure{i}.pdf" for i in range(1, 13))
+deny_names = tuple(f"Figure{i}.pdf" for i in range(1, 14)) + (
+    "FigureA1.pdf",
+    "FigureA2.pdf",
+    "FigureA3.pdf",
+)
 for path in out.rglob("*"):
     if not path.is_file():
         continue
