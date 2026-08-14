@@ -894,9 +894,9 @@ f6a <- ggplot(pair6, aes(y = display)) +
   scale_color_manual(values = c(`TRUE` = FLIP_STROKE, `FALSE` = "grey70"),
                      labels = c(`TRUE` = "sign flip", `FALSE` = "same sign"),
                      name = NULL) +
-  # Short title + subtitle: the prior single-line title overran into panel B
-  # ("…6 sign flips" colliding with "Sign-flip map"). plot.title.position =
-  # "plot" pulls the title into the unused left y-label band.
+  # Short title: the prior single-line title overran into panel B
+  # ("…6 sign flips" colliding with "Sign-flip map"). Title sits over the
+  # forest panel, not the long y-tick band.
   labs(x = "partial Spearman $\\rho$", y = NULL,
        title = "Paired full vs non-degree") +
   # One-row shape/fill/color keys overflow panel A and collide with B's
@@ -918,8 +918,9 @@ f6a <- ggplot(pair6, aes(y = display)) +
         legend.key.size = unit(0.25, "cm"),
         axis.ticks.y = element_blank(),
         axis.title.x = element_text(margin = margin(t = 2)),
-        plot.title.position = "plot",
+        plot.title.position = "panel",
         plot.title = element_text(hjust = 0, margin = margin(b = 3)),
+        plot.tag.position = c(0.02, 1),
         plot.margin = margin(4, 16, 3, 0))
 
 # A discrete binned fill is used instead of a continuous gradient so tikzDevice
@@ -1913,53 +1914,51 @@ f12b <- ggplot(gate_counts, aes(y = gate)) +
   center_panel_title
 
 scope_ink <- "#1a1a1a"
-chip_in <- data.frame(
-  x = c(1, 2, 1, 2), y = c(2, 2, 1, 1),
-  lab = c("$\\pm$2 kb window", "JASPAR motif",
-          "ATAC peak presence", "fixed panel $446\\times 1{,}200$"),
-  stringsAsFactors = FALSE
+# C and D share one 2x2 card. Title is ink inside the grey rect. Every chip is
+# two lines so the boxes stay the same size and the labels stay inside them.
+scope_card <- function(labs, title) {
+  stopifnot(length(labs) == 4L)
+  dat <- data.frame(
+    x = c(1, 2, 1, 2),
+    y = c(1.58, 1.58, 0.74, 0.74),
+    lab = labs,
+    stringsAsFactors = FALSE
+  )
+  ggplot(dat, aes(x, y)) +
+    annotate("rect", xmin = 0.32, xmax = 2.68, ymin = 0.26, ymax = 2.74,
+             fill = "#eef2f5", color = "grey55", linewidth = 0.35) +
+    annotate("text", x = 1.58, y = 2.50, label = title,
+             size = 3.30, color = scope_ink) +
+    geom_tile(width = 0.72, height = 0.58, fill = "white", color = scope_ink,
+              linewidth = 0.28) +
+    geom_text(aes(label = lab), size = 2.60, color = scope_ink, lineheight = 0.92) +
+    coord_cartesian(xlim = c(0.28, 2.72), ylim = c(0.22, 2.78), expand = FALSE) +
+    theme_void() +
+    theme(
+      plot.margin = margin(4, 8, 6, 8),
+      plot.tag.location = "panel",
+      plot.tag.position = c(0.04, 0.93)
+    )
+}
+f12c <- scope_card(
+  c("$\\pm$2 kb\nwindow", "JASPAR\nmotif",
+    "ATAC peak\npresence", "fixed panel\n$446\\times 1{,}200$"),
+  "In scope (this instance)"
 )
-f12c <- ggplot(chip_in, aes(x, y)) +
-  annotate("rect", xmin = 0.45, xmax = 2.55, ymin = 0.42, ymax = 2.58,
-           fill = "#eef2f5", color = "grey55", linewidth = 0.28) +
-  geom_tile(width = 0.92, height = 0.78, fill = "white", color = scope_ink,
-            linewidth = 0.28) +
-  geom_text(aes(label = lab), size = 3.20, color = scope_ink, lineheight = 1.05) +
-  coord_cartesian(xlim = c(0.35, 2.65), ylim = c(0.32, 2.68), expand = FALSE) +
-  labs(title = "In scope (this instance)") +
-  theme_void() +
-  theme(plot.margin = margin(6, 6, 6, 6)) +
-  center_panel_title
-
-chip_out <- data.frame(
-  x = c(1, 2, 1.5), y = c(2.15, 2.15, 1.05),
-  lab = c("distal / 3D excluded",
-          "ChIP / causal TF--target\nnot claimed",
-          "cell-type near-invariant proxy"),
-  stringsAsFactors = FALSE
+f12d <- scope_card(
+  c("distal / 3D\nexcluded",
+    "ChIP / causal\nnot claimed",
+    "near-invariant\nproxy",
+    "not field-level\nnegative"),
+  "Out of scope (claim bound)"
 )
-f12d <- ggplot(chip_out, aes(x, y)) +
-  annotate("rect", xmin = 0.40, xmax = 2.60, ymin = 0.18, ymax = 2.72,
-           fill = "grey97", color = "grey55", linewidth = 0.28) +
-  geom_tile(width = 0.92, height = 0.70, fill = "white", color = scope_ink,
-            linewidth = 0.28) +
-  geom_text(aes(label = lab), size = 3.05, color = scope_ink, lineheight = 1.05) +
-  annotate("text", x = 1.5, y = 0.40,
-           label = paste0("Not a field-level negative;\n",
-                          "other panels or models could differ"),
-           size = 2.85, color = scope_ink, lineheight = 1.08) +
-  coord_cartesian(xlim = c(0.30, 2.70), ylim = c(0.08, 2.82), expand = FALSE) +
-  labs(title = "Out of scope (claim bound)") +
-  theme_void() +
-  theme(plot.margin = margin(6, 6, 6, 6)) +
-  center_panel_title
 
 emit("fig12_protocol_pass_matrix",
      ((f12a | f12b) + plot_layout(widths = c(1.55, 1.00))) /
        ((f12c | f12d) + plot_layout(widths = c(1, 1))) +
        plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.42, 0.92)),
-     6.8, 5.85, tags = c("A", "B", "C", "D"))
+       plot_layout(heights = c(1.32, 1.08)),
+     6.8, 6.05, tags = c("A", "B", "C", "D"))
 # Retired standalone fig13_scope_card.tex (content now panel B above).
 fig13_path <- file.path(figs, "fig13_scope_card.tex")
 if (file.exists(fig13_path))

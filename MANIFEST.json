@@ -100,67 +100,67 @@
     {
       "path": "paper/figs/fig10_coverage_qc.tex",
       "bytes": 23594,
-      "sha256": "933674248af01aacfb8e208562c428fc946c92d462293f2ca60f52fdc803a811"
+      "sha256": "6e309e9d2f5e211eedae016889d2f32f0675f35d0cd1c32896186f469d464c54"
     },
     {
       "path": "paper/figs/fig11_third_tissue_transfer.tex",
       "bytes": 56757,
-      "sha256": "315f8429d35b2a012c601f6faf7d1e059dc2533507a34afb400f70d352917456"
+      "sha256": "44720528f32feeaf26f6c6ad34f4517bdf1398524b8773cf587965749bea49a3"
     },
     {
       "path": "paper/figs/fig12_protocol_pass_matrix.tex",
-      "bytes": 26221,
-      "sha256": "7a3e0a517674c8b73884625567b24e40c0f0d9f5a7d515590662c48f5cf3c557"
+      "bytes": 26632,
+      "sha256": "dfbf4d8cf9c8bf5bdab701f7149aa54e426085ed079c93c6b260eca2837ed505"
     },
     {
       "path": "paper/figs/fig1_truth_construct.tex",
       "bytes": 29493,
-      "sha256": "65c1a7511dd132940b92afc4d3db67948193340173be1014008a1332c5dcd40d"
+      "sha256": "989e43843916a4de91010f451fc8c266fa319d692dd2f1e52ddfcbb630c3bc44"
     },
     {
       "path": "paper/figs/fig2_cross_tissue_decomp.tex",
       "bytes": 19515,
-      "sha256": "1538538d966e6f6a47edf1703e64228645a8aac8d858d6a30346e35e9e96448c"
+      "sha256": "099472bd9a1513111c3af02a7b789c4eebed0b2f8a5a4ae1e97564beb0ee3768"
     },
     {
       "path": "paper/figs/fig3_primary_audit.tex",
       "bytes": 34903,
-      "sha256": "6c227b43275e9f2663908a4593d4ee97119abadc25a4d15dbfe6064424841900"
+      "sha256": "813f150be47303aaa158d1eca6a2978c4b80451a6a4ca4f3df33e3868106b743"
     },
     {
       "path": "paper/figs/fig4_usability_check.tex",
       "bytes": 28161,
-      "sha256": "7ae14b52afc8de0e55cb1e9302a0f505a0acddc9b888693d785c4984f11d5b9c"
+      "sha256": "fe81eb7b81d59a9838142b7eb7c0a72fdb346aaba276603d7563733dba56f1cf"
     },
     {
       "path": "paper/figs/fig5_null_diagnostics.tex",
       "bytes": 24581,
-      "sha256": "c1e010f2f066f99acb674e697cb2f275235e57c3838c5fab9fb35d75e074a970"
+      "sha256": "d9d9e37fecfcee074cf04d18cfc2fb72177992d530405315285bc654554a11a3"
     },
     {
       "path": "paper/figs/fig6_spec_sensitivity.tex",
       "bytes": 56804,
-      "sha256": "65393844f1499b9984dbd3292cd70ba94261edb72f9ef42ee9133c65b55a2c1d"
+      "sha256": "fffa1c55ea33147ddd83fd4f7e01fde8883260ba3ffcbbbf8e48d6ef0aac00fa"
     },
     {
       "path": "paper/figs/fig7_pertype_descriptive.tex",
       "bytes": 43629,
-      "sha256": "34113c9d47d296f49b7a254a31f295f87f05863676e9975a2fee566323ebbdfe"
+      "sha256": "5bcd6fe86ab856a2e0dbb31f76700b746565a5e6d38a6e5d2c172f47e5d3363f"
     },
     {
       "path": "paper/figs/fig8_injection_ladder.tex",
       "bytes": 32195,
-      "sha256": "90c34335990c3787ecb630f6da9f08fa3ca8413ec421c56247c009fea797489f"
+      "sha256": "6bdbaad407e42159386a4316e5529c608acc1262fc9af71b8a4d9e164fbaa227"
     },
     {
       "path": "paper/figs/fig9_tf_probe.tex",
       "bytes": 37636,
-      "sha256": "650bfe7b6c4a3859f0a269a5ca9443e9a83ba8941ab2c6a307bb23cc64d2b16c"
+      "sha256": "4ab2aba3875b0667820d4f1be636963d8f7d259b70845a0627daa8648865d6e6"
     },
     {
       "path": "paper/figs/fig_study_design.tex",
       "bytes": 15219,
-      "sha256": "e7f5345f17cc7675bbdaf72179a64436e8d0b337963bceb9170e8ec02b968b3d"
+      "sha256": "83c1874d376ecddf0aa227919433d6d12693e756aa177fd556d7746689d11123"
     },
     {
       "path": "paper/figs/table1_primary_fixed_panel.tex",
@@ -209,8 +209,8 @@
     },
     {
       "path": "paper/make_figs.R",
-      "bytes": 99709,
-      "sha256": "9b52db840bfd577568abb4f5fed85ab5f90fc8735eb0fffcf977dfac3133cfe0"
+      "bytes": 99303,
+      "sha256": "256f024b45a2cd21d744ed640daf0cc8a8a140d999cba322df56940c5444e5f5"
     },
     {
       "path": "paper/make_panel_data.py",
