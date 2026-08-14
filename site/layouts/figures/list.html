@@ -3,33 +3,32 @@
   <div class="wrap">
     <p class="eyebrow">Graphs</p>
     <h1>Figures</h1>
-    <p class="lede">Durable identity is the TikZ stem. Printed order is 1–13, then A1–A3. Coverage QC (<code>fig10_coverage_qc</code>) is <strong>13</strong>, not 1. Protocol-pass (12) is 0/13.</p>
-    <div class="table-well">
-      <table class="catalog">
-        <thead>
-          <tr>
-            <th>Printed</th>
-            <th>Stem</th>
-            <th>Measures</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{ range hugo.Data.figures.main }}
-          <tr>
-            <td>{{ .display }}</td>
-            <td><code>{{ .stem }}</code></td>
-            <td>{{ .measures }}</td>
-          </tr>
-          {{ end }}
-          {{ range hugo.Data.figures.appendix }}
-          <tr>
-            <td>{{ .display }}</td>
-            <td><code>{{ .stem }}</code></td>
-            <td>{{ .measures }}</td>
-          </tr>
-          {{ end }}
-        </tbody>
-      </table>
+    <p class="lede">Every graph, rendered. Printed order is 1–13, then A1–A3. Coverage QC (<code>fig10_coverage_qc</code>) is <strong>13</strong>, not 1. Protocol-pass (12) is 0/13.</p>
+    <h2 class="gallery-h">Printed 1–13</h2>
+    <div class="gallery">
+      {{ range site.Data.figures.main }}
+      <figure class="card" id="fig-{{ .display }}">
+        <img src="{{ printf "figures/%s.png" .stem | relURL }}" alt="{{ .measures }}" loading="lazy">
+        <figcaption>
+          <span class="card-num">{{ .display }}</span>
+          <span class="card-measures">{{ .measures }}</span>
+          <code class="card-stem">{{ .stem }}</code>
+        </figcaption>
+      </figure>
+      {{ end }}
+    </div>
+    <h2 class="gallery-h">Appendix A1–A3</h2>
+    <div class="gallery">
+      {{ range site.Data.figures.appendix }}
+      <figure class="card" id="fig-{{ .display }}">
+        <img src="{{ printf "figures/%s.png" .stem | relURL }}" alt="{{ .measures }}" loading="lazy">
+        <figcaption>
+          <span class="card-num">{{ .display }}</span>
+          <span class="card-measures">{{ .measures }}</span>
+          <code class="card-stem">{{ .stem }}</code>
+        </figcaption>
+      </figure>
+      {{ end }}
     </div>
   </div>
 </main>

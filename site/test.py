@@ -25,6 +25,26 @@ BANNED = re.compile(
     flags=re.I,
 )
 
+# Printed order 1-13 then A1-A3. fig10_coverage_qc is printed 13, not 1.
+FIG_STEMS = [
+    "fig_study_design",
+    "fig1_truth_construct",
+    "fig2_cross_tissue_decomp",
+    "fig3_primary_audit",
+    "fig4_usability_check",
+    "fig5_null_diagnostics",
+    "fig6_spec_sensitivity",
+    "fig7_pertype_descriptive",
+    "fig8_injection_ladder",
+    "fig9_tf_probe",
+    "fig11_third_tissue_transfer",
+    "fig12_protocol_pass_matrix",
+    "fig10_coverage_qc",
+    "fig_ext1_construct_mantel",
+    "fig_ext2_baselines_collectri",
+    "fig_ext3_honesty_policy",
+]
+
 
 def fail(msg: str) -> None:
     print(f"test: FAIL {msg}", file=sys.stderr)
@@ -140,6 +160,23 @@ def main() -> None:
     if "paper/" in figures or "submission_" in figures:
         fail("figures page leaks repo path words")
     ok("figures catalog is stem + printed order")
+
+    # The page must show the graphs, not just name them: one visible <img>
+    # per stem, src under /scfm-reg-audit/figures/, file present in public/.
+    srcs = re.findall(r'<img\b[^>]*?\bsrc="?([^"\s>]+)"?', figures)
+    want_srcs = {f"/scfm-reg-audit/figures/{stem}.png" for stem in FIG_STEMS}
+    missing_src = sorted(want_srcs - set(srcs))
+    if missing_src:
+        fail(f"figures page missing <img> for {missing_src}")
+    if len([s for s in srcs if s in want_srcs]) != len(FIG_STEMS):
+        fail(f"figures page should embed {len(FIG_STEMS)} previews, found {len(srcs)}")
+    for stem in FIG_STEMS:
+        preview = PUBLIC / "figures" / f"{stem}.png"
+        if not preview.is_file():
+            fail(f"missing published preview figures/{stem}.png")
+        if preview.stat().st_size < 20_000:
+            fail(f"preview figures/{stem}.png suspiciously small")
+    ok("figures page embeds 16 visible graph previews, all files published")
 
     smoke(PUBLIC)
     print("test: all checks passed")
