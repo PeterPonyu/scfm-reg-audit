@@ -1834,146 +1834,132 @@ writeLines(c(
   "\\midrule", pp_rows, "\\bottomrule", "\\end{tabular}"
 ), file.path(figs, "table4_protocol_pass.tex"))
 
-# ==================== Figure 12: protocol-pass (A) + scope card (B) ====================
-# Formerly separate Fig.12 / Fig.13 (each tagged "A" alone). Merged so the wide
-# gate heatmap and the scope card share one float; vertical stack keeps the
-# 13×7 heatmap readable at design width 6.8in (0x10 + 0x15).
+# ==================== Figure 12: protocol-pass 2x2 (A--D) ====================
+# Replaces the tall A-over-B stack (heatmap + sparse scope card). Same 13x7
+# gates; B adds column sums already in `pp` (no new compute). C/D split the
+# former scope card so in-scope and the claim bound each fill a panel (0x10).
 gate_levels <- c("Dual full", "Dual non-deg", "Concordance",
                  "ND same sign", "Multi-RO sign", "$\\rho>$ baseline",
                  "Protocol-pass")
+row_lab <- paste(pp$model, pp$tissue, sep = " / ")
 pp_long <- bind_rows(
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "Dual full", pass = pp$dual_full, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "Dual non-deg", pass = pp$dual_nondeg, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "Concordance", pass = pp$concordance, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "ND same sign", pass = pp$same_sign_nd, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "Multi-RO sign", pass = pp$multi_ok, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "$\\rho>$ baseline", pass = pp$vs_baseline, stringsAsFactors = FALSE),
-  data.frame(display = paste(pp$model, pp$tissue, sep = " / "),
-             gate = "Protocol-pass", pass = pp$protocol_pass, stringsAsFactors = FALSE)
+  data.frame(display = row_lab, gate = "Dual full", pass = pp$dual_full,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "Dual non-deg", pass = pp$dual_nondeg,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "Concordance", pass = pp$concordance,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "ND same sign", pass = pp$same_sign_nd,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "Multi-RO sign", pass = pp$multi_ok,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "$\\rho>$ baseline", pass = pp$vs_baseline,
+             stringsAsFactors = FALSE),
+  data.frame(display = row_lab, gate = "Protocol-pass", pass = pp$protocol_pass,
+             stringsAsFactors = FALSE)
 )
 pp_long$display <- factor(pp_long$display, levels = rev(unique(pp_long$display)))
 pp_long$gate <- factor(pp_long$gate, levels = gate_levels)
-# Emphasize the conjunction column without a garish red (muted slate border).
 pp_long$is_final <- pp_long$gate == "Protocol-pass"
-# tikzDevice draws ggplot legend.position="top" on the panel (overlaps row 1).
-# Title + fail/pass live in a separate header plot, outside the heatmap coord.
-f12a_heat <- ggplot(pp_long, aes(gate, display, fill = pass)) +
-  geom_tile(color = "white", linewidth = 0.4, width = 0.96, height = 0.92) +
-  geom_tile(data = pp_long %>% filter(is_final),
+
+f12a <- ggplot(pp_long, aes(gate, display, fill = pass)) +
+  geom_tile(color = "white", linewidth = 0.35, width = 0.96, height = 0.92) +
+  geom_tile(data = pp_long[pp_long$is_final, ],
             aes(gate, display), fill = NA, color = "#5a6570",
             linewidth = 0.55, width = 0.90, height = 0.86) +
-  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey88"),
+  scale_fill_manual(values = c(`FALSE` = "grey88", `TRUE` = AQUA),
                     guide = "none") +
   scale_x_discrete(expand = expansion(add = c(0.06, 0.08))) +
   scale_y_discrete(expand = expansion(add = c(0.08, 0.08))) +
-  coord_cartesian(xlim = c(0.40, 7.56), expand = FALSE, clip = "off") +
-  labs(x = NULL, y = NULL, title = NULL) +
-  theme(axis.text.x = element_text(angle = 32, hjust = 1, size = 8.2,
+  labs(x = NULL, y = NULL, title = "Gate heatmap ($n=13$ rows)",
+       subtitle = "aqua pass / grey fail") +
+  theme(axis.text.x = element_text(angle = 28, hjust = 1, size = 8.0,
                                    margin = margin(t = 1)),
-        axis.text.y = element_text(size = 8.0, margin = margin(r = 2)),
+        axis.text.y = element_text(size = 7.8, margin = margin(r = 2)),
         axis.ticks = element_blank(),
         legend.position = "none",
+        plot.subtitle = element_text(size = 8.2, hjust = 0.5, color = "#3a3a3a",
+                                     margin = margin(b = 2)),
         panel.grid = element_blank(),
         panel.border = element_rect(color = "grey80", fill = NA, linewidth = 0.3),
-        plot.tag = element_blank(),
-        plot.margin = margin(8, 8, 2, 2))
-f12a_head <- ggplot() +
-  annotate("text", x = 0.00, y = 0.50, label = "Protocol-pass gates",
-           hjust = 0, vjust = 0.5, size = 3.90, color = "#1a1a1a") +
-  annotate("rect", xmin = 0.40, xmax = 0.435, ymin = 0.22, ymax = 0.78,
-           fill = "grey88", color = "white", linewidth = 0.35) +
-  annotate("text", x = 0.445, y = 0.50, label = "fail",
-           hjust = 0, vjust = 0.5, size = 3.20, color = "#1a1a1a") +
-  annotate("rect", xmin = 0.545, xmax = 0.580, ymin = 0.22, ymax = 0.78,
-           fill = AQUA, color = "white", linewidth = 0.35) +
-  annotate("text", x = 0.590, y = 0.50, label = "pass",
-           hjust = 0, vjust = 0.5, size = 3.20, color = "#1a1a1a") +
-  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE, clip = "off") +
-  theme_void() +
-  theme(plot.tag = element_blank(),
-        plot.margin = margin(4, 8, 4, 2))
-f12a <- wrap_elements(full = f12a_head / f12a_heat +
-                        plot_layout(heights = c(0.24, 1)))
+        plot.margin = margin(4, 4, 2, 2)) +
+  center_panel_title
 
-# Panel B: pack chips with a fixed gutter (cluster, not equal-space across
-# the box). Each band is only as wide as its chip row + padding. Titles sit
-# on their own y above the chips. Dark type; ~3.5 mm survives \fitfig.
+gate_counts <- pp_long %>%
+  group_by(gate) %>%
+  summarise(n_pass = sum(pass), .groups = "drop")
+gate_counts$gate <- factor(gate_counts$gate, levels = rev(gate_levels))
+gate_counts$required <- gate_counts$gate != "Dual non-deg"
+f12b <- ggplot(gate_counts, aes(y = gate)) +
+  geom_col(aes(x = 13), fill = "grey88", width = 0.72) +
+  geom_col(aes(x = n_pass, fill = required), width = 0.72) +
+  geom_text(aes(x = pmax(n_pass, 0.4),
+                label = sprintf("%d/13", n_pass)),
+            hjust = 0, nudge_x = 0.25, size = 3.15, color = "#1a1a1a") +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "#8aa4b0"),
+                    guide = "none") +
+  scale_x_continuous(limits = c(0, 16.2), breaks = c(0, 7, 13),
+                     expand = expansion(mult = c(0, 0.02))) +
+  labs(x = "rows passing", y = NULL,
+       title = "Per-gate pass count",
+       subtitle = "Dual non-deg (slate) is shown, not required") +
+  theme(panel.grid.major.x = element_line(color = "grey90", linewidth = 0.25),
+        panel.grid.major.y = element_blank(),
+        axis.text.y = element_text(size = 8.0),
+        axis.text.x = element_text(size = 8.0),
+        plot.subtitle = element_text(size = 8.2, hjust = 0.5, color = "#3a3a3a",
+                                     margin = margin(b = 2)),
+        plot.margin = margin(4, 8, 4, 4)) +
+  center_panel_title
+
 scope_ink <- "#1a1a1a"
-chip_h <- 0.54
-chip_gutter <- 0.10
-xmid <- 2.50
-w_in <- c(0.60, 0.58, 0.76, 0.74)
-w_out <- c(0.76, 1.26, 1.10)
-span_in <- sum(w_in) + chip_gutter * (length(w_in) - 1)
-span_out <- sum(w_out) + chip_gutter * (length(w_out) - 1)
-in_left <- xmid - span_in / 2
-out_left <- xmid - span_out / 2
-in_xmin <- in_left + cumsum(c(0, utils::head(w_in, -1) + chip_gutter))
-out_xmin <- out_left + cumsum(c(0, utils::head(w_out, -1) + chip_gutter))
-band_pad <- 0.16
-scope_nodes <- data.frame(
-  xmin = in_xmin, xmax = in_xmin + w_in,
-  ymin = 1.78 - chip_h / 2, ymax = 1.78 + chip_h / 2,
-  x = in_xmin + w_in / 2, y = 1.78,
-  lab = c("$\\pm$2 kb\nwindow", "JASPAR\nmotif", "ATAC peak\npresence",
-          "fixed panel\n446$\\times$1{,}200"),
+chip_in <- data.frame(
+  x = c(1, 2, 1, 2), y = c(2, 2, 1, 1),
+  lab = c("$\\pm$2 kb window", "JASPAR motif",
+          "ATAC peak presence", "fixed panel $446\\times 1{,}200$"),
   stringsAsFactors = FALSE
 )
-scope_out <- data.frame(
-  xmin = out_xmin, xmax = out_xmin + w_out,
-  ymin = 0.46 - chip_h / 2, ymax = 0.46 + chip_h / 2,
-  x = out_xmin + w_out / 2, y = 0.46,
-  lab = c("distal / 3D\nexcluded", "ChIP / causal\nTF--target not claimed",
-          "cell-type\nnear-invariant proxy"),
-  stringsAsFactors = FALSE
-)
-in_band <- c(xmid - max(span_in, span_out) / 2 - band_pad,
-             xmid + max(span_in, span_out) / 2 + band_pad)
-out_band <- in_band
-f12b <- ggplot() +
-  annotate("rect", xmin = in_band[1], xmax = in_band[2], ymin = 1.38, ymax = 2.70,
-           fill = "#eef2f5", color = "grey50", linewidth = 0.28) +
-  annotate("rect", xmin = out_band[1], xmax = out_band[2], ymin = 0.06, ymax = 1.28,
-           fill = "grey97", color = "grey50", linewidth = 0.28) +
-  annotate("text", x = in_band[1] + 0.10, y = 2.54, label = "In scope",
-           hjust = 0, size = 3.55, color = scope_ink, fontface = "bold") +
-  annotate("text", x = out_band[1] + 0.10, y = 1.14, label = "Out of scope",
-           hjust = 0, size = 3.55, color = scope_ink, fontface = "bold") +
-  geom_rect(data = scope_nodes,
-            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-            fill = "white", color = scope_ink, linewidth = 0.28) +
-  geom_rect(data = scope_out,
-            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-            fill = "white", color = scope_ink, linewidth = 0.28) +
-  geom_text(data = scope_nodes, aes(x, y, label = lab),
-            size = 3.35, color = scope_ink, lineheight = 1.08, vjust = 0.5) +
-  geom_text(data = scope_out, aes(x, y, label = lab),
-            size = 3.35, color = scope_ink, lineheight = 1.08, vjust = 0.5) +
-  annotate("text", x = xmid, y = 2.88,
-           label = "Protocol-instance scope (what this audit asks)",
-           size = 3.45, color = scope_ink) +
-  annotate("text", x = xmid, y = -0.34,
-           label = paste0("Failure here cannot be read as a field-level negative ---\n",
-                          "other panels, tissues, or GRN-informed models could differ"),
-           size = 3.15, color = scope_ink, lineheight = 1.10) +
-  coord_cartesian(xlim = c(0.12, 4.88), ylim = c(-0.72, 3.06),
-                  expand = FALSE, clip = "off") +
+f12c <- ggplot(chip_in, aes(x, y)) +
+  annotate("rect", xmin = 0.45, xmax = 2.55, ymin = 0.42, ymax = 2.58,
+           fill = "#eef2f5", color = "grey55", linewidth = 0.28) +
+  geom_tile(width = 0.92, height = 0.78, fill = "white", color = scope_ink,
+            linewidth = 0.28) +
+  geom_text(aes(label = lab), size = 3.20, color = scope_ink, lineheight = 1.05) +
+  coord_cartesian(xlim = c(0.35, 2.65), ylim = c(0.32, 2.68), expand = FALSE) +
+  labs(title = "In scope (this instance)") +
   theme_void() +
-  theme(plot.margin = margin(6, 10, 4, 8))
+  theme(plot.margin = margin(6, 6, 6, 6)) +
+  center_panel_title
 
-# wrap_elements: B spans the full design width (under A's y-tick column).
-# Chips stay a centered cluster; empty canvas is outside the bands.
+chip_out <- data.frame(
+  x = c(1, 2, 1.5), y = c(2.15, 2.15, 1.05),
+  lab = c("distal / 3D excluded",
+          "ChIP / causal TF--target\nnot claimed",
+          "cell-type near-invariant proxy"),
+  stringsAsFactors = FALSE
+)
+f12d <- ggplot(chip_out, aes(x, y)) +
+  annotate("rect", xmin = 0.40, xmax = 2.60, ymin = 0.18, ymax = 2.72,
+           fill = "grey97", color = "grey55", linewidth = 0.28) +
+  geom_tile(width = 0.92, height = 0.70, fill = "white", color = scope_ink,
+            linewidth = 0.28) +
+  geom_text(aes(label = lab), size = 3.05, color = scope_ink, lineheight = 1.05) +
+  annotate("text", x = 1.5, y = 0.40,
+           label = paste0("Not a field-level negative;\n",
+                          "other panels or models could differ"),
+           size = 2.85, color = scope_ink, lineheight = 1.08) +
+  coord_cartesian(xlim = c(0.30, 2.70), ylim = c(0.08, 2.82), expand = FALSE) +
+  labs(title = "Out of scope (claim bound)") +
+  theme_void() +
+  theme(plot.margin = margin(6, 6, 6, 6)) +
+  center_panel_title
+
 emit("fig12_protocol_pass_matrix",
-     f12a / wrap_elements(full = f12b) +
+     ((f12a | f12b) + plot_layout(widths = c(1.55, 1.00))) /
+       ((f12c | f12d) + plot_layout(widths = c(1, 1))) +
        plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.18, 1.30)),
-     6.8, 7.05, tags = c("A", "B"))
+       plot_layout(heights = c(1.42, 0.92)),
+     6.8, 5.85, tags = c("A", "B", "C", "D"))
 # Retired standalone fig13_scope_card.tex (content now panel B above).
 fig13_path <- file.path(figs, "fig13_scope_card.tex")
 if (file.exists(fig13_path))
@@ -2017,5 +2003,5 @@ writeLines(c(
 ), file.path(figs, "table5_related_work.tex"))
 
 
-cat("protocol-pass 0/13 confirmed; table4 + fig12 (A+B) written\n")
+cat("protocol-pass 0/13 confirmed; table4 + fig12 (A--D) written\n")
 cat("all authoritative figures and tables written to", figs, "\n")

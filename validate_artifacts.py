@@ -20,6 +20,8 @@ EXCLUDED_NAMES = {"MANIFEST.json", ".gitignore"}
 LOCAL_WORKTREE_PREFIXES = (
     "src/v2/",
     "paper/submission_peerj/",
+    "paper/submission_frontiers_genetics/",  # other venue; not capsule payload
+    "paper/extension_article/",  # stale pointer; Frontiers SoT is submission_frontiers_genetics/
     "paper/docs/",
     "paper/figs_extension/",  # post-PeerJ SI R+TikZ (not FIGURE_MAP / upload.zip)
     "results/v2/",
@@ -28,8 +30,12 @@ LOCAL_WORKTREE_PREFIXES = (
     ".grok/",
     ".omc/",
     ".omx/",
+    ".worktrees/",
+    ".playwright-mcp/",
     "docs/reports/",
     "archive/",
+    ".github/",  # Pages workflow YAML (not capsule payload)
+    "site/_site/",  # assemble output with copied product PDFs
 )
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",
@@ -47,12 +53,14 @@ LOCAL_WORKTREE_NAMES = {
     "manuscript.fls",
     "manuscript.fdb_latexmk",
     "manuscript.blg",
+    "manuscript.pdf",  # stray paper/ compile; PRJCS SoT is submission_peerj/flat_upload/
     "Rplots.pdf",
+    "DESIGN.md",  # Pages visual contract; not capsule payload
 }
 
 # Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.
 CURRENT_FIGURES = (
-    "fig10_coverage_qc.tex",
+    "fig_study_design.tex",
     "fig1_truth_construct.tex",
     "fig2_cross_tissue_decomp.tex",
     "fig3_primary_audit.tex",
@@ -64,6 +72,7 @@ CURRENT_FIGURES = (
     "fig9_tf_probe.tex",
     "fig11_third_tissue_transfer.tex",
     "fig12_protocol_pass_matrix.tex",
+    "fig10_coverage_qc.tex",
 )
 CURRENT_TABLES = (
     "table5_related_work.tex",

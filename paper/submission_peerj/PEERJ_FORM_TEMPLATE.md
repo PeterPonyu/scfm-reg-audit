@@ -32,7 +32,9 @@ Archive DOI: https://doi.org/10.5281/zenodo.21724336
 
 ## System-entered metadata
 
-- Authors and affiliations: Zeyu Fu — Army Medical University
+- Authors and affiliations: Zeyu Fu — State Key Laboratory of Trauma and Chemical Poisoning,
+  Institute of Combined Injury, Chongqing Engineering Research Center for Nanomedicine, College of
+  Preventive Medicine, Army Medical University, Chongqing, China
 - Corresponding author and email: Zeyu Fu — fuzeyu99@126.com
 - ORCID identifiers: 0009-0001-8329-0108
 - Author contributions: Zeyu Fu — Conceptualization, Methodology, Software, Validation, Formal
@@ -43,9 +45,8 @@ Archive DOI: https://doi.org/10.5281/zenodo.21724336
 - Ethics/data-use statement: Reuse of public, de-identified datasets; no new human-subject
   recruitment or intervention
 - Code/data archive DOI: https://doi.org/10.5281/zenodo.21724336
-- AI-use disclosure: Anthropic Claude models (accessed through an agentic coding assistant) assisted
-  engineering/refactoring of analysis code, statistical pipeline hardening, manuscript
-  copy-editing, and figure/packaging scripts; no AI generated scientific data or reported numbers;
-  the author reviewed all outputs and takes full responsibility. Disclosure package:
-  `ai_code_disclosure/` (before/after code + prompt log).
+- AI-use disclosure: A large language model was used as an auxiliary aid for
+  limited engineering edits to analysis code. No AI generated scientific data or
+  reported numbers. The author takes full responsibility. Supplemental Data S1
+  (original code), S2 (prompts), S3 (resulting code).
 - Suggested editors/reviewers and conflict checks: **REQUIRED** (owner decision)

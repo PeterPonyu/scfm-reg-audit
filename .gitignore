@@ -9,3 +9,12 @@ archive/
 
 # Local result symlink forest
 results/v2/
+
+# GitHub Pages assemble output (copied product PDFs; not capsule source)
+site/_site/
+
+# PRJCS review PDF lives only in paper/submission_peerj/flat_upload/
+paper/manuscript.pdf
+paper/Rplots.pdf
+paper/submission_peerj/source/manuscript.pdf
+paper/extension_article/manuscript.pdf

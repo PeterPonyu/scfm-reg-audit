@@ -135,9 +135,11 @@ class FigureComposite:
             )
 
 
-# Figure map: canonical R figure names -> submission package names
+# Figure map: printed manuscript order -> PeerJ upload names.
+# Figure 1 is study design; Figure 13 is coverage QC. Do not reuse the
+# retired mapping that named coverage QC as Figure1.pdf.
 FIGURE_MAP = (
-    ("fig10_coverage_qc", "Figure1"),
+    ("fig_study_design", "Figure1"),
     ("fig1_truth_construct", "Figure2"),
     ("fig2_cross_tissue_decomp", "Figure3"),
     ("fig3_primary_audit", "Figure4"),
@@ -149,10 +151,19 @@ FIGURE_MAP = (
     ("fig9_tf_probe", "Figure10"),
     ("fig11_third_tissue_transfer", "Figure11"),
     ("fig12_protocol_pass_matrix", "Figure12"),
+    ("fig10_coverage_qc", "Figure13"),
+)
+
+# Appendix figures live under paper/figs_extension/ and flatten to FigureA*.pdf.
+APPENDIX_MAP = (
+    ("fig_ext1_construct_mantel", "FigureA1"),
+    ("fig_ext2_baselines_collectri", "FigureA2"),
+    ("fig_ext3_honesty_policy", "FigureA3"),
 )
 
 # Composite structure for each figure (panel tags)
 FIGURE_COMPOSITES = {
+    "fig_study_design": FigureComposite("fig_study", ("A", "B")),
     "fig1_truth_construct": FigureComposite("fig1", ("A", "B", "C", "D")),
     "fig2_cross_tissue_decomp": FigureComposite("fig2", ("A", "B", "C", "D")),
     "fig3_primary_audit": FigureComposite("fig3", ("A", "B", "C", "D")),
@@ -164,13 +175,17 @@ FIGURE_COMPOSITES = {
     "fig9_tf_probe": FigureComposite("fig9", ("A", "B", "C", "D")),
     "fig10_coverage_qc": FigureComposite("fig10", ("A", "B", "C", "D")),
     "fig11_third_tissue_transfer": FigureComposite("fig11", ("A", "B", "C", "D")),
-    # Protocol-pass heatmap (A) + scope card (B); former fig13 folded in.
-    "fig12_protocol_pass_matrix": FigureComposite("fig12", ("A", "B")),
+    # Protocol-pass 2x2: heatmap, per-gate counts, in-scope, out-of-scope.
+    "fig12_protocol_pass_matrix": FigureComposite("fig12", ("A", "B", "C", "D")),
 }
+
+# Main-text inputs are paper/figs/*.tex. Do not treat figs_extension/ as figs/.
+_FIG_INPUT_RE = r"(?<![A-Za-z_])figs/(fig[A-Za-z0-9_]+)\.tex"
+_APPENDIX_INPUT_RE = r"figs_extension/(fig_ext[0-9]+_[A-Za-z0-9_]+)\.tex"
 
 
 def validate_figure_map(tex_path: str) -> None:
-    """Validate that manuscript references match FIGURE_MAP.
+    """Validate that manuscript figs/ references match FIGURE_MAP.
 
     Args:
         tex_path: Path to manuscript.tex
@@ -182,12 +197,29 @@ def validate_figure_map(tex_path: str) -> None:
     from pathlib import Path
 
     text = Path(tex_path).read_text()
-    referenced = set(re.findall(r"figs/(fig[0-9]+_[A-Za-z0-9_]+)\.tex", text))
+    referenced = set(re.findall(_FIG_INPUT_RE, text))
     mapped = {name for name, _ in FIGURE_MAP}
 
     if referenced != mapped:
         raise RuntimeError(
             f"Figure map mismatch: "
+            f"manuscript-only={sorted(referenced - mapped)}; "
+            f"map-only={sorted(mapped - referenced)}"
+        )
+
+
+def validate_appendix_map(tex_path: str) -> None:
+    """Validate that manuscript figs_extension/ references match APPENDIX_MAP."""
+    import re
+    from pathlib import Path
+
+    text = Path(tex_path).read_text()
+    referenced = set(re.findall(_APPENDIX_INPUT_RE, text))
+    mapped = {name for name, _ in APPENDIX_MAP}
+
+    if referenced != mapped:
+        raise RuntimeError(
+            f"Appendix map mismatch: "
             f"manuscript-only={sorted(referenced - mapped)}; "
             f"map-only={sorted(mapped - referenced)}"
         )

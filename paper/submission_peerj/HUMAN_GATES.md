@@ -3,8 +3,10 @@
 The local draft is mechanically complete only after its checksums and compiler test pass. Items
 marked DONE were completed on 2026-07-31; the rest remain open.
 
-- DONE — Author block replaced with Zeyu Fu, Army Medical University, fuzeyu99@126.com,
-  ORCID 0009-0001-8329-0108 (single author).
+- DONE — Author block replaced with Zeyu Fu, State Key Laboratory of Trauma and Chemical
+  Poisoning, Institute of Combined Injury, Chongqing Engineering Research Center for
+  Nanomedicine, College of Preventive Medicine, Army Medical University, Chongqing, China;
+  fuzeyu99@126.com; ORCID 0009-0001-8329-0108 (single author).
 - DONE — CRediT contributions written for the single author; confirm the roles are accurate at
   final review.
 - DONE — Funding statement: no dedicated or external funding.
@@ -25,8 +27,10 @@ marked DONE were completed on 2026-07-31; the rest remain open.
   PeerJ keywords, Times body fonts, and numeric citations.
 - DONE — Archive DOI citation corrected to the concept DOI
   https://doi.org/10.5281/zenodo.21724336 (resolves to the latest record).
-- DONE — AI-use disclosure: declaration added to the manuscript; `ai_code_disclosure/` package
-  (representative before/after code + prompt log) prepared for the PeerJ AI-in-code form item.
+- DONE — AI-use disclosure: auxiliary-only manuscript declaration; Supplemental Data
+  S1–S3 in `supplemental/` (original code, prompts, resulting code). Working copies
+  remain under `ai_code_disclosure/` (before / prompts / after). Paste blocks:
+  `PEERJ_SUBMIT_PASTE.md`.
 - DECIDED — No cover letter (PeerJ does not require one).
 - OPEN — Verify suggested editor/reviewer choices and conflict-of-interest entries immediately
   before submission.

@@ -9,7 +9,7 @@
 | Manuscript | `paper/manuscript.tex` |
 | Bibliography | `paper/references.bib` |
 | Class | `paper/wlpeerj.cls` |
-| **Human review PDF** | `paper/manuscript.pdf` |
+| **Human review PDF** | `paper/submission_peerj/flat_upload/manuscript.pdf` |
 
 ## Rebuild (always this order)
 
@@ -18,26 +18,22 @@ cd paper
 python3 make_panel_data.py   # if panel_data.json inputs changed
 Rscript make_figs.R          # regenerates paper/figs/*.tex from R — never hand-edit those
 cd ..
-python3 src/v2/build_peerj_package.py   # syncs submission_peerj/ + refreshes manuscript.pdf
+python3 src/v2/build_peerj_package.py   # writes submission_peerj/flat_upload/ (the PRJCS PDF)
 ```
 
-Or, for paper-only after R:
-
-```bash
-cd paper && latexmk -pdf -interaction=nonstopmode manuscript.tex
-```
+Do not run `latexmk` in `paper/` to produce a review PDF. That leaves an orphan `paper/manuscript.pdf`. The PRJCS review PDF is only `paper/submission_peerj/flat_upload/manuscript.pdf`.
 
 ## Generated mirrors (do not edit; may lag until package rebuild)
 
 | Mirror | Role |
 | --- | --- |
 | `paper/submission_peerj/source/` | Editable TikZ source package |
-| `paper/submission_peerj/flat_upload/` | Upload: `manuscript.pdf` + `Figure1.pdf`…`Figure12.pdf` + table fragments |
+| `paper/submission_peerj/flat_upload/` | Upload: `manuscript.pdf` + `Figure1.pdf`…`Figure13.pdf` + `FigureA1.pdf`–`FigureA3.pdf` + table fragments |
 | `paper/submission_peerj/internal/figure_build/` | Standalone figure wrappers |
 | `paper/submission_peerj/upload.zip` | Zip of flat_upload checksum set |
 | `paper/submission_peerj/SHA256SUMS.txt` | Hashes for flat_upload |
 
-If `flat_upload/manuscript.pdf` or `FigureN.pdf` is older than `paper/figs/` or `make_figs.R`, it is **stale**. Rebuild with `build_peerj_package.py`.
+If `flat_upload/manuscript.pdf` or `FigureN.pdf` is older than `paper/figs/` or `make_figs.R`, it is **stale**. Rebuild with `build_peerj_package.py`. Upload `Figure1.pdf` is study design; `Figure13.pdf` is coverage QC. Appendix figures are `FigureA1.pdf`–`FigureA3.pdf`. AI-in-code supplementals are three zip archives in `paper/submission_peerj/supplemental/` (Supplemental Data S1–S3), not inside `flat_upload/`.
 
 ## Not manuscript SoT (safe to ignore / delete)
 
@@ -50,17 +46,17 @@ If `flat_upload/manuscript.pdf` or `FigureN.pdf` is older than `paper/figs/` or 
 
 ## Additional article draft (Frontiers in Genetics)
 
-Two report PDFs exist. The original PhD/PeerJ paper remains `paper/manuscript.tex` → `paper/manuscript.pdf` (do not rewrite that source for this draft).
+Two report PDFs exist. The original PhD/PeerJ paper remains `paper/manuscript.tex` compiled into `paper/submission_peerj/flat_upload/manuscript.pdf` (do not rewrite that source for this draft).
 
-The Frontiers in Genetics draft is a **full conversion** of that original paper (Figures 1–12, all tables, Methods/Results/Discussion) into a default `article` class, with the three construct-lane overlays as **Appendix A1–A3** of the same unified `.tex`. It is not a three-figure-only manuscript. The folder is **flat** (no `figures/` or `supplementary/`).
+The Frontiers in Genetics draft is a **full conversion** of that original paper (Figures 1–13, all tables, Methods/Results/Discussion) into a default `article` class, with a study-design schematic as Figure 1 and coverage QC as Figure 13, and the three construct-lane overlays as **Appendix A1–A3** of the same unified `.tex`. It is not a three-figure-only manuscript. The folder is **flat** (no `figures/` or `supplementary/`).
 
 | Asset | Path |
 | --- | --- |
 | Unified manuscript | `paper/submission_frontiers_genetics/manuscript.tex` |
 | Review PDF | `paper/submission_frontiers_genetics/manuscript.pdf` |
-| Main TikZ / tables | `fig1`–`fig12` and `table1`–`table8` copies in that folder |
+| Main TikZ / tables | `fig_study_design`, `fig1`–`fig12` (main Figures 1–13) and `table1`–`table8` copies in that folder |
 | Appendix TikZ | `fig_ext{1,2,3}_*.tex` |
-| Original report | `cd paper && latexmk -pdf manuscript.tex` → `paper/manuscript.pdf` |
+| Original report | `python3 src/v2/build_peerj_package.py` → `paper/submission_peerj/flat_upload/manuscript.pdf` |
 | Frontiers report | `cd paper/submission_frontiers_genetics && latexmk -pdf -interaction=nonstopmode manuscript.tex` |
 
 Do **not** run `build_peerj_package.py` for that draft. See `paper/submission_frontiers_genetics/README.md`. The old `paper/extension_article/` tree is a stale pointer only.

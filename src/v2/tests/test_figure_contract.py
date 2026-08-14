@@ -5,7 +5,7 @@ The capsule builder and the capsule validator both refuse to ship when:
 - a `FigureN.tex` standalone wrapper points at a fragment not in
   CURRENT_FIGURES[N-1];
 - a `FigureN.pdf` filename referenced by `flat_upload/manuscript.tex` is out
-  of order (Figure1..Figure11).
+  of order (Figure1..Figure13).
 
 These tests monkey-patch the contract constants to inject a stale fragment,
 then exercise the guard functions to confirm they raise.
@@ -31,11 +31,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 class BuilderConstantShape(unittest.TestCase):
 
     def test_constants_consistent(self):
-        self.assertEqual(len(CURRENT_FIGURES), 12)
+        self.assertEqual(len(CURRENT_FIGURES), 13)
         self.assertEqual(len(CURRENT_TABLES), 8)
         self.assertEqual(CURRENT_FRAGMENTS, CURRENT_FIGURES + CURRENT_TABLES)
-        self.assertEqual(CURRENT_FIGURES[0], "fig10_coverage_qc.tex")
-        self.assertEqual(CURRENT_FIGURES[-1], "fig12_protocol_pass_matrix.tex")
+        self.assertEqual(CURRENT_FIGURES[0], "fig_study_design.tex")
+        self.assertEqual(CURRENT_FIGURES[-1], "fig10_coverage_qc.tex")
         self.assertIn("fig12_protocol_pass_matrix.tex", CURRENT_FIGURES)
         self.assertNotIn("fig13_scope_card.tex", CURRENT_FIGURES)
         self.assertEqual(CURRENT_TABLES[-2], "table7_nondegree_null_pattern.tex")

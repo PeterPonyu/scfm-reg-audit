@@ -4,9 +4,10 @@
 Generates:
 - source/: self-contained editable article source (TikZ fragments included)
 - internal/figure_build/: standalone wrappers for each figure
-- flat_upload/: flat manuscript with pre-rendered FigureN.pdf files, tables,
-  references, and the compiled manuscript PDF
+- flat_upload/: flat manuscript with pre-rendered Figure1.pdf–Figure13.pdf
+  and FigureA1.pdf–FigureA3.pdf, tables, references, and the compiled manuscript PDF
 - SHA256SUMS.txt for every flat_upload file
+- three AI-in-code supplemental zips under supplemental/ (not in flat_upload)
 
 Typography/layout contract:
 - Font: 11pt newtxtext/newtxmath (Times-compatible, matches PeerJ NimbusRomNo9L)
@@ -39,10 +40,19 @@ TABLE_FRAGMENTS = [
 # Import typography contract (figure map, validation)
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from figure_typography import FIGURE_MAP, validate_figure_map, TypographyContract
+from figure_typography import (
+    APPENDIX_MAP,
+    FIGURE_MAP,
+    TypographyContract,
+    validate_appendix_map,
+    validate_figure_map,
+)
 
 FIG_NAMES = list(FIGURE_MAP)
+APPENDIX_NAMES = list(APPENDIX_MAP)
+UPLOAD_NAMES = FIG_NAMES + APPENDIX_NAMES
 TYPOGRAPHY = TypographyContract()
+APPENDIX_DIR = PAPER / "figs_extension"
 
 WRAPPER = """\\documentclass[tikz,border=0pt]{standalone}
 \\usepackage{amsmath}
@@ -125,12 +135,36 @@ def run(cmd, cwd, pdf_name=None):
     return last
 
 
+def _fig_tex_path(name):
+    if name.startswith("fig_ext"):
+        return APPENDIX_DIR / f"{name}.tex"
+    return PAPER / "figs" / f"{name}.tex"
+
+
 def _copy_fig_assets(name, dest_dir):
     """Copy a figure fragment's companion raster assets (e.g. rasterized colorbars
     emitted by tikzDevice as {name}_ras*.png) next to the .tex so \\pgfimage/
     \\includegraphics can resolve them at compile time."""
-    for asset in sorted((PAPER / "figs").glob(f"{name}_ras*.png")):
-        shutil.copy2(asset, Path(dest_dir) / asset.name)
+    src_dirs = (PAPER / "figs", APPENDIX_DIR)
+    for src in src_dirs:
+        if not src.exists():
+            continue
+        for asset in sorted(src.glob(f"{name}_ras*.png")):
+            shutil.copy2(asset, Path(dest_dir) / asset.name)
+
+
+def _flatten_figure_inputs(text, names, tex_dir):
+    for name, figure in names:
+        text = text.replace(
+            f"\\fitfig{{\\input{{{tex_dir}/{name}.tex}}}}",
+            f"\\includegraphics[width=\\linewidth]{{{figure}.pdf}}",
+        )
+        text = re.sub(
+            rf"\\resizebox\{{([^}}]+)\}}\{{!\}}\{{\\input\{{{re.escape(tex_dir)}/{re.escape(name)}\.tex\}}\}}",
+            rf"\\includegraphics[width=\1]{{{figure}.pdf}}",
+            text,
+        )
+    return text
 
 
 def build_source():
@@ -138,12 +172,16 @@ def build_source():
     if source.exists():
         shutil.rmtree(source)
     (source / "figs").mkdir(parents=True)
+    (source / "figs_extension").mkdir(parents=True)
     shutil.copy2(PAPER / "manuscript.tex", source / "manuscript.tex")
     shutil.copy2(PAPER / "references.bib", source / "references.bib")
     shutil.copy2(PAPER / "wlpeerj.cls", source / "wlpeerj.cls")
     for name, _ in FIG_NAMES:
-        shutil.copy2(PAPER / "figs" / f"{name}.tex", source / "figs" / f"{name}.tex")
+        shutil.copy2(_fig_tex_path(name), source / "figs" / f"{name}.tex")
         _copy_fig_assets(name, source / "figs")
+    for name, _ in APPENDIX_NAMES:
+        shutil.copy2(_fig_tex_path(name), source / "figs_extension" / f"{name}.tex")
+        _copy_fig_assets(name, source / "figs_extension")
     for name in TABLE_FRAGMENTS:
         shutil.copy2(PAPER / "figs" / f"{name}.tex", source / "figs" / f"{name}.tex")
     build_pdf_with_bib(source, "manuscript.tex")
@@ -157,15 +195,14 @@ def build_figures():
     wrappers.mkdir(parents=True)
     flat = PKG / "flat_upload"
     flat.mkdir(parents=True, exist_ok=True)
-    for name, figure in FIG_NAMES:
+    for name, figure in UPLOAD_NAMES:
         (wrappers / f"{figure}.tex").write_text(WRAPPER.replace("FIGFILE", f"{name}.tex"))
-        shutil.copy2(PAPER / "figs" / f"{name}.tex", wrappers / f"{name}.tex")
+        shutil.copy2(_fig_tex_path(name), wrappers / f"{name}.tex")
         _copy_fig_assets(name, wrappers)
         run(["latexmk", "-pdf", "-interaction=nonstopmode", f"{figure}.tex"], wrappers,
             pdf_name=f"{figure}.pdf")
         shutil.copy2(wrappers / f"{figure}.pdf", flat / f"{figure}.pdf")
-    # Drop retired FigureN.pdf left from a prior larger FIGURE_MAP (e.g. fig13).
-    expected_pdfs = {f"{figure}.pdf" for _, figure in FIG_NAMES}
+    expected_pdfs = {f"{figure}.pdf" for _, figure in UPLOAD_NAMES}
     for stale in flat.glob("Figure*.pdf"):
         if stale.name not in expected_pdfs:
             stale.unlink()
@@ -179,16 +216,8 @@ def build_flat(flat):
     text = (PAPER / "manuscript.tex").read_text()
     text = text.replace("\\usepackage{tikz}\n", "\\usepackage{xcolor}\n")
     text = text.replace("\\graphicspath{{figs/}}\n", "")
-    for name, figure in FIG_NAMES:
-        text = text.replace(
-            f"\\fitfig{{\\input{{figs/{name}.tex}}}}",
-            f"\\includegraphics[width=\\linewidth]{{{figure}.pdf}}",
-        )
-        text = re.sub(
-            rf"\\resizebox\{{([^}}]+)\}}\{{!\}}\{{\\input\{{figs/{re.escape(name)}\.tex\}}\}}",
-            rf"\\includegraphics[width=\1]{{{figure}.pdf}}",
-            text,
-        )
+    text = _flatten_figure_inputs(text, FIG_NAMES, "figs")
+    text = _flatten_figure_inputs(text, APPENDIX_NAMES, "figs_extension")
     for name in TABLE_FRAGMENTS:
         text = text.replace(f"figs/{name}.tex", f"{name}.tex")
     (flat / "manuscript.tex").write_text(text)
@@ -250,22 +279,27 @@ def scrub_generated_files():
             if path.is_dir() and path.name in cache_names:
                 shutil.rmtree(path)
     for path in (PKG / "source").glob("manuscript.*"):
-        if path.suffix not in {".tex", ".bbl", ".pdf"}:
+        if path.suffix not in {".tex", ".bbl"}:
             path.unlink()
     for path in (PKG / "internal" / "figure_build").glob("*"):
         if path.is_file() and path.suffix in {".aux", ".blg", ".fdb_latexmk", ".fls", ".log", ".out"}:
             path.unlink()
 
 
-def refresh_canonical_pdf():
-    """Rebuild paper/manuscript.pdf so the canonical human-review PDF never
-    drifts from the freshly regenerated figures and the packaged mirror.
-    Without this, editing a figure and repackaging leaves paper/manuscript.pdf
-    stale, which previously shipped an outdated figure caption/title into the
-    canonical review target."""
-    build_pdf_with_bib(PAPER, "manuscript.tex")
+def scrub_orphan_review_pdfs():
+    """PRJCS review PDF lives only in flat_upload/. Drop competing copies."""
+    orphans = (
+        PAPER / "manuscript.pdf",
+        PAPER / "Rplots.pdf",
+        PKG / "source" / "manuscript.pdf",
+        PAPER / "extension_article" / "manuscript.pdf",
+    )
+    for path in orphans:
+        if path.exists():
+            path.unlink()
+    orphan_suffixes = {".pdf", ".aux", ".log", ".out", ".fls", ".fdb_latexmk", ".blg"}
     for stale in PAPER.glob("manuscript.*"):
-        if stale.suffix not in {".tex", ".bbl", ".pdf"}:
+        if stale.suffix in orphan_suffixes:
             stale.unlink()
     rplots = PAPER / "Rplots.pdf"
     if rplots.exists():
@@ -275,20 +309,23 @@ def refresh_canonical_pdf():
 def main():
     regenerate_figures()
     validate_figure_map(str(PAPER / "manuscript.tex"))
+    validate_appendix_map(str(PAPER / "manuscript.tex"))
     source = build_source()
     flat = build_figures()
     build_flat(flat)
-    refresh_canonical_pdf()
+    scrub_orphan_review_pdfs()
     scrub_generated_files()
     if list(PKG.rglob(".omc")):
         raise RuntimeError(".omc session state present in submission package")
     lines = write_checksums(flat)
     checksum_names = [ln.split("  ", 1)[1] for ln in lines]
     zip_path = build_upload_zip(flat, checksum_names)
+    from build_ai_disclosure_zips import build as build_ai_zips
+    build_ai_zips()
     print(f"source rebuilt: {source}")
     print(f"flat upload rebuilt: {flat} ({len(lines)} files)")
     print(f"clean upload archive: {zip_path} ({len(checksum_names) + 1} members)")
-    print(f"canonical PDF refreshed: {PAPER / 'manuscript.pdf'}")
+    print(f"canonical PDF refreshed: {flat / 'manuscript.pdf'}")
 
 
 if __name__ == "__main__":

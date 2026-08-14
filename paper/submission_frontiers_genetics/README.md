@@ -7,13 +7,12 @@ This repository produces **two independent PDFs**. Do not mix their class files 
 Source of truth: `paper/manuscript.tex` (PeerJ class). **Do not edit that file for the Frontiers draft.**
 
 ```bash
-cd paper
-latexmk -pdf -interaction=nonstopmode manuscript.tex
+python3 src/v2/build_peerj_package.py
 ```
 
-Output: `paper/manuscript.pdf`
+Output: `paper/submission_peerj/flat_upload/manuscript.pdf`. Do not run `latexmk` in `paper/`; that leaves an orphan `paper/manuscript.pdf`.
 
-Figures 1–12 and Tables 1–8 live under `paper/figs/` and are `\input` with a `figs/` prefix. Rebuild TikZ with `Rscript paper/make_figs.R` only when panel JSON or `make_figs.R` changed. Do **not** run `src/v2/build_peerj_package.py` for the Frontiers draft.
+Figures 1–13 and Tables 1–8 live under `paper/figs/` and are `\input` with a `figs/` prefix. Rebuild TikZ with `Rscript paper/make_figs.R` only when panel JSON or `make_figs.R` changed. Do **not** run `src/v2/build_peerj_package.py` for the Frontiers draft.
 
 ## 2. Frontiers in Genetics report (full conversion + appendix)
 

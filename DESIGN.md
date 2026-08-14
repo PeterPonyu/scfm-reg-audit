@@ -32,8 +32,8 @@ language, components, accessibility, and content voice.
     `LICENSING.md`, `LICENSE`, `LICENSE-CONTENT.md`, `docs/NOTICE.md`.
   - **Two report paths:** `paper/CANONICAL_BUILD.md`;
     `paper/submission_frontiers_genetics/README.md`; `paper/submission_peerj/README.md`;
-    `paper/submission_peerj/HUMAN_GATES.md`. PeerJ SoT is `paper/manuscript.tex` →
-    `paper/manuscript.pdf`. Frontiers SoT is
+    `paper/submission_peerj/HUMAN_GATES.md`. PeerJ SoT is `paper/manuscript.tex` compiled to
+    `paper/submission_peerj/flat_upload/manuscript.pdf`. Frontiers SoT is
     `paper/submission_frontiers_genetics/manuscript.tex` → `manuscript.pdf` in that
     folder. Frontiers is a **full conversion** (main Figures 1–13 + Tables 1–8 +
     Appendix A1–A3), not a three-figure-only paper.
@@ -53,13 +53,14 @@ language, components, accessibility, and content voice.
     Frontiers draft uses default `article` (Computer Modern). Site type should be
     **print-adjacent serif on screen**, not a CM webfont clone (hairline at UI sizes)
     and not Inter/Roboto/system/Space Grotesk.
-  - **PeerJ upload numbering ≠ R stem order:** `FIGURE_MAP` in
-    `src/v2/figure_typography.py` maps `fig10_coverage_qc` → `Figure1.pdf`,
-    `fig1_truth_construct` → `Figure2.pdf`, … `fig12_protocol_pass_matrix` →
-    `Figure12.pdf`. `fig_study_design` is in both PDFs but **not** in `FIGURE_MAP`.
-    Frontiers in-PDF order starts with study design as Figure 1 and ends coverage QC
-    as Figure 13, plus appendix `fig_ext{1,2,3}_*`.
-  - **Erratum (2026-08-13):** In-PDF number for `fig10_coverage_qc` is Figure 13 in **both** journal SoT manuscripts; `FIGURE_MAP` `Figure1.pdf` is a stale PeerJ upload filename, not PeerJ Figure 1.
+  - **PeerJ upload numbering matches in-PDF order:** `FIGURE_MAP` in
+    `src/v2/figure_typography.py` maps `fig_study_design` → `Figure1.pdf`,
+    `fig1_truth_construct` → `Figure2.pdf`, … `fig10_coverage_qc` →
+    `Figure13.pdf`. Appendix `fig_ext{1,2,3}_*` flatten to `FigureA1.pdf`–
+    `FigureA3.pdf`. Frontiers in-PDF order is the same 1–13 plus appendix A1–A3.
+  - **Erratum (2026-08-13; fixed 2026-08-14):** the retired map named coverage QC
+    as `Figure1.pdf`. That filename is no longer used. In-PDF Figure 1 is study
+    design; Figure 13 is coverage QC.
   - **Stale pointer:** `docs/SCREG_EVAL_PROTOCOL.md` line 3 cites “Deliverable #1 of
     DESIGN.md §8”. That historical §8 is **absent** from this tree. This file is a
     GitHub Pages design contract, not a revival of that section numbering.
@@ -119,8 +120,8 @@ language, components, accessibility, and content voice.
     two clicks from the hub, with 0/13 stated in plain language.
   - A reproducer can run the validator from the reproduce page without being
     told to download missing H5AD.
-  - Venue figure numbers never silently swap (PeerJ `Figure1.pdf` ≠ Frontiers
-    Figure 1).
+  - Venue figure numbers never silently swap: PeerJ `Figure1.pdf` is study
+    design, matching Frontiers Figure 1; `Figure13.pdf` is coverage QC.
   - No slogan appears where a gate count belongs.
 
 ## Personas and jobs
@@ -130,7 +131,7 @@ language, components, accessibility, and content voice.
      venue’s PDF, and a BibTeX/DOI block.
   2. **Reviewer / editor** — needs methods honesty: estimand, dual-null,
      protocol-pass conjunction, what is *not* claimed, licenses, AI-disclosure
-     pointer (`paper/submission_peerj/ai_code_disclosure/`).
+     as Supplemental Data S1–S3 (original code, prompts, resulting code).
   3. **Capsule reproducer** — clones GitHub; wants validate + unit tests +
      FULL_RERUN pointers + accession list, not a GUI for `run_fixed_panel_audit.py`.
 - User jobs:
@@ -165,7 +166,7 @@ resources. Do not hide the second venue behind a dropdown-only control.
   | Route | Purpose |
   | --- | --- |
   | `/` | Hub: one-paragraph what-this-is; honesty strip (panel, dual-null, protocol-pass 0/13); two venue cards; links to GitHub + Zenodo. No hero video, no CTA banner. |
-  | `/peerj/` | PeerJ CS path: review PDF pointer, upload figure list using **`FIGURE_MAP` names** plus stable stems, tables 1–8, package README notes, AI-disclosure pointer. State that `fig_study_design` appears in the compiled PDF but is not a `FigureN.pdf` in `flat_upload/`. |
+  | `/peerj/` | PeerJ CS path: review PDF pointer (`paper/submission_peerj/flat_upload/manuscript.pdf`), upload figure list using **`FIGURE_MAP` names** (printed 1–13) plus appendix `FigureA*`, tables 1–8, package README notes, AI-disclosure pointer to Supplemental Data S1–S3. |
   | `/frontiers/` | Frontiers Genetics path: review PDF pointer, in-PDF Figures 1–13 (study design first, coverage QC last), Appendix A1–A3 (`fig_ext1`–`fig_ext3`), Vancouver vs PeerJ name-year noted only as a bibliographic fact — not a selling point. |
   | `/figures/` | Shared gallery indexed by **stable stem**. Each card shows PeerJ upload name (if any) and Frontiers figure/appendix number. |
   | `/figures/{stem}/` | Single-figure page: caption excerpt, venue numbers, download/view, “same asset, different number”. Stems listed below. |
@@ -184,7 +185,7 @@ resources. Do not hide the second venue behind a dropdown-only control.
 
   | Stem | PeerJ `FIGURE_MAP` | Frontiers in-PDF (observed order) |
   | --- | --- | --- |
-  | `fig_study_design` | not in upload map (in PDF) | Figure 1 |
+  | `fig_study_design` | Figure1 | Figure 1 |
   | `fig1_truth_construct` | Figure2 | Figure 2 |
   | `fig2_cross_tissue_decomp` | Figure3 | Figure 3 |
   | `fig3_primary_audit` | Figure4 | Figure 4 |
@@ -196,10 +197,10 @@ resources. Do not hide the second venue behind a dropdown-only control.
   | `fig9_tf_probe` | Figure10 | Figure 10 |
   | `fig11_third_tissue_transfer` | Figure11 | Figure 11 |
   | `fig12_protocol_pass_matrix` | Figure12 | Figure 12 |
-  | `fig10_coverage_qc` | **Figure1** | Figure 13 |
-  | `fig_ext1_construct_mantel` | — | Appendix A1 |
-  | `fig_ext2_baselines_collectri` | — | Appendix A2 |
-  | `fig_ext3_honesty_policy` | — | Appendix A3 |
+  | `fig10_coverage_qc` | Figure13 | Figure 13 |
+  | `fig_ext1_construct_mantel` | FigureA1 | Appendix A1 |
+  | `fig_ext2_baselines_collectri` | FigureA2 | Appendix A2 |
+  | `fig_ext3_honesty_policy` | FigureA3 | Appendix A3 |
 
   Always label with the stem in `code` style on the figure page so numbering
   collisions cannot be mistaken for different science.
@@ -219,8 +220,8 @@ resources. Do not hide the second venue behind a dropdown-only control.
   download, cite, validate.” No conversion copy. External GitHub/Zenodo links
   are utilities.
 - Principle 5: **Stem is the identity; venue number is a label.** Never title a
-  gallery item “Figure 1” without saying which venue. Prefer `fig10_coverage_qc`
-  as the durable key.
+  gallery item “Figure 1” without saying which venue. Prefer the TikZ stem
+  (`fig_study_design`, `fig10_coverage_qc`, …) as the durable key.
 - Tradeoffs:
   - Static Pages over SPA: slower to “app-like”, faster to trust and archive.
   - Light-only v1 over dark theme: matches PDFs; dark can wait (open question).
