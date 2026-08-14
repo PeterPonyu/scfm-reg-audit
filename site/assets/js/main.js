@@ -27,6 +27,7 @@
       }
       const status = document.querySelector("[data-copy-status]");
       if (status) {
+        status.textContent = "Copied.";
         status.hidden = false;
         window.setTimeout(() => {
           if (!reduce) status.hidden = true;

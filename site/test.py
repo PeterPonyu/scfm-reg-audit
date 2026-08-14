@@ -18,6 +18,13 @@ SITE = ROOT / "site"
 PUBLIC = Path(sys.argv[1]) if len(sys.argv) > 1 else SITE / "public"
 LAYOUTS = SITE / "layouts"
 
+BANNED = re.compile(
+    r"peerj|frontiers|\bgenetics\b|\bmanuscript\b|\bjournal\b|\babstract\b|"
+    r"\bsubmission\b|\bvenue\b|\bpublisher\b|\bpreprint\b|\barticle\b|"
+    r"computer\s+science|\bphd\b|ph\.d|\bpapers?\b",
+    flags=re.I,
+)
+
 
 def fail(msg: str) -> None:
     print(f"test: FAIL {msg}", file=sys.stderr)
@@ -34,8 +41,6 @@ def main() -> None:
 
     routes = [
         "index.html",
-        "peerj/index.html",
-        "frontiers/index.html",
         "figures/index.html",
         "reproducibility/index.html",
         "404.html",
@@ -49,58 +54,68 @@ def main() -> None:
             fail(f"missing route {rel}")
         ok(rel)
 
+    for rel in ("peerj/index.html", "frontiers/index.html"):
+        if (PUBLIC / rel).is_file():
+            fail(f"retired route still published: {rel}")
+    ok("retired venue routes absent")
+
     hub = (PUBLIC / "index.html").read_text(encoding="utf-8")
     if "0/13" not in hub:
         fail("hub missing protocol-pass 0/13")
     ok("hub has 0/13")
 
+    if "446" not in hub or "1,200" not in hub:
+        fail("hub missing frozen 446 × 1,200 panel")
+    if "Monte Carlo" not in hub or "degree-preserving" not in hub:
+        fail("hub missing dual-null wording")
+    if "Support" not in hub:
+        fail("hub missing Support")
+    ok("hub has panel and dual-null")
+
     if re.search(r"Ph\.D|PhD", hub, flags=re.I):
         fail("hub contains Ph.D / PhD chrome")
-    if "Frontiers in Genetics" in hub:
-        fail("hub uses journal title-page identity 'Frontiers in Genetics'")
-    if re.search(r"<h1[^>]*>.*Genetics.*</h1>", hub, flags=re.I | re.S):
-        fail("hub h1 uses genetics as identity")
     if "Army Medical" in hub or "word-count" in hub.lower():
         fail("hub contains degree / word-count chrome")
-    if "PeerJ CS PDF" not in hub or "Frontiers Genetics PDF" not in hub:
-        fail("hub missing equal PDF file labels")
+    if BANNED.search(hub):
+        fail(f"hub contains banned word: {BANNED.search(hub).group(0)!r}")
+    if "products/" in hub or ".pdf" in hub.lower():
+        fail("hub advertises PDFs")
     ok("hub identity chrome checks")
 
     for html_path in PUBLIC.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8")
+        rel = html_path.relative_to(PUBLIC).as_posix()
         if re.search(r"Ph\.D|PhD", text):
-            fail(f"{html_path.relative_to(PUBLIC)} contains Ph.D / PhD")
+            fail(f"{rel} contains Ph.D / PhD")
         if "Army Medical" in text:
-            fail(f"{html_path.relative_to(PUBLIC)} contains Army Medical")
+            fail(f"{rel} contains Army Medical")
         if "fonts.googleapis.com" in text or "fonts.gstatic.com" in text:
-            fail(f"{html_path.relative_to(PUBLIC)} loads Google Fonts CDN")
-    ok("no Ph.D / Army Medical / webfont CDN in HTML")
+            fail(f"{rel} loads Google Fonts CDN")
+        hit = BANNED.search(text)
+        if hit:
+            fail(f"{rel} contains banned word: {hit.group(0)!r}")
+    ok("no banned words / Ph.D / Army Medical / webfont CDN in HTML")
 
     for layout in LAYOUTS.rglob("*.html"):
         text = layout.read_text(encoding="utf-8")
         if "/scfm-reg-audit/" in text:
             fail(f"{layout.relative_to(SITE)} hardcodes /scfm-reg-audit/ (use relURL)")
-        if "relURL" not in text and layout.name in {
-            "header.html",
-            "index.html",
-            "404.html",
-            "baseof.html",
-        }:
-            # header/index/404/baseof must use relURL for internal paths
-            if layout.name != "baseof.html" or "RelPermalink" not in text:
-                pass
     if 'href="/scfm-reg-audit/' in (LAYOUTS / "index.html").read_text(encoding="utf-8"):
         fail("hub layout hardcodes project-pages prefix")
     ok("layouts do not hardcode /scfm-reg-audit/")
 
-    if "/scfm-reg-audit/peerj/" not in hub:
-        fail("built hub missing relURL prefix /scfm-reg-audit/peerj/")
-    if 'href="/peerj/' in hub:
-        fail("built hub has root-absolute /peerj/ (missing project base)")
+    if "/scfm-reg-audit/figures/" not in hub:
+        fail("built hub missing relURL prefix /scfm-reg-audit/figures/")
+    if "/scfm-reg-audit/reproducibility/" not in hub:
+        fail("built hub missing relURL prefix /scfm-reg-audit/reproducibility/")
+    if 'href="/figures/' in hub or 'href="/reproducibility/' in hub:
+        fail("built hub has root-absolute science route (missing project base)")
     if re.search(r"href=/>", hub) or 'href="/"' in hub:
         fail("built hub has root-absolute href=/ (missing project base)")
     if 'href=/scfm-reg-audit/' not in hub.replace('href="/scfm-reg-audit/', "href=/scfm-reg-audit/"):
         fail("built hub missing project-pages href prefix")
+    if "/peerj/" in hub or "/frontiers/" in hub:
+        fail("built hub still links retired routes")
     ok("built hub uses project-pages prefix")
 
     pdfs = list(PUBLIC.rglob("*.pdf"))
@@ -112,14 +127,19 @@ def main() -> None:
     for name in (f"Figure{i}.pdf" for i in range(1, 13)):
         if (PUBLIC / name).exists() or list(PUBLIC.rglob(name)):
             fail(f"denylist PDF present: {name}")
-    ok("exactly two product PDFs")
+    ok("exactly two artifact PDFs (unlinked)")
 
     figures = (PUBLIC / "figures/index.html").read_text(encoding="utf-8")
-    if "paper/figs_extension/fig_ext" in figures:
-        fail("figures page links missing origin/main path paper/figs_extension/")
-    if "paper/submission_frontiers_genetics/fig_ext1_construct_mantel.tex" not in figures:
-        fail("figures page missing origin/main appendix blob path")
-    ok("appendix blob paths exist on origin/main")
+    if "fig10_coverage_qc" not in figures:
+        fail("figures page missing coverage QC stem")
+    if ">13<" not in figures and ">13</" not in figures:
+        if not re.search(r">\s*13\s*<", figures):
+            fail("figures page missing printed 13")
+    if "fig_ext1_construct_mantel" not in figures:
+        fail("figures page missing A1 stem")
+    if "paper/" in figures or "submission_" in figures:
+        fail("figures page leaks repo path words")
+    ok("figures catalog is stem + printed order")
 
     smoke(PUBLIC)
     print("test: all checks passed")
@@ -147,12 +167,8 @@ def smoke(public: Path) -> None:
     try:
         paths = [
             "/",
-            "/peerj/",
-            "/frontiers/",
             "/figures/",
             "/reproducibility/",
-            "/products/peerj-manuscript.pdf",
-            "/products/frontiers-manuscript.pdf",
         ]
         for path in paths:
             url = base + path
@@ -165,7 +181,6 @@ def smoke(public: Path) -> None:
         missing = base + "/no-such-path/"
         try:
             urllib.request.urlopen(missing, timeout=5)
-            # SimpleHTTPRequestHandler 404s for missing files; directories may 301
         except urllib.error.HTTPError as err:
             if err.code not in {404, 403}:
                 fail(f"smoke missing path -> {err.code}")

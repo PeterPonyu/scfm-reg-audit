@@ -1,3 +1,0 @@
----
-title: PeerJ CS PDF
----

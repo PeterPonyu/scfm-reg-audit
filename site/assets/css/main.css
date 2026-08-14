@@ -15,8 +15,8 @@
 }
 
 :root {
-  --paper: #fafbfc;
-  --paper-inset: #ffffff;
+  --surface: #fafbfc;
+  --surface-inset: #ffffff;
   --ink: #1a1a1a;
   --muted: #5a6570;
   --rule: #e2e6ea;
@@ -47,7 +47,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--surface);
   color: var(--ink);
   font-family: var(--font);
   font-size: 17px;
@@ -65,7 +65,7 @@ body {
   top: -48px;
   z-index: 20;
   padding: 8px 12px;
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   color: var(--ink);
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -107,7 +107,7 @@ pre {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
   backdrop-filter: saturate(1.4) blur(12px);
   border-bottom: 1px solid transparent;
   transition: border-color 160ms ease, background 160ms ease;
@@ -177,7 +177,7 @@ pre {
   align-items: center;
   border: 1px solid var(--rule);
   border-radius: 8px;
-  background: var(--paper-inset);
+  background: var(--surface-inset);
 }
 
 .nav-menu summary::-webkit-details-marker {
@@ -191,7 +191,7 @@ pre {
   right: var(--pad);
   margin-top: 8px;
   padding: 8px;
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   border: 1px solid var(--rule);
   border-radius: 10px;
   box-shadow: var(--shadow-hover);
@@ -248,7 +248,7 @@ h2 {
 }
 
 .facts li {
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   padding: 16px 16px 18px;
@@ -285,8 +285,55 @@ h2 {
   font-size: 0.86rem;
 }
 
+.object,
+.construct {
+  padding: 8px 0 4px;
+}
+
+.object .lede,
+.construct p {
+  max-width: 68ch;
+  margin: 0 0 20px;
+}
+
+.defs {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.defs li {
+  background: var(--surface-inset);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px 16px 18px;
+  box-shadow: var(--shadow);
+}
+
+.def-k {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.def-v {
+  display: block;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.facts-two {
+  grid-template-columns: 1fr 1fr;
+}
+
 .materials {
-  padding: 12px 0 48px;
+  padding: 20px 0 48px;
 }
 
 .doors {
@@ -307,7 +354,7 @@ h2 {
   gap: 6px;
   min-height: 148px;
   padding: 20px 20px 18px;
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   text-decoration: none;
@@ -371,7 +418,7 @@ h2 {
   padding: 8px 16px;
   border: 1px solid var(--pass);
   border-radius: 8px;
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   color: var(--pass);
   font-family: var(--font);
   font-size: 0.95rem;
@@ -415,7 +462,7 @@ h2 {
   overflow-x: auto;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: var(--paper-inset);
+  background: var(--surface-inset);
   margin: 8px 0 48px;
 }
 
@@ -439,7 +486,7 @@ h2 {
   text-transform: uppercase;
   font-weight: 600;
   color: var(--muted);
-  background: var(--paper);
+  background: var(--surface);
 }
 
 .catalog tr:last-child td {
@@ -451,7 +498,7 @@ h2 {
   padding: 14px 16px;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: var(--paper-inset);
+  background: var(--surface-inset);
 }
 
 .cite pre {
@@ -515,6 +562,8 @@ h2 {
   }
 
   .facts,
+  .facts-two,
+  .defs,
   .doors,
   .footer-row {
     grid-template-columns: 1fr;
