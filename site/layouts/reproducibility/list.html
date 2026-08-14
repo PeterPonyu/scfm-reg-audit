@@ -8,9 +8,21 @@
     <p>Partial Spearman of a frozen foundation-model gene graph versus the accessibility/motif proxy, residualized on a named confound design. Two Monte Carlo nulls (N=999, plus-one p): gene-label (Mantel-style) and degree-preserving within-TF shuffle. Support requires both BH-adjusted q values &lt; 0.05 in the same confound-spec.</p>
     <h2>Three layers</h2>
     <ol class="layers">
-      <li><span class="n">1.</span> <strong>Artifact validation</strong> — no downloads. From a capsule clone: <code>python validate_artifacts.py</code> and <code>python -m unittest discover -s src/tests</code>.</li>
-      <li><span class="n">2.</span> <strong>Statistical reruns</strong> — needs the datasets below plus cached FM graphs in <code>results/v2/*.npz</code> (not redistributed).</li>
-      <li><span class="n">3.</span> <strong>Full pipeline</strong> — datasets + model weights + vendor code. Experiment workspace only. Boundary note: <a href="{{ site.Params.github }}/blob/main/docs/FULL_RERUN.md">FULL_RERUN.md</a>.</li>
+      <li>
+        <span class="fact-k">Layer 1</span>
+        <span class="fact-v">Artifact validation</span>
+        <span class="fact-s">No downloads. From a capsule clone: <code>python validate_artifacts.py</code> and <code>python -m unittest discover -s src/tests</code>.</span>
+      </li>
+      <li>
+        <span class="fact-k">Layer 2</span>
+        <span class="fact-v">Statistical reruns</span>
+        <span class="fact-s">Needs the datasets below plus cached FM graphs in <code>results/v2/*.npz</code> (not redistributed).</span>
+      </li>
+      <li>
+        <span class="fact-k">Layer 3</span>
+        <span class="fact-v">Full pipeline</span>
+        <span class="fact-s">Datasets + model weights + vendor code. Experiment workspace only. Boundary note: <a href="{{ site.Params.github }}/blob/main/docs/FULL_RERUN.md">FULL_RERUN.md</a>.</span>
+      </li>
     </ol>
     <h2>Data</h2>
     <ul>
