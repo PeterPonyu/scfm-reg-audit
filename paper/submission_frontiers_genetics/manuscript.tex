@@ -22,8 +22,10 @@
 \usepackage{xcolor}
 \usepackage{setspace}
 \usepackage{lineno}
-\usepackage[authoryear,round]{natbib}
-\setcitestyle{authoryear,round,semicolon,aysep={,},yysep={;}}
+% Frontiers in Genetics uses Vancouver (numbered) citations in order of
+% first appearance, Arabic numerals in parentheses; not Harvard/apalike.
+\usepackage[numbers,sort&compress]{natbib}
+\setcitestyle{numbers,round,comma,sort&compress}
 \usepackage[breaklinks=true]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
 
@@ -304,6 +306,7 @@ Writing $r(\cdot)$ for ranks and $x^{\perp C}$ for the residual of $x$ after lin
 r(G_{\mathrm{proxy}})^{\perp C_{\mathrm{spec}}}\bigr),
 \end{equation}
 where $C_{\mathrm{full}}$ is the full design and $C_{\mathrm{nondeg}}$ omits TF out-degree and target in-degree.
+Figures~\ref{fig:primary}, \ref{fig:spec}, and \ref{fig:pertype} report this statistic.
 
 \subsection{Finite-panel randomization inference}\label{sec:inference}
 The TF panel is treated as fixed; no TF-superpopulation bootstrap~\citep{efron1993bootstrap} or
@@ -320,10 +323,12 @@ shared across model rows, with each model scored against the same replicate. Exp
 verify numerical equivalence to separate least-squares calculations, including rank-deficient designs.
 
 Both tests use two-sided plus-one correction~\citep{phipson2010permutation},
-\[
+\begin{equation}
+\label{eq:plus-one}
  p_{\mathrm{MC}}=\frac{1+\sum_{b=1}^{999}\mathbf{1}\{|T_b|\ge |T_{\mathrm{obs}}|\}}{1000},
-\]
-with resolution 0.001. Benjamini--Hochberg correction~\citep{benjamini1995fdr} is performed within
+\end{equation}
+with resolution 0.001. Figure~\ref{fig:nulls} uses this Monte Carlo $p$-value.
+Benjamini--Hochberg correction~\citep{benjamini1995fdr} is performed within
 each of eight families: tissue (brain/PBMC) $\times$ confound specification (full/non-degree)
 $\times$ null (gene-label/row-shuffle). The full specification is the protocol-frozen primary (in-repo
 family definitions); the non-degree specification is reported alongside it as co-primary because the
@@ -338,6 +343,7 @@ q_M<0.05
 q_D<0.05,
 \end{equation}
 with $q_M$ the gene-label (Mantel) BH $q$ and $q_D$ the degree-preserving row-shuffle BH $q$.
+Figure~\ref{fig:primary} reports Support under this rule.
 A sign flip between specifications is
 \begin{equation}
 \label{eq:sign-flip}
@@ -345,7 +351,9 @@ A sign flip between specifications is
 \neq
 \mathrm{sign}(\rho_{\mathrm{nondeg}}).
 \end{equation}
+Figure~\ref{fig:spec} marks these sign flips.
 Protocol-pass is the conjunction of dual-full Support, FM--co-expression concordance (Spearman $>0$), non-degree same sign as the full estimate, multi-readout sign agreement within model family and tissue, and full-spec $\rho$ strictly above the tissue co-expression baseline; dual non-degree Support is reported but not required for protocol-pass.
+Figure~\ref{fig:protocol} applies these gates.
 
 \subsection{TF-disjoint supervised probe}\label{sec:probe}
 The pooled audit is an unsupervised raw-readout test. As a supervised complement, run on paired
@@ -361,7 +369,17 @@ indexed by TF identity, so a probe
 trained on 311 held-in TFs transfers unchanged to 135 disjoint test TFs. Regularization is chosen
 by leave-one-out cross-validation over training pairs. Performance is the per-test-TF Spearman correlation
 between predicted and observed proxy profiles, averaged over test TFs, after residualizing both
-sides against target peak count, gene length, GC content, and detection rate. The null permutes
+sides against target peak count, gene length, GC content, and detection rate.
+Writing $C'$ for that four-column probe design and $\hat{y}_t$ for the ridge prediction on test TF $t$,
+\begin{equation}
+\label{eq:probe}
+\bar{\rho}_{\mathrm{probe}}
+=
+\frac{1}{n_{\mathrm{test}}}\sum_{t}
+\mathrm{Spearman}\bigl(\hat{y}_t^{\perp C'}, y_t^{\perp C'}\bigr).
+\end{equation}
+Figure~\ref{fig:probe} reports this mean and the paired sign-flip test of per-TF differences versus co-expression.
+The null permutes
 gene labels within each test TF; paired FM-versus-co-expression contrasts use sign-flipped
 per-TF differences. Gene-level degree features are withheld from the primary probe arm because
 they let the probe reach the proxy through gene-level confounding rather than through the graph's
@@ -370,15 +388,43 @@ edges.
 \subsection{Descriptive and pipeline-sensitivity analyses}
 Per-cell-type rows report observed partial correlations, cell counts, ranges, medians, and sign counts.
 They have no randomization $p$-values or FDR adjustment. Cross-tissue proxy reproducibility is also
-observed-only. An additive TF-row-plus-gene-column fit $\widehat{W}_{ij}=a_i+b_j$ on one tissue's
-proxy is scored against the other tissue by Spearman $\rho$; the additive fraction is that predicted
-$\rho$ divided by the observed cross-tissue $\rho$, and residual $\rho$ is rank agreement after
-removing each graph's own additive fit. These quantities are descriptive; they are not a new
-randomization test.
+observed-only.
+On the shared non-self TF--target edge set, the Mantel rank statistic between two graphs is
+\begin{equation}
+\label{eq:mantel}
+\rho_{\mathrm{Mantel}}(G,H)
+=
+\mathrm{Spearman}\bigl(\mathrm{vec}(G),\mathrm{vec}(H)\bigr).
+\end{equation}
+Figures~\ref{fig:proxy}, \ref{fig:third_tissue}, and \ref{fig:app-mantel} report this observed agreement.
+An additive TF-row-plus-gene-column fit on one tissue's proxy,
+\begin{equation}
+\label{eq:decomp}
+\begin{aligned}
+\widehat{W}_{ij}
+&=
+\mu+a_i+b_j,\\
+f_{\mathrm{add}}
+&=
+\frac{\rho(\widehat{W}^{(A)},W^{(B)})}{\rho(W^{(A)},W^{(B)})},\\
+\rho_{\mathrm{resid}}
+&=
+\mathrm{Spearman}(W^{(A)}-\widehat{W}^{(A)},W^{(B)}-\widehat{W}^{(B)}),
+\end{aligned}
+\end{equation}
+is scored against the other tissue; $f_{\mathrm{add}}$ is the additive fraction and $\rho_{\mathrm{resid}}$ is rank agreement after removing each graph's own additive fit.
+Figure~\ref{fig:decomp} reports these quantities; Figs.~\ref{fig:app-mantel}--\ref{fig:app-coverage} reuse them on construct-lane overlays.
+These quantities are descriptive; they are not a new randomization test.
 
-Concordance is the Spearman correlation of each FM graph with co-expression on the same edge set.
-It is an attention-likeness check (a co-expression-like readout should correlate positively with
-co-expression) and does not adjudicate residual regulatory content. The Geneformer knockout (KO)
+Concordance is
+\begin{equation}
+\label{eq:concordance}
+\rho_{\mathrm{conc}}
+=
+\mathrm{Spearman}(G_{\mathrm{FM}},G_{\mathrm{coexp}})
+\end{equation}
+on the same edge set; a readout passes if $\rho_{\mathrm{conc}}>0$.
+Figure~\ref{fig:concordance} plots this attention-likeness check; it does not adjudicate residual regulatory content. The Geneformer knockout (KO)
 readout is an in-silico perturbation of the same frozen graph; the artifact-corrected KO subtracts a
 random-token position-shift baseline and is not a positive control. An attention-omission guard
 repeats the brain dual-null decision with attention omitted and a separate seed stream; the
@@ -392,7 +438,7 @@ Finally, for each tissue we evaluate the following injected fractions:
 \[
 \alpha\in\{0,.02,.05,.08,.12,.18,.25,.35,.5,.75,1\}.
 \]
-The injected graph on residualized, $z$-scored proxy ranks $r_{\mathrm{proxy}}$ is
+Writing $r_{\mathrm{proxy}}$ for proxy ranks residualized against $C_{\mathrm{full}}$, the injected graph is
 \begin{equation}
 \label{eq:injection}
 G_{\mathrm{synth}}(\alpha)
@@ -402,7 +448,9 @@ G_{\mathrm{synth}}(\alpha)
 (1-\alpha)\, z(\varepsilon),
 \end{equation}
 where $\varepsilon$ is independent standard Gaussian noise and the observed statistic is repeated
-$30$ times per $\alpha$. The $\alpha$-equivalent of an observed $\rho$ is the ladder $\alpha$ whose
+$30$ times per $\alpha$.
+Figure~\ref{fig:sensitivity} reports this ladder.
+The $\alpha$-equivalent of an observed $\rho$ is the ladder $\alpha$ whose
 mean recovered $\rho$ matches that observation (descriptive interpolation, not an MDE). This
 axis-aligned diagnostic checks implementation response; it is not a power analysis and does not
 define an MDE, confidence interval, or exclusion bound.
@@ -984,7 +1032,7 @@ the accuracy and integrity of the manuscript and the accompanying code. No AI to
 author.
 
 {\raggedright
-\bibliographystyle{apalike}
+\bibliographystyle{unsrtnat}
 \bibliography{references}
 \par}
 
@@ -993,13 +1041,12 @@ author.
 \renewcommand{\thefigure}{A\arabic{figure}}
 \section{Additional construct-lane ATAC overlays}
 
-The twelve main-text figures report the fixed-panel scReg-Eval audit. The three figures below add
+The thirteen main-text figures report the fixed-panel scReg-Eval audit. The three figures below add
 construct-lane ATAC from spleen, BMMC, and Treg on the same frozen panel; they are additional data,
-not a restatement of the main-text proxy figure, not a substitute for Figures~1--12, and they do not
-add foundation-model audit rows. Spearman $\rho$ is a Mantel rank correlation between two TF--gene
+not a restatement of the main-text proxy figure, not a substitute for Figures~1--13, and they do not
+add foundation-model audit rows. Spearman $\rho$ is the Mantel rank statistic of Eq.~\eqref{eq:mantel} between two TF--gene
 matrices on $n_{\mathrm{TF}}=446$ shared transcription factors from the frozen $446\times 1{,}200$
-gene panel. Additive fraction is predicted $\rho$ from a TF-row plus gene-column fit, divided by
-observed $\rho$. Residual $\rho$ is rank agreement after removing each graph's own additive fit.
+gene panel. Additive fraction and residual $\rho$ are Eq.~\eqref{eq:decomp}.
 
 \begin{figure}[!htbp]
 \centering

@@ -52,13 +52,13 @@ If `flat_upload/manuscript.pdf` or `FigureN.pdf` is older than `paper/figs/` or 
 
 Two report PDFs exist. The original PhD/PeerJ paper remains `paper/manuscript.tex` → `paper/manuscript.pdf` (do not rewrite that source for this draft).
 
-The Frontiers in Genetics draft is a **full conversion** of that original paper (Figures 1–12, all tables, Methods/Results/Discussion) into a default `article` class, with the three construct-lane overlays as **Appendix A1–A3** of the same unified `.tex`. It is not a three-figure-only manuscript. The folder is **flat** (no `figures/` or `supplementary/`).
+The Frontiers in Genetics draft is a **full conversion** of that original paper (Figures 1–13, all tables, Methods/Results/Discussion) into a default `article` class, with a study-design schematic as Figure 1 and coverage QC as Figure 13, and the three construct-lane overlays as **Appendix A1–A3** of the same unified `.tex`. It is not a three-figure-only manuscript. The folder is **flat** (no `figures/` or `supplementary/`).
 
 | Asset | Path |
 | --- | --- |
 | Unified manuscript | `paper/submission_frontiers_genetics/manuscript.tex` |
 | Review PDF | `paper/submission_frontiers_genetics/manuscript.pdf` |
-| Main TikZ / tables | `fig1`–`fig12` and `table1`–`table8` copies in that folder |
+| Main TikZ / tables | `fig_study_design`, `fig1`–`fig12` (main Figures 1–13) and `table1`–`table8` copies in that folder |
 | Appendix TikZ | `fig_ext{1,2,3}_*.tex` |
 | Original report | `cd paper && latexmk -pdf manuscript.tex` → `paper/manuscript.pdf` |
 | Frontiers report | `cd paper/submission_frontiers_genetics && latexmk -pdf -interaction=nonstopmode manuscript.tex` |
