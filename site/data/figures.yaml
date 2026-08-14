@@ -1,67 +1,51 @@
 main:
-  - display: "Fig. 1"
+  - display: "1"
     stem: fig_study_design
-    label: study design
-    source: paper/figs/fig_study_design.tex
-  - display: "Fig. 2"
+    measures: Audit layout — frozen panel, two-tissue proxy, dual-null, protocol-pass
+  - display: "2"
     stem: fig1_truth_construct
-    label: proxy construct
-    source: paper/figs/fig1_truth_construct.tex
-  - display: "Fig. 3"
+    measures: How the accessibility/motif regulatory-potential proxy is built
+  - display: "3"
     stem: fig2_cross_tissue_decomp
-    label: cross-tissue proxy
-    source: paper/figs/fig2_cross_tissue_decomp.tex
-  - display: "Fig. 4"
+    measures: Proxy structure across brain snATAC and PBMC multiome
+  - display: "4"
     stem: fig3_primary_audit
-    label: primary audit
-    source: paper/figs/fig3_primary_audit.tex
-  - display: "Fig. 5"
+    measures: Dual-null partial-Spearman audit of the 13 FM/readout rows
+  - display: "5"
     stem: fig4_usability_check
-    label: usability / concordance
-    source: paper/figs/fig4_usability_check.tex
-  - display: "Fig. 6"
+    measures: Concordance of FM graphs with co-expression (attention-likeness)
+  - display: "6"
     stem: fig5_null_diagnostics
-    label: null diagnostics
-    source: paper/figs/fig5_null_diagnostics.tex
-  - display: "Fig. 7"
+    measures: Monte Carlo gene-label and degree-preserving null behavior
+  - display: "7"
     stem: fig6_spec_sensitivity
-    label: spec sensitivity
-    source: paper/figs/fig6_spec_sensitivity.tex
-  - display: "Fig. 8"
+    measures: Full vs non-degree confound-spec sensitivity
+  - display: "8"
     stem: fig7_pertype_descriptive
-    label: per-cell-type descriptive
-    source: paper/figs/fig7_pertype_descriptive.tex
-  - display: "Fig. 9"
+    measures: Per-cell-type descriptive ranges (not a pass gate)
+  - display: "9"
     stem: fig8_injection_ladder
-    label: injection ladder
-    source: paper/figs/fig8_injection_ladder.tex
-  - display: "Fig. 10"
+    measures: Signal-injection ladder on the frozen panel
+  - display: "10"
     stem: fig9_tf_probe
-    label: TF-disjoint probe
-    source: paper/figs/fig9_tf_probe.tex
-  - display: "Fig. 11"
+    measures: TF-disjoint recoverability probe on paired PBMC multiome
+  - display: "11"
     stem: fig11_third_tissue_transfer
-    label: third-tissue transfer
-    source: paper/figs/fig11_third_tissue_transfer.tex
-  - display: "Fig. 12"
+    measures: Fibroblast mix (GSE206767) transfer — construct-only, not a third audit tissue
+  - display: "12"
     stem: fig12_protocol_pass_matrix
-    label: protocol-pass matrix (0/13)
-    source: paper/figs/fig12_protocol_pass_matrix.tex
-  - display: "Fig. 13"
+    measures: Predeclared conjunction on 13 rows — frozen 0/13
+  - display: "13"
     stem: fig10_coverage_qc
-    label: coverage QC
-    source: paper/figs/fig10_coverage_qc.tex
+    measures: Panel and coverage QC (printed 13; this stem is not 1)
 
 appendix:
   - display: "A1"
     stem: fig_ext1_construct_mantel
-    label: construct-lane Mantel
-    source: paper/submission_frontiers_genetics/fig_ext1_construct_mantel.tex
+    measures: Construct-lane Mantel of the proxy
   - display: "A2"
     stem: fig_ext2_baselines_collectri
-    label: CollecTRI prior
-    source: paper/submission_frontiers_genetics/fig_ext2_baselines_collectri.tex
+    measures: CollecTRI prior on the same frozen panel
   - display: "A3"
     stem: fig_ext3_honesty_policy
-    label: honesty / inclusion limits
-    source: paper/submission_frontiers_genetics/fig_ext3_honesty_policy.tex
+    measures: Inclusion limits and honesty constraints

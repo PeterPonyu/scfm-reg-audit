@@ -5,7 +5,7 @@
     <div class="wrap">
       <p class="eyebrow">Fixed-panel audit</p>
       <h1>scReg-Eval</h1>
-      <p class="lede">scRNA foundation-model gene graphs, scored on a frozen 446 TF × 1,200 gene panel against a two-tissue regulatory-potential proxy. The object is the audit, not a manuscript.</p>
+      <p class="lede">scRNA foundation-model gene graphs, scored on a frozen 446 TF × 1,200 gene panel against a two-tissue regulatory-potential proxy. The object is the audit.</p>
       <ul class="facts">
         <li>
           <span class="fact-k">Panel</span>
@@ -14,8 +14,8 @@
         </li>
         <li>
           <span class="fact-k">Dual-null</span>
-          <span class="fact-v">Gene-label Mantel-style + degree-preserving shuffle, N=999</span>
-          <span class="fact-s">Dual-null Support ≠ protocol-pass ≠ recovery.</span>
+          <span class="fact-v">Support iff both q &lt; 0.05</span>
+          <span class="fact-s">Monte Carlo gene-label (Mantel-style) and degree-preserving shuffle, N=999. Support ≠ protocol-pass ≠ recovery.</span>
         </li>
         <li>
           <span class="fact-k">Protocol-pass</span>
@@ -25,34 +25,59 @@
       </ul>
     </div>
   </section>
-  <section class="materials" aria-labelledby="materials-heading">
+  <section class="object" aria-labelledby="object-heading">
     <div class="wrap">
-      <h2 id="materials-heading">Materials</h2>
-      <p class="materials-lede">Two assembled PDFs of the same audit. Venue names are file labels, not this site’s identity.</p>
+      <h2 id="object-heading">The object</h2>
+      <p class="lede">On the frozen panel, is partial-Spearman alignment between a frozen foundation-model gene graph and the accessibility/motif proxy unusually large under a named confound design and two named Monte Carlo randomizations, after within-family BH?</p>
+      <ul class="defs">
+        <li>
+          <span class="def-k">Support</span>
+          <span class="def-v">Both Monte Carlo q<sub>M</sub> and degree-preserving q<sub>D</sub> &lt; 0.05 in the same confound-spec. Panel-local unusualness only.</span>
+        </li>
+        <li>
+          <span class="def-k">Protocol-pass</span>
+          <span class="def-v">Stricter conjunction on each of 13 FM/readout rows: dual-full ∧ concordance ∧ non-degree same sign ∧ multi-readout sign ∧ ρ above the co-expression baseline. Freeze: <strong>0/13</strong>.</span>
+        </li>
+        <li>
+          <span class="def-k">Recovery</span>
+          <span class="def-v">Causal TF–target recovery is not the estimand. Dual-null Support without protocol-pass is residual geometry under a disclosed degree hazard — not recovery.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="construct" aria-labelledby="construct-heading">
+    <div class="wrap">
+      <h2 id="construct-heading">Construct</h2>
+      <p>The proxy is sequence-derived: TF motif matches in accessible peaks, gated by per-cell-type accessibility. It does not use RNA covariation, so a graph that only encodes “genes that move together” cannot satisfy it by construction.</p>
+      <ul class="facts facts-two">
+        <li>
+          <span class="fact-k">Tissues</span>
+          <span class="fact-v">Two-tissue proxy</span>
+          <span class="fact-s">Brain snATAC and paired PBMC multiome are the audit tissues. The fibroblast mix is a construct-lane / transfer check, not a third scored tissue.</span>
+        </li>
+        <li>
+          <span class="fact-k">Rows</span>
+          <span class="fact-v">13 FM / readout rows</span>
+          <span class="fact-s">Geneformer, scGPT, scFoundation, UCE. CellPLM is out of scope: no per-gene contextual state after pooling.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="materials" aria-labelledby="open-heading">
+    <div class="wrap">
+      <h2 id="open-heading">Open</h2>
       <div class="doors" role="list">
-        <a class="door" role="listitem" href="{{ "products/peerj-manuscript.pdf" | relURL }}">
-          <span class="door-kicker">Assembled product</span>
-          <span class="door-title">PeerJ CS PDF</span>
-          <span class="door-meta">Open the PeerJ Computer Science report</span>
-          <span class="door-go" aria-hidden="true">Open</span>
-        </a>
-        <a class="door" role="listitem" href="{{ "products/frontiers-manuscript.pdf" | relURL }}">
-          <span class="door-kicker">Assembled product</span>
-          <span class="door-title">Frontiers Genetics PDF</span>
-          <span class="door-meta">Open the Frontiers conversion PDF</span>
-          <span class="door-go" aria-hidden="true">Open</span>
-        </a>
-      </div>
-      <div class="doors doors-secondary" role="list">
-        <a class="door door-quiet" role="listitem" href="{{ "figures/" | relURL }}">
-          <span class="door-kicker">Catalog</span>
+        <a class="door" role="listitem" href="{{ "figures/" | relURL }}">
+          <span class="door-kicker">Graphs</span>
           <span class="door-title">Figures</span>
-          <span class="door-meta">Stems, not upload FigureN.pdf names</span>
+          <span class="door-meta">Stems, printed 1–13 + A1–A3. Coverage QC is 13, not 1.</span>
+          <span class="door-go" aria-hidden="true">Open</span>
         </a>
-        <a class="door door-quiet" role="listitem" href="{{ "reproducibility/" | relURL }}">
+        <a class="door" role="listitem" href="{{ "reproducibility/" | relURL }}">
           <span class="door-kicker">Capsule</span>
           <span class="door-title">Reproducibility</span>
-          <span class="door-meta">Validate artifacts; full rerun is out of capsule</span>
+          <span class="door-meta">How the audit is computed; GEO and 10x as data</span>
+          <span class="door-go" aria-hidden="true">Open</span>
         </a>
       </div>
     </div>

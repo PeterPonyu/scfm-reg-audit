@@ -1,3 +1,0 @@
----
-title: Frontiers Genetics PDF
----

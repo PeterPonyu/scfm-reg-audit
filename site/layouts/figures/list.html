@@ -1,17 +1,16 @@
 {{ define "main" }}
 <main id="content">
   <div class="wrap">
-    <p class="eyebrow">Catalog</p>
+    <p class="eyebrow">Graphs</p>
     <h1>Figures</h1>
-    <p class="lede">Durable identity is the TikZ stem. Both PDFs print Figures 1–13 plus Appendix A1–A3. Coverage QC (<code>fig10_coverage_qc</code>) is Figure 13, not Figure 1. Protocol-pass (Fig. 12) is 0/13. Source links point at files on <code>origin/main</code>.</p>
+    <p class="lede">Durable identity is the TikZ stem. Printed order is 1–13, then A1–A3. Coverage QC (<code>fig10_coverage_qc</code>) is <strong>13</strong>, not 1. Protocol-pass (12) is 0/13.</p>
     <div class="table-well">
       <table class="catalog">
         <thead>
           <tr>
-            <th>Display</th>
+            <th>Printed</th>
             <th>Stem</th>
-            <th>Label</th>
-            <th>Source</th>
+            <th>Measures</th>
           </tr>
         </thead>
         <tbody>
@@ -19,16 +18,14 @@
           <tr>
             <td>{{ .display }}</td>
             <td><code>{{ .stem }}</code></td>
-            <td>{{ .label }}</td>
-            <td><a href="{{ site.Params.github }}/blob/main/{{ .source }}">{{ path.Base .source }}</a></td>
+            <td>{{ .measures }}</td>
           </tr>
           {{ end }}
           {{ range hugo.Data.figures.appendix }}
           <tr>
             <td>{{ .display }}</td>
             <td><code>{{ .stem }}</code></td>
-            <td>{{ .label }}</td>
-            <td><a href="{{ site.Params.github }}/blob/main/{{ .source }}">{{ path.Base .source }}</a></td>
+            <td>{{ .measures }}</td>
           </tr>
           {{ end }}
         </tbody>

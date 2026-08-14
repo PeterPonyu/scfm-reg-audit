@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Build the Hugo site and copy the two SoT manuscript PDFs into the publish dir.
-# Fail closed if a PDF is missing. Do not copy FigureN.pdf.
+# Build the Hugo site and copy the two SoT PDFs into the publish dir (artifact only).
+# Fail closed if a PDF is missing. Do not copy FigureN.pdf. Do not link them from pages.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
