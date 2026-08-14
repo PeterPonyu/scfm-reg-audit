@@ -140,14 +140,14 @@ pre {
 .nav-primary {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.15rem 0.2rem;
-  font-size: 0.86rem;
+  gap: 0.15rem 0.25rem;
+  font-size: 0.95rem;
 }
 
 .nav-primary a {
   color: var(--muted);
   text-decoration: none;
-  padding: 8px 10px;
+  padding: 8px 14px;
   border-radius: 8px;
   min-height: 36px;
   display: inline-flex;
@@ -235,7 +235,7 @@ h2 {
 }
 
 .problem {
-  padding: 36px 0 12px;
+  padding: 36px 0 16px;
 }
 
 .facts {
@@ -287,7 +287,7 @@ h2 {
 
 .object,
 .construct {
-  padding: 8px 0 4px;
+  padding: 36px 0 32px;
 }
 
 .object .lede,
@@ -333,7 +333,11 @@ h2 {
 }
 
 .materials {
-  padding: 20px 0 48px;
+  padding: 4px 0 36px;
+}
+
+.construct {
+  padding-bottom: 48px;
 }
 
 .doors {
@@ -438,8 +442,11 @@ h2 {
 }
 
 .prose {
-  max-width: 68ch;
   padding: 32px 0 48px;
+}
+
+.prose > :not(.layers) {
+  max-width: 68ch;
 }
 
 .prose p,
@@ -447,10 +454,26 @@ h2 {
   margin: 0 0 0.85rem;
 }
 
+.prose .layers li {
+  margin: 0;
+}
+
 .layers {
-  margin: 0 0 1.4rem;
-  padding: 0;
   list-style: none;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.layers li {
+  background: var(--surface-inset);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px 16px 18px;
+  min-height: 100%;
+  box-shadow: var(--shadow);
 }
 
 .layers .n {
@@ -474,7 +497,7 @@ h2 {
 
 .catalog th,
 .catalog td {
-  padding: 10px 12px;
+  padding: 15px 16px;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--rule);
@@ -565,6 +588,7 @@ h2 {
   .facts-two,
   .defs,
   .doors,
+  .layers,
   .footer-row {
     grid-template-columns: 1fr;
   }
