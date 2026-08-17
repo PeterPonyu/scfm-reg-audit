@@ -11,7 +11,7 @@ publishDir = "public"
 [params]
   github = "https://github.com/PeterPonyu/scfm-reg-audit"
   zenodo = "https://doi.org/10.5281/zenodo.21724336"
-  capsule = "v0.3.0"
+  capsule = "v0.4.0"
   protocolPass = "0/13"
 
 [outputs]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the sanitized scReg-Eval audit capsule artifacts (v0.3.0 contract)."""
+"""Validate the sanitized scReg-Eval audit capsule artifacts (v0.4.0 contract)."""
 import hashlib
 import json
 import math
@@ -36,6 +36,8 @@ LOCAL_WORKTREE_PREFIXES = (
     "archive/",
     ".github/",  # Pages workflow YAML (not capsule payload)
     "site/",  # Hugo Pages source, fonts, and publish dir (not capsule payload)
+    "release_candidate/",  # built tarball + unpacked capsule (not payload)
+    "release_private/",  # original-to-public hash bridge
 )
 LOCAL_WORKTREE_NAMES = {
     "PAPER_REVIEW_TARGETS.md",
@@ -128,6 +130,14 @@ def bh(pvalues):
     return out
 
 
+def is_local_worktree(rel: str) -> bool:
+    name = Path(rel).name
+    return (
+        name in LOCAL_WORKTREE_NAMES
+        or any(rel.startswith(prefix) for prefix in LOCAL_WORKTREE_PREFIXES)
+    )
+
+
 def check_no_private_paths():
     # The validator necessarily names the forbidden needles; it must not flag itself
     # or ENVIRONMENT.example, which documents those needles for reviewers.
@@ -147,7 +157,7 @@ def check_no_private_paths():
         rel = path.relative_to(ROOT).as_posix()
         # Full private result trees may contain machine paths; they are outside the
         # public capsule and are ignored by closed-tree equality. Skip scrub there.
-        if rel.startswith("results/v2/"):
+        if is_local_worktree(rel):
             continue
         if path.is_file() and path.suffix in {".json", ".md", ".tex", ".py", ".R", ".bib", ".cff", ".txt"}:
             text = path.read_text(errors="replace")
@@ -311,13 +321,6 @@ def main():
     records = manifest["files"]
     listed = {record["path"] for record in records}
     require(len(listed) == len(records), "MANIFEST.json lists a path more than once")
-
-    def is_local_worktree(rel: str) -> bool:
-        name = Path(rel).name
-        return (
-            name in LOCAL_WORKTREE_NAMES
-            or any(rel.startswith(prefix) for prefix in LOCAL_WORKTREE_PREFIXES)
-        )
 
     actual = {
         path.relative_to(ROOT).as_posix()

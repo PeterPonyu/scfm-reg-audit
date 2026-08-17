@@ -26,7 +26,7 @@ folder itself is **not** a checkout of that repo.
 ### Why Desktop “suddenly” looked independent
 
 The Desktop tree is the **sanitized audit capsule** extracted for submission and
-public validation (`README.md` calls it “audit capsule v0.3.0”). The monorepo
+public validation (`README.md` calls it “audit capsule v0.4.0”). The monorepo
 path remains the heavy research home (GPU plans, raw-ish derivatives, enhancement
 runs). Paper edits in this session were made on the **capsule** path, so
 `paper/manuscript.*` can diverge from the monorepo copy until explicitly synced.

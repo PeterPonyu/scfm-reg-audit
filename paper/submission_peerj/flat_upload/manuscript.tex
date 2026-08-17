@@ -6,6 +6,7 @@
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
 \usepackage{placeins}
+\usepackage{float}
 \usepackage[breaklinks=true]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=color1,citecolor=color1,urlcolor=color1}
 \usepackage{orcidlink}
@@ -20,11 +21,11 @@
 
 \title{scReg-Eval: a fixed-panel audit of regulatory alignment in single-cell RNA foundation-model gene graphs}
 
-\author[1]{Zeyu Fu\,\orcidlink{0009-0001-8329-0108}}
+\author[1,2]{Zeyu Fu\,\orcidlink{0009-0001-8329-0108}}
 \affil[1]{State Key Laboratory of Trauma and Chemical Poisoning, Institute of Combined Injury, Chongqing Engineering Research Center for Nanomedicine, College of Preventive Medicine, Army Medical University, Chongqing, China}
-\affil[1]{Corresponding author: \href{mailto:fuzeyu99@126.com}{fuzeyu99@126.com}}
+\affil[2]{Corresponding author: \href{mailto:fuzeyu99@126.com}{fuzeyu99@126.com}}
 
-\keywords{single-cell RNA-seq, foundation models, gene regulatory networks, co-expression confounding, randomization inference, benchmark audit}
+\keywords{single-cell RNA-seq, foundation models, motif-accessibility proxy, co-expression confounding, randomization inference, benchmark audit}
 
 \begin{abstract}
 \noindent Background.
@@ -46,29 +47,33 @@ alignment under named confounds and two named randomizations---not causal TF--ta
 not model ranking.
 
 \noindent Results.
-Dual-null ``Support'' under the primary full confound specification is seven of thirteen rows
-(six small positive alignments, $\rho$ from $0.00425$ to $0.01241$, plus one negative Geneformer
-attention row in brain), but that count is not regulatory recovery: the same seven rows appear only
-when degree covariates computed from the proxy are conditioned on; under the co-primary non-degree
-specification dual-null Support is $0/13$ and three of the six positives change sign; and five of
-the six positive dual-null rows fail the protocol's own FM--co-expression concordance check (Spearman
-$-0.18$ to $-0.02$), while PBMC scGPT weakly passes (Spearman $\approx +0.01$) yet still fails
-protocol-pass (e.g.\ non-degree same-sign; protocol-pass $0/13$ overall), so dual-null Support marks
-unusual residual geometry under disclosed degree hazard, not recovered regulation. The
-co-expression baseline, tested on the same edge set outside FM BH families (uncorrected $p$), is
-itself dual-null significant in both tissues, and the PBMC Geneformer-embedding alignment
-($\rho=0.00425$) is smaller than its own baseline ($\rho=0.0070$). A supervised TF-disjoint probe
-on paired PBMC data gives mixed family-level results: UCE versus co-expression is supported by
-paired sign-flip testing ($q=0.0325$), as is the random-init floor ($q=0.0300$), whereas Geneformer
-embedding ($q=0.5125$), Geneformer attention ($q=0.65$), and scGPT ($q=0.255$) are not. The probe
-therefore must not be summarized as showing that all models are indistinguishable from
-co-expression.
+Protocol-pass is $0/13$ on the thirteen pooled rows. Dual-null ``Support'' under the primary full
+confound specification is seven of thirteen rows ($7/13$; six small positive alignments, $\rho$ from
+$0.00425$ to $0.01241$, plus one negative Geneformer attention row in brain). That census is not
+regulatory recovery and is not a cross-family multiplicity correction.
+
+The same seven rows appear only when degree covariates computed from the proxy are conditioned on;
+under the prespecified non-degree sensitivity dual-null Support is $0/13$ and three of the six
+positives change sign. Five of the six positive dual-null rows fail the protocol's own
+FM--co-expression concordance check (Spearman $-0.18$ to $-0.02$), while PBMC scGPT weakly passes
+(Spearman $+0.01$) yet still fails protocol-pass. The co-expression baseline, tested on the same
+edge set outside FM BH families (uncorrected $p$), is itself dual-null significant in both tissues,
+and the PBMC Geneformer-embedding alignment ($\rho=0.00425$) is smaller than its own baseline
+($\rho=0.0070$). External ENCODE pan-biosample TF-occupancy edges give brain Spearman $\rho=0.081$
+and PBMC $\rho=0.109$ (mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$ positives), a
+failed occupancy check.
+
+A supervised TF-disjoint probe on paired PBMC data gives mixed family-level results: UCE versus
+co-expression is supported by paired sign-flip testing ($q=0.0325$), as is the random-init floor
+($q=0.0300$), whereas Geneformer embedding ($q=0.5125$), Geneformer attention ($q=0.65$), and scGPT
+($q=0.255$) are not; those contrasts mark relative over-correction of the baseline, not recovered
+regulation.
 
 \noindent Conclusions.
-The audit finds weak, readout-specific, specification-dependent residual alignment concentrated in
-embedding-geometry readouts. It neither supports a global regulatory-capability claim for these
-scFM gene graphs nor licenses a field-level negative conclusion beyond this fixed-panel protocol
-instance.
+The audit finds weak, readout-specific, specification-dependent residual alignment in encoder and
+embedding readouts plus one opposite-signed attention row. It neither supports a global
+regulatory-capability claim for these scFM gene graphs nor licenses a field-level negative
+conclusion beyond this fixed-panel protocol instance.
 \end{abstract}
 
 \begin{document}
@@ -134,20 +139,21 @@ inconsistency that single-readout studies cannot see.
 
 Our contributions are:
 \begin{enumerate}
-\item a reusable fixed-panel audit protocol and hash-pinned software capsule (panel manifests,
+\item a reusable fixed-panel audit protocol and protocol-frozen software capsule (panel manifests,
 null semantics, FDR families, and one-command validation) for scFM gene-graph claims, with
-biology serving as the application scene rather than as a claim of recovered regulatory truth;
+biology as the application setting rather than as a claim of recovered regulatory truth;
 \item a sequence/accessibility regulatory-potential proxy and 446-TF by 1,200-gene panel that show
 moderate observed agreement across brain, blood, and a mixed fibroblast reprogramming dataset
 (motif/proximity stability is not a causal ceiling);
 \item a full-confound partial-Spearman statistic that controls co-expression and six structural
-covariates, with a non-degree specification reported as a co-primary sensitivity analysis;
+covariates, with a non-degree specification reported as a prespecified sensitivity analysis;
 \item two finite-panel Monte Carlo tests with explicit null semantics, deterministic seed streams,
 plus-one correction, and eight prespecified FDR families;
 \item a multi-readout application of Geneformer, scGPT, scFoundation, and UCE
-~\citep{theodoris2023geneformer,cui2024scgpt,hao2024scfoundation,rosen2023uce,yang2022scbert}---purely
+~\citep{theodoris2023geneformer,cui2024scgpt,hao2024scfoundation,rosen2023uce}---purely
 transcriptomic FMs, as distinct from knowledge-informed models that inject prior GRN structure at
-pretraining~\citep{yang2024genecompass,hu2026regformer}---showing small,
+pretraining~\citep{yang2024genecompass,hu2026regformer} and from scBERT~\citep{yang2022scbert},
+which is cited as a related transcriptomic FM but is not among the thirteen audited rows---showing small,
 readout-specific primary alignments---including a sign-inconsistent embedding/attention pair within
 one model---rather than a uniform positive or negative result; and
 \item descriptive per-cell-type, cross-tissue, and axis-aligned injection diagnostics whose scope is
@@ -155,20 +161,20 @@ kept separate from the pooled inferential families.
 \end{enumerate}
 
 These choices are reported as ordinary design rules rather than as a separate boxed checklist.
-We freeze and hash the TF--target panel; label the reference as a regulatory-potential proxy rather
+We freeze the TF--target panel; label the reference as a regulatory-potential proxy rather
 than causal truth; control co-expression and structural covariates; state exactly what each
 randomization changes; use plus-one Monte Carlo $p$-values; define FDR families before reading
 results; and keep exploratory cell-type and sensitivity analyses distinct from the primary test.
 Relative to scFM interpretability studies, living GRN benchmarks, and scFM task suites
 (Table~\ref{tab:related}), scReg-Eval is designed to \emph{complement} rather than compete: it
 holds motif/ATAC edge weights free of expression statistics, freezes dual-null families, and ships
-a hash-pinned audit capsule rather than a leaderboard score.
+a protocol-frozen audit capsule rather than a leaderboard score.
 Methods define the panel, proxy, confounds, and nulls; Results report the primary full-confound
-audit and the co-primary non-degree sensitivity; Discussion and the final figure set bound what the
+audit and the prespecified non-degree sensitivity; Discussion and the final figure set bound what the
 alignments can and cannot claim. Figure~\ref{fig:study} states the two-tissue pairing, the
 $\pm$2\,kb linkage rule, and the frozen panel before the audit heatmaps.
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \input{table5_related_work.tex}
 \caption{Protocol axes versus related evaluation resources. Entries are qualitative design
 features, not performance ranks. scReg-Eval is a fixed-panel audit capsule; GeneRNIB and BioLLM-style
@@ -182,21 +188,37 @@ is the partial-Spearman alignment between a frozen foundation-model gene graph a
 accessibility/motif proxy unusually large (in absolute value) under (i)~a named full or non-degree
 confound design and (ii)~two named randomizations (gene-label permutation and within-TF-row
 degree-preserving target shuffle), after within-family BH control? Dual-null ``Support'' answers
-that panel-local question only. Table~\ref{tab:primary} Support is full-spec /
+that panel-local question only. The primary-audit Support column is full-spec /
 degree-hazard-conditioned by definition. It is not an estimand for causal TF--target effects, not a ranking
 of foundation models, and not a test of residual regulatory content after every possible
 confound. Concordance checks against co-expression further bound whether a dual-null row resembles
 attention-like co-expression geometry; they do not adjudicate residual regulatory truth. Discussion
-returns to this scope when interpreting Support counts. Reporting gates (dual-null Support,
-protocol-pass, FM-versus-baseline observed $\Delta\rho$, and probe contrast families) are frozen in
-the in-repo statistical analysis plan (SAP-v1.0; shipped with the release capsule).
-Digests for that plan live in the online deposit, not in the main text.
+returns to this scope when interpreting Support counts.
+Four printed uses of ``support'' are not interchangeable: (i)~capitalized Dual-null Support is only
+the two-null BH conjunction defined below; (ii)~lowercase probe ``supported'' is a sign-flip contrast
+against co-expression, not Dual-null Support; (iii)~nonzero-edge $\varphi$ (binary presence of
+proxy edges) is not an FM gate; (iv)~ordinary English ``supports a claim'' is not a reporting gate.
+Reporting gates are applied as follows. Dual-null Support is
+$q_M<0.05$ and $q_D<0.05$ under a named confound specification.
+\textbf{Protocol-pass} is the five-gate conjunction of (1)~Dual-full Support,
+(2)~FM--co-expression concordance (Spearman $>0$; an attention-likeness check),
+(3)~non-degree same sign as the full-spec estimate,
+(4)~multi-readout sign agreement within model family and tissue (single-readout families pass), and
+(5)~full-spec $\rho$ strictly above the tissue co-expression baseline on the same edge set.
+Dual non-degree Support is reported on every row and is \emph{not} a sixth required gate: under
+non-degree the row-shuffle still preserves TF out-degree while the statistic does not condition on
+degree, so the two nulls do not address the same estimand. Multi-readout families on this instance
+are Geneformer brain (embedding, attention, knockout, and artifact-corrected knockout) and
+Geneformer PBMC (embedding and attention); every other model$\times$tissue family is a single
+readout and therefore passes the multi-readout sign gate by definition. Results apply this
+conjunction to the thirteen available pipeline-complete rows (protocol-pass $0/13$); $7/13$ and $0/13$
+are census counts over those rows, not a cross-family multiplicity correction.
+The family and gate list is printed here.
 
 \subsection{Regulatory-potential proxy and fixed panel}\label{sec:proxy}
 The panel contains 1,200 genes, including 446 unique in-range transcription factors,
-protocol-frozen in-repo by a hash-pinned panel manifest in the audit capsule
-(exact digests are recorded in the deposit \texttt{MANIFEST}, not repeated here).
-This is an in-repository protocol freeze, not an external preregistration
+protocol-frozen by a panel manifest in the audit capsule.
+This is a capsule protocol freeze, not an external preregistration
 (OSF/AsPredicted) link. Panel construction further requires each gene to have at least one brain
 snATAC peak in the same $\pm2$\,kb promoter-plus-gene-body window used for linkage, together with
 RNA-detection and vocabulary filters; the panel is therefore \emph{not} ATAC-orthogonal. Accessible
@@ -205,9 +227,20 @@ peaks from brain snATAC-seq, paired PBMC multiome, and a chemical reprogramming 
 single \texttt{ALL} accessibility track) are linked to genes by that window rule, which retains
 6{,}609 of 111{,}743 accessible peaks in the PBMC data (5.91\%) and systematically excludes distal
 enhancer elements. JASPAR2024 CORE vertebrate motifs are scanned with
-MOODS~\citep{rauluseviciute2024jaspar,korhonen2009moods}; motif evidence in an accessible peak
-contributes a directed TF--target regulatory-potential weight, following the
-motif-in-accessible-region linkage paradigm used by regulon-inference methods~\citep{aibar2017scenic}. Edge
+MOODS~\citep{rauluseviciute2024jaspar,korhonen2009moods} at $p<10^{-5}$ in $500$\,bp accessible
+windows, both strands, $554$ motifs. Writing $\mathrm{accessibility}(\mathrm{peak})$ for the
+tissue mean accessibility of a window-linked peak and $\mathrm{motif\text{-}hit}(\mathrm{TF},\mathrm{peak})$
+for a MOODS match (1 if any motif of that TF hits the peak, 0 otherwise), the directed proxy weight
+is
+\[
+G_{\mathrm{proxy}}[\mathrm{TF},\mathrm{target}]
+=
+\sum_{\mathrm{peaks\ of\ target}}
+\mathrm{accessibility}(\mathrm{peak})\cdot\mathrm{motif\text{-}hit}(\mathrm{TF},\mathrm{peak}).
+\]
+Motif evidence in an accessible peak therefore contributes a directed TF--gene
+regulatory-potential weight, following the motif-in-accessible-region linkage paradigm used by
+regulon-inference methods~\citep{aibar2017scenic}. Edge
 weights are assembled without expression statistics; panel membership and ATAC peak-presence
 filters remain expression-adjacent inputs, so the proxy is not claimed RNA-structure-independent in
 every design choice. Accessibility, motif occurrence, and proximity still do not establish direct
@@ -221,14 +254,41 @@ mask removes 446 of 534{,}754 brain edges (0.08\%), a small fixed-panel exclusio
 of the 34 prespecified markers (VCAN, which is not a transcription factor) falls in the fixed panel. PBMC edges are unmasked under
 the prespecified tissue policy. Before
 analysis, the driver verifies the manifest, TF identity and order across all caches, matrix dimensions
-and finiteness, and four pinned legacy-file hashes.
+and finiteness, and cache integrity checks.
 
 \subsection{Foundation-model and baseline graphs}
-Gene graphs are read from cached, model-validated outputs over the same manifest. Available pooled
+Gene graphs are read from cached, pipeline-complete outputs over the same manifest. Each readout is
+a pairwise map $G_{\mathrm{FM}}$ on the frozen panel, not a biological assay. Available pooled
 readouts are Geneformer embedding, attention, and in-silico knockout; scFoundation encoder; UCE
 encoder (4-layer variant, checkpoint pinned by the pipeline); and scGPT encoder; plus a
-random-init Geneformer floor. Coverage differs by tissue because
-only precomputed, validated graphs are included: brain has eight FM/readout rows and PBMC has five.
+random-init Geneformer floor. The maps are:
+embedding $=$ cosine similarity of per-gene contextual embeddings;
+encoder rows (scFoundation, UCE, scGPT) use that same pairwise embedding map (an alias, not a
+fourth operator);
+attention $=$ last-layer gene--gene attention, mean over heads;
+knockout $=$ an in-silico token-deletion graph readout (not a biological knockout assay), with the
+artifact-corrected knockout subtracting a random-token position-shift baseline;
+random-init $=$ a Geneformer-shaped floor scored with the same embedding-cosine operator as the
+Geneformer embedding row.
+The primary-audit attention row (Table~\ref{tab:primary}) uses that same
+\emph{symmetrized} last-layer mean-over-heads map; TF$\to$target and
+target$\to$TF are orientation sensitivities on the randomization-diagnostic display (marginal
+Spearman, not the full-spec partial $\rho$), not additional primary rows.
+Writing $e_j$ for the contextual embedding of gene $j$ and $e_j^{(-g)}$ for the same embedding
+after deleting TF $g$'s token, the raw knockout weight is the cell-mean cosine shift
+\[
+G_{\mathrm{KO}}[g,j]
+=
+\mathrm{mean}_{\mathrm{cells}}
+\bigl(1-\cos(e_j,e_j^{(-g)})\bigr);
+\]
+the artifact-corrected map subtracts the same shift after deleting a random non-TF token.
+Coverage differs by tissue because
+only precomputed, pipeline-complete graphs are included: brain has eight FM/readout rows and PBMC has five.
+Pairs with a missing cached graph are dropped (no silent impute).
+The co-expression graph $G_{\mathrm{coexp}}$ is the absolute Pearson correlation of
+library-size CP10k then $\log(1+x)$ RNA on the same non-self TF--gene edge set and the same cell
+pool as that row \citep{pratapa2020benchmarking}.
 Co-expression is reported as a baseline on the same edge set and nulls, but is not included as an
 FM row or in FM multiplicity families. Co-expression enters its own test only as the signal,
 never as a covariate: its design matrix is the full specification minus the
@@ -238,9 +298,11 @@ co-expression out of itself is degenerate by construction. CellPLM is outside sc
 architecture does not
 expose contextual per-gene states~\citep{wen2024cellplm}. Inference settings differ by model and
 are reported rather than harmonized: PBMC readouts use a deterministic 4,000-cell pool for every
-model; brain Geneformer embedding and scGPT use all available cells, brain Geneformer attention is
-capped at 4,000 cells, brain UCE uses 2,000 cells, and brain scFoundation uses 1,500 cells with a
-512-token context cap. Manifest gene coverage is 1,159/1,200 for PBMC UCE, 1,195/1,200 for brain
+model; brain Geneformer embedding and scGPT use all available cells in the preprocessed brain RNA
+object (those two integers are not separate rows on the coverage display); brain Geneformer
+attention is capped at 4,000 cells, brain Geneformer knockout uses 300 cells, brain UCE uses 2,000
+cells, and brain scFoundation uses 1,500 cells with a 512-token context cap. The coverage display
+lists those capped or subset rows plus the PBMC 4,000-cell pool. Manifest gene coverage is 1,159/1,200 for PBMC UCE, 1,195/1,200 for brain
 UCE, 1,199/1,200 for brain scFoundation, 1,168/1,200 for PBMC scFoundation, and 1,200/1,200
 otherwise.
 
@@ -254,9 +316,16 @@ from at most 40 peaks per gene (centered windows on the peak midpoints), so GC u
 extremes of very peak-dense genes while peak count does not. The two degree
 covariates are computed from the proxy graph itself, so the full specification conditions on
 functions of the outcome; this is a validity hazard, not a bookkeeping detail, and it is why the
-\emph{non-degree} design, which omits both degree columns, is reported co-primary rather than as a
+\emph{non-degree} design, which omits both degree columns, is reported as a prespecified sensitivity rather than as a
 footnote. Observed and randomized statistics always use matching column sets.
+Printed $\rho$ symbols are not interchangeable:
+$\rho_{\mathrm{spec}}$ is this partial Spearman (Pearson of residualized ranks);
+$\bar{\rho}_{\mathrm{probe}}$ is Spearman of residualized probe vectors (a different operator);
+$\rho_{\mathrm{Mantel}}$ is raw Spearman of unfolded edges;
+$\rho_{\mathrm{resid}}$ is Spearman after subtracting an additive TF-row plus gene-column fit;
+$\rho_{\mathrm{conc}}$ is raw Spearman of an FM graph with co-expression.
 Writing $r(\cdot)$ for ranks and $x^{\perp C}$ for the residual of $x$ after linear projection onto a named confound matrix $C$,
+with $\mathrm{spec}\in\{\mathrm{full},\mathrm{nondeg}\}$ and $\mathrm{corr}$ the Pearson correlation,
 \begin{equation}
 \label{eq:partial-rho}
 \rho_{\mathrm{spec}}
@@ -264,8 +333,8 @@ Writing $r(\cdot)$ for ranks and $x^{\perp C}$ for the residual of $x$ after lin
 \mathrm{corr}\bigl(r(G_{\mathrm{FM}})^{\perp C_{\mathrm{spec}}},
 r(G_{\mathrm{proxy}})^{\perp C_{\mathrm{spec}}}\bigr),
 \end{equation}
-where $C_{\mathrm{full}}$ is the full design and $C_{\mathrm{nondeg}}$ omits TF out-degree and target in-degree.
-Figures~\ref{fig:primary}, \ref{fig:spec}, and \ref{fig:pertype} report this statistic.
+where $C_{\mathrm{full}}$ is the full design (ranked co-expression mixed with standardized structural columns) and $C_{\mathrm{nondeg}}$ omits TF out-degree and target in-degree.
+The primary-audit, specification-sensitivity, and per-type displays report this statistic.
 
 \subsection{Finite-panel randomization inference}\label{sec:inference}
 The TF panel is treated as fixed; no TF-superpopulation bootstrap~\citep{efron1993bootstrap} or
@@ -273,24 +342,28 @@ confidence interval is used. For
 the gene-label null, one permutation relabels both endpoints of the proxy graph, in the spirit of the
 Mantel matrix correspondence test~\citep{mantel1967}. The FM graph,
 co-expression, and non-degree gene covariates remain fixed. In the full specification, proxy-derived
-TF out-degree and target in-degree are recomputed after relabeling.
+TF out-degree and target in-degree are recomputed after relabeling and then
+re-standardized in that design.
 
 The second null independently shuffles edge weights within each TF row across non-self targets. This
 preserves TF out-degree and the row's weight multiset while changing target assignment; target
 in-degree is recomputed only for the full specification. One proxy randomization per replicate is
 shared across model rows, with each model scored against the same replicate. Explicit-index tests
-verify numerical equivalence to separate least-squares calculations, including rank-deficient designs.
+verify numerical equivalence to separate least-squares calculations, including rank-deficient
+designs (for example a constant confound column on a row subset).
 
-Both tests use two-sided plus-one correction~\citep{phipson2010permutation},
+Both tests use two-sided plus-one correction~\citep{phipson2010permutation} with
+$T=\rho_{\mathrm{spec}}$ under the matching column set,
 \begin{equation}
 \label{eq:plus-one}
  p_{\mathrm{MC}}=\frac{1+\sum_{b=1}^{999}\mathbf{1}\{|T_b|\ge |T_{\mathrm{obs}}|\}}{1000},
 \end{equation}
-with resolution 0.001. Figure~\ref{fig:nulls} uses this Monte Carlo $p$-value.
+with resolution 0.001. The randomization-diagnostic display uses this Monte Carlo $p$-value.
 Benjamini--Hochberg correction~\citep{benjamini1995fdr} is performed within
-each of eight families: tissue (brain/PBMC) $\times$ confound specification (full/non-degree)
-$\times$ null (gene-label/row-shuffle). The full specification is the protocol-frozen primary (in-repo
-family definitions); the non-degree specification is reported alongside it as co-primary because the
+each of eight families ($m=8$: tissue (brain/PBMC) $\times$ confound specification (full/non-degree)
+$\times$ null (gene-label/row-shuffle)). The $7/13$ Dual-null count is a census over the
+pipeline-complete rows, not a ninth cross-family BH correction. The full specification is the protocol-frozen primary;
+the non-degree specification is reported alongside it as a prespecified sensitivity because the
 full specification conditions on proxy-derived degree covariates.
 Dual-null Support on an FM row is the conjunction of both within-family BH thresholds,
 \begin{equation}
@@ -302,7 +375,7 @@ q_M<0.05
 q_D<0.05,
 \end{equation}
 with $q_M$ the gene-label (Mantel) BH $q$ and $q_D$ the degree-preserving row-shuffle BH $q$.
-Figure~\ref{fig:primary} reports Support under this rule; Fig.~\ref{fig:protocol} uses it as a gate.
+The primary-audit display reports Support under this rule; the protocol-pass display uses it as a gate.
 A sign flip between specifications is
 \begin{equation}
 \label{eq:sign-flip}
@@ -310,24 +383,33 @@ A sign flip between specifications is
 \neq
 \mathrm{sign}(\rho_{\mathrm{nondeg}}).
 \end{equation}
-Figure~\ref{fig:spec} marks these sign flips.
+The specification-sensitivity display marks these sign flips. Dual-null Support is two-sided in
+$|T|$; protocol-pass additionally requires signed gates (concordance $>0$, non-degree same sign,
+and $\rho>$ baseline).
+The shared-null Mantel test of
+$\Delta\rho=\rho_{\mathrm{FM,full}}-\rho_{\mathrm{baseline}}>0$
+($N=999$ gene-label draws, one-sided, BH within tissue) is the Results recompute in
+Table~\ref{tab:fmbase}. It is not a second primary estimand and is not a protocol-pass gate.
 
 \subsection{TF-disjoint supervised probe}\label{sec:probe}
 The pooled audit is an unsupervised raw-readout test. As a supervised complement, run on paired
 PBMC multiome data only, we train a ridge
 probe to predict each TF's proxy-target profile from the FM graph itself. The probe was originally
-specified over per-gene embeddings; because the validated caches store gene-by-gene graphs rather
-than embeddings, we reformulated it at the pair level, which answers the same question without new
+specified over per-gene embeddings; because the pipeline-complete caches store gene-by-gene graphs rather
+than embeddings, we reformulated it at the pair level without new
 model inference. Samples are ordered
 (TF, gene) pairs; features for each family are the edge weight $S_{tf,g}$, its reverse $S_{g,tf}$,
 and the within-TF rank of the edge. These are scalar per-edge summaries, so the probe tests
-edge-level linear recoverability, not row-level regulatory programs. Nothing in the design is
+edge-level linear predictability of the proxy profile, not row-level regulatory programs. Nothing in the design is
 indexed by TF identity, so a probe
-trained on 311 held-in TFs transfers unchanged to 135 disjoint test TFs. Regularization is chosen
+trained on 311 held-in TFs (TF-disjoint split, seed $20260730$) transfers unchanged to
+$n_{\mathrm{test}}=135$ disjoint test TFs. Regularization is chosen
 by leave-one-out cross-validation over training pairs. Performance is the per-test-TF Spearman correlation
 between predicted and observed proxy profiles, averaged over test TFs, after residualizing both
 sides against target peak count, gene length, GC content, and detection rate.
-Writing $C'$ for that four-column probe design and $\hat{y}_t$ for the ridge prediction on test TF $t$,
+Writing $C'$ for that four-column probe design, $\hat{y}_t$ for the ridge prediction on test TF $t$,
+and $y_t$ for that TF's observed proxy profile, the probe estimand residualizes first and then
+takes Spearman (not the rank-then-Pearson operator of $\rho_{\mathrm{spec}}$),
 \begin{equation}
 \label{eq:probe}
 \bar{\rho}_{\mathrm{probe}}
@@ -335,7 +417,7 @@ Writing $C'$ for that four-column probe design and $\hat{y}_t$ for the ridge pre
 \frac{1}{n_{\mathrm{test}}}\sum_{t}
 \mathrm{Spearman}\bigl(\hat{y}_t^{\perp C'}, y_t^{\perp C'}\bigr).
 \end{equation}
-Figure~\ref{fig:probe} reports this mean and the paired sign-flip test of per-TF differences versus co-expression.
+The probe display reports this mean and the paired sign-flip test of per-TF differences versus co-expression.
 The null permutes
 gene labels within each test TF; paired FM-versus-co-expression contrasts use sign-flipped
 per-TF differences. Gene-level degree features are withheld from the primary probe arm because
@@ -346,15 +428,18 @@ edges.
 Per-cell-type rows report observed partial correlations, cell counts, ranges, medians, and sign counts.
 They have no randomization $p$-values or FDR adjustment. Cross-tissue proxy reproducibility is also
 observed-only.
-On the shared non-self TF--target edge set, the Mantel rank statistic between two graphs is
+On the shared non-self TF--gene edge set, the Mantel rank statistic between two graphs is
 \begin{equation}
 \label{eq:mantel}
 \rho_{\mathrm{Mantel}}(G,H)
 =
 \mathrm{Spearman}\bigl(\mathrm{vec}(G),\mathrm{vec}(H)\bigr).
 \end{equation}
-Figures~\ref{fig:proxy}, \ref{fig:third_tissue}, and \ref{fig:app-mantel} report this observed agreement.
-An additive TF-row-plus-gene-column fit on one tissue's proxy,
+The proxy, third-tissue, and appendix Mantel displays report this observed agreement.
+Let $W$ be the proxy weight matrix on that shared edge set, with $i$ indexing TFs and $j$ genes;
+$\mu$, $a_i$, and $b_j$ are the intercept, TF-row, and gene-column terms of an additive fit, and
+superscripts $(A)$ and $(B)$ are the two tissues in a pair. An additive TF-row-plus-gene-column
+fit on one tissue's proxy,
 \begin{equation}
 \label{eq:decomp}
 \begin{aligned}
@@ -363,28 +448,35 @@ An additive TF-row-plus-gene-column fit on one tissue's proxy,
 \mu+a_i+b_j,\\
 f_{\mathrm{add}}
 &=
-\frac{\rho(\widehat{W}^{(A)},W^{(B)})}{\rho(W^{(A)},W^{(B)})},\\
+\frac{\rho_{\mathrm{Mantel}}(\widehat{W}^{(A)},W^{(B)})}{\rho_{\mathrm{Mantel}}(W^{(A)},W^{(B)})},\\
 \rho_{\mathrm{resid}}
 &=
-\mathrm{Spearman}(W^{(A)}-\widehat{W}^{(A)},W^{(B)}-\widehat{W}^{(B)}),
+\mathrm{Spearman}\bigl(\mathrm{vec}(W^{(A)}-\widehat{W}^{(A)}),\mathrm{vec}(W^{(B)}-\widehat{W}^{(B)})\bigr),
 \end{aligned}
 \end{equation}
-is scored against the other tissue; $f_{\mathrm{add}}$ is the additive fraction and $\rho_{\mathrm{resid}}$ is rank agreement after removing each graph's own additive fit.
-Figure~\ref{fig:decomp} reports these quantities; Figs.~\ref{fig:app-mantel}--\ref{fig:app-coverage} reuse them on construct-lane overlays.
-Concordance is
+is scored against the other tissue; $f_{\mathrm{add}}$ is the additive fraction of observed
+Mantel agreement, not an $R^{2}$, and $\rho_{\mathrm{resid}}$ is rank agreement after removing each
+graph's own additive fit.
+The decomposition display reports these quantities; the appendix construct-lane displays reuse them
+on construct-lane overlays.
+Concordance (attention-likeness) is
 \begin{equation}
 \label{eq:concordance}
 \rho_{\mathrm{conc}}
 =
-\mathrm{Spearman}(G_{\mathrm{FM}},G_{\mathrm{coexp}})
+\mathrm{Spearman}\bigl(\mathrm{vec}(G_{\mathrm{FM}}),\mathrm{vec}(G_{\mathrm{coexp}})\bigr)
 \end{equation}
-on the same edge set; a readout passes if $\rho_{\mathrm{conc}}>0$.
-Figure~\ref{fig:concordance} plots this attention-likeness check; Fig.~\ref{fig:protocol} uses $\rho_{\mathrm{conc}}>0$ as a gate.
+on the same non-self TF--gene edge set (brain $534{,}308$ edges after the marker mask; PBMC
+$534{,}754$); a readout passes this descriptive gate if $\rho_{\mathrm{conc}}>0$ (no
+standard error).
+The concordance display plots this attention-likeness check; the protocol-pass display uses
+$\rho_{\mathrm{conc}}>0$ as a gate.
 Finally, for each tissue we evaluate the following injected fractions:
 \[
 \alpha\in\{0,.02,.05,.08,.12,.18,.25,.35,.5,.75,1\}.
 \]
-Writing $r_{\mathrm{proxy}}$ for proxy ranks residualized against $C_{\mathrm{full}}$, the injected graph is
+Writing $r_{\mathrm{proxy}}$ for proxy ranks residualized against $C_{\mathrm{full}}$ and $z(\cdot)$
+for a column $z$-score (center and scale to unit variance), the injected graph is
 \begin{equation}
 \label{eq:injection}
 G_{\mathrm{synth}}(\alpha)
@@ -393,16 +485,17 @@ G_{\mathrm{synth}}(\alpha)
 +
 (1-\alpha)\, z(\varepsilon),
 \end{equation}
-where $\varepsilon$ is independent standard Gaussian noise and the observed statistic is repeated
+where $\varepsilon$ is independent standard Gaussian noise and the observed statistic
+$\rho_{\mathrm{spec}}$ is repeated
 $30$ times per $\alpha$.
-Figure~\ref{fig:sensitivity} reports this ladder.
+The injection-ladder display reports this ladder.
 This axis-aligned diagnostic checks implementation
 response; it is not a power analysis and does not define an MDE, confidence interval, or exclusion
 bound.
 
 The fixed panel, model/readout availability, inference cell counts, and edge-accounting
-steps are audited explicitly in Fig.~\ref{fig:coverage}; blank coverage cells denote missing
-validated graphs, not negative results. The full audit therefore comprises 13 pooled FM/readout
+steps are audited explicitly in the coverage display; blank coverage cells denote missing
+pipeline-complete graphs, not negative results. The full audit therefore comprises 13 pooled FM/readout
 rows rather than a balanced model-by-tissue factorial design.
 
 \section{Results}\label{sec:results}
@@ -421,11 +514,12 @@ promoter-plus-gene-body $\pm$2\,kb window: 8{,}823/219{,}070 (4.03\%) in brain, 
 (5.91\%) in PBMC, and 11{,}614/275{,}448 (4.22\%) in the fibroblast mix. Distal and
 three-dimensional contacts are excluded by this rule.}\label{fig:study}
 \end{figure}
+\FloatBarrier
 
-\subsection{The proxy is reproducible, but remains a proxy}
+\subsection{The proxy agrees across tissues, but remains a proxy}
 The accessibility/motif construct shows moderate observed agreement across tissue consensus graphs:
-brain--PBMC $\rho=0.5249$, brain--fibroblast-mix $\rho=0.5245$, and PBMC--fibroblast-mix
-$\rho=0.4623$ (Fig.~\ref{fig:proxy}; Table~\ref{tab:cross}). The third dataset (GSE206767) is a
+brain--PBMC $\rho_{\mathrm{Mantel}}=0.5249$, brain--fibroblast-mix $\rho_{\mathrm{Mantel}}=0.5245$, and PBMC--fibroblast-mix
+$\rho_{\mathrm{Mantel}}=0.4623$ (Fig.~\ref{fig:proxy}; Table~\ref{tab:cross}). The third dataset (GSE206767) is a
 chemical-reprogramming experiment whose accessibility track pools day-0 fibroblasts and day-3
 induced neuron-like cells, so it does not represent any resting tissue. These are descriptive
 fixed-panel correlations without new randomization inference. They show the construct is stable
@@ -448,13 +542,16 @@ which are tissue-independent by design, rather than by tissue-specific regulator
 \caption{Regulatory-potential proxy, evidence, and panel composition. (A) Construction pipeline:
 accessible peaks are linked to genes ($\pm2$\,kb promoter-plus-gene-body), JASPAR/MOODS motif
 matches contribute directed TF$\rightarrow$target weights, and edges are restricted to the
-hash-pinned 446-TF$\times$1{,}200-gene panel; edge weights are built without expression statistics
+frozen 446-TF$\times$1{,}200-gene panel; edge weights are built without expression statistics
 (panel and ATAC inputs remain expression-adjacent), and the proxy is not causal ground truth.
-(B) Observed consensus-graph correlations across three tissue datasets.
-(C) Motif hits per accessible peak relative to the expected 5.5 random hits at the $10^{-5}$
-motif threshold. (D) TF target-profile redundancy: counts with an identical binary profile or a
-partner at cosine similarity $>0.8$, out of 446 TFs.}\label{fig:proxy}
+(B) Observed pairwise Mantel $\rho$ among the three construct graphs (not a claim that the
+proxy is tissue-reproducible biology).
+(C) Motif hits per accessible peak; the dashed guide is the expected 5.5 random hits at the
+$10^{-5}$ motif threshold (a count, not a share). (D) TF target-profile redundancy: counts with
+an identical binary profile or a partner at cosine similarity $>0.8$, out of 446 TFs.
+Panel D omits the fibroblast-mix arm (construct-only; no FM composition counts).}\label{fig:proxy}
 \end{figure}
+\FloatBarrier
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure3.pdf}
@@ -462,30 +559,34 @@ partner at cosine similarity $>0.8$, out of 446 TFs.}\label{fig:proxy}
 $446\times 1{,}200$ panel (three tissue pairs). (A)~Observed Spearman $\rho$,
 TF-row-plus-gene-column additive prediction, and residual $\rho$ after removing
 each tissue's own additive fit. (B)~Fraction of observed agreement predicted by
-those additive marginals ($69$--$78\%$). (C)~Residual minus observed $\rho$;
+those additive marginals ($69$--$78\%$; an additive fraction of Mantel $\rho$, not a variance
+share). (C)~Residual minus observed $\rho$;
 red = net-subtractive (residual $>$ observed), grey otherwise; brain--fibroblast
 mix is net-subtractive. (D)~Mean pairwise cell-type proxy Spearman $\rho$ within
-brain and PBMC; whiskers are the min--max range (not a confidence interval).
+brain and PBMC only; the fibroblast-mix arm is omitted (construct-only; no per-type FM rows).
+Whiskers are the min--max range (not a confidence interval).
 These are descriptive fixed-panel quantities without new randomization inference.}\label{fig:decomp}
 \end{figure}
+\FloatBarrier
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \fitfig{\input{table2_cross_tissue_observed.tex}}
 \caption{Observed cross-tissue reproducibility of the regulatory-potential proxy on the frozen
-$446\times 1{,}200$ panel ($n=3$ tissue pairs). Columns: observed Spearman $\rho$; additive
-fraction of that agreement from TF-row plus gene-column marginals; residual Spearman after each
-tissue's own additive fit; binary-support $\varphi$ (phi coefficient of nonzero-edge
+$446\times 1{,}200$ panel ($n=3$ tissue pairs). Columns: observed Spearman $\rho_{\mathrm{Mantel}}$; additive
+fraction of that agreement from TF-row plus gene-column marginals; residual Spearman $\rho_{\mathrm{resid}}$ after each
+tissue's own additive fit; nonzero-edge $\varphi$ (phi coefficient of nonzero-edge
 presence/absence); edge Jaccard; mean per-TF-row Spearman; shared TF count ($446$). Fixed-panel
 descriptive quantities; no confidence interval or new randomization inference.}
 \label{tab:cross}
 \end{table}
+\FloatBarrier
 
 \subsection{Primary full-confound audit: six weak positives, one negative, and a baseline that
 matches them}
 Table~\ref{tab:primary} and Fig.~\ref{fig:primary} report all thirteen pooled FM/readout rows plus
 the co-expression baseline. Six small positive effects are supported by both randomization tests
 after within-family BH correction (Support column in Table~\ref{tab:primary}); that full-spec Support
-count is authoritative only together with co-primary non-degree dual-null Support $0/13$ and
+count is authoritative only together with prespecified non-degree dual-null Support $0/13$ and
 protocol-pass $0/13$ (Table~\ref{tab:protocol}), not as a standalone recovery claim. In brain,
 Geneformer embedding has $\rho=0.00442$
 ($q_M=0.006$, $q_D=0.003$), UCE encoder has $\rho=0.00461$ ($q_M=0.004$, $q_D=0.003$), and scGPT
@@ -502,14 +603,18 @@ $M$ is the gene-label (Mantel) null and $D$ the within-TF-row degree-preserving 
 ($N=999$ each); FM $q$ values are BH-adjusted within tissue-by-specification-by-null families.
 Dual-null Support requires $q_M<0.05$ and $q_D<0.05$. (A)~Full-confound rows; labels are BH
 $q_M,q_D$ for FM rows and uncorrected $p_M,p_D$ for the baseline (aqua = both nulls, yellow =
-one null, grey = neither, black = baseline). (B)~Non-degree co-primary rows; no row is supported
-by both nulls. (C)~Full-confound $q_M$ versus $q_D$; dashed lines at $0.05$. (D)~Dual-null FM
+one null, grey = neither, black = baseline). (B)~Non-degree prespecified-sensitivity rows: both $q_M$ and $q_D$
+are shown; no row is Dual-null supported (the conjunction $q_M<0.05$ and $q_D<0.05$ is empty),
+while nine rows are D-only ($q_D<0.05$ with $q_M\ge0.05$). (C)~Full-confound
+$q_M$ versus $q_D$; dashed lines at $0.05$. (D)~Dual-null FM
 rows versus the tissue co-expression baseline; $r^{2}=\rho^{2}$ on FM bars (tiny effects;
-several dual-null positives do not exceed baseline). Dual-null Support is not protocol-pass.}
+several dual-null positives do not exceed baseline). Tick abbreviations:
+GFe/GFa = Geneformer embedding/attention; B/P = brain/PBMC; UCE and scGPT keep their names.
+Dual-null Support is not protocol-pass.}
 \label{fig:primary}
 \end{figure}
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \fitfig{\input{table1_primary_fixed_panel.tex}}
 \caption{Primary fixed-panel results under the \emph{full} confound specification only (13
 FM/readout rows plus the same-edge co-expression baseline). Partial Spearman $\rho$ is alignment
@@ -523,7 +628,7 @@ applies). Dual-null Support is not protocol-pass.}\label{tab:primary}
 \end{table}
 
 Dual-null Support is only one gate. Table~\ref{tab:protocol} and
-Fig.~\ref{fig:protocol} report six gate columns on the same thirteen FM rows
+the protocol-pass display report six gate columns on the same thirteen FM rows
 (dual-null under full and under non-degree, FM--co-expression concordance
 (Spearman $>0$), non-degree same sign as the full estimate, multi-readout sign agreement within
 model family and tissue, and full-spec $\rho$ strictly above the tissue co-expression baseline).
@@ -531,9 +636,9 @@ model family and tissue, and full-spec $\rho$ strictly above the tissue co-expre
 not required): dual-full, concordance, non-degree same sign, multi-readout sign
 agreement, and $\rho>$ baseline simultaneously. Under those gates,
 \textbf{$0/13$ rows protocol-pass}---including every dual-null positive---so dual-null Support is not
-treated as regulatory recovery (Fig.~\ref{fig:protocol}).
+treated as regulatory recovery.
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \resizebox{\linewidth}{!}{\input{table4_protocol_pass.tex}}
 \caption{Protocol-pass matrix for the thirteen pooled FM/readout rows (yes = pass, no = fail). Dual full / Dual non-deg:
 both within-family BH $q_M,q_D<0.05$ under the named confound specification. Concord.:
@@ -567,70 +672,71 @@ alignment as the supported FM rows. Second, the PBMC Geneformer-embedding positi
 with the proxy less than the confound it is adjusted against.
 Table~\ref{tab:fmbase} reports observed
 $\Delta\rho=\rho_{\mathrm{FM,full}}-\rho_{\mathrm{baseline}}$ for all 13 FM rows and a shared-null
-Mantel test of $\Delta>0$ ($N{=}999$ gene-label draws, BH within tissue;
-\texttt{method=shared\_mantel\_delta\_v1}): only four dual-null full rows beat their tissue baseline
-on the observed contrast (brain Geneformer embed, UCE, scGPT; PBMC scGPT), and only
+Mantel test of $\Delta>0$ ($N{=}999$ gene-label draws, BH within tissue):
+only four dual-null full rows have observed $\Delta\rho>0$
+(brain Geneformer embed, UCE, scGPT; PBMC scGPT), and only
 $2/13$ rows are shared-null significant after BH (brain scGPT; PBMC scGPT), so dual-null Support
 does not imply multiplicity-controlled superiority to co-expression on the same edge set.
-Under an independence reference operating characteristic for dual-null Support (independent
-Uniform $p_M,p_D$, BH within each full-spec tissue family, $2\times10^{4}$ draws), the Monte Carlo
-rate of $\ge1$ dual-null row is $\approx2\times10^{-4}$ (brain) and $\approx3\times10^{-4}$ (PBMC),
-while the audit records 4 and 3 dual-null rows respectively---so dual-null Support is not explained
-by naive independent double-dipping alone, yet still is not regulatory recovery
-(release-capsule dual-null independence diagnostic).
+Dual-null Support is a reporting gate (both within-family BH $q_M<0.05$ and $q_D<0.05$), not an
+independence Type~I rate for the intersection. On the 13 full-spec pairs the two $q$ values are
+concordant (no mixed one-null full-spec row). The audit records 4 (brain) and 3 (PBMC) dual-null
+rows; that count is not regulatory recovery.
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \resizebox{\linewidth}{!}{\input{table6_fm_vs_baseline.tex}}
 \caption{FM versus same-edge co-expression baseline under the full confound design.
-The $\rho_{\mathrm{FM}}$ column is the shared-null pipeline recompute
-(\texttt{method=shared\_mantel\_delta\_v1}); small differences from the primary fixed-panel $\rho$ values
+The $\rho_{\mathrm{FM}}$ column is a shared-null recompute of the primary partial Spearman
+printed in Table~\ref{tab:primary}; that table is the only primary $\rho$.
+Small differences from the primary fixed-panel $\rho_{\mathrm{spec}}$ values
 reflect that recompute, not a second primary estimand.
 $\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{base}}$ is the observed contrast; $q_{\Delta}$ and
 Shared sig are one-sided shared-null Mantel tests of $\Delta>0$ ($N{=}999$, BH within tissue).
-Dual-null is the primary Support gate (both within-family BH $q_M<0.05$ and $q_D<0.05$). Dual$\wedge$beats counts rows that are
+Dual-null is the primary Support gate (both within-family BH $q_M<0.05$ and $q_D<0.05$). Dual$\wedge\Delta{>}0$ counts rows that are
 dual-null \emph{and} have observed $\Delta\rho>0$ ($4/7$ dual-null rows; $4/13$ FM rows overall);
 shared-null significance is $2/13$ (brain/PBMC scGPT only).}\label{tab:fmbase}
 \end{table}
 
-Four completed enhancement-v1 checks qualify the fixed-panel interpretation without changing the
+Four completed sensitivity checks qualify the fixed-panel interpretation without changing the
 frozen primary families. Five-fold cross-fitting of the proxy-derived degree covariates preserved the
 qualitative direction in all 13 pooled rows, with absolute changes from the frozen estimates no larger
-than $1.1\times10^{-5}$ (E1). Linkage sensitivity preserved the edge-weight structure for TSS--1 kb
+than $1.1\times10^{-5}$. Linkage sensitivity preserved the edge-weight structure for TSS--1 kb
 and TSS--5 kb policies ($\rho=0.988$ and $0.971$ versus the baseline), whereas a promoter-only policy
-changed the construct substantially ($\rho=0.119$; E2). In 20 fixed 80\% TF subsamples, signs were
+changed the construct substantially ($\rho=0.119$). In 20 fixed 80\% TF subsamples, signs were
 concordant in all brain and PBMC draws; the descriptive $\rho$ ranges were 0.00271--0.00610 and
-0.00115--0.00716, respectively (E3). Detection-based stratification also showed larger alignment for
+0.00115--0.00716, respectively. Detection-based stratification also showed larger alignment for
 the operational housekeeping proxy than for low-detection TF strata (brain $\rho=0.00891$ versus
-$0.00398$; PBMC $0.02111$ versus $0.00141$; E5). These checks report observed stability and
-construct sensitivity; E3 did not recompute valid randomization nulls after TF subsampling, and E5
-uses a detection-based operational label rather than a biological housekeeping annotation.
+$0.00398$; PBMC $0.02111$ versus $0.00141$). These checks report observed stability and
+construct sensitivity; the TF-subsample check did not recompute valid randomization nulls after
+subsampling, and the detection split uses an operational label rather than a biological housekeeping
+annotation.
 
-A separate sequence-opportunity audit (S1) applied a five-bin target-opportunity permutation and
-passed its null-calibration checks, but it is not the frozen v2 primary result: several row-level
-statistics and q-values differ under that stricter sensitivity design. We therefore report S1 as a
-sensitivity audit rather than claiming that the primary headline has been re-tested under S1.
+A separate sequence-opportunity sensitivity applied a five-bin target-opportunity permutation and
+passed its null-calibration checks, but it is not the frozen primary result: several row-level
+statistics and q-values differ under that stricter sensitivity design. We therefore report it as a
+sensitivity audit rather than claiming that the primary headline has been re-tested under that
+design.
 External ENCODE pan-biosample TF-occupancy edges on the frozen panel (coverage gate:
 204 TFs, 114{,}467 positive edges) correlate with the pooled motif+ATAC proxy under a lightweight
 within-TF encode-shuffle null (brain Spearman $\rho=0.081$, PBMC $\rho=0.109$; plus-one
-$p=0.005$ at $N=199$; mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$ positives;
-details archived in the release capsule). That association bounds the proxy as
-binding-proximal structure; it does \emph{not} convert FM dual-null Support into causal TF--target
+$p=0.005$ at $N=199$; mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$ positives).
+That association is a failed occupancy check: it bounds the proxy as
+binding-proximal structure and does \emph{not} convert FM dual-null Support into causal TF--target
 recovery.
  Our protocol freezes a readout
-\emph{concordance} (attention-likeness) check in-repo: a co-expression-like readout should correlate
+concordance (attention-likeness) check: a co-expression-like readout should correlate
 positively with co-expression (attention $\approx$ co-expression is well established). This check
 blocks analogy to attention-GRN recovery stories; it does \emph{not} adjudicate residual regulatory
 content on its own. Five of the six dual-null positive rows fail concordance: their FM--co-expression
 Spearman correlations are $-0.18$ to $-0.02$ (all negative). PBMC scGPT weakly passes
 (Spearman $+0.01$) yet still fails protocol-pass (e.g.\ non-degree same-sign). The readouts that
-pass concordance include PBMC scGPT ($+0.01$), scFoundation ($+0.08$), and PBMC Geneformer
-attention ($+0.40$); the latter two are dual-null negative, so a concordance passer need not be
-dual-null supported (and conversely).
+pass concordance are five of thirteen rows: brain scFoundation, brain Geneformer attention,
+PBMC scGPT ($+0.01$), PBMC scFoundation ($+0.08$), and PBMC Geneformer attention ($+0.40$).
+Brain Geneformer attention and both scFoundation rows are dual-null negative, so a concordance
+passer need not be dual-null supported (and conversely).
 We report the six positives as readout-specific geometry rather than as regulatory signal
 (Fig.~\ref{fig:concordance}). Randomization and knockout diagnostics for the same rows are
 summarized in Fig.~\ref{fig:nulls}; per-TF embedding-norm / cosine anisotropy versus degree is
-\emph{not} tested in this release and is not used as a mechanistic claim
-(SAP~\S8).
+not tested on this instance and is not used as a mechanistic claim.
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure5.pdf}
@@ -650,13 +756,16 @@ versus artifact-corrected (position-shift) KO, marginally and after partialling 
 \includegraphics[width=\linewidth]{Figure6.pdf}
 \caption{Randomization and readout diagnostics ($N=999$ permutations). (A)~Observed partial
 $\rho$ (aqua) against the within-TF-row degree-preserving row-shuffle null mean and $95\%$ null
-band (grey) for representative rows; $z$ is (observed $-$ null mean)/null SD. (B)~Brain
-Geneformer-attention alignment, marginally and after adjusting for co-expression; the dotted
-``naive expectation'' line is $\rho=0.15$, not a fitted target. (C)~Geneformer knockout (KO) raw
-and artifact-corrected (position-shift) KO both align with the proxy after partialling
-co-expression alone ($p<0.001$ and $p=0.004$); the full confound specification removes that
-alignment. (D)~Dual-null Support decisions agree between the authoritative audit and a parallel
-attention-omission guard on the same eight brain rows (aqua = supported).}\label{fig:nulls}
+band (grey $=$ null mean $\pm 1.96$ SD) for four plotted rows (brain Geneformer embedding,
+scFoundation, UCE, and the brain co-expression self-test); $z$ is (observed $-$ null mean)/null SD.
+(B)~Brain Geneformer-attention orientation sensitivities: symmetrized, TF$\to$target,
+target$\to$TF, and the two co-expression-partialled variants; the primary-audit attention row uses
+the symmetrized map. The dotted line is $\rho=0.15$, a visual reference, not a fitted target.
+(C)~Geneformer knockout (KO) graph readout, raw and artifact-corrected (position-shift), both
+align with the proxy after partialling co-expression alone (uncorrected $p<0.001$ and $p=0.004$,
+not a BH family); the full confound specification removes that alignment. (D)~Dual-null Support decisions agree between the
+authoritative audit and a parallel attention-omission guard (re-score of the originally omitted
+attention/floor family on the same eight brain rows; aqua = Dual-null supported).}\label{fig:nulls}
 \end{figure}
 
 \subsection{The alignments depend on conditioning on proxy-derived degree covariates}
@@ -666,14 +775,13 @@ full-spec positives (brain Geneformer embedding, PBMC Geneformer embedding, PBMC
 negative before degree conditioning. Because the degree covariates are computed from the proxy
 graph itself, the full specification conditions on functions of the outcome; the positives
 therefore appear in exactly the specification that carries this hazard. We report the non-degree
-specification as co-primary and treat the divergence as a substantive finding, not a footnote.
+specification as a prespecified sensitivity and treat the divergence as a substantive finding, not a footnote.
 Under non-degree, the audit records \textbf{0 dual}, \textbf{0 M-only}, and \textbf{9 D-only}
 rejections (row-shuffle $q_D<0.05$ with gene-label $q_M\ge0.05$); the gene-label null never
 rejects alone. Dual-Support is therefore never granted under non-degree. Those D-only rejections
 must not be read as dual-null Support: the row-shuffle still preserves TF out-degree while the
-non-degree design does not condition on degree, so the two nulls do not address the same estimand
-(SAP~\S3; release-capsule non-degree null-pattern summary).
-Table~\ref{tab:nondegree} enumerates that non-degree pattern row by row (0 dual; D-only majority).
+non-degree design does not condition on degree, so the two nulls do not address the same estimand.
+The non-degree pattern table enumerates that pattern row by row (0 dual; D-only majority).
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure7.pdf}
@@ -682,12 +790,13 @@ co-expression plus six structural covariates (including two proxy-derived degree
 non-degree drops those two degree terms. Dual-null Support is $q_M<0.05$ and $q_D<0.05$.
 (A)~Paired full (circles) versus non-degree (squares) partial $\rho$; aqua fill = dual-null
 Support ($7$ under full, $0$ under non-degree); red segments = sign flips ($6/13$). (B)~Binned
-partial $\rho$ (not a binary sign map): negative large / negative small / positive small /
-positive large at $\pm0.005$. (C)~Full versus non-degree randomization $p$ for the gene-label
+partial $\rho_{\mathrm{spec}}$ (four magnitude bins at $\pm0.005$: negative large / negative small /
+positive small / positive large). This panel is a binned partial-$\rho$ board, not a binary sign map. (C)~Full versus non-degree randomization $p$ for the gene-label
 and row-shuffle nulls. (D)~Nested covariate ladder from marginal correlation through
 co-expression, non-degree, and degree rungs to the full specification; descriptive, not model
 selection.}\label{fig:spec}
 \end{figure}
+\FloatBarrier
 
 \subsection{Per-cell-type patterns are descriptive}
 The proxy itself is near cell-type-invariant on this panel (pairwise consensus $\rho\approx0.99$),
@@ -695,9 +804,10 @@ so per-cell-type rows score readouts against a reference with essentially no cel
 we report them only as descriptive robustness summaries. The full-confound cell-type analysis
 contains 15 brain (3 readouts $\times$ 5 cell types) and 14 PBMC (2 readouts $\times$ 7 cell
 types) FM rows per specification
-(Fig.~\ref{fig:pertype}). Brain full-confound estimates range from $-0.00396$ to $0.00445$ with
+(Fig.~\ref{fig:pertype} and Table~\ref{tab:pertype_ranges}). Brain full-confound estimates range from $-0.00396$ to $0.00445$ with
 median $0.00258$; PBMC estimates range from $0.00222$ to $0.00682$ with median $0.00413$.
-Table~\ref{tab:pertype_ranges} summarizes full and non-degree ranges. These
+Those ranges belong with the per-type display, not with the later injection-ladder display.
+These
 rows have no randomization $p$-values or BH correction. They neither support cell-type
 discoveries nor provide population uncertainty.
 
@@ -705,25 +815,30 @@ discoveries nor provide population uncertainty.
 \includegraphics[width=\linewidth]{Figure8.pdf}
 \caption{Per-cell-type descriptive robustness summaries of observed partial Spearman $\rho$ under
 the full confound specification (brain: 15 exploratory FM$\times$type rows; PBMC: 14). (A)~Brain
-rows by readout ($x$ = partial $\rho$; $y$ = cell type). (B)~PBMC rows by readout. Whiskers in
-(A--B), where drawn, are bootstrap $95\%$ intervals shown only as descriptive spread; they are not
-randomization $p$-values or population-uncertainty intervals. (C)~Brain per-type co-expression,
-Geneformer-embedding, and Geneformer-attention summaries on the same frozen panel (legacy per-type
-readout overlay, not a second primary family). (D)~Cell counts underlying the per-type rows. No
+rows by readout ($x$ = partial $\rho$; $y$ = cell type). (B)~PBMC rows by readout. The $x$ window
+is cropped to the Table~\ref{tab:pertype_ranges} full-confound ranges (brain $-0.00396$ to $0.00445$;
+PBMC $0.00222$ to $0.00682$) with pad so the zero line remains visible. Whiskers in
+(A--B), where drawn, are bootstrap $95\%$ intervals shown only as descriptive spread; they may clip
+at the crop and are not randomization $p$-values or population-uncertainty intervals. (C)~Brain
+per-type legacy overlay: co-expression, Geneformer-embedding, and Geneformer-attention summaries on
+the same frozen panel (an earlier overlay series, not the A/B estimand and not a second primary
+family). (D)~Cell counts underlying the per-type rows. No
 multiplicity claims.}\label{fig:pertype}
 \end{figure}
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \fitfig{\input{table3_pertype_ranges.tex}}
 \caption{Per-cell-type descriptive ranges of observed partial $\rho$ under full and non-degree
 confound specifications (brain: 15 exploratory FM$\times$type rows; PBMC: 14). Min/max/median
 across those rows only; no randomization $p$-values, BH correction, or population-uncertainty
 interpretation.}\label{tab:pertype_ranges}
 \end{table}
+\FloatBarrier
+Table~\ref{tab:nondegree} enumerates the same non-degree pattern row by row.
 
-\begin{table}[!tbp]\centering
+\begin{table}[H]\centering
 \fitfig{\input{table7_nondegree_null_pattern.tex}}
-\caption{Non-degree dual-null pattern for all 13 FM rows. The co-primary non-degree specification
+\caption{Non-degree dual-null pattern for all 13 FM rows. The prespecified non-degree sensitivity
 is the full design minus the two proxy-derived degree covariates. $M$ is the gene-label
 permutation null and $D$ is the within-TF-row degree-preserving target shuffle ($N=999$ each);
 each $q$ is BH-adjusted within the non-degree families. Dual-null Support ($q_M<0.05$ and
@@ -736,7 +851,7 @@ protocol-pass.}\label{tab:nondegree}
 effects sit at the bottom of that ladder}
 The axis-aligned diagnostic rises monotonically from approximately zero at $\alpha=0$ to mean
 partial correlations of 0.905 in brain and 0.913 in PBMC at $\alpha=1$
-(Fig.~\ref{fig:sensitivity}). The original ladder probes $\alpha\in\{0,.02,.05,.08,.12,.18,.25,.35,.5,.75,1\}$;
+(Fig.~\ref{fig:sensitivity}). That ladder is a pooled implementation check, not the companion of the per-type range table. The original ladder probes $\alpha\in\{0,.02,.05,.08,.12,.18,.25,.35,.5,.75,1\}$;
 the later $\alpha\in\{0.002,0.005,0.01\}$ points are subdivided diagnostics used only to locate the observed
 magnitudes on that curve. They are not direct tests at each row's inferred equivalent and do not
 constitute a power analysis, MDE, confidence interval, or exclusion bound.
@@ -745,61 +860,68 @@ constitute a power analysis, MDE, confidence interval, or exclusion bound.
 \includegraphics[width=\linewidth]{Figure9.pdf}
 \caption{Axis-aligned pipeline-sensitivity diagnostic. $\alpha$ is the injected fraction of the
 proxy residual mixed with independent Gaussian noise. (A--B)~Brain and PBMC ladders: lines are
-mean recovered partial $\rho$ across 30 independent noise replicates, ribbons the replicate range,
+mean returned partial $\rho_{\mathrm{spec}}$ of the injected mixture across 30 independent noise replicates, ribbons the replicate range,
 diamonds the subdivided low-$\alpha$ points. (C)~Observed full-spec effects located on those
-curves. (D)~$\alpha$-equivalents of the six dual-null supported \emph{positive} rows versus the
-smallest probed nonzero $\alpha=0.002$; the negative brain Geneformer-attention row has no
-positive $\alpha$-equivalent. This is not a confidence interval, power curve, minimum detectable
+curves. (D)~Eight bars: the six dual-null supported \emph{positive} FM rows plus the two tissue
+co-expression baselines, each as an $\alpha$-equivalent versus the smallest probed nonzero
+$\alpha=0.002$. A bar left of $0.002$ means the observed effect is smaller than that first
+nonzero rung. The negative brain Geneformer-attention row has no positive $\alpha$-equivalent
+and is omitted. This is not a confidence interval, power curve, minimum detectable
 effect, or exclusion analysis.}
 \label{fig:sensitivity}
 \end{figure}
+\FloatBarrier
 
 \subsection{A supervised TF-disjoint probe gives mixed family-level results}
 A linear probe trained to predict each TF's proxy targets from graph features on 311 held-in TFs
 and tested on 135 disjoint TFs (Fig.~\ref{fig:probe}) gives mixed family-level results after confound
-adjustment. The probe estimand is supervised TF-disjoint recoverability on \textbf{paired PBMC
-multiome only}; the eight brain rows are not probed. Paired sign-flip testing against co-expression
-supports the UCE contrast ($q=0.0325$) and the random-init floor contrast ($q=0.0300$) when the
-Benjamini--Hochberg family includes the floor, while Geneformer embedding ($q=0.5125$), Geneformer
-attention ($q=0.65$), and scGPT ($q=0.255$) are not supported. As a sensitivity check that treats
-the floor as a control rather than a peer FM, BH recomputed on the $n=4$ FM contrasts
-\emph{excluding} \texttt{random\_floor} moves UCE to $q=0.052$ (no longer $<0.05$) with the other
-three FM contrasts remaining non-significant
-(release-capsule no-floor probe-contrast sensitivity). The sign-flip statistic compares how
+adjustment. The probe estimand is supervised TF-disjoint predictability of the proxy profile on
+\textbf{paired PBMC multiome only}; the eight brain rows are not probed. Paired sign-flip testing
+against co-expression supports the UCE contrast ($q=0.0325$) and the random-init floor contrast
+($q=0.0300$) when the Benjamini--Hochberg family includes the floor, while Geneformer embedding
+($q=0.5125$), Geneformer attention ($q=0.65$), and scGPT ($q=0.255$) are not supported. As a
+sensitivity check that treats the floor as a control rather than a peer FM, BH recomputed on the
+$n=4$ FM contrasts excluding the random-init floor moves UCE to $q=0.052$ (no longer $<0.05$) with
+the other three FM contrasts remaining non-significant. The sign-flip statistic compares how
 much each family is over-corrected, not how much it recovers: adjusted test correlations are
 essentially zero for UCE ($+0.0003$) and the floor ($+0.0023$) but negative for co-expression
-($-0.0120$), so ``supported'' contrasts mean the baseline is over-corrected further below zero, not
+($-0.0120$), so probe ``supported'' contrasts mean the baseline is over-corrected further below zero, not
 that UCE carries more residual regulatory signal. The probe's confound set differs from the
 audit's---it contains neither co-expression nor the proxy-derived degree covariates---so it answers a
-different question (supervised recoverability, not raw-readout alignment) and neither confirms nor
+different question (supervised proxy-profile fit, not raw-readout alignment) and neither confirms nor
 refutes the pooled rows. In particular, the floor result and the no-floor sensitivity prevent reading
-the probe as confirmatory evidence that FMs beat co-expression.
+the probe as confirmatory evidence that FMs exceed co-expression on this contrast.
 Table~\ref{tab:probe} reports the corresponding numeric family-level contrasts (PBMC only; brain
 omitted), including the no-floor BH column.
-
-\begin{table}[!tbp]\centering
-\fitfig{\input{table8_tf_probe_numeric.tex}}
-\caption{TF-disjoint probe numeric contrasts on paired PBMC multiome only (eight brain rows
-omitted). A linear probe is trained on 311 TFs and tested on 135 disjoint TFs; $\rho$ is the
-confound-adjusted mean test Spearman. $\Delta\rho$ vs base is versus co-expression. Paired
-sign-flip $q_{\mathrm{flip}}$ includes the random-init floor in the BH family ($n=5$ FM contrasts
-+ floor); the no-floor column recomputes BH on the $n=4$ FM contrasts excluding the floor (UCE
-moves to $q=0.052$). ``Supported'' contrasts mean the baseline is over-corrected further below
-zero, not that the FM recovers residual regulation.}\label{tab:probe}
-\end{table}
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure10.pdf}
 \caption{TF-disjoint supervised probe on paired PBMC multiome only (brain rows not probed;
-train $n=311$ TFs, test $n=135$). (A)~Confound-adjusted test Spearman per family; labels are
-gene-label $q_M$ and, for each FM family, paired sign-flip $q_{\mathrm{flip}}$ against
-co-expression. Aqua rows are supported against the baseline at $q_{\mathrm{flip}}<0.05$ (UCE
+train $n=311$ TFs, test $n=135$). (A)~Confound-adjusted test Spearman per family; gene-label
+$q_M$ is display-only (not a BH family). For each FM family the paired sign-flip
+$q_{\mathrm{flip}}$ against co-expression is the contrast family. Aqua rows are probe-supported
+against the baseline at $q_{\mathrm{flip}}<0.05$ (UCE
 $0.0325$; random-init floor $0.0300$) when the floor is in the BH family. (B)~Adjusted Spearman
-across confound subsets (none, construction, full, detection-only); recovery collapses at
+across confound subsets (none $=$ empty; construction $=$ peak count + length + GC; full $=$ those
+plus detection; detection-only $=$ detection rate); the adjusted Spearman falls to near zero at
 construction covariates. (C)~Edge-only primary arm versus the all-feature sensitivity arm.
 (D)~Across-TF mean (circle), median (triangle), and $\pm 1$~SD (whiskers) of adjusted Spearman.
-Supported probe contrasts are not residual-regulation claims.}\label{fig:probe}
+The no-floor BH sensitivity ($n=4$) is Table~\ref{tab:probe}, not redrawn here.
+Probe contrasts are not residual-regulation claims.}\label{fig:probe}
 \end{figure}
+\FloatBarrier
+
+\begin{table}[H]\centering
+\fitfig{\input{table8_tf_probe_numeric.tex}}
+\caption{TF-disjoint probe numeric contrasts on paired PBMC multiome only (eight brain rows
+omitted). A linear probe is trained on 311 TFs and tested on 135 disjoint TFs; $\bar{\rho}_{\mathrm{probe}}$ is the
+confound-adjusted mean test Spearman. $\Delta\rho$ vs base is versus co-expression. Paired
+sign-flip $q_{\mathrm{flip}}$ is BH on $n=5$ contrasts (four FM families plus the random-init
+floor); the no-floor column recomputes BH on the $n=4$ FM contrasts excluding the floor (UCE
+moves to $q=0.052$). Probe ``supported'' contrasts mean the baseline is over-corrected further below
+zero, not that the FM recovers residual regulation.}\label{tab:probe}
+\end{table}
+\FloatBarrier
 
 \subsection{The construct transfers across three independent ATAC datasets}\label{sec:third_tissue}
 The proxy was built independently in three datasets (brain GSE174367, PBMC 10x multiome, and the
@@ -812,24 +934,27 @@ edge set (534,754 edges), 38,082 edges carry nonzero weight in all three consens
 of the 158,838-edge union), and the TF out-degree marginals are similar across tissues (median
 129--171 supported targets per TF)---which is exactly the structure the additive decomposition of
 Fig.~\ref{fig:decomp} attributes most cross-tissue agreement to. Cross-tissue rank agreement also
-tracks binary-support agreement (observed $\rho$ 0.462--0.525 versus support $\varphi$
+tracks nonzero-edge agreement (observed $\rho_{\mathrm{Mantel}}$ 0.462--0.525 versus presence $\varphi$
 0.446--0.507), so the construct transfers chiefly at the level of which edges exist, not of their
 continuous weights. The fibroblast arm carries no foundation-model readouts and enters none of the
 audit's supported rows; it is a construct-level check, not evidence about model capability.
 
-Independent ATAC overlays on DESCARTES spleen, bone-marrow mononuclear cells (BMMC; GSE194122), and a regulatory T-cell (Treg) ATAC pilot (GSE211155) transfer onto the three locked reference graphs at Mantel $\rho$ $0.391$--$0.890$, with BMMC--PBMC the strongest pair ($\rho=0.890$) and spleen--PBMC the weakest; spleen agreement is largely additive ($0.824$--$0.846$) while BMMC--PBMC is not (additive fraction $0.460$; Fig.~\ref{fig:app-mantel}). Projecting CollecTRI signed transcription-factor--gene interactions~\citep{mullerdott2023collectri} onto the same frozen panel keeps $4{,}592/43{,}536$ raw edges ($0.105$) and $327/446$ TFs, about $19\times$ sparser than motif-binary support ($85{,}809$ edges), so the prior cannot replace the accessibility/motif graph (Fig.~\ref{fig:app-collectri}). Residual BMMC--PBMC rank match remains high after additive removal ($\rho=0.950$), yet BMMC misses a predeclared $0.90$ panel-replicate gate ($1{,}076/1{,}200$ genes, $341/446$ TFs) and the Treg overlay is a filename-meta pilot (Fig.~\ref{fig:app-coverage}); these overlays do not add foundation-model audit rows.
+Independent ATAC overlays on DESCARTES spleen~\citep{domcke2020descartes}, bone-marrow mononuclear cells (BMMC; GSE194122)~\citep{luecken2021sandbox}, and regulatory T-cell (Treg) ATAC (GSE211155)~\citep{itahashi2022batf} transfer onto the three locked reference graphs at Mantel $\rho_{\mathrm{Mantel}}$ $0.391$--$0.890$, with BMMC--PBMC the strongest pair ($\rho_{\mathrm{Mantel}}=0.890$) and spleen--PBMC the weakest; spleen agreement is largely additive ($0.824$--$0.846$) while BMMC--PBMC is not (additive fraction $0.460$). Projecting CollecTRI signed transcription-factor--gene interactions~\citep{mullerdott2023collectri} onto the same frozen panel keeps $4{,}592/43{,}536$ raw edges ($0.105$) and $327/446$ TFs, about $19\times$ sparser than motif-binary nonzero edges ($85{,}809$ edges), so the prior cannot replace the accessibility/motif graph. Residual BMMC--PBMC rank match remains high after additive removal ($\rho_{\mathrm{resid}}=0.950$), yet BMMC covers $1{,}076/1{,}200$ genes and $341/446$ TFs on this panel and the Treg overlay uses filename-sorted metadata; these overlays are outside the 13-row instance and do not add foundation-model audit rows.
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure11.pdf}
 \caption{Third-tissue transfer of the proxy construct on brain (GSE174367), PBMC 10x multiome, and
 the fibroblast mix (GSE206767; construct-only, no FM rows). (A)~Fraction of each dataset's peaks
 admitted by the promoter-plus-gene-body $\pm$2\,kb window (linked over total peaks). (B)~Overlap
-of supported (nonzero) non-self TF--gene edges; aqua bar = $38{,}082$-edge core present in all
-three. (C)~Empirical CDF of TF out-degree (supported targets per TF; $n_{\mathrm{TF}}=446$) per
-tissue. (D)~Observed cross-tissue Spearman $\rho$ versus binary-support $\varphi$ (phi of
-nonzero-edge presence/absence) for the three pairs. Descriptive rank/support agreement only; not
+of nonzero non-self TF--gene edges; aqua bar = $38{,}082$-edge core present in all
+three. (C)~Empirical CDF of TF out-degree (nonzero targets per TF; $n_{\mathrm{TF}}=446$) per
+tissue. (D)~Observed cross-tissue Spearman $\rho_{\mathrm{Mantel}}$ versus nonzero-edge $\varphi$ (phi of
+nonzero-edge presence/absence) for the three pairs. Descriptive rank/presence agreement only; not
 a causal TF--target test and not an FM audit.}\label{fig:third_tissue}
 \end{figure}
+
+Figure~\ref{fig:protocol} applies the five-gate protocol-pass conjunction to the same thirteen rows
+and bounds what this instance does and does not score.
 
 \begin{figure}[!tbp]\centering
 \includegraphics[width=\linewidth]{Figure12.pdf}
@@ -845,23 +970,28 @@ Multi-RO sign, and $\rho>$ baseline; Dual non-deg is shown but not required. No 
 Dual non-deg, reported only). (C)~What this instance scores: JASPAR motif matches in
 $\pm$2\,kb-linked ATAC peaks on the frozen $446\times 1{,}200$ TF$\times$gene panel. (D)~What it
 does not score: distal/3D structure and ChIP-derived causal TF--target maps; the proxy is cell-type
-near-invariant on this panel. Failure on this instance cannot be read as a field-level
-negative.}\label{fig:protocol}
+near-invariant on this panel. An external ENCODE occupancy overlay on this panel (brain Spearman
+$\rho=0.081$, PBMC $\rho=0.109$; mean per-TF AP $\approx0.51$--$0.53$ among TFs with $\ge5$
+positives) is a failed occupancy check: it bounds the proxy as binding-proximal structure and does
+not convert Dual-null Support into causal TF--target recovery. Failure on this instance cannot be
+read as a field-level negative.}\label{fig:protocol}
 \end{figure}
 
 Coverage, cell counts, and edge accounting for the same frozen panel are collected in
 Fig.~\ref{fig:coverage}.
 
-\begin{figure}[!tbp]\centering
+\begin{figure}[!tp]\centering
 \includegraphics[width=\linewidth]{Figure13.pdf}
 \caption{Coverage and fixed-panel quality control on the frozen $446\times 1{,}200$ TF$\times$gene
 panel. (A)~Fraction of each encoder's manifest genes present in the audit gene list (count out of
-$1{,}200$). (B)~Validated graph availability by tissue and analysis level (aqua = present, grey =
+$1{,}200$). (B)~Pipeline-complete graph availability by tissue and analysis level (aqua = present, grey =
 absent); coverage is disclosed rather than assumed balanced. (C)~Cell counts used by
 representative pooled inference runs. (D)~Edge accounting from the Cartesian panel through
 self-pair exclusion (PBMC edge set) and the brain marker mask (brain edge set). This figure is a
 coverage disclosure, not a proof of balanced design.}\label{fig:coverage}
 \end{figure}
+\FloatBarrier
+\clearpage
 
 \section{Discussion}
 The audit finds six small positive fixed-panel alignments and one negative one, all supported by
@@ -870,18 +1000,18 @@ restrain its interpretation. First, the co-expression baseline meets both uncorr
 thresholds on the same edge set, and a shared-null Mantel test of
 $\Delta\rho=\rho_{\mathrm{FM}}-\rho_{\mathrm{baseline}}>0$ supports multiplicity-controlled
 superiority for only $2/13$ rows (brain and PBMC scGPT; Table~\ref{tab:fmbase}). Four dual-null
-positives beat their tissue baseline on the observed contrast; the rest---including PBMC
+positives have observed $\Delta\rho>0$ versus their tissue baseline; the rest---including PBMC
 Geneformer embedding---do not. Dual-null Support therefore does not imply separation from the
-co-expression confound under the frozen $\Delta\rho$ gate. Second, the two supported readouts of
+co-expression confound under the frozen $\Delta\rho$ gate. Second, the two Dual-null readouts of
 the same model in the same tissue (Geneformer embedding $+0.0044$, Geneformer attention
 $-0.0036$, both brain) have opposite signs, which is not the signature of a model-level
 regulatory capability. Third, three of the six positives are negative before conditioning on the
 proxy's own degree covariates, so they appear only in the specification that conditions on
 functions of the outcome. A supervised TF-disjoint probe, answering the distinct question of
-supervised recoverability on paired PBMC data (brain rows are not probed), finds mixed contrasts:
-when the BH family includes the random-init floor, UCE and the floor are supported ($q=0.0325$,
+supervised proxy-profile fit on paired PBMC data (brain rows are not probed), finds mixed contrasts:
+when the BH family includes the random-init floor, UCE and the floor are probe-supported ($q=0.0325$,
 $q=0.0300$); excluding the floor as a peer FM moves UCE to $q=0.052$. Adjusted test correlations
-are near zero for UCE/floor and more negative for co-expression, so ``support'' marks relative
+are near zero for UCE/floor and more negative for co-expression, so probe ``support'' marks relative
 over-correction of the baseline, not recovered regulatory signal.
 
 The most defensible reading is not that four models encode weak regulation. It is that small,
@@ -889,14 +1019,14 @@ readout-specific, specification-dependent alignments exist on this panel; that p
 $0/13$; and that under the frozen estimand (Sec.~\ref{sec:estimand}) dual-null Support does not
 establish residual regulatory content after named confounds---especially once shared-null
 $\Delta\rho$ superiority is limited to $2/13$ rows. A further observation points the same way: our own protocol
-freezes a concordance (attention-likeness) check in-repo in which a co-expression-like readout
+freezes a concordance (attention-likeness) check in which a co-expression-like readout
 should correlate with co-expression (attention $\approx$ co-expression is well established). Five of
-the six supported positives fail that check (FM--co-expression Spearman $-0.18$ to $-0.02$), while
+the six Dual-null positives fail that check (FM--co-expression Spearman $-0.18$ to $-0.02$), while
 concordance passers include PBMC scGPT ($+0.01$; still fails protocol-pass), scFoundation ($+0.08$),
 and PBMC Geneformer attention ($+0.40$)---the latter two are dual-null negative---so concordance does
 not adjudicate residual regulatory content, and dual-null Support without protocol-pass is not
 recovery. Embedding-cosine anisotropy versus degree remains an
-\emph{untested} mechanistic hypothesis in this release (no frozen anisotropy diagnostic); we do not
+untested mechanistic hypothesis on this instance; we do not
 use it to explain dual-null positives. The pattern is compatible with reports that scFM-derived gene
 relationships often resemble
 co-expression~\citep{kendiukhov2026scfm,kendiukhov2026sae}, and with zero-shot and biology-driven
@@ -904,11 +1034,10 @@ benchmarks that find scFMs unreliable or only weakly structured relative to simp
 baselines~\citep{kedzierska2023assessing,wu2025biologydriven,qiu2025biollm}. Failure to support a
 global regulatory-capability claim on this panel equally cannot support a field-level negative
 conclusion: the probe is linear and operates on pairwise graph summaries, the proxy is a narrow
-accessibility/motif construct (Fig.~\ref{fig:protocol}B), and other panels, tissues, or GRN-informed
+accessibility/motif construct (Fig.~\ref{fig:protocol}C), and other panels, tissues, or GRN-informed
 models could differ.
 Models pretrained with explicit GRN inductive biases~\citep{yang2024genecompass,kalfon2025scprint,hu2026regformer}
-are outside the present multi-readout audit and remain a natural target for the same fixed-panel
-protocol.
+are outside the present multi-readout audit.
 
 Three statistical caveats apply throughout. First, one proxy randomization per replicate is shared
 across the rows of a family, so the Monte Carlo $p$-values within a family are positively
@@ -933,9 +1062,9 @@ The reference is a regulatory-potential proxy built from motif and accessibility
 coverage is narrow by construction. Panel membership further requires $\ge1$ brain ATAC peak in the
 linkage window (Sec.~\ref{sec:proxy}); a no-peak-filter manifest under the same $n=1200$ cap
 overlaps the frozen panel in 1167/1200 genes (Jaccard $0.946$) and enlarges the pre-cap universe
-from 12{,}382 to 12{,}690 genes
-(release-capsule no-ATAC-filter panel-sensitivity analysis). A full dual-null re-audit
-on that alternate universe was not re-run (would require new proxy and FM graphs). The $\pm2$\,kb
+from 12{,}382 to 12{,}690 genes.
+A full dual-null re-audit
+on that alternate universe was not re-run. The $\pm2$\,kb
 promoter-plus-gene-body rule retains 6{,}609 of
 111{,}743 accessible peaks in the PBMC data (5.91\%); distal enhancer elements, which carry most
 cell-type-specific TF occupancy~\citep{thurman2012accessible}, are systematically excluded, and no co-accessibility or
@@ -953,7 +1082,7 @@ proxy is near cell-type-invariant on this panel (pairwise $\rho\approx0.99$), so
 score readouts against a reference with essentially no cell-type contrast. Brain analyses combine
 unpaired snATAC-seq with cross-study RNA, whereas the PBMC data are paired multiome, so the
 co-expression control is intrinsically stronger in PBMC than in brain. The full specification
-conditions on proxy-derived degree covariates; the non-degree co-primary specification avoids
+conditions on proxy-derived degree covariates; the prespecified non-degree sensitivity avoids
 that hazard and supports no row under both nulls. The panel is fixed rather than sampled, so
 $p_{\mathrm{MC}}$ describes unusualness under the stated randomizations, not uncertainty over a TF
 or tissue population; no effect size carries an interval estimate, and with
@@ -966,20 +1095,15 @@ test the eight brain rows, whose RNA and ATAC measurements come from unpaired so
 Per-cell-type and cross-tissue analyses are descriptive. The injection diagnostic is axis-aligned
 and cannot establish power against arbitrary biological alternatives. Fine-tuning, few-shot
 adaptation, decoder outputs, non-linear probes on raw per-gene embeddings, other gene panels, and
-direct perturbational validation are not tested. To make the path to broader validation explicit,
-we have inventoried and registered two additional single-cell RNA collections for follow-up
-replication: a development collection (27 datasets, ${\approx}2.35\times10^{6}$ cells, mixed human
-and mouse) and a cancer collection (28 datasets, ${\approx}1.20\times10^{6}$ cells, predominantly
-human), with per-file accession, cell count, and modality recorded in the project registry. These
-collections are RNA-only, so they cannot drive the accessibility/motif proxy used here; they are
-reserved for a planned co-expression-side replication that reuses the same fixed panel and
-confound specification once an orthogonal binding reference (for example ENCODE TF ChIP-seq) is
-in place.
+direct perturbational validation are not tested. This instance is two FM tissues plus a
+construct-only ATAC mix on one frozen panel; other RNA collections are outside the instance.
+ENCODE occupancy is used only as a claim bound (failed occupancy check), not as a scheduled next
+reference.
 
-The same accessibility/motif construct on independent spleen, BMMC, and Treg ATAC still agrees with the locked references in the Mantel $\rho$ $0.39$--$0.89$ range, so cross-ATAC transfer is not confined to the three main-text tissues (Fig.~\ref{fig:app-mantel}). A literature prior (CollecTRI) is too sparse on this panel to serve as a substitute reference (Fig.~\ref{fig:app-collectri}), and disclosed coverage and metadata gates keep BMMC below a $0.90$ replicate threshold and Treg as a filename-meta pilot (Fig.~\ref{fig:app-coverage}). Those panels bound how the proxy moves with new ATAC; they are not scored against FM graphs in this article.
+The same accessibility/motif construct on independent spleen, BMMC, and Treg ATAC still agrees with the locked references in the Mantel $\rho_{\mathrm{Mantel}}$ $0.39$--$0.89$ range, so cross-ATAC transfer is not confined to the three main-text tissues (Fig.~\ref{fig:app-mantel}). A literature prior (CollecTRI) is too sparse on this panel to serve as a substitute reference (Fig.~\ref{fig:app-collectri}), and BMMC covers $1{,}076/1{,}200$ genes and $341/446$ TFs while the Treg overlay uses filename-sorted metadata (Fig.~\ref{fig:app-coverage}). Those panels bound how the proxy moves with new ATAC on this instance; they are not scored against FM graphs.
 
 \section{Conclusion}
-scReg-Eval is first a fixed-panel audit protocol and software capsule: hash-pinned panel and
+scReg-Eval is first a fixed-panel audit protocol and software capsule: frozen panel and
 nulls, dual-null Support reporting, concordance checks, and baseline comparison on a shared edge
 set. Applied to thirteen pooled model/readout rows against an accessibility/motif
 regulatory-potential proxy, it finds six small positive and one negative dual-null alignment under
@@ -1002,7 +1126,7 @@ Code, fixed-panel manifests, seed metadata, model/readout coverage tables, autho
 outputs, and figure sources are available at
 \url{https://github.com/PeterPonyu/scfm-reg-audit} and archived at
 \url{https://doi.org/10.5281/zenodo.21724336}. The repository and archive support three levels of
-reproducibility: (i)~validation that every published number and hash can be checked without external
+reproducibility: (i)~validation that every published number can be checked without external
 downloads; (ii)~statistical reruns of the fixed-panel audit against the released outputs; and
 (iii)~a full-pipeline recipe with dataset accessions, checkpoint hashes, a locked environment, and
 ordered commands. Public inputs include GSE174367 brain data~\citep{morabito2021gse174367}, the 10x
@@ -1028,12 +1152,14 @@ Formal analysis, Investigation, Data curation, Visualization, Writing---original
 and editing, and Project administration.
 
 \section*{Declaration of generative AI use}
-A large language model was used as an auxiliary aid for limited engineering
-edits to analysis code. No AI system generated scientific data, randomization
-outputs, or any reported number. The author takes full responsibility for the
-manuscript and accompanying software. No AI tool is listed as an author.
-Original code, the prompts used, and the resulting code are provided as
-Supplemental Data S1--S3.
+A large language model accessed through an agentic coding assistant (2026-07
+revision cycle) was used as an auxiliary aid for limited engineering edits to
+three analysis scripts: PBMC UCE co-expression normalization, TF-disjoint probe
+seed contracts, and layout-independent project-root resolution. No AI system
+generated scientific data, randomization outputs, or any reported number. The
+author takes full responsibility for the manuscript and accompanying software.
+No AI tool is listed as an author. Original code, the prompts used, and the
+resulting code are not bound inside this PDF.
 
 \FloatBarrier
 \appendix
@@ -1055,8 +1181,9 @@ gene panel. Additive fraction and residual $\rho$ are Eq.~\eqref{eq:decomp}.
 Each overlay graph is a TF $\times$ gene matrix built by scanning JASPAR motifs in accessible peaks
 and linking hits to genes by a promoter-plus-gene-body rule. Reference graphs use the same construct
 on adult brain (GSE174367), 10k PBMC multiome, and fibroblast/induced-neuron mix (GSE206767). Overlay
-tissues are DESCARTES spleen, bone-marrow mononuclear cells (BMMC; GSE194122), and a regulatory
-T-cell (Treg) ATAC pilot (GSE211155). All nine pairs are scored on $n_{\mathrm{TF}}=446$ shared TFs.
+tissues are DESCARTES spleen~\citep{domcke2020descartes}, bone-marrow mononuclear cells
+(BMMC; GSE194122)~\citep{luecken2021sandbox}, and regulatory
+T-cell (Treg) ATAC (GSE211155)~\citep{itahashi2022batf}. All nine pairs are scored on $n_{\mathrm{TF}}=446$ shared TFs.
 \textbf{(A)}~Observed Spearman $\rho$. Spleen versus brain/PBMC/fibroblast mix: $0.434$, $0.391$,
 $0.493$. BMMC versus the same references: $0.529$, $0.890$, $0.473$. Treg versus the same: $0.464$,
 $0.506$, $0.490$. The BMMC--PBMC cell is the strongest transfer; spleen--PBMC is the weakest.
@@ -1074,10 +1201,10 @@ do not add foundation-model audit rows.}
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{FigureA2.pdf}
-\caption{CollecTRI literature prior versus motif-binary support on the fixed panel, with summary
-transfer statistics.
+\caption{CollecTRI coverage (A--B) and overlay transfer summaries (C--D), not a single CollecTRI
+estimand across all four panels.
 CollecTRI signed TF--gene interactions were projected onto the
-$446\times 1{,}200$ panel (absolute weight; maximum over duplicate edges). Motif-binary support is
+$446\times 1{,}200$ panel (absolute weight; maximum over duplicate edges). Motif-binary nonzero count is
 the count of nonzero edges in a magnitude-ablated copy of the brain reference graph.
 \textbf{(A)}~Hit rates: $327/446$ TFs ($0.733$), $683/1{,}200$ genes ($0.569$), and
 $4{,}592/43{,}536$ raw CollecTRI edges kept ($0.105$). The prior is TF-rich relative to genes and
@@ -1097,29 +1224,22 @@ CollecTRI is not treated as a causal regulon gold standard.}
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{FigureA3.pdf}
-\caption{Residual rank match, Treg metadata limits, BMMC coverage against a $0.90$ gate, and a
-blocked tumor ATAC input.
-\textbf{(A)}~Residual Spearman $\rho$ after removing additive TF-row and gene-column fits. Spleen
+\caption{Residual rank match, Treg metadata limits, and BMMC panel overlap on this instance.
+\textbf{(A)}~Residual Spearman $\rho_{\mathrm{resid}}$ after removing additive TF-row and gene-column fits. Spleen
 residuals: $0.340$, $0.236$, $0.383$ versus brain, PBMC, and fibroblast mix. BMMC residuals:
-$0.515$, $0.950$, $0.414$. Treg residuals: $0.494$, $0.525$, $0.482$. Residual $\rho$ can exceed
-observed $\rho$ when additive structure is net-subtractive (BMMC--PBMC: observed $0.890$, residual
+$0.515$, $0.950$, $0.414$. Treg residuals: $0.494$, $0.525$, $0.482$. Residual $\rho_{\mathrm{resid}}$ can exceed
+observed $\rho_{\mathrm{Mantel}}$ when additive structure is net-subtractive (BMMC--PBMC: observed $0.890$, residual
 $0.950$).
-\textbf{(B)}~Treg-pilot Mantel $\rho$ versus the three reference graphs ($0.464$, $0.506$, $0.490$).
-The Treg population label is taken from filename-sorted metadata, not from recovered cell-type
-columns in the object \texttt{obs} field. A local set of 115 peak-matrix files had no cell-type-like
-\texttt{obs} columns, so this overlay is a filename-meta pilot.
+\textbf{(B)}~Treg Mantel $\rho_{\mathrm{Mantel}}$ versus the three reference graphs ($0.464$, $0.506$, $0.490$).
+The Treg population label is taken from filename-sorted metadata rather than from cell-type
+columns in the peak-matrix object.
 \textbf{(C)}~BMMC overlap with the frozen $446\times 1{,}200$ panel: $1{,}076/1{,}200$ genes
-($0.897$) and $341/446$ TFs ($0.765$). Both miss a predeclared $0.90$ replication gate, so BMMC is
-not treated as a complete panel replicate.
+($0.897$) and $341/446$ TFs ($0.765$), so BMMC is not a complete panel match on this instance.
 \textbf{(D)}~Treg additive fractions ($0.742$, $0.805$, $0.766$), showing a more additive profile
 than BMMC--PBMC.
-Human Tumor Atlas Network glioblastoma sample C3N-01334 was a candidate overlay and is blocked: only
-fragment files were available (no peak matrix). It is not a Mantel row and is not drawn as a bar.
-These panels disclose inclusion limits. They do not add foundation-model audit rows.}
+These panels disclose coverage of the overlays that were scored. They do not add foundation-model audit rows.}
 \label{fig:app-coverage}
 \end{figure}
-
-% Absorb a possible one-line orphan at the end of the alphabetized list.
-\enlargethispage{3\baselineskip}%
+\FloatBarrier
 \bibliography{references}
 \end{document}

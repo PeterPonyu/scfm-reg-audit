@@ -1,7 +1,7 @@
-{\small
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.15cm}>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
+{\small\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.00cm}>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
 \toprule
-Resource & Expression in reference? & Degree / confound control? & Explicit null semantics? & Multi-readout? & Hash-pinned capsule? \\
+Resource & Expression in reference? & Degree / confound control? & Explicit null semantics? & Multi-readout? & Protocol-frozen capsule? \\
 \midrule
 scReg-Eval (this work) & No (edge weights motif+ATAC) & Yes (coexp + 6 structural) & Yes (two MC nulls + BH families) & Yes & Yes \\
 Kendiukhov et al.\ scFM interpretability & Yes (co-expression / pathways) & Partial & Varies & Attention-focused & No \\

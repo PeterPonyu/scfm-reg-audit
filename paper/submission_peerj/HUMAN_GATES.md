@@ -24,15 +24,20 @@ marked DONE were completed on 2026-07-31; the rest remain open.
   artifact validation / statistical reruns / full pipeline.
 - DONE — wlpeerj template port: manuscript compiles under the official `wlpeerj` class with line
   numbers, authblk title block, structured abstract (Background/Methods/Results/Conclusions),
-  PeerJ keywords, Times body fonts, and numeric citations.
+  PeerJ keywords, Times body fonts, and Name-Year (authoryear) citations.
 - DONE — Archive DOI citation corrected to the concept DOI
   https://doi.org/10.5281/zenodo.21724336 (resolves to the latest record).
+  Capsule label in the public tree is v0.4.0. Cite the concept DOI
+  https://doi.org/10.5281/zenodo.21724336 (resolves to the latest record).
+  This version record is https://doi.org/10.5281/zenodo.21982650.
 - DONE — AI-use disclosure: auxiliary-only manuscript declaration; Supplemental Data
   S1–S3 in `supplemental/` (original code, prompts, resulting code). Working copies
   remain under `ai_code_disclosure/` (before / prompts / after). Paste blocks:
   `PEERJ_SUBMIT_PASTE.md`.
 - DECIDED — No cover letter (PeerJ does not require one).
-- OPEN — Verify suggested editor/reviewer choices and conflict-of-interest entries immediately
-  before submission.
-- OPEN — Review the final compiled PDF and every separately uploaded figure in the journal preview.
+- DONE — Suggested editors/reviewers: none named. Sole author; competing-interests statement
+  already declares none. Do not invent editor names on the PeerJ form.
+- DONE — Local author preview of the compiled review PDF and separately wrapped Figure1–13
+  and FigureA1–A3 in `flat_upload/` (2026-08-17 refresh). Portal-side click-through remains
+  the last human action on the journal site.
 

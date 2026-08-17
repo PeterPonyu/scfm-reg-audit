@@ -39,7 +39,7 @@ Dual-null **Support** answers that panel-local question only. It is **not**:
   - Peak count = **all** linked peaks in the gene window.
   - GC = mean over **at most 40** peaks/gene (sampling only).
   - Degree columns are **proxy-derived** (outcome functions) → validity hazard.
-- **Non-degree design (co-primary):** full minus the two degree columns.
+- **Non-degree design (prespecified sensitivity):** full minus the two degree columns.
 - Matching column sets for observed and randomized statistics.
 
 ---
@@ -62,8 +62,8 @@ Dual-null **Support** answers that panel-local question only. It is **not**:
 
 Under non-degree, the row-shuffle null still preserves TF out-degree while the
 statistic does **not** condition on degree. **D-only** rejections under non-degree
-are therefore not dual-Support and must not be sold as “Support under the co-primary
-spec.” Dual-Support requires **both** nulls to reject under the same named design.
+are therefore not dual-Support and must not be sold as “Support under the non-degree
+sensitivity.” Dual-Support requires **both** nulls to reject under the same named design.
 
 ---
 
@@ -108,6 +108,8 @@ family (size = number of FM rows in that tissue×full family), report the Monte 
 rate of ≥1 dual-null Support row. Shared-batch dependence is **not** simulated here;
 independence is a reference OC, not a claim of exact FDR control under the audit’s
 shared null stream. See `results/dual_null_oc_independence_v2.public.json`.
+The manuscript does **not** print this independence OC as the Type I of Support;
+Dual-null Support is a reporting gate, not an independence Type I rate.
 
 ---
 
@@ -120,6 +122,8 @@ shared null stream. See `results/dual_null_oc_independence_v2.public.json`.
 - Sensitivity: BH recomputed **excluding** `random_floor` from the contrast family
   (`results/tf_probe_contrasts_no_floor_v2.public.json`).
 - Probe results are **not** confirmatory evidence that all FMs beat co-expression.
+- Figure 10 gene-label \(q_M\) (when drawn) is **display-only**, not a BH family.
+  The probe contrast family remains paired sign-flip \(q_{\mathrm{flip}}\).
 
 ---
 
@@ -127,7 +131,7 @@ shared null stream. See `results/dual_null_oc_independence_v2.public.json`.
 
 Per-TF embedding-norm / cosine anisotropy vs degree is **not** a frozen primary
 analysis in this SAP. Manuscript language must not treat it as a tested mechanism
-unless a hash-pinned diagnostic JSON is added later.
+unless a protocol-frozen diagnostic JSON is added later.
 
 ---
 

@@ -15,8 +15,8 @@ import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = "v0.3.0"
-RELEASE_DATE = "2026-08-03"
+VERSION = "v0.4.0"
+RELEASE_DATE = "2026-08-17"
 CAPSULE_NAME = f"scfm-reg-audit-audit-capsule-{VERSION}"
 RELEASE_DIR = ROOT / "release_candidate"
 CAPSULE = RELEASE_DIR / CAPSULE_NAME
@@ -72,13 +72,20 @@ COPY_FILES = [
     ("results/v2/NOTICE.md", "results/NOTICE.md"),
     ("ENVIRONMENT.example", "ENVIRONMENT.example"),
     ("paper/manuscript.tex", "paper/manuscript.tex"),
-    ("paper/submission_peerj/flat_upload/manuscript.pdf",
-     "paper/submission_peerj/flat_upload/manuscript.pdf"),
     ("paper/references.bib", "paper/references.bib"),
     ("paper/make_figs.R", "paper/make_figs.R"),
     ("paper/make_panel_data.py", "paper/make_panel_data.py"),
     ("paper/panel_data.json", "paper/panel_data.json"),
     ("paper/figs_preview.tex", "paper/figs_preview.tex"),
+    ("REPO_TOPOLOGY.md", "REPO_TOPOLOGY.md"),
+    ("docs/SCREG_EVAL_SAP.md", "docs/SCREG_EVAL_SAP.md"),
+    ("paper/CANONICAL_BUILD.md", "paper/CANONICAL_BUILD.md"),
+    ("src/emit_wave5_tables.py", "src/emit_wave5_tables.py"),
+    ("src/w2_public_analyses.py", "src/w2_public_analyses.py"),
+    ("src/v2/tests/test_coexp_baseline_null.py", "src/tests/test_coexp_baseline_null.py"),
+    ("src/v2/tests/test_pair_probe.py", "src/tests/test_pair_probe.py"),
+    ("src/v2/tests/test_pbmc_cache.py", "src/tests/test_pbmc_cache.py"),
+    ("src/tests/test_validate_artifacts.py", "src/tests/test_validate_artifacts.py"),
     ("src/v2/fixed_panel_audit.py", "src/fixed_panel_audit.py"),
     ("src/v2/run_fixed_panel_audit.py", "src/run_fixed_panel_audit.py"),
     ("src/v2/pbmc_cache.py", "src/pbmc_cache.py"),
@@ -116,6 +123,17 @@ PUBLIC_JSONS = [
     "insilico_ko_v2.json",
     "verify_brain_attention_omission_v2.json",
     "pertype_fm_v2.json",
+]
+
+# Already-public derivatives retained from the v0.3.0 tree (no private raw sibling).
+EXTRA_PUBLIC_JSONS = [
+    "dual_null_oc_independence_v2.public.json",
+    "encode_proxy_calibration_v1.public.json",
+    "fm_vs_baseline_observed_v2.public.json",
+    "fm_vs_baseline_shared_null_v2.public.json",
+    "no_atac_filter_manifest_sensitivity_v1.public.json",
+    "nondegree_null_pattern_v2.public.json",
+    "tf_probe_contrasts_no_floor_v2.public.json",
 ]
 
 PATH_REPLACEMENTS = [
@@ -222,7 +240,7 @@ environment.
 - frozen 446-TF / 1,200-gene manifest;
 - path-scrubbed authoritative JSON derivatives (pooled audit, injection, inference status,
   co-expression baselines, TF-disjoint probe, cell-type invariance, subdivided calibration);
-- manuscript source, active data-driven figure fragments, generator, and verified PDF;
+- manuscript source, active data-driven figure fragments, and the figure generator;
 - licenses (MIT for original code, CC BY 4.0 for manuscript/figures/derived results), citation
   metadata, and this validator with a SHA-256 manifest.
 
@@ -242,7 +260,7 @@ python validate_artifacts.py
 
 ```bash
 pip install numpy scipy anndata pyfaidx  # test dependencies
-python -m unittest discover -s src/tests
+python -m unittest src.tests.test_fixed_panel_audit
 ```
 
 The bundled suite is the statistical-contract suite (`test_fixed_panel_audit.py`). Legacy-hash,
@@ -357,7 +375,7 @@ def run_capsule_validator():
 
 def run_capsule_tests():
     result = subprocess.run(
-        ["python3", "-m", "unittest", "discover", "-s", "src/tests"],
+        ["python3", "-m", "unittest", "src.tests.test_fixed_panel_audit"],
         cwd=CAPSULE, capture_output=True, text=True)
     for cache_dir in CAPSULE.rglob("__pycache__"):
         shutil.rmtree(cache_dir)
@@ -385,6 +403,13 @@ def main():
             raise FileNotFoundError(name)
         dst = CAPSULE / "results" / name.replace(".json", ".public.json")
         dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_text(sanitize_text(src.read_text()))
+
+    for name in EXTRA_PUBLIC_JSONS:
+        src = ROOT / "results" / name
+        if not src.exists():
+            raise FileNotFoundError(name)
+        dst = CAPSULE / "results" / name
         dst.write_text(sanitize_text(src.read_text()))
 
     write_citation()

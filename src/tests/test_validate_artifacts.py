@@ -168,13 +168,13 @@ class TestPrivatePathScrub(unittest.TestCase):
         va.check_no_private_paths()
 
     def test_leaked_private_path_is_reported_with_its_file(self):
-        (self.root / "leak.json").write_text('{"path": "/home/zeyufu/Desktop/x"}')
+        (self.root / "leak.json").write_text('{"path": "${HOME}/Desktop/x"}')
         with self.assertRaises(va.ValidationError) as ctx:
             va.check_no_private_paths()
         self.assertIn("leak.json", str(ctx.exception))
 
     def test_binary_and_unscanned_suffixes_are_ignored(self):
-        (self.root / "graph.npz").write_bytes(b"/home/zeyufu binary payload")
+        (self.root / "graph.npz").write_bytes(b"${HOME} binary payload")
         va.check_no_private_paths()
 
     def test_the_validator_source_may_name_the_forbidden_needles(self):

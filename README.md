@@ -1,4 +1,4 @@
-# scReg-Eval fixed-panel audit capsule v0.3.0
+# scReg-Eval fixed-panel audit capsule v0.4.0
 
 This is a sanitized **audit capsule** for the scReg-Eval manuscript. It validates the published
 numerical artifacts and carries the audited statistical code; it is not a raw-data reproduction
@@ -10,7 +10,7 @@ environment.
 - frozen 446-TF / 1,200-gene manifest;
 - path-scrubbed authoritative JSON derivatives (pooled audit, injection, inference status,
   co-expression baselines, TF-disjoint probe, cell-type invariance, subdivided calibration);
-- manuscript source, active data-driven figure fragments, generator, and verified PDF;
+- manuscript source, active data-driven figure fragments, and the figure generator;
 - licenses (MIT for original code, CC BY 4.0 for manuscript/figures/derived results), citation
   metadata, and this validator with a SHA-256 manifest.
 
@@ -30,17 +30,12 @@ python validate_artifacts.py
 
 ```bash
 pip install numpy scipy anndata pyfaidx  # test dependencies
-pip install scikit-learn                 # optional: pair-probe statistics tests
-python -m unittest discover -s src/tests
+python -m unittest src.tests.test_fixed_panel_audit
 ```
 
-The bundled suite covers the statistical contract (`test_fixed_panel_audit.py`), the PBMC cache
-provenance helpers (`test_pbmc_cache.py`), the TF-disjoint pair-probe statistics
-(`test_pair_probe.py`), the co-expression baseline peak-count confound and seed contract
-(`test_coexp_baseline_null.py`), and the capsule validator itself
-(`test_validate_artifacts.py`). Legacy-hash, model-scope, and real-cache integration cases skip
-automatically when their retired or machine-local inputs are absent, and the pair-probe cases skip
-when scikit-learn is not installed; the development repository runs the full suite including
+The bundled suite is the statistical-contract suite (`test_fixed_panel_audit.py`). Legacy-hash,
+model-scope, and real-cache integration cases skip automatically when their retired or
+machine-local inputs are absent; the development repository runs the full suite including
 model/cache contract tests. The release builder runs this command after every rebuild and fails
 on any error.
 

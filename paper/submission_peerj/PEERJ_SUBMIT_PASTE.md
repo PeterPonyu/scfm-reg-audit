@@ -187,4 +187,5 @@ Please consider this sole-author Research article for PeerJ Computer Science. sc
 
 ## Suggested editors / reviewers
 
-Leave empty until you confirm names and conflicts (`HUMAN_GATES.md` OPEN item).
+Leave the editor and reviewer boxes empty. Sole author; no competing interests; no named
+suggestions (do not invent names).

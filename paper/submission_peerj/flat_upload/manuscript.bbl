@@ -44,6 +44,13 @@ Cui, H., Wang, C., Maan, H., Pang, K., Luo, F., Duan, N., and Wang, B. (2024).
   multi-omics using generative {AI}.
 \newblock {\em Nature Methods}, 21(8):1470--1480.
 
+\bibitem[Domcke et~al., 2020]{domcke2020descartes}
+Domcke, S., Hill, A.~J., Daza, R.~M., Cao, J., O'Day, D.~R., Pliner, H.~A.,
+  et~al. (2020).
+\newblock A human cell atlas of fetal chromatin accessibility.
+\newblock {\em Science}, 370(6518):eaba7612.
+\newblock DESCARTES atlas; GEO GSE149683.
+
 \bibitem[Efron and Tibshirani, 1993]{efron1993bootstrap}
 Efron, B. and Tibshirani, R.~J. (1993).
 \newblock {\em An Introduction to the Bootstrap}.
@@ -74,6 +81,13 @@ Hu, L., Qin, H., Zhang, Y., Lu, Y., Qiu, P., et~al. (2026).
 \newblock {RegFormer}: a single-cell foundation model powered by gene
   regulatory hierarchies.
 \newblock {\em Nature Communications}, 17.
+
+\bibitem[Itahashi et~al., 2022]{itahashi2022batf}
+Itahashi, K., Irie, T., Yuda, J., Kumagai, S., Tanoue, K., et~al. (2022).
+\newblock {BATF} epigenetically and transcriptionally controls the activation
+  program of regulatory {T} cells in human tumors.
+\newblock {\em Science Immunology}, 7(76):eabk0957.
+\newblock GEO GSE211155.
 
 \bibitem[Kalfon et~al., 2025]{kalfon2025scprint}
 Kalfon, J., Samaran, J., Peyr{\'e}, G., and Cantini, L. (2025).
@@ -109,6 +123,15 @@ Korhonen, J., Martinm{\"a}ki, P., Pizzi, C., Rastas, P., and Ukkonen, E.
 \newblock {MOODS}: fast search for position weight matrix matches in {DNA}
   sequences.
 \newblock {\em Bioinformatics}, 25(23):3181--3182.
+
+\bibitem[L{\"u}cken et~al., 2021]{luecken2021sandbox}
+L{\"u}cken, M.~D., Burkhardt, D.~B., Cannoodt, R., Lance, C., Agrawal, A.,
+  et~al. (2021).
+\newblock A sandbox for prediction and integration of {DNA}, {RNA}, and
+  proteins in single cells.
+\newblock In {\em Proceedings of the Neural Information Processing Systems
+  Track on Datasets and Benchmarks}.
+\newblock GEO GSE194122; NeurIPS 2021 Datasets and Benchmarks.
 
 \bibitem[Mantel, 1967]{mantel1967}
 Mantel, N. (1967).

@@ -24,6 +24,42 @@ options(tikzDocumentDeclaration = "\\documentclass[11pt]{article}",
         tikzMetricsDictionary = ".tikz_metrics_pdftex")
 
 base <- Sys.getenv("SCFM_BASE", "..")
+# Owner-R isolation: parse stems before any JSON load or emit so empty
+# SCFM_FIG_ONLY and fig12* fail closed without touching leftover chips.
+parse_fig_stems <- function() {
+  raw <- Sys.getenv("SCFM_FIG_ONLY", "")
+  extra <- Sys.getenv("SCFM_FIG_ALLOWLIST", "")
+  parts <- c(
+    if (nzchar(raw)) trimws(unlist(strsplit(raw, ",", fixed = TRUE))) else character(0),
+    if (nzchar(extra)) trimws(unlist(strsplit(extra, ",", fixed = TRUE))) else character(0)
+  )
+  unique(parts[nzchar(parts)])
+}
+FIG_STEMS <- parse_fig_stems()
+FIG_ISOLATED <- identical(Sys.getenv("SCFM_FIG_ISOLATED"), "1")
+ISOLATED_ALLOW <- c(
+  "fig_study_design", "fig1_truth_construct", "fig2_cross_tissue_decomp",
+  "fig3_primary_audit", "fig4_usability_check", "fig5_null_diagnostics",
+  "fig6_spec_sensitivity", "fig7_pertype_descriptive",
+  "fig8_injection_ladder", "fig9_tf_probe", "fig10_coverage_qc",
+  "fig11_third_tissue_transfer"
+)
+AFTER_FIG7 <- c(
+  "fig8_injection_ladder", "fig9_tf_probe",
+  "fig10_coverage_qc", "fig11_third_tissue_transfer"
+)
+if (any(grepl("^fig12", FIG_STEMS))) {
+  stop("fig12* stems are forbidden (leftover fig12 freeze)", call. = FALSE)
+}
+if (FIG_ISOLATED && !length(FIG_STEMS)) {
+  stop("SCFM_FIG_ISOLATED=1 forbids empty SCFM_FIG_ONLY / SCFM_FIG_ALLOWLIST",
+       call. = FALSE)
+}
+if (FIG_ISOLATED && !all(FIG_STEMS %in% ISOLATED_ALLOW)) {
+  stop("SCFM_FIG_ISOLATED allowlist is only ",
+       paste(ISOLATED_ALLOW, collapse = ","), "; got: ",
+       paste(FIG_STEMS, collapse = ","), call. = FALSE)
+}
 source(file.path(base, "src", "v2", "figure_helpers.R"))
 res <- file.path(base, "results", "v2")
 figs <- file.path(base, "paper", "figs")
@@ -74,8 +110,10 @@ d_title_nudge <- theme(
   plot.title = element_text(hjust = 0, margin = margin(b = 3, l = 10)))
 
 emit <- function(name, plot, width, height, tags = LETTERS[1:4]) {
-  only <- Sys.getenv("SCFM_FIG_ONLY", "")
-  if (nzchar(only) && !identical(only, name)) {
+  if (grepl("^fig12", name) && (FIG_ISOLATED || length(FIG_STEMS))) {
+    stop("fig12* emit is forbidden when isolation/allowlist is set", call. = FALSE)
+  }
+  if (length(FIG_STEMS) && !(name %in% FIG_STEMS)) {
     cat(name, "skip\n")
     return(invisible(NULL))
   }
@@ -235,7 +273,7 @@ f_sd_a <- ggplot() +
   scale_fill_identity() +
   scale_color_identity() +
   coord_cartesian(xlim = c(0.08, 6.62), ylim = c(0.12, 4.08), clip = "off") +
-  labs(title = "Two-tissue design, one frozen panel") +
+  labs(title = "Brain and PBMC FM rows; ATAC construct is mixed-tissue") +
   theme_void(base_size = 11) +
   theme(plot.title = element_text(size = 11, hjust = 0),
         plot.title.position = "plot",
@@ -316,7 +354,7 @@ if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig_study_design"))
 # ==================== Figure 1: construct, evidence, panel ====================
 # A: S-shaped construction schematic matching Methods: ATAC peak → peak–gene
 # link + JASPAR/MOODS motif → directed TF→target weight → restrict to the
-# hash-pinned 446×1,200 panel. No RNA enters the proxy.
+# frozen 446×1,200 panel. No RNA enters the proxy.
 flow <- data.frame(
   x = c(1.0, 3.05, 3.05, 1.0),
   y = c(2.18, 2.18, 1.18, 1.18),
@@ -377,7 +415,8 @@ f1b <- ggplot(cross, aes(reorder(pair, rho), rho)) +
   geom_col(fill = BLUE, width = 0.62) +
   geom_text(aes(label = sprintf("%.3f", rho)), vjust = -0.5, size = 3.3) +
   coord_cartesian(ylim = c(0, 0.58)) +
-  labs(x = NULL, y = "observed Spearman $\\rho$", title = "Reproducible across tissues") +
+  labs(x = NULL, y = "observed Spearman $\\rho$",
+       title = "Pairwise Mantel $\\rho$ among construct graphs") +
   theme(axis.text.x = element_text(angle = 12, hjust = 0.95),
         plot.margin = margin(4, 8, 3, 8)) +
   center_panel_title
@@ -397,7 +436,7 @@ f1c <- ggplot(motif, aes(tissue, hits_per_peak)) +
            color = REF_MUTED) +
   coord_cartesian(ylim = c(0, 28)) +
   labs(x = NULL, y = "motif hits per peak",
-       title = "Expected-random motif share") +
+       title = "Motif hits per peak") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1)) +
   center_panel_title
 
@@ -451,7 +490,7 @@ f2a <- ggplot(dec_long, aes(pair, rho, fill = metric)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(values = c(BLUE, YELLOW, AQUA)) +
   labs(x = NULL, y = "Spearman $\\rho$", fill = NULL,
-       title = "Most reproducibility is marginal") +
+       title = "Most pairwise Mantel $\\rho$ is additive") +
   # One-row legend is wider than the panel and clips the left key; two
   # compact rows keep all three entries inside the figure box.
   guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
@@ -468,8 +507,8 @@ f2b <- ggplot(dec, aes(reorder(pair, frac), frac)) +
   geom_text(aes(label = sprintf("%.0f\\%%", 100 * frac)), vjust = -0.5, size = 3.3) +
   scale_x_discrete(expand = expansion(mult = c(0.22, 0.22))) +
   coord_cartesian(ylim = c(0, 0.9), clip = "off") +
-  labs(x = NULL, y = "fraction explained",
-       title = "Additive marginals explain 69--78\\%") +
+  labs(x = NULL, y = "additive fraction",
+       title = "Additive fraction of Mantel $\\rho$ (not variance)") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1),
         plot.margin = margin(4, 6, 3, 8)) +
   center_panel_title
@@ -495,7 +534,7 @@ f2d <- ggplot(inv, aes(tissue, mean)) +
   geom_point(size = 2.6, color = BLUE) +
   coord_cartesian(ylim = c(0.95, 1.0)) +
   labs(x = NULL, y = "cell-type consensus $\\rho$",
-       title = "Near cell-type-invariant") +
+       title = "Within-tissue cell-type proxy $\\rho$") +
   theme(axis.text.x = element_text(angle = 15, hjust = 1),
         plot.margin = margin(4, 10, 3, 6)) +
   center_panel_title
@@ -551,7 +590,7 @@ nondeg$is_baseline <- FALSE
 nondeg <- nondeg[order(match(nondeg$tissue, tissue_order)), ]
 nondeg$display <- paste(nondeg$model, nondeg$tissue, sep = " -- ")
 nondeg$closest_q <- pmin(nondeg$mantel_q, nondeg$degree_q)
-f3b <- mk_forest(nondeg, "Non-degree co-primary (closest $q$ shown; none below 0.05)")
+f3b <- mk_forest(nondeg, "Non-degree sensitivity (both $q$ shown; no dual-null below 0.05)")
 
 f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = status)) +
   geom_vline(xintercept = 0.05, linetype = "dashed", color = "grey55") +
@@ -560,7 +599,7 @@ f3c <- ggplot(primary %>% filter(!is_baseline), aes(mantel_q, degree_q, color = 
   scale_color_manual(values = support_colors) +
   scale_x_log10() + scale_y_log10() +
   labs(x = "gene-label $q_M$", y = "row-shuffle $q_D$",
-       color = NULL, title = "Both nulls below 0.05") +
+       color = NULL, title = "Full-spec $q_M$ vs $q_D$ (13 rows)") +
   theme(legend.position = "none") +  # colors defined by panel A's legend; no room here
   center_panel_title
 
@@ -637,6 +676,10 @@ emit("fig3_primary_audit",
        plot_annotation(tag_levels = list(c("A", "B", ""))) +
        plot_layout(heights = c(1.15, 1.0, 0.95)),
      6.8, 8.0)  # 9.2->8.0: a 9.2in float exceeded the text block, forcing a near-empty float page (large whitespace band); 8.0in fits the caption on one float page
+if (length(FIG_STEMS) && all(FIG_STEMS %in% c("fig3_primary_audit"))) {
+  cat("SCFM_FIG_ONLY: stopping after fig3_primary_audit\n")
+  quit(save = "no", status = 0)
+}
 
 # ==================== Figure 4: concordance (attention-likeness) check ====================
 # Panel JSON key remains usability_fm_vs_coexp for schema stability; plot labels use "concordance".
@@ -669,7 +712,12 @@ f4a <- ggplot(usa, aes(fm_vs_coexp, primary_rho)) +
                     labels = c(`TRUE` = "dual-null Support",
                                `FALSE` = "not dual-null"),
                     name = NULL) +
-  scale_shape_manual(values = c(`TRUE` = 21, `FALSE` = 22), guide = "none") +
+  scale_shape_manual(values = c(`TRUE` = 21, `FALSE` = 22),
+                     labels = c(`TRUE` = "dual-null Support",
+                                `FALSE` = "not dual-null"),
+                     name = NULL) +
+  guides(fill = guide_legend(override.aes = list(shape = c(22, 21), stroke = 0.3)),
+         shape = "none") +
   labs(x = "FM--co-expression concordance $\\rho$",
        y = "full-confound partial $\\rho$",
        title = "Concordance vs dual-null") +
@@ -688,7 +736,8 @@ tile_long <- bind_rows(
                      pass = `passes concordance ($\\rho>0$)`))
 f4b <- ggplot(tile_long, aes(check, display, fill = pass)) +
   geom_tile(color = "white") +
-  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey80")) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey80"),
+                    labels = c(`TRUE` = "yes", `FALSE` = "no")) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Support vs concordance") +
   # Nudge only the B tag right; title stays on the plot title grob.
@@ -829,7 +878,8 @@ om_long <- bind_rows(
 om_long$model <- factor(om_long$model, levels = rev(unique(om_long$model)))
 f5d <- ggplot(om_long, aes(analysis, model, fill = supported)) +
   geom_tile(color = "white") +
-  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85"),
+                    labels = c(`TRUE` = "yes", `FALSE` = "no")) +
   scale_x_discrete(expand = expansion(mult = c(0.15, 0.15))) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Support decisions agree") +
@@ -875,6 +925,7 @@ pair6 <- full6 %>% left_join(nd6, by = "display")
 pair6$sign_flip <- pair6$rho_Full * pair6$rho_nd < 0
 stopifnot(nrow(pair6) == 13L, sum(pair6$dual_Full) == 7L, sum(pair6$dual_nd) == 0L)
 n_flip <- sum(pair6$sign_flip)
+stopifnot(n_flip == 6L)
 # Softened sign-flip stroke: same red family as RED but lower chroma so the
 # six flip segments do not dominate PeerJ downscale (science encoding unchanged).
 FLIP_STROKE <- "#b86f6f"
@@ -895,7 +946,7 @@ f6a <- ggplot(pair6, aes(y = display)) +
                      labels = c(`TRUE` = "sign flip", `FALSE` = "same sign"),
                      name = NULL) +
   # Short title: the prior single-line title overran into panel B
-  # ("…6 sign flips" colliding with "Sign-flip map"). Title sits over the
+  # ("…6 sign flips" colliding with the binned-ρ title). Title sits over the
   # forest panel, not the long y-tick band.
   labs(x = "partial Spearman $\\rho$", y = NULL,
        title = "Paired full vs non-degree") +
@@ -935,7 +986,7 @@ f6b <- ggplot(f6b_dat, aes(spec_label, display, fill = rho_bin)) +
   scale_fill_manual(values = setNames(c(VIOLET, "#C9B7E0", "#B7D9D2", AQUA), rho_bins),
                     name = "partial $\\rho$", drop = FALSE) +
   guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
-  labs(x = NULL, y = NULL, title = "Sign-flip map") +
+  labs(x = NULL, y = NULL, title = "Binned partial $\\rho$") +
   # 2×2 tiles are wider than panel B; left-justify so overflow goes into the
   # right plot margin instead of covering A's "same sign" / "sign flip".
   theme(legend.position = "bottom",
@@ -1034,14 +1085,15 @@ f6d <- ggplot(lad_long, aes(rung, rho, group = model, color = display_model)) +
 # free(f6c): A/B y-ticks otherwise panel-align C's axis box far right of its
 # ylab; D keeps a right legend column and a slightly wider share.
 # Wider A share + A/B margins above keep the long y-tick forest from crowding
-# the Sign-flip map title (PeerJ Figure 7 / manuscript fig:spec).
+# the binned-ρ title (PeerJ Figure 7 / manuscript fig:spec).
 emit("fig6_spec_sensitivity",
      ((f6a | f6b) + plot_layout(widths = c(1.75, 1))) /
        ((free(f6c) | f6d) + plot_layout(widths = c(0.95, 1.15))) +
        plot_annotation(tag_levels = "A"),
      6.8, 7.2)
-if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig6_spec_sensitivity")) {
-  cat("SCFM_FIG_ONLY: stopping after fig6_spec_sensitivity\n")
+if (length(FIG_STEMS) &&
+    all(FIG_STEMS %in% c("fig3_primary_audit", "fig6_spec_sensitivity"))) {
+  cat("SCFM_FIG_ONLY: stopping after fig3/fig6; skip leftover-delete and table5\n")
   quit(save = "no", status = 0)
 }
 
@@ -1090,6 +1142,9 @@ pertype_rows <- function(tissue) {
 }
 pt_brain <- pertype_rows("brain")
 pt_pbmc <- pertype_rows("pbmc")
+# Table 6 full-confound window (brain -0.00396..0.00445; PBMC 0.00222..0.00682)
+# plus pad so A/B share a zero line. Whiskers clip; they must not set the scale.
+PERTYPE_XLIM <- c(-0.006, 0.009)
 pertype_panel <- function(data, tissue_name, color) {
   data$cell_type <- factor(data$cell_type, levels = rev(unique(data$cell_type)))
   ggplot(data, aes(rho, cell_type)) +
@@ -1098,8 +1153,9 @@ pertype_panel <- function(data, tissue_name, color) {
                   width = 0.25, color = "grey40", linewidth = 0.3,
                   na.rm = TRUE, orientation = "y") +
     geom_point(size = 1.9, color = color) +
-    facet_wrap(~model, nrow = 1, scales = "free_x") +
-    scale_x_continuous(expand = expansion(mult = 0.10), n.breaks = 3) +
+    facet_wrap(~model, nrow = 1, scales = "fixed") +
+    scale_x_continuous(expand = expansion(mult = 0.02), n.breaks = 4) +
+    coord_cartesian(xlim = PERTYPE_XLIM) +
     labs(x = NULL, y = NULL, title = tissue_name) +
     theme(strip.text = element_text(size = 10), axis.text.y = element_text(size = 9.5),
           axis.text.x = element_text(size = 8.5),
@@ -1124,7 +1180,7 @@ f7c <- ggplot(ptf_long, aes(cell_type, rho, color = series, group = series)) +
   geom_line(linewidth = 0.5) + geom_point(size = 2.0) +
   scale_color_manual(values = c("black", BLUE, AQUA)) +
   labs(x = NULL, y = "Spearman $\\rho$", color = NULL,
-       title = "Brain per-type readouts and the confound itself") +
+       title = "Brain per-type legacy overlay (not the A/B estimand)") +
   guides(color = guide_legend(nrow = 1, byrow = TRUE)) +
   theme(legend.position = "top",
         legend.text = element_text(size = 7.5),
@@ -1175,6 +1231,10 @@ f7d <- ggplot(cells, aes(reorder(cell_type, n_cells), n_cells, fill = tissue)) +
 
 emit("fig7_pertype_descriptive", f7a / f7b / (f7c | f7d) + plot_annotation(tag_levels = "A") +
        plot_layout(heights = c(1, 1, 0.95), axis_titles = "collect"), 6.8, 8.2)
+if (length(FIG_STEMS) && !any(FIG_STEMS %in% AFTER_FIG7)) {
+  cat("SCFM_FIG_ONLY: stopping after fig7; no later stem requested\n")
+  quit(save = "no", status = 0)
+}
 
 # ==================== Figure 8: injection ladder and effect scale ====================
 injection_rows <- function(tissue) {
@@ -1204,7 +1264,7 @@ dose_panel <- function(data, subdiv_data, tissue_name, color) {
     {if (!is.null(subdiv_data)) geom_point(data = subdiv_data, aes(alpha, mean),
                                            shape = 23, size = 2.0, fill = "white", color = color,
                                            inherit.aes = FALSE)} +
-    labs(x = "axis-aligned injected fraction $\\alpha$", y = "recovered partial $\\rho$",
+    labs(x = "axis-aligned injected fraction $\\alpha$", y = "returned partial $\\rho$",
          title = paste(tissue_name, "injection ladder")) +
     theme(legend.position = "none")
 }
@@ -1373,7 +1433,7 @@ f9b_gg <- ggplot(pb, aes(subset, rho, color = family, group = family)) +
                                 "Geneformer attention" = AQUA, "scGPT encoder" = VIOLET,
                                 "UCE encoder" = YELLOW, "Random-init floor" = MUTED)) +
   labs(x = NULL, y = "adjusted test $\\rho$", color = NULL,
-       title = "Recovery collapses at the construction covariates") +
+       title = "Adjusted test $\\rho$ falls at construction covariates") +
   guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
   theme(legend.position = "right",
         legend.justification = c(0, 0.5),
@@ -1419,7 +1479,7 @@ f9c <- ggplot(arms, aes(rho, family, fill = arm)) +
   geom_vline(xintercept = 0, color = "grey55") +
   scale_fill_manual(values = c(BLUE, MUTED)) +
   labs(y = NULL, x = "adjusted test $\\rho$", fill = NULL,
-       title = "Degree features: no rescue") +
+       title = "Degree features do not raise adjusted test $\\rho$") +
   theme(legend.position = "top",
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.28, "cm"),
@@ -1442,7 +1502,7 @@ f9d <- ggplot(dist, aes(family)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey55") +
   coord_flip() +
   labs(x = NULL, y = "adjusted test $\\rho$",
-       title = "Per-TF recovery spread") +
+       title = "Per-TF adjusted test $\\rho$ spread") +
   theme(axis.ticks.y = element_blank(),
         plot.margin = margin(4, 6, 3, 2)) +
   d_title_nudge
@@ -1514,7 +1574,8 @@ f10b <- ggplot(cov_long, aes(analysis_num, model, fill = present)) +
             hjust = 0, size = 3.2, inherit.aes = FALSE) +
   scale_x_continuous(breaks = seq_along(analysis_lvls), labels = analysis_lvls,
                      expand = c(0, 0)) +
-  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85")) +
+  scale_fill_manual(values = c(`TRUE` = AQUA, `FALSE` = "grey85"),
+                    labels = c(`TRUE` = "yes", `FALSE` = "no")) +
   coord_cartesian(xlim = c(0.5, 4.5), clip = "off") +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Graph coverage") +
@@ -1910,59 +1971,82 @@ f12b <- ggplot(gate_counts, aes(y = gate)) +
         axis.text.x = element_text(size = 8.0),
         plot.subtitle = element_text(size = 8.2, hjust = 0.5, color = "#3a3a3a",
                                      margin = margin(b = 2)),
-        plot.margin = margin(4, 8, 4, 4)) +
+        # Pull the xlabel up toward the ticks; patchwork panel-aligns B with A's
+        # rotated-label band, which otherwise parks "rows passing" too low.
+        axis.title.x = element_text(margin = margin(t = -14, b = 0)),
+        plot.margin = margin(4, 8, 1, 4)) +
   center_panel_title
 
 scope_ink <- "#1a1a1a"
-# C and D share one 2x2 card. Title is ink inside the grey rect. Every chip is
-# two lines so the boxes stay the same size and the labels stay inside them.
-scope_card <- function(labs, title) {
+# In-scope aqua / out-of-scope umber so C/D cards read as content, not empty grey.
+scope_in_ink <- AQUA
+scope_out_ink <- "#a65b3a"
+scope_in_fill <- "#e4f0ec"
+scope_out_fill <- "#f4ebe6"
+# C and D share one 2x2 card. Title stays ink inside the card. Letter tags
+# use the plot corner (same as A/B), not panel, so they sit outside the card.
+# Every chip is two lines so the boxes stay the same size.
+scope_card <- function(labs, title, title_ink, card_fill) {
   stopifnot(length(labs) == 4L)
   dat <- data.frame(
-    x = c(1, 2, 1, 2),
-    y = c(1.58, 1.58, 0.74, 0.74),
+    x = c(0.94, 2.16, 0.94, 2.16),
+    y = c(1.50, 1.50, 0.48, 0.48),
     lab = labs,
     stringsAsFactors = FALSE
   )
   ggplot(dat, aes(x, y)) +
-    annotate("rect", xmin = 0.32, xmax = 2.68, ymin = 0.26, ymax = 2.74,
-             fill = "#eef2f5", color = "grey55", linewidth = 0.35) +
-    annotate("text", x = 1.58, y = 2.50, label = title,
-             size = 3.30, color = scope_ink) +
-    geom_tile(width = 0.72, height = 0.58, fill = "white", color = scope_ink,
-              linewidth = 0.28) +
-    geom_text(aes(label = lab), size = 2.60, color = scope_ink, lineheight = 0.92) +
-    coord_cartesian(xlim = c(0.28, 2.72), ylim = c(0.22, 2.78), expand = FALSE) +
+    annotate("rect", xmin = 0.26, xmax = 2.82, ymin = 0.02, ymax = 2.58,
+             fill = card_fill, color = NA) +
+    annotate("rect", xmin = 0.26, xmax = 2.82, ymin = 2.06, ymax = 2.58,
+             fill = title_ink, color = NA) +
+    annotate("rect", xmin = 0.26, xmax = 2.82, ymin = 0.02, ymax = 2.58,
+             fill = NA, color = "grey55", linewidth = 0.35) +
+    annotate("text", x = 1.54, y = 2.30, label = title,
+             size = 4.15, color = "white") +
+    geom_tile(width = 1.08, height = 0.92, fill = "white", color = title_ink,
+              linewidth = 0.32) +
+    geom_text(aes(label = lab), size = 3.50, color = scope_ink, lineheight = 0.98) +
+    # Slim left/top data space so plot-corner C/D tags stay outside the stroke
+    # (D has no y-axis gutter; C already has one from aligning with A).
+    coord_cartesian(xlim = c(0.10, 2.88), ylim = c(0.00, 2.70), expand = FALSE) +
     theme_void() +
     theme(
-      plot.margin = margin(4, 8, 6, 8),
-      plot.tag.location = "panel",
-      plot.tag.position = c(0.04, 0.93)
+      plot.margin = margin(3, 5, 2, 6),
+      plot.tag.location = "plot",
+      plot.tag.position = c(0.02, 1)
     )
 }
 f12c <- scope_card(
   c("$\\pm$2 kb\nwindow", "JASPAR\nmotif",
     "ATAC peak\npresence", "fixed panel\n$446\\times 1{,}200$"),
-  "In scope (this instance)"
+  "In scope (this instance)", scope_in_ink, scope_in_fill
 )
 f12d <- scope_card(
   c("distal / 3D\nexcluded",
     "ChIP / causal\nnot claimed",
     "near-invariant\nproxy",
     "not field-level\nnegative"),
-  "Out of scope (claim bound)"
+  "Out of scope (claim bound)", scope_out_ink, scope_out_fill
 )
 
+if (FIG_ISOLATED || (length(FIG_STEMS) && !any(grepl("^fig12", FIG_STEMS)))) {
+  cat("isolation: quitting before leftover-delete / table5 write\n")
+  quit(save = "no", status = 0)
+}
 emit("fig12_protocol_pass_matrix",
      ((f12a | f12b) + plot_layout(widths = c(1.55, 1.00))) /
        ((f12c | f12d) + plot_layout(widths = c(1, 1))) +
        plot_annotation(tag_levels = "A") +
-       plot_layout(heights = c(1.32, 1.08)),
-     6.8, 6.05, tags = c("A", "B", "C", "D"))
+       plot_layout(heights = c(1.42, 0.94)),
+     6.8, 6.18, tags = c("A", "B", "C", "D"))
 # Retired standalone fig13_scope_card.tex (content now panel B above).
 fig13_path <- file.path(figs, "fig13_scope_card.tex")
 if (file.exists(fig13_path))
   file.remove(fig13_path)
+if (identical(Sys.getenv("SCFM_FIG_ONLY"), "fig12_protocol_pass_matrix")) {
+  cat("SCFM_FIG_ONLY: stopping after fig12_protocol_pass_matrix\n")
+  quit(save = "no", status = 0)
+}
 
 # ==================== Table 5: related-work comparison (0x14) ====================
 # Qualitative protocol axes only; complement-not-compete framing (PeerJ #4).

@@ -231,27 +231,27 @@
         "sha256": "ca6dac8097bba732f3453e9e78139ec1b11d6f63ae33e3f44d243f2377eb3ae8"
       },
       "atac_pbmc": {
-        "path": "${SCFM_PROJECT_ROOT}/data/multiome/pbmc10k_atac.h5ad",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/data/multiome/pbmc10k_atac.h5ad",
         "sha256": "d2afd953ac98f7626fb501024e5eab76a38be95751e62a488e06d2cfbe372a15"
       },
       "fmgraphs_pooled_brain": {
-        "path": "${SCFM_PROJECT_ROOT}/results/v2/fmgraphs_pooled_v2.npz",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/fmgraphs_pooled_v2.npz",
         "sha256": "4f833efd46cedbab35e4dc2c0bec95b11de38b01701719cc291bb08e41b55ab0"
       },
       "fmgraphs_pooled_pbmc": {
-        "path": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_fmgraphs_pooled.npz",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_fmgraphs_pooled.npz",
         "sha256": "cbcdd1afcc9351cd78cb97ad2edb030456482268e80bfd6fbee01c6d803a8347"
       },
       "G_atac_brain": {
-        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_GSE174367.npz",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/G_ATAC_v2_GSE174367.npz",
         "sha256": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c"
       },
       "G_atac_pbmc": {
-        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_PBMC10k.npz",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/G_ATAC_v2_PBMC10k.npz",
         "sha256": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c"
       },
       "G_ko": {
-        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ko_v2.npz",
+        "path": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/G_ko_v2.npz",
         "sha256": "65fb8a2973c0711dfbaecb9a236ebe40cf00209b7cb6e74e427c26bf99dca07d"
       }
     },

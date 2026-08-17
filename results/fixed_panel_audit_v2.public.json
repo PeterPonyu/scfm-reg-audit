@@ -2571,7 +2571,7 @@
         ]
       },
       "provenance": {
-        "G_atac_pooled_source": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_GSE174367.npz",
+        "G_atac_pooled_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/G_ATAC_v2_GSE174367.npz",
         "G_atac_pooled_sha256": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c",
         "confound_source": "${SCFM_BRAIN_ATAC}",
         "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
@@ -3203,7 +3203,7 @@
           "row_type": "pooled_fm",
           "family_id_mantel": "pbmc_pooled_full_confound_mantel",
           "family_id_degree": "pbmc_pooled_full_confound_degree",
-          "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_scgpt_pooled_v2.npz:co"
+          "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_scgpt_pooled_v2.npz:co"
         },
         {
           "tissue": "pbmc",
@@ -3277,7 +3277,7 @@
           "row_type": "pooled_fm",
           "family_id_mantel": "pbmc_pooled_non_degree_confound_mantel",
           "family_id_degree": "pbmc_pooled_non_degree_confound_degree",
-          "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_scgpt_pooled_v2.npz:co"
+          "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_scgpt_pooled_v2.npz:co"
         },
         {
           "tissue": "pbmc",
@@ -3355,7 +3355,7 @@
           "row_type": "pooled_fm",
           "family_id_mantel": "pbmc_pooled_full_confound_mantel",
           "family_id_degree": "pbmc_pooled_full_confound_degree",
-          "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_uce_pooled_v2.npz:co"
+          "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_uce_pooled_v2.npz:co"
         },
         {
           "tissue": "pbmc",
@@ -3429,7 +3429,7 @@
           "row_type": "pooled_fm",
           "family_id_mantel": "pbmc_pooled_non_degree_confound_mantel",
           "family_id_degree": "pbmc_pooled_non_degree_confound_degree",
-          "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_uce_pooled_v2.npz:co"
+          "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_uce_pooled_v2.npz:co"
         }
       ],
       "primary_family": {
@@ -3745,7 +3745,7 @@
             "row_type": "pooled_fm",
             "family_id_mantel": "pbmc_pooled_full_confound_mantel",
             "family_id_degree": "pbmc_pooled_full_confound_degree",
-            "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_scgpt_pooled_v2.npz:co"
+            "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_scgpt_pooled_v2.npz:co"
           },
           {
             "tissue": "pbmc",
@@ -3823,7 +3823,7 @@
             "row_type": "pooled_fm",
             "family_id_mantel": "pbmc_pooled_full_confound_mantel",
             "family_id_degree": "pbmc_pooled_full_confound_degree",
-            "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_uce_pooled_v2.npz:co"
+            "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_uce_pooled_v2.npz:co"
           }
         ]
       },
@@ -4124,7 +4124,7 @@
             "row_type": "pooled_fm",
             "family_id_mantel": "pbmc_pooled_non_degree_confound_mantel",
             "family_id_degree": "pbmc_pooled_non_degree_confound_degree",
-            "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_scgpt_pooled_v2.npz:co"
+            "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_scgpt_pooled_v2.npz:co"
           },
           {
             "tissue": "pbmc",
@@ -4198,14 +4198,14 @@
             "row_type": "pooled_fm",
             "family_id_mantel": "pbmc_pooled_non_degree_confound_mantel",
             "family_id_degree": "pbmc_pooled_non_degree_confound_degree",
-            "coexp_control_source": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_uce_pooled_v2.npz:co"
+            "coexp_control_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/pbmc_uce_pooled_v2.npz:co"
           }
         ]
       },
       "provenance": {
-        "G_atac_pooled_source": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_PBMC10k.npz",
+        "G_atac_pooled_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/results/v2/G_ATAC_v2_PBMC10k.npz",
         "G_atac_pooled_sha256": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c",
-        "confound_source": "${SCFM_PROJECT_ROOT}/data/multiome/pbmc10k_atac.h5ad",
+        "confound_source": "${HOME}/Desktop/singlecell-genomics-research/projects/scfm-reg-audit/data/multiome/pbmc10k_atac.h5ad",
         "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
         "model_label_provenance": {
           "geneformer_embed": {
