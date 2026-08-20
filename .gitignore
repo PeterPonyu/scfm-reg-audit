@@ -18,3 +18,13 @@ paper/manuscript.pdf
 paper/Rplots.pdf
 paper/submission_peerj/source/manuscript.pdf
 paper/extension_article/manuscript.pdf
+
+# Agent / editor state (never public HEAD)
+.cursor/
+.cursor.cloud/
+.claude/
+.codex/
+.omc/
+.omx/
+agent-transcripts/
+.hud/
