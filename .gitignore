@@ -28,3 +28,16 @@ paper/extension_article/manuscript.pdf
 .omx/
 agent-transcripts/
 .hud/
+
+# public-head drop (keep local copies)
+**/manuscript.tex
+**/manuscript.pdf
+**/manuscript.bbl
+paper/submission_frontiers_genetics/
+paper/submission_peerj/HUMAN_GATES.md
+paper/submission_peerj/PEERJ_FORM_TEMPLATE.md
+paper/submission_peerj/PEERJ_SUBMIT_PASTE.md
+paper/submission_peerj/_stale_archive/
+paper/submission_peerj/internal/
+paper/submission_peerj/upload.zip
+docs/SCREG_EVAL_SAP.md
