@@ -13,8 +13,25 @@ results/v2/
 # GitHub Pages assemble output (copied product PDFs; not capsule source)
 site/_site/
 
-# PRJCS review PDF lives only in paper/submission_peerj/flat_upload/
-paper/manuscript.pdf
+# Agent / editor state (never public HEAD)
+.cursor/
+.cursor.cloud/
+.claude/
+.codex/
+.omc/
+.omx/
+agent-transcripts/
+.hud/
+
+# Full manuscripts and abandoned venue packages stay on disk, not public HEAD
+**/manuscript.tex
+**/manuscript.pdf
 paper/Rplots.pdf
-paper/submission_peerj/source/manuscript.pdf
-paper/extension_article/manuscript.pdf
+paper/submission_frontiers_genetics/
+paper/submission_peerj/HUMAN_GATES.md
+paper/submission_peerj/PEERJ_FORM_TEMPLATE.md
+paper/submission_peerj/PEERJ_SUBMIT_PASTE.md
+paper/submission_peerj/_stale_archive/
+paper/submission_peerj/internal/
+paper/submission_peerj/upload.zip
+docs/SCREG_EVAL_SAP.md

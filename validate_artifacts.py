@@ -55,12 +55,15 @@ LOCAL_WORKTREE_NAMES = {
     "manuscript.fls",
     "manuscript.fdb_latexmk",
     "manuscript.blg",
-    "manuscript.pdf",  # stray paper/ compile; PRJCS SoT is submission_peerj/flat_upload/
+    "manuscript.pdf",  # stray paper/ compile; local overlay only
+    "manuscript.tex",  # full manuscript is local-only, not public HEAD
+    "SCREG_EVAL_SAP.md",  # analysis-plan doc is local-only, not public HEAD
     "Rplots.pdf",
     "DESIGN.md",  # Pages visual contract; not capsule payload
 }
 
-# Order must match first-to-last \\input{figs/...} in paper/manuscript.tex.
+# Order must match first-to-last \\input{figs/...} in paper/figs_preview.tex
+# (and paper/manuscript.tex when that local overlay is present).
 CURRENT_FIGURES = (
     "fig_study_design.tex",
     "fig1_truth_construct.tex",
@@ -171,16 +174,17 @@ def figure_inputs(path):
 
 
 def check_figure_contract():
-    manuscript_inputs = figure_inputs(ROOT / "paper/manuscript.tex")
-    manuscript_figures = tuple(name for name in manuscript_inputs if name.startswith("fig"))
-    manuscript_tables = tuple(name for name in manuscript_inputs if name.startswith("table"))
     preview_inputs = figure_inputs(ROOT / "paper/figs_preview.tex")
     bundled = {path.name for path in (ROOT / "paper/figs").glob("*.tex")}
-
-    require(manuscript_figures == CURRENT_FIGURES,
-            f"manuscript figure inputs mismatch: {list(manuscript_figures)}")
-    require(manuscript_tables == CURRENT_TABLES,
-            f"manuscript table inputs mismatch: {list(manuscript_tables)}")
+    manuscript_path = ROOT / "paper/manuscript.tex"
+    if manuscript_path.is_file():
+        manuscript_inputs = figure_inputs(manuscript_path)
+        manuscript_figures = tuple(name for name in manuscript_inputs if name.startswith("fig"))
+        manuscript_tables = tuple(name for name in manuscript_inputs if name.startswith("table"))
+        require(manuscript_figures == CURRENT_FIGURES,
+                f"manuscript figure inputs mismatch: {list(manuscript_figures)}")
+        require(manuscript_tables == CURRENT_TABLES,
+                f"manuscript table inputs mismatch: {list(manuscript_tables)}")
     require(preview_inputs == CURRENT_FRAGMENTS,
             f"figs_preview.tex inputs mismatch: {list(preview_inputs)}")
     require(bundled == set(CURRENT_FRAGMENTS),

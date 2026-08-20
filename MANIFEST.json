@@ -29,13 +29,13 @@
   },
   {
    "path": "README.md",
-   "bytes": 2141,
-   "sha256": "697bec65b3078bc44c2f861a0e7f9301b5c351a6de377984525ba22fe7b0a7d9"
+   "bytes": 2153,
+   "sha256": "d15388f6152405fa4915bb33f7511e911a31a80b68e1014bed02b362d657a282"
   },
   {
    "path": "README_PROJECT.md",
-   "bytes": 2141,
-   "sha256": "697bec65b3078bc44c2f861a0e7f9301b5c351a6de377984525ba22fe7b0a7d9"
+   "bytes": 2153,
+   "sha256": "d15388f6152405fa4915bb33f7511e911a31a80b68e1014bed02b362d657a282"
   },
   {
    "path": "REPO_TOPOLOGY.md",
@@ -49,8 +49,8 @@
   },
   {
    "path": "docs/FULL_RERUN.md",
-   "bytes": 8726,
-   "sha256": "7a2f8bb9286c4659355b190c110cc9c5baf699da6015f69057e1a71aca2a340d"
+   "bytes": 8722,
+   "sha256": "2b113b25d9eb718209c5badae75032c46bc7833616b5580a9598627ba8f7ade3"
   },
   {
    "path": "docs/FULL_RUN_LOG.md",
@@ -69,18 +69,13 @@
   },
   {
    "path": "docs/PAPER_OUTLINE.md",
-   "bytes": 5328,
-   "sha256": "dd309d9d02b96b1fb25c8f212b4ffab009af642cbf006a3774418f7be49a393a"
+   "bytes": 5203,
+   "sha256": "8f7c007046318f9f1d837ff6dc1209f67f9822a915df0ff14c08d69f499034d4"
   },
   {
    "path": "docs/SCREG_EVAL_PROTOCOL.md",
    "bytes": 11073,
    "sha256": "d2fa663f83e93b288f51bb65cebf2a59cc9316fe7af8d6b9ccb5679baa86f14c"
-  },
-  {
-   "path": "docs/SCREG_EVAL_SAP.md",
-   "bytes": 6541,
-   "sha256": "7113899d0f210460aadff1c84f59ae075a6f3941a8e9b1992361d3226237c361"
   },
   {
    "path": "docs/TF_PROBE_RESULT.md",
@@ -89,8 +84,8 @@
   },
   {
    "path": "paper/CANONICAL_BUILD.md",
-   "bytes": 3894,
-   "sha256": "a207de174359a3b5474d8f706486301beaca504ee3cf436c877e63b867f579ce"
+   "bytes": 1769,
+   "sha256": "7b1defcceceb6cb719f18925b1fb1a81665bad1894cc10abb46d4b347902f1a2"
   },
   {
    "path": "paper/NOTICE.md",
@@ -216,11 +211,6 @@
    "path": "paper/make_panel_data.py",
    "bytes": 16891,
    "sha256": "a06e36159e69034ad5262a9ef9ae6ebb701c2c9df00df02d48ad70bb3bada05d"
-  },
-  {
-   "path": "paper/manuscript.tex",
-   "bytes": 88864,
-   "sha256": "4ba95ee3e2d7058c35802ebdf5722371e95b3419cd61f0a2a6478de89d983c3f"
   },
   {
    "path": "paper/panel_data.json",
@@ -439,8 +429,8 @@
   },
   {
    "path": "src/tests/test_validate_artifacts.py",
-   "bytes": 12998,
-   "sha256": "218222f434f8b1872d9682fc52423865e5efe7178bdbf8ba14bd93e61abd6772"
+   "bytes": 13165,
+   "sha256": "b93c6783800df81daab04b2fc3657ea1ac80d9344fff1a782875a6d2fc72b768"
   },
   {
    "path": "src/w2_public_analyses.py",
@@ -449,8 +439,8 @@
   },
   {
    "path": "validate_artifacts.py",
-   "bytes": 16174,
-   "sha256": "d56dc754d4241eccf11a41bb274139df3f0552ed487f768d0031f46c99034eb8"
+   "bytes": 16464,
+   "sha256": "7ef7ca6667080438a3f7599bde37bb62b100d4f5ec431ddafba309c2f33fcf37"
   }
  ]
 }

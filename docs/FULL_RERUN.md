@@ -135,10 +135,10 @@ python src/v2/run_pair_probe.py
 python src/v2/pair_probe_stats.py
 python src/v2/pair_probe_sensitivity.py
 
-# 5. Figures + manuscript (publish capsule paper/ is SoT for PeerJ)
-cd paper && Rscript make_figs.R && latexmk -pdf manuscript.tex
+# 5. Figures (publish capsule paper/figs is SoT for TikZ fragments)
+cd paper && Rscript make_figs.R
 
-# 6. Packages (from publish capsule checkout)
+# 6. Packages (from a checkout that still has local manuscript overlays)
 python src/v2/build_peerj_package.py
 python src/v2/build_release_capsule.py
 ```

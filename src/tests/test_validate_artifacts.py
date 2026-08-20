@@ -122,6 +122,11 @@ class TestFigureContract(unittest.TestCase):
         self.write_capsule()
         va.check_figure_contract()
 
+    def test_preview_only_capsule_passes(self):
+        self.write_capsule()
+        (self.root / "paper/manuscript.tex").unlink()
+        va.check_figure_contract()
+
     def test_missing_manuscript_figure_fails(self):
         self.write_capsule(manuscript=va.CURRENT_FRAGMENTS[1:])
         with self.assertRaises(va.ValidationError):

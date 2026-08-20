@@ -34,8 +34,8 @@ The archives are written to `paper/submission_peerj/supplemental/`,
 | Supplemental Data S2 | `Supplemental_Data_S2_prompts.zip` |
 | Supplemental Data S3 | `Supplemental_Data_S3_resulting_code.zip` |
 
-Do not unpack these into GitHub Pages. The site assembler copies only
-`paper/submission_peerj/flat_upload/manuscript.pdf` and the Frontiers PDF.
+Do not unpack these into GitHub Pages. The site assembler does not copy
+manuscripts or figure PDFs into the publish directory.
 
 ## Working tree
 

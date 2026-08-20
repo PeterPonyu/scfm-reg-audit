@@ -221,6 +221,8 @@ class TestFigureMapValidation:
     def test_live_manuscript_matches_maps(self):
         root = Path(__file__).resolve().parents[3]
         manuscript = root / "paper" / "manuscript.tex"
+        if not manuscript.exists():
+            pytest.skip(reason="manuscript is local-only")
         validate_figure_map(str(manuscript))
         validate_appendix_map(str(manuscript))
 

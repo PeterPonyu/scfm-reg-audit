@@ -64,8 +64,6 @@ def main() -> None:
         "figures/index.html",
         "reproducibility/index.html",
         "404.html",
-        "products/peerj-manuscript.pdf",
-        "products/frontiers-manuscript.pdf",
         ".nojekyll",
     ]
     for rel in routes:
@@ -139,15 +137,12 @@ def main() -> None:
     ok("built hub uses project-pages prefix")
 
     pdfs = list(PUBLIC.rglob("*.pdf"))
-    if len(pdfs) != 2:
-        fail(f"expected 2 PDFs, found {len(pdfs)}")
-    names = {p.name for p in pdfs}
-    if names != {"peerj-manuscript.pdf", "frontiers-manuscript.pdf"}:
-        fail(f"unexpected PDFs {sorted(names)}")
+    if pdfs:
+        fail(f"expected no PDFs, found {sorted(p.name for p in pdfs)}")
     for name in (f"Figure{i}.pdf" for i in range(1, 13)):
         if (PUBLIC / name).exists() or list(PUBLIC.rglob(name)):
             fail(f"denylist PDF present: {name}")
-    ok("exactly two artifact PDFs (unlinked)")
+    ok("publish dir has no PDFs")
 
     figures = (PUBLIC / "figures/index.html").read_text(encoding="utf-8")
     if "fig10_coverage_qc" not in figures:

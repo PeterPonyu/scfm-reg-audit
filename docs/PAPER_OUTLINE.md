@@ -84,11 +84,9 @@ Do not summarize this as either “scFMs encode regulation” or “no scFM enco
 - per-cell-type significance or cross-tissue uncertainty;
 - population generalization beyond the fixed panel and stated randomizations.
 
-## Current manuscript assets
+## Current figure assets
 
-- Canonical source: `paper/manuscript.tex`
 - Data-driven generator: `paper/make_figs.R`
-- Current visuals: six figures and two tables from authoritative JSON.
-- Build: `Rscript make_figs.R`, then `latexmk -g -pdf manuscript.tex` from `paper/`.
-- Author identity, affiliation, funding, and CRediT declarations are now populated in the manuscript;
-  the repository DOI remains gated on public release.
+- Current visuals: figure and table TikZ fragments under `paper/figs/` from authoritative JSON.
+- Build: `Rscript make_figs.R` from `paper/`.
+- Full manuscript TeX/PDF sources are local-only and are not on the public repository HEAD.
