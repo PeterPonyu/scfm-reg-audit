@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-07-26T15:50:36Z",
+  "question": "Does the primary statistic depend on conditioning on covariates derived from the outcome graph G_ATAC?",
+  "outcome_derived_covariates": [
+    "tf_outdeg",
+    "atac_indeg"
+  ],
+  "specs": {
+    "full": "coexp + peakcount, genelen, detection, GC + tf_outdeg, atac_indeg (outcome-derived)",
+    "non_degree": "coexp + peakcount, genelen, detection, GC (no outcome-derived covariate)"
+  },
+  "rows": [
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "rho_full": 0.00442,
+      "rho_non_degree": -0.006588,
+      "delta_full_minus_non_degree": 0.011008,
+      "sign_flip_between_specs": true,
+      "mantel_p_full": 0.003,
+      "mantel_p_non_degree": 0.375,
+      "degree_preserving_p_full": 0.001,
+      "degree_preserving_p_non_degree": 0.517,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.116472,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.173601
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "rho_full": 0.000619,
+      "rho_non_degree": 0.002555,
+      "delta_full_minus_non_degree": -0.001936,
+      "sign_flip_between_specs": false,
+      "mantel_p_full": 0.633,
+      "mantel_p_non_degree": 0.768,
+      "degree_preserving_p_full": 0.643,
+      "degree_preserving_p_non_degree": 0.797,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.016311,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.067327
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "rho_full": 0.004612,
+      "rho_non_degree": 0.010875,
+      "delta_full_minus_non_degree": -0.006263,
+      "sign_flip_between_specs": false,
+      "mantel_p_full": 0.001,
+      "mantel_p_non_degree": 0.14,
+      "degree_preserving_p_full": 0.001,
+      "degree_preserving_p_non_degree": 0.001,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.121532,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.286569
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "rho_full": 0.012407,
+      "rho_non_degree": 0.012217,
+      "delta_full_minus_non_degree": 0.00019,
+      "sign_flip_between_specs": false,
+      "mantel_p_full": 0.001,
+      "mantel_p_non_degree": 0.177,
+      "degree_preserving_p_full": 0.001,
+      "degree_preserving_p_non_degree": 0.009,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.326939,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.321932
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "rho_full": -0.000933,
+      "rho_non_degree": 0.017568,
+      "delta_full_minus_non_degree": -0.018501,
+      "sign_flip_between_specs": true,
+      "mantel_p_full": 0.407,
+      "mantel_p_non_degree": 0.147,
+      "degree_preserving_p_full": 0.366,
+      "degree_preserving_p_non_degree": 0.001,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.024586,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.462937
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "rho_full": -0.001887,
+      "rho_non_degree": 0.002351,
+      "delta_full_minus_non_degree": -0.004238,
+      "sign_flip_between_specs": true,
+      "mantel_p_full": 0.1,
+      "mantel_p_non_degree": 0.852,
+      "degree_preserving_p_full": 0.091,
+      "degree_preserving_p_non_degree": 0.897,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.049725,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.061952
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "rho_full": 0.004254,
+      "rho_non_degree": -0.013317,
+      "delta_full_minus_non_degree": 0.017571,
+      "sign_flip_between_specs": true,
+      "mantel_p_full": 0.001,
+      "mantel_p_non_degree": 0.189,
+      "degree_preserving_p_full": 0.002,
+      "degree_preserving_p_non_degree": 0.001,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.056043,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.175441
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "rho_full": -0.000176,
+      "rho_non_degree": 0.026964,
+      "delta_full_minus_non_degree": -0.02714,
+      "sign_flip_between_specs": true,
+      "mantel_p_full": 0.866,
+      "mantel_p_non_degree": 0.067,
+      "degree_preserving_p_full": 0.839,
+      "degree_preserving_p_non_degree": 0.001,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.002319,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.355229
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "rho_full": 0.001115,
+      "rho_non_degree": 0.009773,
+      "delta_full_minus_non_degree": -0.008658,
+      "sign_flip_between_specs": false,
+      "mantel_p_full": 0.393,
+      "mantel_p_non_degree": 0.27,
+      "degree_preserving_p_full": 0.359,
+      "degree_preserving_p_non_degree": 0.011,
+      "audit_rho_full_matches": true,
+      "audit_rho_non_degree_matches": true,
+      "abs_rho_full_vs_coexp_marginal": 0.014689,
+      "abs_rho_non_degree_vs_coexp_marginal": 0.128751
+    }
+  ],
+  "rank_stability": {
+    "brain": {
+      "n_models": 6,
+      "spearman_full_vs_non_degree": 0.2,
+      "argmax_full": "scGPT_encoder",
+      "argmax_non_degree": "geneformer_ko_raw"
+    },
+    "pbmc": {
+      "n_models": 3,
+      "spearman_full_vs_non_degree": -1.0,
+      "argmax_full": "geneformer_embed",
+      "argmax_non_degree": "geneformer_attn"
+    }
+  },
+  "null_model_agreement": {
+    "note": "Mantel permutes gene labels; the degree-preserving null shuffles within degree strata. Under 'full' they agree. Under 'non_degree' they do not: Mantel finds nothing while the degree-preserving null still flags rows. With no degree covariate in the design, the degree-preserving null no longer breaks the degree structure the statistic is picking up, so the more conservative Mantel result governs.",
+    "n_significant_at_0p05": {
+      "mantel_full": 4,
+      "mantel_non_degree": 0,
+      "degree_preserving_full": 4,
+      "degree_preserving_non_degree": 6
+    },
+    "significant_rows": {
+      "mantel_full": [
+        "brain/geneformer_embed",
+        "brain/UCE_encoder",
+        "brain/scGPT_encoder",
+        "pbmc/geneformer_embed"
+      ],
+      "mantel_non_degree": [],
+      "degree_preserving_full": [
+        "brain/geneformer_embed",
+        "brain/UCE_encoder",
+        "brain/scGPT_encoder",
+        "pbmc/geneformer_embed"
+      ],
+      "degree_preserving_non_degree": [
+        "brain/UCE_encoder",
+        "brain/scGPT_encoder",
+        "brain/geneformer_ko_raw",
+        "pbmc/geneformer_embed",
+        "pbmc/geneformer_attn",
+        "pbmc/scFoundation_encoder"
+      ]
+    },
+    "nulls_agree_under_full": true,
+    "nulls_agree_under_non_degree": false
+  },
+  "summary": {
+    "n_model_rows": 9,
+    "n_sign_flips_between_specs": 5,
+    "sign_flipping_rows": [
+      "brain/geneformer_embed",
+      "brain/geneformer_ko_raw",
+      "brain/geneformer_ko_posctrl",
+      "pbmc/geneformer_embed",
+      "pbmc/geneformer_attn"
+    ],
+    "max_abs_delta_between_specs": 0.02714,
+    "n_rows_reaching_coexp_marginal_under_either_spec": 0,
+    "coexp_marginal_by_tissue": {
+      "brain": 0.037949,
+      "pbmc": 0.075906
+    },
+    "all_audit_rho_reproduced": true
+  },
+  "provenance": {
+    "generated_utc": "2026-07-26T15:50:36Z",
+    "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+    "inputs": {
+      "atac_brain": {
+        "path": "${SCFM_BRAIN_ATAC}",
+        "sha256": "ca6dac8097bba732f3453e9e78139ec1b11d6f63ae33e3f44d243f2377eb3ae8"
+      },
+      "atac_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/data/multiome/pbmc10k_atac.h5ad",
+        "sha256": "d2afd953ac98f7626fb501024e5eab76a38be95751e62a488e06d2cfbe372a15"
+      },
+      "fmgraphs_pooled_brain": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/fmgraphs_pooled_v2.npz",
+        "sha256": "4f833efd46cedbab35e4dc2c0bec95b11de38b01701719cc291bb08e41b55ab0"
+      },
+      "fmgraphs_pooled_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_fmgraphs_pooled.npz",
+        "sha256": "cbcdd1afcc9351cd78cb97ad2edb030456482268e80bfd6fbee01c6d803a8347"
+      },
+      "G_atac_brain": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_GSE174367.npz",
+        "sha256": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c"
+      },
+      "G_atac_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_PBMC10k.npz",
+        "sha256": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c"
+      },
+      "G_ko": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ko_v2.npz",
+        "sha256": "65fb8a2973c0711dfbaecb9a236ebe40cf00209b7cb6e74e427c26bf99dca07d"
+      }
+    },
+    "code": {
+      "module": "src/v2/spec_audit_v2.py",
+      "reused": [
+        "fixed_panel_audit.partial_rho ladder via fpa.pcorr",
+        "fixed_panel_audit.edge_mask",
+        "fixed_panel_audit.build_confounds"
+      ]
+    }
+  }
+}

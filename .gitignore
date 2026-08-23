@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+results/v2/
+output/
+tmp/
+paper/
+submission*/
+.codex/
+.omx/
+.omc/

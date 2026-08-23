@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "confound_spec": "non_degree",
+  "counts": {
+    "dual": 0,
+    "M_only": 0,
+    "D_only": 9,
+    "neither": 4
+  },
+  "rows": [
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "rho": -0.006588,
+      "q_M": 0.593333,
+      "q_D": 0.689333,
+      "pattern": "neither"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "rho": 0.002555,
+      "q_M": 0.852,
+      "q_D": 0.897,
+      "pattern": "neither"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "rho": 0.010875,
+      "q_M": 0.354,
+      "q_D": 0.002667,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "rho": 0.012217,
+      "q_M": 0.354,
+      "q_D": 0.018,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_attn",
+      "rho": -0.011588,
+      "q_M": 0.593333,
+      "q_D": 0.002667,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "random_init_floor",
+      "rho": 0.002944,
+      "q_M": 0.354,
+      "q_D": 0.0448,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "rho": 0.017568,
+      "q_M": 0.354,
+      "q_D": 0.002667,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "rho": 0.002351,
+      "q_M": 0.852,
+      "q_D": 0.897,
+      "pattern": "neither"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "rho": -0.013317,
+      "q_M": 0.328333,
+      "q_D": 0.001667,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "rho": 0.026964,
+      "q_M": 0.328333,
+      "q_D": 0.001667,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "rho": 0.009773,
+      "q_M": 0.3375,
+      "q_D": 0.01375,
+      "pattern": "D_only"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scGPT_encoder",
+      "rho": -0.001785,
+      "q_M": 0.856,
+      "q_D": 0.998,
+      "pattern": "neither"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "UCE_encoder",
+      "rho": 0.01149,
+      "q_M": 0.328333,
+      "q_D": 0.001667,
+      "pattern": "D_only"
+    }
+  ],
+  "note": "Under non-degree, all rejections in audit v2 are D-only (row-shuffle). Dual-Support never fires; D-only must not be reported as dual-null Support."
+}

@@ -1,0 +1,186 @@
+{
+ "schema_version": 1,
+ "method": "shared_mantel_delta_v1",
+ "job": "0x55",
+ "goal": "G002_option_B",
+ "alternative": "one_sided_delta_gt_0",
+ "alternative_note": "p_mc = (#{\u0394_null \u2265 \u0394_obs} + 1) / (N_perm + 1); tests whether FM partial \u03c1 exceeds the co-expression baseline under shared gene-label Mantel draws.",
+ "confound_spec": "full",
+ "baseline_rung": "degree_only_no_selfpartial",
+ "fm_rung": "full_confound_use_coexp_true",
+ "n_perm": 999,
+ "seeds": {
+  "brain": 2026081001,
+  "pbmc": 2026081002,
+  "seed_contract": "explicit_integer_v1"
+ },
+ "bh": {
+  "method": "Benjamini-Hochberg",
+  "within": "tissue",
+  "alpha": 0.05
+ },
+ "wall_time_sec": 595.9,
+ "n_fm_rows": 13,
+ "n_beats_baseline_observed": 4,
+ "n_shared_null_significant": 2,
+ "by_tissue": {
+  "brain": {
+   "rho_baseline": 0.0027597497150060124,
+   "n_pairs": 534308,
+   "n_shared_null_significant": 1,
+   "n_beats_baseline_observed": 3
+  },
+  "pbmc": {
+   "rho_baseline": 0.006974391790800994,
+   "n_pairs": 534754,
+   "n_shared_null_significant": 1,
+   "n_beats_baseline_observed": 1
+  }
+ },
+ "summary": "2/13 FM rows significant for \u0394>0 under shared Mantel (BH q<0.05 within tissue); 4/13 beat baseline on the observed point estimate.",
+ "rows": [
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_embed",
+   "rho_fm_full": 0.004412,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": 0.0016524996145357686,
+   "beats_baseline_observed": true,
+   "p_mc": 0.141,
+   "bh_q": 0.378667,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "scFoundation_encoder",
+   "rho_fm_full": 0.000564,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": -0.002196037925975923,
+   "beats_baseline_observed": false,
+   "p_mc": 0.896,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "UCE_encoder",
+   "rho_fm_full": 0.004563,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": 0.0018027556346734428,
+   "beats_baseline_observed": true,
+   "p_mc": 0.142,
+   "bh_q": 0.378667,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "scGPT_encoder",
+   "rho_fm_full": 0.012377,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": 0.00961751502741947,
+   "beats_baseline_observed": true,
+   "p_mc": 0.001,
+   "bh_q": 0.008,
+   "shared_null_significant": true
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_attn",
+   "rho_fm_full": -0.003529,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": -0.006288843299809714,
+   "beats_baseline_observed": false,
+   "p_mc": 1.0,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "random_init_floor",
+   "rho_fm_full": 0.001884,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": -0.0008753019489643199,
+   "beats_baseline_observed": false,
+   "p_mc": 0.688,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_ko_raw",
+   "rho_fm_full": -0.001096,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": -0.0038556883050994972,
+   "beats_baseline_observed": false,
+   "p_mc": 0.994,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "brain",
+   "model_label": "geneformer_ko_posctrl",
+   "rho_fm_full": -0.001971,
+   "rho_baseline": 0.0027597497150060124,
+   "delta_rho": -0.004730383446288082,
+   "beats_baseline_observed": false,
+   "p_mc": 0.998,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "geneformer_embed",
+   "rho_fm_full": 0.004254,
+   "rho_baseline": 0.006974391790800994,
+   "delta_rho": -0.0027199582148807744,
+   "beats_baseline_observed": false,
+   "p_mc": 0.948,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "geneformer_attn",
+   "rho_fm_full": -0.000176,
+   "rho_baseline": 0.006974391790800994,
+   "delta_rho": -0.007150065641104971,
+   "beats_baseline_observed": false,
+   "p_mc": 1.0,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "scFoundation_encoder",
+   "rho_fm_full": 0.001115,
+   "rho_baseline": 0.006974391790800994,
+   "delta_rho": -0.005859720826911604,
+   "beats_baseline_observed": false,
+   "p_mc": 0.999,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "scGPT_encoder",
+   "rho_fm_full": 0.010981,
+   "rho_baseline": 0.006974391790800994,
+   "delta_rho": 0.004006883820732561,
+   "beats_baseline_observed": true,
+   "p_mc": 0.008,
+   "bh_q": 0.04,
+   "shared_null_significant": true
+  },
+  {
+   "tissue": "pbmc",
+   "model_label": "UCE_encoder",
+   "rho_fm_full": 0.005927,
+   "rho_baseline": 0.006974391790800994,
+   "delta_rho": -0.0010477345668116825,
+   "beats_baseline_observed": false,
+   "p_mc": 0.721,
+   "bh_q": 1.0,
+   "shared_null_significant": false
+  }
+ ]
+}

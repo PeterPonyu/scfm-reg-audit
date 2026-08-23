@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-07-26T15:50:36Z",
+  "purpose": "Nested covariate ladder for every (tissue, model) on the fixed panel's edge set, using the fixed panel's statistic.",
+  "rungs": {
+    "marginal": "no controls",
+    "coexp_only": "+ rank(co-expression)",
+    "nondegree_only": "+ peakcount, genelen, detection, GC (no coexp)",
+    "degree_only": "+ tf_outdeg, atac_indeg (no coexp) -- both outcome-derived",
+    "coexp_plus_nondegree": "audit spec 'non_degree'",
+    "coexp_plus_full": "audit spec 'full' (headline)"
+  },
+  "baseline_note": "The co_expression row is the baseline, not a model; its coexp rungs are null because partialling co-expression out of itself is degenerate. Its primary rung is degree_only.",
+  "rows": [
+    {
+      "tissue": "brain",
+      "model_label": "co_expression",
+      "is_baseline": true,
+      "n_pairs": 534308,
+      "marginal": 0.037949,
+      "coexp_only": null,
+      "nondegree_only": 0.024814,
+      "degree_only": 0.003568,
+      "coexp_plus_nondegree": null,
+      "coexp_plus_full": null,
+      "delta_marginal_to_primary": -0.034381,
+      "sign_flip_marginal_to_primary": false,
+      "primary_rung": "degree_only"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": -0.024279,
+      "coexp_only": -0.017599,
+      "nondegree_only": -0.009645,
+      "degree_only": 0.00323,
+      "coexp_plus_nondegree": -0.006588,
+      "coexp_plus_full": 0.00442,
+      "delta_marginal_to_primary": 0.0287,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": 0.027731,
+      "coexp_only": 0.024726,
+      "nondegree_only": 0.005752,
+      "degree_only": 0.000781,
+      "coexp_plus_nondegree": 0.002555,
+      "coexp_plus_full": 0.000619,
+      "delta_marginal_to_primary": -0.027112,
+      "sign_flip_marginal_to_primary": false,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": 0.013972,
+      "coexp_only": 0.014785,
+      "nondegree_only": 0.010755,
+      "degree_only": 0.004254,
+      "coexp_plus_nondegree": 0.010875,
+      "coexp_plus_full": 0.004612,
+      "delta_marginal_to_primary": -0.00936,
+      "sign_flip_marginal_to_primary": false,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": -0.009651,
+      "coexp_only": -0.003817,
+      "nondegree_only": 0.008342,
+      "degree_only": 0.01214,
+      "coexp_plus_nondegree": 0.012217,
+      "coexp_plus_full": 0.012407,
+      "delta_marginal_to_primary": 0.022058,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": 0.069578,
+      "coexp_only": 0.070843,
+      "nondegree_only": 0.01856,
+      "degree_only": -0.00214,
+      "coexp_plus_nondegree": 0.017568,
+      "coexp_plus_full": -0.000933,
+      "delta_marginal_to_primary": -0.070511,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "is_baseline": false,
+      "n_pairs": 534308,
+      "marginal": 0.033128,
+      "coexp_only": 0.035106,
+      "nondegree_only": 0.002337,
+      "degree_only": -0.002936,
+      "coexp_plus_nondegree": 0.002351,
+      "coexp_plus_full": -0.001887,
+      "delta_marginal_to_primary": -0.035015,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "co_expression",
+      "is_baseline": true,
+      "n_pairs": 534754,
+      "marginal": 0.075906,
+      "coexp_only": null,
+      "nondegree_only": 0.052086,
+      "degree_only": 0.008831,
+      "coexp_plus_nondegree": null,
+      "coexp_plus_full": null,
+      "delta_marginal_to_primary": -0.067075,
+      "sign_flip_marginal_to_primary": false,
+      "primary_rung": "degree_only"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "is_baseline": false,
+      "n_pairs": 534754,
+      "marginal": -0.047917,
+      "coexp_only": -0.040838,
+      "nondegree_only": -0.015865,
+      "degree_only": 0.003372,
+      "coexp_plus_nondegree": -0.013317,
+      "coexp_plus_full": 0.004254,
+      "delta_marginal_to_primary": 0.052171,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "is_baseline": false,
+      "n_pairs": 534754,
+      "marginal": 0.074964,
+      "coexp_only": 0.048879,
+      "nondegree_only": 0.043328,
+      "degree_only": 0.005116,
+      "coexp_plus_nondegree": 0.026964,
+      "coexp_plus_full": -0.000176,
+      "delta_marginal_to_primary": -0.07514,
+      "sign_flip_marginal_to_primary": true,
+      "primary_rung": "coexp_plus_full"
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "is_baseline": false,
+      "n_pairs": 534754,
+      "marginal": 0.017162,
+      "coexp_only": 0.012325,
+      "nondegree_only": 0.013889,
+      "degree_only": 0.001797,
+      "coexp_plus_nondegree": 0.009773,
+      "coexp_plus_full": 0.001115,
+      "delta_marginal_to_primary": -0.016047,
+      "sign_flip_marginal_to_primary": false,
+      "primary_rung": "coexp_plus_full"
+    }
+  ],
+  "cross_check_confound_ablation": {
+    "status": "compared",
+    "note": "confound_ablation_v2.json used the unmasked brain edge set (534754 pairs); this recomputation uses the fixed panel's marker-masked set (534308). Deltas are expected to be small but non-zero.",
+    "n_compared": 5,
+    "max_abs_delta_across_rows": 0.000351,
+    "all_signs_agree": true,
+    "comparisons": [
+      {
+        "ablation_label": "coexp_vs_atac",
+        "model_label": "co_expression",
+        "status": "compared",
+        "rungs": {
+          "marginal": {
+            "ablation": 0.0383,
+            "recomputed": 0.037949,
+            "abs_delta": 0.000351,
+            "sign_agrees": true
+          },
+          "coexp_only": null,
+          "coexp_plus_nondegree": null,
+          "coexp_plus_full": null
+        },
+        "max_abs_delta": 0.000351,
+        "all_signs_agree": true
+      },
+      {
+        "ablation_label": "geneformer_embed",
+        "model_label": "geneformer_embed",
+        "status": "compared",
+        "rungs": {
+          "marginal": {
+            "ablation": -0.0245,
+            "recomputed": -0.024279,
+            "abs_delta": 0.000221,
+            "sign_agrees": true
+          },
+          "coexp_only": {
+            "ablation": -0.0177,
+            "recomputed": -0.017599,
+            "abs_delta": 0.000101,
+            "sign_agrees": true
+          },
+          "coexp_plus_nondegree": {
+            "ablation": -0.0066,
+            "recomputed": -0.006588,
+            "abs_delta": 1.2e-05,
+            "sign_agrees": true
+          },
+          "coexp_plus_full": {
+            "ablation": 0.0044,
+            "recomputed": 0.00442,
+            "abs_delta": 2e-05,
+            "sign_agrees": true
+          }
+        },
+        "max_abs_delta": 0.000221,
+        "all_signs_agree": true
+      },
+      {
+        "ablation_label": "scfoundation",
+        "model_label": "scFoundation_encoder",
+        "status": "compared",
+        "rungs": {
+          "marginal": {
+            "ablation": 0.0279,
+            "recomputed": 0.027731,
+            "abs_delta": 0.000169,
+            "sign_agrees": true
+          },
+          "coexp_only": {
+            "ablation": 0.0249,
+            "recomputed": 0.024726,
+            "abs_delta": 0.000174,
+            "sign_agrees": true
+          },
+          "coexp_plus_nondegree": {
+            "ablation": 0.0026,
+            "recomputed": 0.002555,
+            "abs_delta": 4.5e-05,
+            "sign_agrees": true
+          },
+          "coexp_plus_full": {
+            "ablation": 0.0006,
+            "recomputed": 0.000619,
+            "abs_delta": 1.9e-05,
+            "sign_agrees": true
+          }
+        },
+        "max_abs_delta": 0.000174,
+        "all_signs_agree": true
+      },
+      {
+        "ablation_label": "uce",
+        "model_label": "UCE_encoder",
+        "status": "compared",
+        "rungs": {
+          "marginal": {
+            "ablation": 0.0137,
+            "recomputed": 0.013972,
+            "abs_delta": 0.000272,
+            "sign_agrees": true
+          },
+          "coexp_only": {
+            "ablation": 0.0145,
+            "recomputed": 0.014785,
+            "abs_delta": 0.000285,
+            "sign_agrees": true
+          },
+          "coexp_plus_nondegree": {
+            "ablation": 0.0108,
+            "recomputed": 0.010875,
+            "abs_delta": 7.5e-05,
+            "sign_agrees": true
+          },
+          "coexp_plus_full": {
+            "ablation": 0.0046,
+            "recomputed": 0.004612,
+            "abs_delta": 1.2e-05,
+            "sign_agrees": true
+          }
+        },
+        "max_abs_delta": 0.000285,
+        "all_signs_agree": true
+      },
+      {
+        "ablation_label": "geneformer_ko_raw",
+        "model_label": "geneformer_ko_raw",
+        "status": "compared",
+        "rungs": {
+          "marginal": {
+            "ablation": 0.0693,
+            "recomputed": 0.069578,
+            "abs_delta": 0.000278,
+            "sign_agrees": true
+          },
+          "coexp_only": {
+            "ablation": 0.0706,
+            "recomputed": 0.070843,
+            "abs_delta": 0.000243,
+            "sign_agrees": true
+          },
+          "coexp_plus_nondegree": {
+            "ablation": 0.0175,
+            "recomputed": 0.017568,
+            "abs_delta": 6.8e-05,
+            "sign_agrees": true
+          },
+          "coexp_plus_full": {
+            "ablation": -0.0009,
+            "recomputed": -0.000933,
+            "abs_delta": 3.3e-05,
+            "sign_agrees": true
+          }
+        },
+        "max_abs_delta": 0.000278,
+        "all_signs_agree": true
+      }
+    ]
+  },
+  "provenance": {
+    "generated_utc": "2026-07-26T15:50:36Z",
+    "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+    "inputs": {
+      "atac_brain": {
+        "path": "${SCFM_BRAIN_ATAC}",
+        "sha256": "ca6dac8097bba732f3453e9e78139ec1b11d6f63ae33e3f44d243f2377eb3ae8"
+      },
+      "atac_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/data/multiome/pbmc10k_atac.h5ad",
+        "sha256": "d2afd953ac98f7626fb501024e5eab76a38be95751e62a488e06d2cfbe372a15"
+      },
+      "fmgraphs_pooled_brain": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/fmgraphs_pooled_v2.npz",
+        "sha256": "4f833efd46cedbab35e4dc2c0bec95b11de38b01701719cc291bb08e41b55ab0"
+      },
+      "fmgraphs_pooled_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/pbmc_fmgraphs_pooled.npz",
+        "sha256": "cbcdd1afcc9351cd78cb97ad2edb030456482268e80bfd6fbee01c6d803a8347"
+      },
+      "G_atac_brain": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_GSE174367.npz",
+        "sha256": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c"
+      },
+      "G_atac_pbmc": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ATAC_v2_PBMC10k.npz",
+        "sha256": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c"
+      },
+      "G_ko": {
+        "path": "${SCFM_PROJECT_ROOT}/results/v2/G_ko_v2.npz",
+        "sha256": "65fb8a2973c0711dfbaecb9a236ebe40cf00209b7cb6e74e427c26bf99dca07d"
+      }
+    },
+    "code": {
+      "module": "src/v2/spec_audit_v2.py",
+      "reused": [
+        "fixed_panel_audit.partial_rho ladder via fpa.pcorr",
+        "fixed_panel_audit.edge_mask",
+        "fixed_panel_audit.build_confounds"
+      ]
+    }
+  }
+}

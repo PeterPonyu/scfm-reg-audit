@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "panel_contract": {
+    "n_tf": 446,
+    "n_genes": 1200,
+    "policy_default": "frozen_brain_pinned_446x1200"
+  },
+  "forbidden_roles_for_g_atac": [
+    "out_of_scope",
+    "rna_lake_only"
+  ],
+  "tissues": {
+    "brain": {
+      "accession": "GSE174367",
+      "modality": "snATAC",
+      "lane": "audit",
+      "role": "primary_audit",
+      "genome": "hg38",
+      "peerj_freeze": true,
+      "panel_policy": "frozen_brain_pinned_446x1200",
+      "g_atac_tag": "GSE174367",
+      "notes": "PeerJ primary audit tissue; do not re-register for extension Support inflation."
+    },
+    "pbmc": {
+      "accession": "10x_PBMC_10k_multiome",
+      "modality": "multiome",
+      "lane": "audit",
+      "role": "primary_audit",
+      "genome": "hg38",
+      "peerj_freeze": true,
+      "panel_policy": "frozen_brain_pinned_446x1200",
+      "g_atac_tag": "PBMC10k",
+      "notes": "PeerJ primary audit tissue (monorepo RNA partner)."
+    },
+    "fibroblast": {
+      "accession": "GSE206767",
+      "modality": "scATAC",
+      "lane": "construct",
+      "role": "construct",
+      "genome": "hg38",
+      "peerj_freeze": true,
+      "panel_policy": "frozen_brain_pinned_446x1200",
+      "g_atac_tag": "GSE206767",
+      "notes": "Construct-transfer only; no FM Support rows."
+    },
+    "bmmc": {
+      "accession": "GSE194122",
+      "modality": "multiome",
+      "lane": "construct",
+      "role": "construct_candidate",
+      "genome": "hg38",
+      "peerj_freeze": false,
+      "panel_policy": "pending_written_decision",
+      "panel_coverage_preflight": "enhancement_v1/gse194122_preflight.json",
+      "local_path_env": "SCREG_BMMC_H5AD",
+      "local_path_hint": "${DESKTOP_DATA}/external/scfm-reg-audit/gse194122/",
+      "g_atac_tag": "GSE194122",
+      "notes": "Already local (~5.7G). Construct-candidate only until panel policy + re-SAP. Full FM audit (Option C) gated. Gene cov ~0.897 / TF cov ~0.765 on frozen panel (remeasure before C).\n"
+    },
+    "descartes_spleen": {
+      "accession": "GSE149683",
+      "modality": "scATAC",
+      "lane": "construct",
+      "role": "construct",
+      "genome": "hg38",
+      "peerj_freeze": false,
+      "panel_policy": "frozen_brain_pinned_446x1200",
+      "fetch_status": "absent_local",
+      "estimated_download_mb": 100,
+      "g_atac_tag": "DESCARTES_spleen",
+      "notes": "Preferred first construct SI after PeerJ; needs ~100MB RDS fetch (not this session)."
+    },
+    "orphan_atac_placeholder": {
+      "accession": "TBD_after_meta_rescue",
+      "modality": "scATAC",
+      "lane": "construct",
+      "role": "construct",
+      "genome": "hg38",
+      "peerj_freeze": false,
+      "panel_policy": "frozen_brain_pinned_446x1200",
+      "local_path_hint": "${DESKTOP_DATA}/datasets/ATAC_data/",
+      "notes": "~111 peak matrices local; obs often empty. Construct hooks only after cell-type metadata recovery. No Support rows.\n"
+    },
+    "cancer_rna_lakes": {
+      "accession": "CancerDatasets_bundle",
+      "modality": "RNA",
+      "lane": "none",
+      "role": "out_of_scope",
+      "peerj_freeze": false,
+      "allow_g_atac": false,
+      "notes": "Forbidden for Support / G_ATAC (RNA\u2229ATAC empty). Limitations / coexp-side only."
+    },
+    "development_rna_lakes": {
+      "accession": "DevelopmentDatasets_bundle",
+      "modality": "RNA",
+      "lane": "none",
+      "role": "out_of_scope",
+      "peerj_freeze": false,
+      "allow_g_atac": false,
+      "notes": "Forbidden for Support / G_ATAC. Limitations / coexp-side only."
+    }
+  }
+}

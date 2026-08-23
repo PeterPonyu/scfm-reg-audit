@@ -1,0 +1,26 @@
+{
+  "readout": "geneformer_insilico_KO",
+  "n_cells": 300,
+  "n_tf": 446,
+  "n_pairs": 534754,
+  "ko_vs_atac": 0.0693,
+  "ko_partial_given_coexp": 0.0706,
+  "ko_vs_coexp": -0.0314,
+  "ko_ctrl_vs_atac": 0.0331,
+  "ko_ctrl_partial_given_coexp": 0.0351,
+  "coexp_vs_atac": 0.0383,
+  "mantel_ko_partial": {
+    "observed": 0.0706,
+    "null_mean": 0.0001,
+    "null_sd": 0.0116,
+    "z": 6.05,
+    "p_perm": 0.001
+  },
+  "mantel_ko_ctrl_partial": {
+    "observed": 0.0351,
+    "null_mean": 0.0003,
+    "null_sd": 0.0119,
+    "z": 2.92,
+    "p_perm": 0.004
+  }
+}

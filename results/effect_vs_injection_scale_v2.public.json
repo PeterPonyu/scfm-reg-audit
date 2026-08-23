@@ -1,0 +1,633 @@
+{
+  "analysis": "effect_size_vs_injection_floor",
+  "question": "The injection diagnostic probes alpha in {0, 0.02, ..., 1.0}. Where do the paper's OBSERVED effects sit on that scale? Effects below the smallest non-zero probed alpha are smaller than the pipeline's own coarsest non-null test point.",
+  "alpha_to_rho_curves": {
+    "brain": {
+      "confound_spec": "full",
+      "replicates_per_alpha": 30,
+      "monotone_increasing_in_alpha": true,
+      "smallest_nonzero_alpha": 0.02,
+      "alpha0_null_band": {
+        "mean_rho": -0.00015973333333333328,
+        "max_rho_over_replicates": 0.002932
+      },
+      "smallest_nonzero_alpha_band": {
+        "alpha": 0.02,
+        "mean_rho": 0.019842666666666668,
+        "min_rho_over_replicates": 0.017386
+      },
+      "points": [
+        {
+          "alpha": 0.0,
+          "n_replicates": 30,
+          "mean_rho": -0.00015973333333333328,
+          "sd_rho": 0.0014733948351442951,
+          "min_rho": -0.002713,
+          "max_rho": 0.002932
+        },
+        {
+          "alpha": 0.02,
+          "n_replicates": 30,
+          "mean_rho": 0.019842666666666668,
+          "sd_rho": 0.0013353986705083253,
+          "min_rho": 0.017386,
+          "max_rho": 0.022076
+        },
+        {
+          "alpha": 0.05,
+          "n_replicates": 30,
+          "mean_rho": 0.05127073333333333,
+          "sd_rho": 0.0012663689045056537,
+          "min_rho": 0.04821,
+          "max_rho": 0.053638
+        },
+        {
+          "alpha": 0.08,
+          "n_replicates": 30,
+          "mean_rho": 0.08421106666666665,
+          "sd_rho": 0.0012603474598459853,
+          "min_rho": 0.081593,
+          "max_rho": 0.086793
+        },
+        {
+          "alpha": 0.12,
+          "n_replicates": 30,
+          "mean_rho": 0.1324872666666667,
+          "sd_rho": 0.001422211874543295,
+          "min_rho": 0.129366,
+          "max_rho": 0.135896
+        },
+        {
+          "alpha": 0.18,
+          "n_replicates": 30,
+          "mean_rho": 0.2077749666666667,
+          "sd_rho": 0.0011343570101325158,
+          "min_rho": 0.205402,
+          "max_rho": 0.210795
+        },
+        {
+          "alpha": 0.25,
+          "n_replicates": 30,
+          "mean_rho": 0.30361616666666674,
+          "sd_rho": 0.0012758186305901413,
+          "min_rho": 0.29903,
+          "max_rho": 0.305652
+        },
+        {
+          "alpha": 0.35,
+          "n_replicates": 30,
+          "mean_rho": 0.4450740000000001,
+          "sd_rho": 0.0009504430182996178,
+          "min_rho": 0.44326,
+          "max_rho": 0.446911
+        },
+        {
+          "alpha": 0.5,
+          "n_replicates": 30,
+          "mean_rho": 0.6321969000000001,
+          "sd_rho": 0.0004950406009124198,
+          "min_rho": 0.631473,
+          "max_rho": 0.633546
+        },
+        {
+          "alpha": 0.75,
+          "n_replicates": 30,
+          "mean_rho": 0.8266058333333333,
+          "sd_rho": 0.000163763513963735,
+          "min_rho": 0.826344,
+          "max_rho": 0.826901
+        },
+        {
+          "alpha": 1.0,
+          "n_replicates": 30,
+          "mean_rho": 0.9053359999999997,
+          "sd_rho": 3.387607712450221e-16,
+          "min_rho": 0.905336,
+          "max_rho": 0.905336
+        }
+      ]
+    },
+    "pbmc": {
+      "confound_spec": "full",
+      "replicates_per_alpha": 30,
+      "monotone_increasing_in_alpha": true,
+      "smallest_nonzero_alpha": 0.02,
+      "alpha0_null_band": {
+        "mean_rho": 0.0005423666666666668,
+        "max_rho_over_replicates": 0.003632
+      },
+      "smallest_nonzero_alpha_band": {
+        "alpha": 0.02,
+        "mean_rho": 0.02001863333333333,
+        "min_rho_over_replicates": 0.01639
+      },
+      "points": [
+        {
+          "alpha": 0.0,
+          "n_replicates": 30,
+          "mean_rho": 0.0005423666666666668,
+          "sd_rho": 0.0015342733534114792,
+          "min_rho": -0.003746,
+          "max_rho": 0.003632
+        },
+        {
+          "alpha": 0.02,
+          "n_replicates": 30,
+          "mean_rho": 0.02001863333333333,
+          "sd_rho": 0.0015185745467453974,
+          "min_rho": 0.01639,
+          "max_rho": 0.024368
+        },
+        {
+          "alpha": 0.05,
+          "n_replicates": 30,
+          "mean_rho": 0.05154093333333334,
+          "sd_rho": 0.001737398747897385,
+          "min_rho": 0.048396,
+          "max_rho": 0.054608
+        },
+        {
+          "alpha": 0.08,
+          "n_replicates": 30,
+          "mean_rho": 0.08455716666666666,
+          "sd_rho": 0.0013121712220941111,
+          "min_rho": 0.082307,
+          "max_rho": 0.087401
+        },
+        {
+          "alpha": 0.12,
+          "n_replicates": 30,
+          "mean_rho": 0.13147456666666668,
+          "sd_rho": 0.001255905764182069,
+          "min_rho": 0.128517,
+          "max_rho": 0.133313
+        },
+        {
+          "alpha": 0.18,
+          "n_replicates": 30,
+          "mean_rho": 0.20819290000000004,
+          "sd_rho": 0.0013591140458604537,
+          "min_rho": 0.205681,
+          "max_rho": 0.211264
+        },
+        {
+          "alpha": 0.25,
+          "n_replicates": 30,
+          "mean_rho": 0.30443746666666666,
+          "sd_rho": 0.001163788158627213,
+          "min_rho": 0.30234,
+          "max_rho": 0.306421
+        },
+        {
+          "alpha": 0.35,
+          "n_replicates": 30,
+          "mean_rho": 0.4475542333333334,
+          "sd_rho": 0.0011175021926487275,
+          "min_rho": 0.445213,
+          "max_rho": 0.449907
+        },
+        {
+          "alpha": 0.5,
+          "n_replicates": 30,
+          "mean_rho": 0.6398326666666666,
+          "sd_rho": 0.0003005069662780084,
+          "min_rho": 0.639093,
+          "max_rho": 0.640247
+        },
+        {
+          "alpha": 0.75,
+          "n_replicates": 30,
+          "mean_rho": 0.8368420666666666,
+          "sd_rho": 0.00012160079778926999,
+          "min_rho": 0.836635,
+          "max_rho": 0.837062
+        },
+        {
+          "alpha": 1.0,
+          "n_replicates": 30,
+          "mean_rho": 0.9134260000000002,
+          "sd_rho": 2.2584051416334807e-16,
+          "min_rho": 0.913426,
+          "max_rho": 0.913426
+        }
+      ]
+    }
+  },
+  "observed_effects_as_alpha": [
+    {
+      "tissue": "brain",
+      "model_label": "co_expression",
+      "confound_spec": "n/a_marginal",
+      "observed_rho": 0.037949,
+      "source": "coexp_baseline_marginal",
+      "alpha_equivalent": 0.03728,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": false,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "confound_spec": "full",
+      "observed_rho": 0.00442,
+      "p_mc_mantel": 0.003,
+      "p_mc_degree_preserving": 0.001,
+      "source": "primary_family",
+      "alpha_equivalent": 0.00458,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "confound_spec": "full",
+      "observed_rho": 0.000619,
+      "p_mc_mantel": 0.633,
+      "p_mc_degree_preserving": 0.643,
+      "source": "primary_family",
+      "alpha_equivalent": 0.00078,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "confound_spec": "full",
+      "observed_rho": 0.004612,
+      "p_mc_mantel": 0.001,
+      "p_mc_degree_preserving": 0.001,
+      "source": "primary_family",
+      "alpha_equivalent": 0.00477,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "confound_spec": "full",
+      "observed_rho": 0.012407,
+      "p_mc_mantel": 0.001,
+      "p_mc_degree_preserving": 0.001,
+      "source": "primary_family",
+      "alpha_equivalent": 0.01257,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "confound_spec": "full",
+      "observed_rho": -0.000933,
+      "p_mc_mantel": 0.407,
+      "p_mc_degree_preserving": 0.366,
+      "source": "primary_family",
+      "alpha_equivalent": null,
+      "alpha_equivalent_status": "BELOW_ALPHA_0_FLOOR",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "confound_spec": "full",
+      "observed_rho": -0.001887,
+      "p_mc_mantel": 0.1,
+      "p_mc_degree_preserving": 0.091,
+      "source": "primary_family",
+      "alpha_equivalent": null,
+      "alpha_equivalent_status": "BELOW_ALPHA_0_FLOOR",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_embed",
+      "confound_spec": "non_degree",
+      "observed_rho": -0.006588,
+      "p_mc_mantel": 0.375,
+      "p_mc_degree_preserving": 0.517,
+      "source": "sensitivity_family",
+      "alpha_equivalent": null,
+      "alpha_equivalent_status": "BELOW_ALPHA_0_FLOOR",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scFoundation_encoder",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.002555,
+      "p_mc_mantel": 0.768,
+      "p_mc_degree_preserving": 0.797,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.00271,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "brain",
+      "model_label": "UCE_encoder",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.010875,
+      "p_mc_mantel": 0.14,
+      "p_mc_degree_preserving": 0.001,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.01103,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "scGPT_encoder",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.012217,
+      "p_mc_mantel": 0.177,
+      "p_mc_degree_preserving": 0.009,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.01238,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_raw",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.017568,
+      "p_mc_mantel": 0.147,
+      "p_mc_degree_preserving": 0.001,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.01773,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "brain",
+      "model_label": "geneformer_ko_posctrl",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.002351,
+      "p_mc_mantel": 0.852,
+      "p_mc_degree_preserving": 0.897,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.00251,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.019843,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "co_expression",
+      "confound_spec": "n/a_marginal",
+      "observed_rho": 0.075906,
+      "source": "coexp_baseline_marginal",
+      "alpha_equivalent": 0.07214,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": false,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "confound_spec": "full",
+      "observed_rho": 0.004254,
+      "p_mc_mantel": 0.001,
+      "p_mc_degree_preserving": 0.002,
+      "source": "primary_family",
+      "alpha_equivalent": 0.00381,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "confound_spec": "full",
+      "observed_rho": -0.000176,
+      "p_mc_mantel": 0.866,
+      "p_mc_degree_preserving": 0.839,
+      "source": "primary_family",
+      "alpha_equivalent": null,
+      "alpha_equivalent_status": "BELOW_ALPHA_0_FLOOR",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "confound_spec": "full",
+      "observed_rho": 0.001115,
+      "p_mc_mantel": 0.393,
+      "p_mc_degree_preserving": 0.359,
+      "source": "primary_family",
+      "alpha_equivalent": 0.00059,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_embed",
+      "confound_spec": "non_degree",
+      "observed_rho": -0.013317,
+      "p_mc_mantel": 0.189,
+      "p_mc_degree_preserving": 0.001,
+      "source": "sensitivity_family",
+      "alpha_equivalent": null,
+      "alpha_equivalent_status": "BELOW_ALPHA_0_FLOOR",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": true
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "geneformer_attn",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.026964,
+      "p_mc_mantel": 0.067,
+      "p_mc_degree_preserving": 0.001,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.02661,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": false,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": false
+    },
+    {
+      "tissue": "pbmc",
+      "model_label": "scFoundation_encoder",
+      "confound_spec": "non_degree",
+      "observed_rho": 0.009773,
+      "p_mc_mantel": 0.27,
+      "p_mc_degree_preserving": 0.011,
+      "source": "sensitivity_family",
+      "alpha_equivalent": 0.00948,
+      "alpha_equivalent_status": "INTERPOLATED",
+      "below_smallest_nonzero_probed_alpha": true,
+      "smallest_nonzero_probed_alpha": 0.02,
+      "mean_rho_at_smallest_nonzero_alpha": 0.020019,
+      "within_alpha0_noise_band": false
+    }
+  ],
+  "summary": {
+    "n_observed_rows": 20,
+    "n_below_smallest_nonzero_probed_alpha": 17,
+    "rows_below_smallest_nonzero_probed_alpha": [
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_embed",
+        "confound_spec": "full",
+        "observed_rho": 0.00442
+      },
+      {
+        "tissue": "brain",
+        "model_label": "scFoundation_encoder",
+        "confound_spec": "full",
+        "observed_rho": 0.000619
+      },
+      {
+        "tissue": "brain",
+        "model_label": "UCE_encoder",
+        "confound_spec": "full",
+        "observed_rho": 0.004612
+      },
+      {
+        "tissue": "brain",
+        "model_label": "scGPT_encoder",
+        "confound_spec": "full",
+        "observed_rho": 0.012407
+      },
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_ko_raw",
+        "confound_spec": "full",
+        "observed_rho": -0.000933
+      },
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_ko_posctrl",
+        "confound_spec": "full",
+        "observed_rho": -0.001887
+      },
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_embed",
+        "confound_spec": "non_degree",
+        "observed_rho": -0.006588
+      },
+      {
+        "tissue": "brain",
+        "model_label": "scFoundation_encoder",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.002555
+      },
+      {
+        "tissue": "brain",
+        "model_label": "UCE_encoder",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.010875
+      },
+      {
+        "tissue": "brain",
+        "model_label": "scGPT_encoder",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.012217
+      },
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_ko_raw",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.017568
+      },
+      {
+        "tissue": "brain",
+        "model_label": "geneformer_ko_posctrl",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.002351
+      },
+      {
+        "tissue": "pbmc",
+        "model_label": "geneformer_embed",
+        "confound_spec": "full",
+        "observed_rho": 0.004254
+      },
+      {
+        "tissue": "pbmc",
+        "model_label": "geneformer_attn",
+        "confound_spec": "full",
+        "observed_rho": -0.000176
+      },
+      {
+        "tissue": "pbmc",
+        "model_label": "scFoundation_encoder",
+        "confound_spec": "full",
+        "observed_rho": 0.001115
+      },
+      {
+        "tissue": "pbmc",
+        "model_label": "geneformer_embed",
+        "confound_spec": "non_degree",
+        "observed_rho": -0.013317
+      },
+      {
+        "tissue": "pbmc",
+        "model_label": "scFoundation_encoder",
+        "confound_spec": "non_degree",
+        "observed_rho": 0.009773
+      }
+    ],
+    "plain_statement": "Every pooled confound-adjusted (full-spec) effect in the paper is smaller than the mean rho recovered at alpha=0.02, the smallest non-zero injection strength probed. The injection ladder therefore provides no calibration point at or below the magnitude of the reported effects: the observed effects sit inside the interval between alpha=0 (pure noise) and alpha=0.02, which was never subdivided."
+  },
+  "provenance": {
+    "inputs": {
+      "results/v2/fixed_panel_signal_injection_v2.json": "96129465691d5e34f310fed4ac04fb06c15e0f92144ace3ba9a6ef5de980253e",
+      "results/v2/fixed_panel_audit_v2.json": "0f73da20a0994c671839ea140483f5341451c1bd8fc2400357249615e87f44d0"
+    },
+    "logic_summary": "Build the alpha->rho map per tissue by averaging observed_partial_rho_axis_aligned over the 30 replicates at each of the 11 probed alphas (full confound spec, the same spec as the primary statistic). Verify monotonicity. Then, for every observed pooled row in fixed_panel_audit_v2.json (both primary full-spec and non-degree sensitivity families, plus the co-expression marginal baseline), invert the curve by piecewise-linear interpolation to an equivalent alpha, and flag rows whose observed rho falls below the mean rho at the smallest non-zero probed alpha.",
+    "script": "/tmp/regaudit/t345.py",
+    "generated_utc": "2026-07-26T14:42:56Z",
+    "gpu_required": false
+  }
+}

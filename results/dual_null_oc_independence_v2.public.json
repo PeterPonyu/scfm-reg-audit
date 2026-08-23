@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "method": "global_null_independence_mc_v1",
+  "note": "Reference operating characteristic under independent null p-values. The audit shares one proxy null batch across rows, inducing positive dependence; this OC is not exact FDR under the audit stream.",
+  "observed_dual_null_full_counts": {
+    "brain": 4,
+    "pbmc": 3
+  },
+  "families": {
+    "brain": {
+      "n_rows_in_family": 8,
+      "n_sims": 20000,
+      "rate_at_least_one_dual_null_row": 0.0002,
+      "mean_dual_null_rows_per_sim": 0.0002,
+      "assumption": "independent Uniform p_M, p_D; separate BH per null; no shared-batch dependence"
+    },
+    "pbmc": {
+      "n_rows_in_family": 5,
+      "n_sims": 20000,
+      "rate_at_least_one_dual_null_row": 0.0003,
+      "mean_dual_null_rows_per_sim": 0.0003,
+      "assumption": "independent Uniform p_M, p_D; separate BH per null; no shared-batch dependence"
+    }
+  },
+  "interpretation": "If independence OC rate of \u22651 dual-null row is far below the event of observing 7 dual-null rows across tissues, dual-null Support is not explained by naive independent double-dipping alone \u2014 still not causal recovery."
+}

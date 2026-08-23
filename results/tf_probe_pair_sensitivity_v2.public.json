@@ -1,0 +1,145 @@
+{
+  "arm": "edge_only",
+  "arm_features": [
+    "w",
+    "w_rev",
+    "rank_g"
+  ],
+  "confound_names": [
+    "peakcount",
+    "genelen",
+    "gc",
+    "detv"
+  ],
+  "design": "pair-level (TF, gene) probe; TF-disjoint train/test",
+  "grid": {
+    "UCE_encoder": {
+      "atac_construction": {
+        "adjusted_rho_mean": -0.002377131126094146,
+        "adjusted_rho_std": 0.03674985954494285
+      },
+      "detv_only": {
+        "adjusted_rho_mean": 0.005210737919051557,
+        "adjusted_rho_std": 0.029764305403196828
+      },
+      "full": {
+        "adjusted_rho_mean": 0.0003176554675076546,
+        "adjusted_rho_std": 0.03435885325601937
+      },
+      "none": {
+        "adjusted_rho_mean": 0.00999061013940995,
+        "adjusted_rho_std": 0.03450985606678774
+      }
+    },
+    "co_expression": {
+      "atac_construction": {
+        "adjusted_rho_mean": -0.002564025237363205,
+        "adjusted_rho_std": 0.04331838895220908
+      },
+      "detv_only": {
+        "adjusted_rho_mean": 0.06349868420101383,
+        "adjusted_rho_std": 0.060934292612081095
+      },
+      "full": {
+        "adjusted_rho_mean": -0.01204238238539929,
+        "adjusted_rho_std": 0.047670202131956906
+      },
+      "none": {
+        "adjusted_rho_mean": 0.06059269393283568,
+        "adjusted_rho_std": 0.06578336896601956
+      }
+    },
+    "geneformer_attn": {
+      "atac_construction": {
+        "adjusted_rho_mean": -0.0053791608857341544,
+        "adjusted_rho_std": 0.046572746260045206
+      },
+      "detv_only": {
+        "adjusted_rho_mean": 0.09069705394263257,
+        "adjusted_rho_std": 0.06994079754425851
+      },
+      "full": {
+        "adjusted_rho_mean": -0.010188259544316043,
+        "adjusted_rho_std": 0.05047733465386037
+      },
+      "none": {
+        "adjusted_rho_mean": 0.0703543302922167,
+        "adjusted_rho_std": 0.05972449749147067
+      }
+    },
+    "geneformer_embed": {
+      "atac_construction": {
+        "adjusted_rho_mean": -0.012049364591894134,
+        "adjusted_rho_std": 0.0455670318007031
+      },
+      "detv_only": {
+        "adjusted_rho_mean": 0.028077223924378312,
+        "adjusted_rho_std": 0.05125979266954013
+      },
+      "full": {
+        "adjusted_rho_mean": -0.016267449877087108,
+        "adjusted_rho_std": 0.04714608893478489
+      },
+      "none": {
+        "adjusted_rho_mean": 0.05253995364021976,
+        "adjusted_rho_std": 0.06688075487983845
+      }
+    },
+    "random_floor": {
+      "atac_construction": {
+        "adjusted_rho_mean": 0.00212130008423617,
+        "adjusted_rho_std": 0.027187066742848418
+      },
+      "detv_only": {
+        "adjusted_rho_mean": 0.000625986441960076,
+        "adjusted_rho_std": 0.019582954553815732
+      },
+      "full": {
+        "adjusted_rho_mean": 0.0023184993981348696,
+        "adjusted_rho_std": 0.026824974878211182
+      },
+      "none": {
+        "adjusted_rho_mean": 0.004633296667094361,
+        "adjusted_rho_std": 0.026953140549757334
+      }
+    },
+    "scGPT_encoder": {
+      "atac_construction": {
+        "adjusted_rho_mean": -0.020359095979824885,
+        "adjusted_rho_std": 0.03975884448674878
+      },
+      "detv_only": {
+        "adjusted_rho_mean": -0.002021197542911928,
+        "adjusted_rho_std": 0.057632717556520184
+      },
+      "full": {
+        "adjusted_rho_mean": -0.019144378881127307,
+        "adjusted_rho_std": 0.0407149651470724
+      },
+      "none": {
+        "adjusted_rho_mean": 0.02814483711968866,
+        "adjusted_rho_std": 0.07333194978066289
+      }
+    }
+  },
+  "n_test_tfs": 135,
+  "note": "peakcount/genelen/gc enter the ATAC-proxy construction, so `atac_construction` and `full` partly condition on the target's own definition; `none` is the unadjusted upper bound.",
+  "schema_version": 1,
+  "subsets": {
+    "atac_construction": [
+      "peakcount",
+      "genelen",
+      "gc"
+    ],
+    "detv_only": [
+      "detv"
+    ],
+    "full": [
+      "peakcount",
+      "genelen",
+      "gc",
+      "detv"
+    ],
+    "none": []
+  }
+}

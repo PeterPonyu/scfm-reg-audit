@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software capsule, please cite the software."
+title: "scReg-Eval code capsule"
+type: software
+authors:
+  - family-names: Fu
+    given-names: Zeyu
+    orcid: "https://orcid.org/0009-0001-8329-0108"
+    email: "fuzeyu09@gmail.com"
+license: MIT
+repository-code: "https://github.com/PeterPonyu/scfm-reg-audit"
+date-released: 2026-08-23

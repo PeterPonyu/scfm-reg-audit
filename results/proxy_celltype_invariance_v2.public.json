@@ -1,0 +1,377 @@
+{
+  "analysis": "proxy_celltype_invariance",
+  "question": "How cell-type-specific is the v2 ATAC regulatory-potential proxy? If the per-cell-type graphs are near-identical, the ATAC modality is effectively inert as a source of cell-type contrast.",
+  "tissues": {
+    "brain": {
+      "atac_tag": "GSE174367",
+      "n_cell_types": 7,
+      "cell_types": [
+        "ODC",
+        "EX",
+        "ASC",
+        "MG",
+        "INH",
+        "OPC",
+        "PER.END"
+      ],
+      "n_edges_evaluated": 534308,
+      "edge_mask": "self_pairs_and_brain_marker_mask",
+      "n_pairs_compared": 21,
+      "pairwise_spearman": {
+        "mean": 0.986465,
+        "min": 0.978082,
+        "max": 0.99398,
+        "median": 0.987484,
+        "n_pairs": 21
+      },
+      "pairs": [
+        {
+          "type_a": "ODC",
+          "type_b": "EX",
+          "spearman_rho": 0.987767,
+          "pearson_on_ranks": 0.987767
+        },
+        {
+          "type_a": "ODC",
+          "type_b": "ASC",
+          "spearman_rho": 0.988095,
+          "pearson_on_ranks": 0.988095
+        },
+        {
+          "type_a": "ODC",
+          "type_b": "MG",
+          "spearman_rho": 0.985513,
+          "pearson_on_ranks": 0.985513
+        },
+        {
+          "type_a": "ODC",
+          "type_b": "INH",
+          "spearman_rho": 0.987626,
+          "pearson_on_ranks": 0.987626
+        },
+        {
+          "type_a": "ODC",
+          "type_b": "OPC",
+          "spearman_rho": 0.984713,
+          "pearson_on_ranks": 0.984713
+        },
+        {
+          "type_a": "ODC",
+          "type_b": "PER.END",
+          "spearman_rho": 0.978082,
+          "pearson_on_ranks": 0.978082
+        },
+        {
+          "type_a": "EX",
+          "type_b": "ASC",
+          "spearman_rho": 0.993795,
+          "pearson_on_ranks": 0.993795
+        },
+        {
+          "type_a": "EX",
+          "type_b": "MG",
+          "spearman_rho": 0.990746,
+          "pearson_on_ranks": 0.990746
+        },
+        {
+          "type_a": "EX",
+          "type_b": "INH",
+          "spearman_rho": 0.99398,
+          "pearson_on_ranks": 0.99398
+        },
+        {
+          "type_a": "EX",
+          "type_b": "OPC",
+          "spearman_rho": 0.987228,
+          "pearson_on_ranks": 0.987228
+        },
+        {
+          "type_a": "EX",
+          "type_b": "PER.END",
+          "spearman_rho": 0.979528,
+          "pearson_on_ranks": 0.979528
+        },
+        {
+          "type_a": "ASC",
+          "type_b": "MG",
+          "spearman_rho": 0.991699,
+          "pearson_on_ranks": 0.991699
+        },
+        {
+          "type_a": "ASC",
+          "type_b": "INH",
+          "spearman_rho": 0.992869,
+          "pearson_on_ranks": 0.992869
+        },
+        {
+          "type_a": "ASC",
+          "type_b": "OPC",
+          "spearman_rho": 0.988401,
+          "pearson_on_ranks": 0.988401
+        },
+        {
+          "type_a": "ASC",
+          "type_b": "PER.END",
+          "spearman_rho": 0.981026,
+          "pearson_on_ranks": 0.981026
+        },
+        {
+          "type_a": "MG",
+          "type_b": "INH",
+          "spearman_rho": 0.990118,
+          "pearson_on_ranks": 0.990118
+        },
+        {
+          "type_a": "MG",
+          "type_b": "OPC",
+          "spearman_rho": 0.986542,
+          "pearson_on_ranks": 0.986542
+        },
+        {
+          "type_a": "MG",
+          "type_b": "PER.END",
+          "spearman_rho": 0.980432,
+          "pearson_on_ranks": 0.980432
+        },
+        {
+          "type_a": "INH",
+          "type_b": "OPC",
+          "spearman_rho": 0.987484,
+          "pearson_on_ranks": 0.987484
+        },
+        {
+          "type_a": "INH",
+          "type_b": "PER.END",
+          "spearman_rho": 0.980119,
+          "pearson_on_ranks": 0.980119
+        },
+        {
+          "type_a": "OPC",
+          "type_b": "PER.END",
+          "spearman_rho": 0.980002,
+          "pearson_on_ranks": 0.980002
+        }
+      ],
+      "variance_decomposition_raw_weights": {
+        "total_variance_over_edge_by_celltype_matrix": 0.0016496214820439252,
+        "between_edge_variance_type_invariant": 0.0013310556211919614,
+        "within_edge_variance_type_specific": 0.0003185658608519654,
+        "fraction_type_invariant": 0.806885,
+        "fraction_type_specific": 0.193115
+      },
+      "variance_decomposition_on_ranks": {
+        "fraction_type_invariant_rank_scale": 0.988397
+      }
+    },
+    "pbmc": {
+      "atac_tag": "PBMC10k",
+      "n_cell_types": 7,
+      "cell_types": [
+        "MonoCD14",
+        "CD4T",
+        "CD8T",
+        "NK",
+        "B",
+        "DC",
+        "MonoCD16"
+      ],
+      "n_edges_evaluated": 534754,
+      "edge_mask": "self_pairs_only",
+      "n_pairs_compared": 21,
+      "pairwise_spearman": {
+        "mean": 0.994394,
+        "min": 0.990516,
+        "max": 0.999215,
+        "median": 0.994156,
+        "n_pairs": 21
+      },
+      "pairs": [
+        {
+          "type_a": "MonoCD14",
+          "type_b": "CD4T",
+          "spearman_rho": 0.993671,
+          "pearson_on_ranks": 0.993671
+        },
+        {
+          "type_a": "MonoCD14",
+          "type_b": "CD8T",
+          "spearman_rho": 0.991475,
+          "pearson_on_ranks": 0.991475
+        },
+        {
+          "type_a": "MonoCD14",
+          "type_b": "NK",
+          "spearman_rho": 0.995027,
+          "pearson_on_ranks": 0.995027
+        },
+        {
+          "type_a": "MonoCD14",
+          "type_b": "B",
+          "spearman_rho": 0.995615,
+          "pearson_on_ranks": 0.995615
+        },
+        {
+          "type_a": "MonoCD14",
+          "type_b": "DC",
+          "spearman_rho": 0.999215,
+          "pearson_on_ranks": 0.999215
+        },
+        {
+          "type_a": "MonoCD14",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.998219,
+          "pearson_on_ranks": 0.998219
+        },
+        {
+          "type_a": "CD4T",
+          "type_b": "CD8T",
+          "spearman_rho": 0.994237,
+          "pearson_on_ranks": 0.994237
+        },
+        {
+          "type_a": "CD4T",
+          "type_b": "NK",
+          "spearman_rho": 0.993918,
+          "pearson_on_ranks": 0.993918
+        },
+        {
+          "type_a": "CD4T",
+          "type_b": "B",
+          "spearman_rho": 0.993759,
+          "pearson_on_ranks": 0.993759
+        },
+        {
+          "type_a": "CD4T",
+          "type_b": "DC",
+          "spearman_rho": 0.994206,
+          "pearson_on_ranks": 0.994206
+        },
+        {
+          "type_a": "CD4T",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.992557,
+          "pearson_on_ranks": 0.992557
+        },
+        {
+          "type_a": "CD8T",
+          "type_b": "NK",
+          "spearman_rho": 0.992693,
+          "pearson_on_ranks": 0.992693
+        },
+        {
+          "type_a": "CD8T",
+          "type_b": "B",
+          "spearman_rho": 0.992739,
+          "pearson_on_ranks": 0.992739
+        },
+        {
+          "type_a": "CD8T",
+          "type_b": "DC",
+          "spearman_rho": 0.992168,
+          "pearson_on_ranks": 0.992168
+        },
+        {
+          "type_a": "CD8T",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.990516,
+          "pearson_on_ranks": 0.990516
+        },
+        {
+          "type_a": "NK",
+          "type_b": "B",
+          "spearman_rho": 0.994156,
+          "pearson_on_ranks": 0.994156
+        },
+        {
+          "type_a": "NK",
+          "type_b": "DC",
+          "spearman_rho": 0.995602,
+          "pearson_on_ranks": 0.995602
+        },
+        {
+          "type_a": "NK",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.994009,
+          "pearson_on_ranks": 0.994009
+        },
+        {
+          "type_a": "B",
+          "type_b": "DC",
+          "spearman_rho": 0.996055,
+          "pearson_on_ranks": 0.996055
+        },
+        {
+          "type_a": "B",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.994457,
+          "pearson_on_ranks": 0.994457
+        },
+        {
+          "type_a": "DC",
+          "type_b": "MonoCD16",
+          "spearman_rho": 0.997983,
+          "pearson_on_ranks": 0.997983
+        }
+      ],
+      "variance_decomposition_raw_weights": {
+        "total_variance_over_edge_by_celltype_matrix": 0.08477466625624229,
+        "between_edge_variance_type_invariant": 0.08134785332816197,
+        "within_edge_variance_type_specific": 0.0034268129280802515,
+        "fraction_type_invariant": 0.959577,
+        "fraction_type_specific": 0.040423
+      },
+      "variance_decomposition_on_ranks": {
+        "fraction_type_invariant_rank_scale": 0.995195
+      }
+    },
+    "fibroblast_GSE206767": {
+      "atac_tag": "GSE206767",
+      "n_cell_types": 1,
+      "cell_types": [
+        "ALL"
+      ],
+      "n_edges_evaluated": 534754,
+      "edge_mask": "self_pairs_only",
+      "n_pairs_compared": 0,
+      "pairwise_spearman": {
+        "note": "single cell type -- no pairs computable"
+      },
+      "pairs": [],
+      "variance_decomposition_raw_weights": {
+        "total_variance_over_edge_by_celltype_matrix": 0.014495432905867429,
+        "between_edge_variance_type_invariant": 0.014495432905867429,
+        "within_edge_variance_type_specific": 0.0,
+        "fraction_type_invariant": 1.0,
+        "fraction_type_specific": 0.0
+      },
+      "variance_decomposition_on_ranks": {
+        "fraction_type_invariant_rank_scale": 1.0
+      }
+    }
+  },
+  "aT_attribution": {
+    "verdict": "STRUCTURALLY_EXACT_NOT_A_VARIANCE_FRACTION",
+    "explanation": "build_atac_graph_v2.py builds G_t = (L .* aT[None,:] @ H^T)^T with the diagonal zeroed. L (gene x peak link matrix) and H (peak x TF motif-hit matrix) are IDENTICAL across cell types; aT = log1p(mean accessibility over the sampled cells of type t) is the ONLY cell-type-dependent input. G_t is therefore an exactly linear function of aT: 100% of the between-cell-type variation in G is attributable to aT by construction. Asking 'what fraction of the proxy's variance is attributable to aT' is not cleanly decomposable into a percentage, because aT also carries the shared (type-invariant) accessibility level -- the same vector supplies both the shared and the type-specific parts. We therefore report the decomposable quantity instead: the fraction of total variance in the edge-by-cell-type matrix that is type-INVARIANT (between-edge) versus type-SPECIFIC (within-edge). See variance_decomposition_* per tissue. A single scalar 'aT explains X% of proxy variance' would be invented.",
+    "aT_source_line": "src/v2/build_atac_graph_v2.py:153 (aT = np.log1p(X[cid].mean(0)))",
+    "type_invariant_inputs": [
+      "L (peak-gene link, PROM=2000bp + gene body)",
+      "H (peak-motif hits, JASPAR2024, MOODS p<1e-5)"
+    ]
+  },
+  "provenance": {
+    "inputs": {
+      "results/v2/G_ATAC_v2_GSE174367.npz": "52dfdd2bc0cb2dcf58bc23e9adf74c076dc588295786d9e70411e90210b48f8c",
+      "results/v2/G_ATAC_v2_PBMC10k.npz": "a10a9297277a14861d42b94476367aec63f124bcd7ab5bf34f4185ee9962482c",
+      "results/v2/G_ATAC_v2_GSE206767.npz": "c6e4bde8746d60ea306454593467cf2baa26a352612739117d501db56e17fee1"
+    },
+    "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+    "code_reused": [
+      "src/v2/fixed_panel_audit.py:load_manifest",
+      "src/v2/fixed_panel_audit.py:edge_mask"
+    ],
+    "logic_summary": "For each tissue's cached G_ATAC_v2_<tag>.npz: slice every per-cell-type graph G_<type> on the tissue's own audit edge mask (self-pairs dropped; brain marker mask applied for brain only), then compute all pairwise Spearman rho between cell types (scipy.stats.spearmanr). Report mean/min/max/median and n_pairs. Separately decompose the edge-by-cell-type value matrix into between-edge (type-invariant) and within-edge (type-specific) variance, on both the raw weight scale and the per-type rank scale.",
+    "script": "/tmp/regaudit/t345.py",
+    "generated_utc": "2026-07-26T14:42:56Z",
+    "gpu_required": false
+  }
+}
