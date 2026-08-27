@@ -106,7 +106,12 @@ log(f"manifest TFs with >=1 motif: {len(tf2mot)} | motifs used: {len(use_mot)}")
 
 # ---- scan relevant peaks (resized to PEAK_WIDTH core) -> motif hits (cached) ----
 mot_order = sorted(use_mot); mcol = {m: k for k, m in enumerate(mot_order)}
-ck = hashlib.sha256(f"{man['sha256']}|{nRel}|{MOTIF_P}|{PEAK_WIDTH}|{mot_order}".encode()).hexdigest()[:16]
+peak_coord_sha = hashlib.sha256(
+    "\n".join(peaks[int(p)] for p in rel).encode("utf-8")
+).hexdigest()
+ck = hashlib.sha256(
+    f"{man['sha256']}|{peak_coord_sha}|{nRel}|{MOTIF_P}|{PEAK_WIDTH}|{mot_order}".encode()
+).hexdigest()[:16]
 cpath = f"{CACHE}/peak_motif_{ck}.npz"
 if os.path.exists(cpath):
     Z = np.load(cpath, allow_pickle=False); H = sp.csr_matrix((Z["Hdata"], Z["Hind"], Z["Hptr"]), shape=tuple(Z["Hshape"])); mot_order = list(Z["mot_order"])
@@ -128,7 +133,10 @@ else:
                     f"{rate:.1f}/s elapsed={now - t0:.0f}s eta={eta:.0f}s")
                 last_hb = now
     H = sp.csr_matrix((np.ones(len(hr), np.float32), (hr, hc)), shape=(nRel, len(mot_order)))
-    np.savez(cpath, Hdata=H.data, Hind=H.indices, Hptr=H.indptr, Hshape=H.shape, mot_order=np.array(mot_order))
+    cache_tmp = f"{cpath}.{os.getpid()}.tmp.npz"
+    np.savez(cache_tmp, Hdata=H.data, Hind=H.indices, Hptr=H.indptr,
+             Hshape=H.shape, mot_order=np.array(mot_order))
+    os.replace(cache_tmp, cpath)
     log(f"scanned {nRel} peaks @ {PEAK_WIDTH}bp p={MOTIF_P} with {NPROC} procs -> {H.nnz} hits "
         f"({H.nnz/max(1,nRel):.1f}/peak, {time.time()-t0:.0f}s), cached")
 
@@ -178,6 +186,7 @@ np.savez(f"{OUT}/G_ATAC_v2_{TAG}.npz",
          **{f"G_{t}": graphs[t] for t in types})
 json.dump(dict(construct="motif->accessible-peak->TF->target", tag=TAG, atac=os.path.basename(ATAC),
                n_genes=Ng, n_tf=len(TFgenes), relevant_peaks=int(nRel), peak_motif_hits=int(H.nnz),
+               peak_coordinate_sha256=peak_coord_sha,
                motif_p=MOTIF_P, manifest_sha=man["sha256"], types={t: int(vc[t]) for t in types}),
           open(f"{OUT}/G_ATAC_v2_{TAG}_meta.json", "w"), indent=2)
 log(f"SAVED {OUT}/G_ATAC_v2_{TAG}.npz ({len(types)} types, {Ng} genes, {len(TFgenes)} TF rows)")
