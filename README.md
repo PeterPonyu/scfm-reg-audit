@@ -15,7 +15,7 @@ Large datasets, model weights, caches, journal submission packages, internal rev
 Independent public full-text walls (compiled PDF plus source):
 
 - [scReg-Eval fixed-panel manuscript](https://github.com/PeterPonyu/scfm-reg-paper-a-fixed-panel)
-- [Tumor locked-proxy transfer](https://github.com/PeterPonyu/scfm-reg-paper-b-tumor-specificity)
+- [Tumor locked-proxy transfer](https://github.com/PeterPonyu/locked-proxy-transfer-tumor-chromatin)
 - [Cross-organ chromatin maps](https://github.com/PeterPonyu/scfm-reg-paper-u-organ-transfer)
 
 See `REPO_TOPOLOGY.md`.
