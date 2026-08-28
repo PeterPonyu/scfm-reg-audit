@@ -1,6 +1,6 @@
 # scReg-Eval code capsule
 
-This repository contains executable source code and small, path-scrubbed public inputs for fixed-panel regulatory graph audits. It is a software release surface only.
+This repository contains executable source code and small, path-scrubbed public inputs for fixed-panel regulatory graph audits. It is the public implementation wall, not a manuscript host.
 
 ## Contents
 
@@ -10,7 +10,15 @@ This repository contains executable source code and small, path-scrubbed public 
 - `requirements.txt`: pinned Python versions of the reference environment.
 - `ENVIRONMENT.example`: optional runtime-path configuration.
 
-Large datasets, model weights, caches, manuscript sources, figures, submission packages, internal review material, and local execution state are intentionally excluded.
+Large datasets, model weights, caches, journal submission packages, internal review material, and local execution state are excluded.
+
+Independent public full-text walls (compiled PDF plus source):
+
+- [scReg-Eval fixed-panel manuscript](https://github.com/PeterPonyu/scfm-reg-paper-a-fixed-panel)
+- [Tumor locked-proxy transfer](https://github.com/PeterPonyu/scfm-reg-paper-b-tumor-specificity)
+- [Cross-organ chromatin maps](https://github.com/PeterPonyu/scfm-reg-paper-u-organ-transfer)
+
+See `REPO_TOPOLOGY.md`.
 
 ## Checks
 
@@ -25,7 +33,7 @@ External-data tests skip when their documented inputs are unavailable.
 
 ## Publication boundary
 
-GitHub Pages and GitHub Actions are not used for this capsule. The repository tree is the complete public surface.
+GitHub Pages and GitHub Actions are not used for this capsule. Each upcoming manuscript has its own public repository; venue upload decks stay local.
 
 ## License
 
