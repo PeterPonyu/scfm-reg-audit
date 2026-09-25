@@ -50,27 +50,12 @@ PRIVATE_JSON = OUT_ROOT / "results" / "v2" / "fm_vs_baseline_shared_null_v2.json
 NPZ_OUT = Path(fpa.OUT)
 DATA_ROOT = os.environ.get(
     "SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
-# Optional sibling experiment-workspace data root (no machine-specific path literals).
-_MONOREPO_CANDIDATES = [
-    os.environ.get("SCREG_MONOREPO_DATA", ""),
-    os.path.join(str(WORKSPACE.parent), "singlecell-genomics-research",
-                 "projects", "scfm-reg-audit", "data"),
-]
-MONOREPO_DATA = next((p for p in _MONOREPO_CANDIDATES if p and os.path.isdir(p)), "")
-
+# Inputs are project-local or explicitly configured; never search sibling studies.
 ATAC_B = os.environ.get(
     "SCFM_BRAIN_ATAC",
     f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad")
-_ATAC_P_DEFAULT = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
-if not os.path.exists(_ATAC_P_DEFAULT) and MONOREPO_DATA:
-    _ATAC_P_DEFAULT = f"{MONOREPO_DATA}/multiome/pbmc10k_atac.h5ad"
-ATAC_P = os.environ.get("SCREG_PBMC_ATAC", _ATAC_P_DEFAULT)
-
-COORDS = fpa.COORDS
-if not os.path.exists(COORDS):
-    _coords_fallback = (
-        f"{MONOREPO_DATA}/annotation/gene_coords_hg38.tsv" if MONOREPO_DATA else "")
-    COORDS = os.environ.get("SCREG_GENE_COORDS", _coords_fallback or fpa.COORDS)
+ATAC_P = os.environ.get("SCREG_PBMC_ATAC", f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad")
+COORDS = os.environ.get("SCREG_GENE_COORDS", fpa.COORDS)
 
 PROM = fpa.PROM
 N_PERM = int(os.environ.get("SCREG_SHARED_NULL_NPERM", "999"))
@@ -108,7 +93,7 @@ def log(*a):
 
 
 def require_path(path: str, label: str) -> str:
-    if not path or not os.path.exists(path):
+    if not path or not os.path.isfile(path):
         raise FileNotFoundError(
             f"required {label} missing (fail-closed, no fabrication): {path!r}")
     return path

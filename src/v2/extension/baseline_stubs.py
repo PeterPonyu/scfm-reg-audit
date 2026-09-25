@@ -2,7 +2,7 @@
 """Runnable baseline emitters for extension Tier A–C comparisons.
 
 Uses local locked ``G_ATAC`` / public JSON only. No FM BH membership writes.
-No PeerJ Support mutation. Outputs under ``results/v2/extension/baselines/``.
+No fixed-panel audit Support mutation. Outputs under ``results/v2/extension/baselines/``.
 """
 
 from __future__ import annotations

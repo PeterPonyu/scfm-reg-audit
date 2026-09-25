@@ -2,7 +2,7 @@
 """Construct-lane hooks: Mantel / additive-decomp against locked proxies.
 
 Runs on **local** ``G_ATAC`` NPZ when present (fibroblast / brain / PBMC freeze
-caches). Does **not** download data, does **not** mutate PeerJ Support public
+caches). Does **not** download data, does **not** mutate fixed-panel audit Support public
 JSON or MANIFEST locks. Heavy outputs land under ``results/v2/extension/``.
 """
 

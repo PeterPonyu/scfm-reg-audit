@@ -19,10 +19,32 @@ import fixed_panel_audit as fpa  # noqa: E402
 import run_fixed_panel_audit as rfa  # noqa: E402
 
 OUT_DIR = Path(fpa.ROOT) / "results" / "revision_05613"
-AUDIT_JSON = Path(fpa.OUT) / "fixed_panel_audit_v2.json"
+
+def result_json(name, env_var=None):
+    """Resolve an explicit input, then local pipeline output, then public JSON.
+
+    An invalid explicit path is an error, never a reason to use another input.
+    No sibling workspace is searched. The chosen bytes are hashed by callers.
+    """
+    configured = os.environ.get(env_var) if env_var else None
+    if configured is not None:
+        path = Path(configured)
+        if not path.is_file():
+            raise FileNotFoundError(f"{env_var} input missing: {path}")
+        return path
+    candidates = [Path(fpa.OUT) / name,
+                  Path(fpa.ROOT) / "results" / (Path(name).stem + ".public.json")]
+    for path in candidates:
+        if path.is_file():
+            return path
+    raise FileNotFoundError(f"Result input missing: {name}; checked {candidates}")
+
+
+AUDIT_JSON = result_json("fixed_panel_audit_v2.json", "SCREG_AUDIT_JSON")
 ATAC_FILES = {
-    "brain": f"{rfa.DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad",
-    "pbmc": f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad",
+    "brain": os.environ.get("SCFM_BRAIN_ATAC",
+        f"{rfa.DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"),
+    "pbmc": os.environ.get("SCREG_PBMC_ATAC", f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"),
 }
 SEED_ROOT = 20260724            # the frozen audit's seed root (run_fixed_panel_audit.py:29)
 SEED_ROOT_REVISION = 20260924   # new analyses in this revision

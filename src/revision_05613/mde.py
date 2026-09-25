@@ -1,19 +1,23 @@
 #!/usr/bin/env python
 """R1.4: minimum detectable effect (MDE) of each fixed-panel randomization test.
 
-Scope: the MDE is the smallest partial Spearman rho that the named randomization
-test would declare unusual with 80% probability on this frozen panel. It is a
-statement about the test's sensitivity under the named randomizations, not a
-population power calculation and not an exclusion bound on regulatory capability.
+Scope: these MDE values are marginal normal-shift sensitivity approximations,
+conditional on the frozen panel and the named null reference distributions. They
+are not guaranteed joint 80%-power thresholds, population power calculations, or
+exclusion bounds on an unobserved effect or regulatory capability.
 
 Two versions:
-  analytic   MDE = (z_{1-a/2} + z_{0.80}) * sd_null           (normal approximation)
+  analytic   MDE = (z_{1-a/2} + z_{0.80}) * sd_null
+             assumes a centered normal-shift reference
   empirical  MDE = c_a + z_{0.80} * sd_null, c_a the (1-a) quantile of |null|
-             from the saved N = 9,999 null arrays (when present)
-with a = 0.05 per test and a = 0.05/m (Bonferroni bound on BH's first rejection).
-The dual-null MDE of a row is the larger of its two single-null MDEs.
-power_sim.py checks the normal approximation by simulation.
+             from saved N = 9,999 arrays; still an approximate marginal shift model
+with a = 0.05 per test and a = 0.05/m (a fixed Bonferroni reference, not adaptive BH
+family power). Historical fields named mde_dual contain the maximum of two
+marginal approximations; taking this maximum does not ensure joint 80% power.
+power_sim.py evaluates joint rejection only for its specified synthetic mechanism;
+it does not validate the assumptions for every model-specific null distribution.
 """
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -35,9 +39,15 @@ def analytic(sd, a):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--summary-only", action="store_true",
+                    help="Use only published null standard deviations; no empirical null arrays")
+    ap.add_argument("--output", type=Path,
+                    default=Path(common.fpa.ROOT) / "output/revision_checks/mde.json")
+    args = ap.parse_args()
     doc = json.loads(common.AUDIT_JSON.read_text())
     res_dir = common.OUT_DIR / "resolution_n9999"
-    have_deep = res_dir.exists() and any(res_dir.glob("fm_*.npz"))
+    have_deep = not args.summary_only and res_dir.exists() and any(res_dir.glob("fm_*.npz"))
     deep = {}
     if have_deep:
         # file names: fm_{group}_{null}_{spec}.npz, where group and spec may contain '_'
@@ -83,7 +93,8 @@ def main():
                 rows_out.append(rec)
 
     # TF-disjoint probe (Table 8): family permutation and paired sign-flip contrasts.
-    probe = json.loads((Path(common.fpa.OUT) / "tf_probe_pair_stats_v2.json").read_text())
+    probe_path = common.result_json("tf_probe_pair_stats_v2.json", "SCREG_PROBE_JSON")
+    probe = json.loads(probe_path.read_text())
     probe_out = {"families": {}, "contrasts": {}}
     for fam, d in probe["families"].items():
         probe_out["families"][fam] = {"rho": d["adjusted_rho_mean"], "sd": d["null_std"],
@@ -106,17 +117,18 @@ def main():
     result = {
         "schema_version": 1,
         "analysis": "minimum_detectable_effect",
-        "scope": ("Sensitivity of the fixed-panel randomization tests under the named "
-                  "randomizations; not population power, not an exclusion bound on "
-                  "regulatory capability."),
+        "scope": ("Marginal normal-shift sensitivity approximations on a frozen panel; "
+                  "mde_dual fields are maximum-marginal references, not guaranteed joint "
+                  "80%-power thresholds, population power, or effect-size exclusion bounds."),
         "power": POWER, "alpha": ALPHA,
         "rows": rows_out,
         "summary_ranges": summary,
         "probe": probe_out,
         "inputs": {"fixed_panel_audit_v2_sha256": common.sha256_file(common.AUDIT_JSON),
+                   "tf_probe_pair_stats_v2_sha256": common.sha256_file(probe_path),
                    "n9999_nulls_used": bool(deep)},
     }
-    common.write_json(common.OUT_DIR / "mde.json", result)
+    common.write_json(args.output, result)
     for k, v in summary.items():
         log(k, {kk: [round(x, 4) for x in vv] for kk, vv in v.items()})
 

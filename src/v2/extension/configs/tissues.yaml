@@ -1,4 +1,4 @@
-# Extension tissue registry — PeerJ freeze tissues are listed for reference only.
+# Extension tissue registry — fixed-panel audit freeze tissues are listed for reference only.
 # New construct/audit work must emit under results/v2/extension/ (never inflate Support).
 schema_version: 1
 panel_contract:
@@ -19,7 +19,7 @@ tissues:
     peerj_freeze: true
     panel_policy: frozen_brain_pinned_446x1200
     g_atac_tag: GSE174367
-    notes: PeerJ primary audit tissue; do not re-register for extension Support inflation.
+    notes: fixed-panel audit primary audit tissue; do not re-register for extension Support inflation.
 
   pbmc:
     accession: 10x_PBMC_10k_multiome
@@ -30,7 +30,7 @@ tissues:
     peerj_freeze: true
     panel_policy: frozen_brain_pinned_446x1200
     g_atac_tag: PBMC10k
-    notes: PeerJ primary audit tissue (monorepo RNA partner).
+    notes: fixed-panel audit primary audit tissue; matched RNA and ATAC must be supplied explicitly.
 
   fibroblast:
     accession: GSE206767
@@ -71,7 +71,7 @@ tissues:
     fetch_status: absent_local
     estimated_download_mb: 100
     g_atac_tag: DESCARTES_spleen
-    notes: Preferred first construct SI after PeerJ; needs ~100MB RDS fetch (not this session).
+    notes: Preferred first construct SI after fixed-panel audit; needs ~100MB RDS fetch (not this session).
 
   orphan_atac_placeholder:
     accession: TBD_after_meta_rescue

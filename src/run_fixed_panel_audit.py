@@ -22,7 +22,7 @@ from scipy.stats import rankdata, spearmanr
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fixed_panel_audit as fpa
 import pbmc_cache
-DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(fpa.ROOT, "data"))
 
 
 # ----------------------------- defaults --------------------------------------
@@ -1117,8 +1117,8 @@ def main():
     )
     log("preflight passed: legacy hashes, fixed panel, graph shapes, and finite values")
 
-    ATAC_B = f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad"
-    ATAC_P = f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad"
+    ATAC_B = os.environ.get("SCFM_BRAIN_ATAC", f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad")
+    ATAC_P = os.environ.get("SCREG_PBMC_ATAC", f"{fpa.ROOT}/data/multiome/pbmc10k_atac.h5ad")
     for input_path in (ATAC_B, ATAC_P, fpa.MANI, fpa.COORDS, fpa.HG38):
         if not os.path.exists(input_path):
             raise FileNotFoundError(f"required fixed-panel input missing: {input_path}")

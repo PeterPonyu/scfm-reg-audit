@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """R1.2: are the dual-null Support decisions robust to the dependence between rows?
 
-Inputs: the frozen N = 999 p-values in results/v2/fixed_panel_audit_v2.json and,
+Inputs: frozen N = 999 p-values in the configured/local audit JSON, falling back
+to results/fixed_panel_audit_v2.public.json on a fresh checkout; and,
 when present, the N = 9,999 null arrays from resolution_check.py.
 
 Procedures, each applied within the frozen families (tissue x specification x null):
@@ -13,14 +14,21 @@ Procedures, each applied within the frozen families (tissue x specification x nu
         (needs the saved null arrays; rows that share a randomization batch are
         paired replicate by replicate, independent batches are paired by index)
 
-BH is implemented twice (here and statsmodels) and the two must agree.
+Corrections on each component family followed by intersection are descriptive
+screens; they do not automatically control the rowwise conjunction error rate.
+IUT-BY supplies within-family conjunction FDR control under arbitrary dependence,
+conditional on valid component p-values. The joint WY construction is exploratory:
+subset pivotality and the cross-stream pairing assumptions are not established.
+
+BH is cross-checked with SciPy; BY uses SciPy and Holm uses NumPy.
 """
+import argparse
 import json
 import sys
 from pathlib import Path
 
 import numpy as np
-from statsmodels.stats.multitest import multipletests
+from scipy.stats import false_discovery_control
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common  # noqa: E402
@@ -42,12 +50,26 @@ def bh(p):
 
 
 def adjust(p, method):
+    p = np.asarray(p, dtype=float)
+    if p.ndim != 1 or not np.all(np.isfinite(p)) or np.any((p < 0) | (p > 1)):
+        raise ValueError("p-values must be a finite one-dimensional array in [0, 1]")
+    if method not in {"BH", "BY", "Holm"}:
+        raise ValueError(f"Unknown correction: {method}")
+    if not len(p):
+        return p.copy()
     if method == "BH":
         ours = bh(p)
-        ref = multipletests(p, method="fdr_bh")[1]
-        assert np.allclose(ours, ref, atol=1e-12), (ours, ref)
+        ref = false_discovery_control(p, method="bh")
+        if not np.allclose(ours, ref, atol=1e-12):
+            raise ValueError("Independent BH implementations disagree")
         return ours
-    return multipletests(p, method={"BY": "fdr_by", "Holm": "holm"}[method])[1]
+    if method == "BY":
+        return false_discovery_control(p, method="by")
+    order = np.argsort(p, kind="stable")
+    corrected = np.maximum.accumulate(p[order] * np.arange(len(p), 0, -1))
+    out = np.empty_like(p)
+    out[order] = np.minimum(corrected, 1.0)
+    return out
 
 
 def wy_stepdown_minp(null_mat, observed):
@@ -158,6 +180,12 @@ def counts(block):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--summary-only", action="store_true",
+                    help="Check frozen p-values only; do not load graph or null-array caches")
+    ap.add_argument("--output", type=Path,
+                    default=Path(common.fpa.ROOT) / "output/revision_checks/multiplicity_robustness.json")
+    args = ap.parse_args()
     doc = json.loads(common.AUDIT_JSON.read_text())
     frozen = frozen_analysis(doc)
     result = {
@@ -170,14 +198,14 @@ def main():
         "inputs": {"fixed_panel_audit_v2_sha256": common.sha256_file(common.AUDIT_JSON)},
     }
     res_dir = common.OUT_DIR / "resolution_n9999"
-    if all((res_dir / f"fm_{g}_{nt}_{sp}.npz").exists()
+    if not args.summary_only and all((res_dir / f"fm_{g}_{nt}_{sp}.npz").exists()
            for g in ("brain", "pbmc_shared", "pbmc_scgpt", "pbmc_uce")
            for nt in ("mantel", "degree") for sp in ("full", "non_degree")):
         deep = deep_analysis(doc, res_dir)
         result["resolution_n9999"] = {"families": deep, "support_counts": counts(deep)}
     else:
-        log("N=9,999 null arrays not complete; frozen analysis only")
-    common.write_json(common.OUT_DIR / "multiplicity_robustness.json", result)
+        log("Frozen summary only; N=9,999 graph-based analysis was not executed")
+    common.write_json(args.output, result)
     log("support counts (frozen N=999):", result["frozen_n999"]["support_counts"])
     if "resolution_n9999" in result:
         log("support counts (N=9,999):", result["resolution_n9999"]["support_counts"])

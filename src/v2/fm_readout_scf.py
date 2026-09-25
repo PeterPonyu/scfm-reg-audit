@@ -2,15 +2,12 @@
 """
 scfm-reg-audit v2 — scFoundation gene-embedding readout (3rd FM, per DESIGN's pre-registered order).
 
-Architecture/loading code vendored from research/sc-fm-benchmark/scripts/scf_repo/ (itself a vendored
-copy of biomap-research/scFoundation's model/ folder) and scfoundation_embed.py (the validated,
-dependency-free reimplementation used in that project — the official decoder path needs an
-uninstallable `pretrainmodels` package + missing reversible.py, so only the ENCODER-ONLY forward is
-runnable here). This mirrors exactly what scfoundation_embed.py already validated for CELL embeddings;
-the new part is capturing PER-GENE encoder hidden states (before pooling) and scattering them onto our
-own frozen 1200-gene manifest, matching the FMReadout.geneformer()/scgpt() pattern in fm_readout.py so
-this plugs directly into the existing crossmodal/confound-regression test suite.
-
+Architecture/loading code is bundled locally in scf_vendor/ and adapted from
+biomap-research/scFoundation's model/ folder; retain the upstream Apache-2.0 license.
+The local implementation uses the encoder-only forward pass. It captures per-gene
+encoder hidden states before pooling and scatters them onto the frozen 1,200-gene
+manifest, matching the FMReadout.geneformer()/scgpt() interface in fm_readout.py.
+No neighboring benchmark checkout is imported or required.
 Caveat (report alongside any result): this is scFoundation's ENCODER-ONLY embedding (no performer
 decoder refinement) — analogous to using Geneformer's raw encoder hidden states, not an official
 "gene embedding mode". Per-cell gene set is capped at top-CAP nonzero genes by expression (default

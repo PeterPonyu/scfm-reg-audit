@@ -13,7 +13,7 @@ ROOT = EXT_DIR.parents[2]
 DEFAULT_TISSUES = EXT_DIR / "configs" / "tissues.json"
 DEFAULT_METHODS = EXT_DIR / "configs" / "methods.json"
 FORBIDDEN_G_ATAC_ROLES = frozenset({"out_of_scope", "rna_lake_only"})
-# Heavy extension artifacts under results/v2/extension/ (PeerJ freeze untouched).
+# Heavy extension artifacts under results/v2/extension/ (fixed-panel audit freeze untouched).
 # SI claim-pack tables use docs/reports/extension-claim-pack/ so MANIFEST stays frozen.
 try:
     from paths import CLAIM_PACK_ROOT, HEAVY_ARTIFACT_ROOT
@@ -30,7 +30,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 class ExtensionRegistry:
-    """Config-driven tissue + method registry with PeerJ/extension fences."""
+    """Config-driven tissue + method registry with fixed-panel audit/extension fences."""
 
     def __init__(self, tissues_doc: dict[str, Any], methods_doc: dict[str, Any]):
         self.tissues_doc = tissues_doc
@@ -76,7 +76,7 @@ class ExtensionRegistry:
             )
 
     def dry_run_register(self, tissue_id: str) -> dict[str, Any]:
-        """Return a dry-run payload for an extension tissue (no PeerJ writes)."""
+        """Return a dry-run payload for an extension tissue (no fixed-panel audit writes)."""
         meta = self.get_tissue(tissue_id)
         self.assert_may_emit_g_atac(tissue_id)
         return {

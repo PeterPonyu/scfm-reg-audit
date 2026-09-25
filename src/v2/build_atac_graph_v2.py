@@ -20,6 +20,7 @@ Env: SAMPLE_PEAKS (test), CELL_CAP (accessibility subsample), MOTIF_P.
 import os, sys, json, time, gzip, hashlib, numpy as np, anndata as ad, scipy.sparse as sp
 import multiprocessing as mp
 import pyfaidx, motif_utils as mu
+from screg_paths import proxy_metadata_path
 DATA_ROOT = os.environ.get("SCREG_DATA_ROOT", os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 def log(*a): print(f"[{time.strftime('%H:%M:%S')}]", *a, flush=True)
 
@@ -46,7 +47,7 @@ COORDS = f"{ROOT}/data/annotation/gene_coords_hg38.tsv"
 MEME = f"{ROOT}/data/motifs/JASPAR2024_CORE_vertebrates.meme"
 HG38 = f"{ROOT}/data/genome/hg38.fa"
 ATAC = os.environ.get("ATAC_FILE", f"{DATA_ROOT}/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad")
-META = os.environ.get("META_FILE", os.path.join(ROOT, "../../research/sc-fm-benchmark/raw_pulls/scatac/atac_cell_meta.csv.gz"))
+META = proxy_metadata_path(ROOT)
 TAG = os.environ.get("TAG", "GSE174367")
 # SCREG_EXTENSION_OUT keeps overlay NPZ off the locked results/v2 freeze names.
 _ext_out = os.environ.get("SCREG_EXTENSION_OUT", "").strip()
@@ -155,15 +156,17 @@ log(f"peak×TF matrix {HT.shape} nnz={HT.nnz}")
 # ---- per-cell-type (or pooled) accessibility over relevant peaks ----
 A = ad.read_h5ad(ATAC)
 bc = np.array([str(b) for b in A.obs_names])
-if META not in ("none", "") and os.path.exists(META):
+if META is not None:
     meta = {}
     with gzip.open(META, "rt") as f:
         hdr = f.readline().rstrip("\n").split(","); bi = hdr.index("Barcode"); ci = hdr.index("Cell.Type")
         for ln in f:
             q = ln.rstrip("\n").split(","); meta[q[bi]] = q[ci]
     lab = np.array([meta.get(b, "NA") for b in bc])
+    if not np.any(lab != "NA"):
+        raise ValueError("META_FILE has no matching labelled ATAC barcodes; refusing an empty proxy")
 else:
-    lab = np.array(["ALL"] * len(bc)); log("no META -> POOLED single accessibility (type=ALL)")
+    lab = np.array(["ALL"] * len(bc)); log("META_FILE=none -> explicitly pooled accessibility (type=ALL)")
 X = (A.X.tocsc() if sp.issparse(A.X) else sp.csr_matrix(A.X).tocsc())[:, rel].tocsr().astype(np.float32)
 from collections import Counter
 rng = np.random.default_rng(20260713); vc = Counter(lab.tolist())

@@ -13,9 +13,25 @@ export SCREG_DATA_ROOT=/path/to/data
 # Defaults to $SCREG_DATA_ROOT/datasets/ATAC_data/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad
 # export SCFM_BRAIN_ATAC=/path/to/GSE174367_snATAC-seq_filtered_peak_bc_matrix.h5ad
 
-# Figure generator base (project root) — defaults to the paper/ parent.
+# Archived figure generator base (historical paper/ layout; see docs/INDEPENDENT_RERUN.md).
 # export SCFM_BASE=/path/to/projects/scfm-reg-audit
 
 # Privacy note: the release builder and validator derive user-specific path
 # needles at runtime. No contributor account name or workstation path is part
 # of this public template.
+
+# Explicit inputs for audit/shared-null/revision drivers; no sibling auto-discovery.
+# export SCREG_PBMC_ATAC=/path/to/pbmc10k_atac.h5ad
+# Shared-null coordinates only (not a global override for all historical scripts).
+# export SCREG_GENE_COORDS=/path/to/gene_coords_hg38.tsv
+
+# Proxy builder: explicit tissue input and output tag.
+# export ATAC_FILE=/path/to/brain_atac.h5ad
+# export TAG=GSE174367
+# Cell-type metadata required unless explicitly choosing a different pooled analysis.
+# export META_FILE=/path/to/atac_cell_meta.csv.gz
+# export META_FILE=none  # pooled proxy; not an equivalent cell-type rerun
+
+# Optional fixed public-summary inputs; invalid explicit paths fail.
+# export SCREG_AUDIT_JSON="$PWD/results/fixed_panel_audit_v2.public.json"
+# export SCREG_PROBE_JSON="$PWD/results/tf_probe_pair_stats_v2.public.json"

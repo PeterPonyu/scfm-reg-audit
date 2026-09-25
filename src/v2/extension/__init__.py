@@ -1,6 +1,6 @@
 """Extension-lane local compute overlay (registries, claim pack, construct hooks).
 
-PeerJ freeze artifacts under ``results/*.public.json`` remain authoritative.
+fixed-panel audit freeze artifacts under ``results/*.public.json`` remain authoritative.
 Heavy extension artifacts go under ``results/v2/extension/`` (local overlay).
 SI claim-pack tables go under ``docs/reports/extension-claim-pack/``.
 Construct ``--execute`` = Mantel/decomp on existing local ``G_ATAC`` NPZ

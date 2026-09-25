@@ -34,3 +34,18 @@ def model_root():
 
 def brain_atac_path():
     return os.environ.get("SCFM_BRAIN_ATAC", str(data_root() / _BRAIN_ATAC_REL))
+
+
+def proxy_metadata_path(root=None):
+    """Require project/configured metadata; only META_FILE=none selects pooled mode."""
+    base = Path(root) if root is not None else PROJECT_ROOT
+    configured = os.environ.get("META_FILE")
+    if configured == "none":
+        return None
+    path = Path(configured) if configured is not None else base / "data/annotation/atac_cell_meta.csv.gz"
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"ATAC cell-type metadata missing: {path}. Set META_FILE to the metadata "
+            "CSV.gz, or explicitly set META_FILE=none for a pooled proxy; "
+            "pooled and cell-type proxies are different analyses.")
+    return str(path)

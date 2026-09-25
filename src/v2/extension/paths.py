@@ -1,4 +1,4 @@
-"""Resolve local extension / PeerJ freeze artifact paths (no downloads)."""
+"""Resolve local extension / fixed-panel audit freeze artifact paths (no downloads)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import Any
 EXT_DIR = Path(__file__).resolve().parent
 ROOT = EXT_DIR.parents[2]
 
-# PeerJ-safe overlay roots (never write into frozen results/*.public.json).
+# fixed-panel audit-safe overlay roots (never write into frozen results/*.public.json).
 # results/v2/ is already a LOCAL_WORKTREE_PREFIX in validate_artifacts.py.
 EXTENSION_ROOT = ROOT / "results" / "v2" / "extension"
 HEAVY_ARTIFACT_ROOT = "results/v2/extension/"
