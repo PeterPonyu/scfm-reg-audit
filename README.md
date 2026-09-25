@@ -40,10 +40,14 @@ tissues.
   `results/revision_05613/` holds the revision outputs.
 - `requirements.txt` — pinned Python versions of the reference environment.
 - `ENVIRONMENT.example` — optional runtime-path configuration.
+- `LICENSING.md` — code is MIT, results and documentation are CC BY 4.0, and vendored model
+  code keeps its upstream license.
 
-This tree carries the code and the public inputs. The full numerical record, including the
-per-row outputs and content digests, lives in the Zenodo archive linked above; datasets, model
-weights, and caches stay with their original sources.
+This tree carries the code and the public outputs. The Zenodo archive linked above adds the
+protocol and analysis-plan documents and the full-rerun recipe with dataset and checkpoint
+hashes (`docs/`), the figure sources (`figures/`), and the SHA-256 digest of every file
+(`MANIFEST.json`, `SHA256SUMS`). Datasets, model weights, and caches stay with their original
+sources.
 
 ## Checks
 
@@ -54,8 +58,10 @@ python -m unittest discover -s src/v2/tests
 python validate_artifacts.py
 ```
 
-`validate_artifacts.py` revalidates the capsule against the MANIFEST digests. Tests that need
-external data run when their documented inputs are present.
+`validate_artifacts.py` checks the public boundary: no manuscript or submission folders, no
+private paths or keys, and only finite numbers in the JSON outputs. In the Zenodo archive,
+`sha256sum -c SHA256SUMS` checks every file against its digest. Tests that need external data
+run when their documented inputs are present.
 
 ## Revision analyses (ARRAY-D-26-05613, first review round)
 
