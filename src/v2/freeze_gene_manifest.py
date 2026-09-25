@@ -3,7 +3,7 @@
 scfm-reg-audit v2 — freeze the pre-registered shared gene manifest (fixes pilot `shared[:1000]` bias).
 
 Universe (deterministic, order = sorted symbol):
-  hg38-coord protein-coding  ∩  Geneformer-tokenizable  ∩  scGPT-vocab
+  GENCODE v44 basic symbols with coordinates (all biotypes)  ∩  Geneformer-tokenizable  ∩  scGPT-vocab
   ∩  >=1 ATAC peak in [TSS-2kb, gene end]  ∩  RNA-detected in >= DETECT_FRAC of ad_hm cells.
 Cap to N_MAX (fits scGPT MAXLEN) by a PRE-REGISTERED rule: keep all TFs (JASPAR symbols) that pass,
 then fill remaining slots by RNA detection rate (modality-neutral, NOT the ATAC test signal).

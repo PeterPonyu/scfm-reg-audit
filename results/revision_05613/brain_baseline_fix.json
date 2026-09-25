@@ -1,0 +1,188 @@
+{
+ "schema_version": 1,
+ "analysis": "brain_baseline_covariate_fix",
+ "gc_correlation_brain_vs_pbmc_cache": 0.4984045639931688,
+ "baseline": {
+  "rho_frozen": 0.0027597497150060124,
+  "rho_brain_covariates": 0.0027824045869655526,
+  "n999": {
+   "pM": 0.02,
+   "pD": 0.014,
+   "sdM": 0.0011389540092980508,
+   "sdD": 0.001044224692897931
+  },
+  "n9999": {
+   "pM": 0.0185,
+   "pD": 0.0136,
+   "sdM": 0.001137310201378966,
+   "sdD": 0.0010765101413925653
+  },
+  "frozen": {
+   "pM": 0.019,
+   "pD": 0.014
+  }
+ },
+ "contrast_brain": {
+  "rho_baseline": 0.0027824045869655526,
+  "rows": [
+   {
+    "model_label": "geneformer_embed",
+    "rho_fm": 0.00442,
+    "audit_rho": 0.00442,
+    "rho_fm_matches_audit": true,
+    "delta": 0.0016379009400878017,
+    "p": 0.141,
+    "q": 0.376,
+    "shared_sig": false,
+    "rho_gt_base": true,
+    "frozen": {
+     "rho_fm_full": 0.004412,
+     "delta_rho": 0.0016524996145357686,
+     "p_mc": 0.141,
+     "bh_q": 0.378667,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": true
+   },
+   {
+    "model_label": "scFoundation_encoder",
+    "rho_fm": 0.000619,
+    "audit_rho": 0.000619,
+    "rho_fm_matches_audit": true,
+    "delta": -0.00216370268919167,
+    "p": 0.892,
+    "q": 1.0,
+    "shared_sig": false,
+    "rho_gt_base": false,
+    "frozen": {
+     "rho_fm_full": 0.000564,
+     "delta_rho": -0.002196037925975923,
+     "p_mc": 0.896,
+     "bh_q": 1.0,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": false
+   },
+   {
+    "model_label": "UCE_encoder",
+    "rho_fm": 0.004612,
+    "audit_rho": 0.004612,
+    "rho_fm_matches_audit": true,
+    "delta": 0.0018291747013265765,
+    "p": 0.138,
+    "q": 0.376,
+    "shared_sig": false,
+    "rho_gt_base": true,
+    "frozen": {
+     "rho_fm_full": 0.004563,
+     "delta_rho": 0.0018027556346734428,
+     "p_mc": 0.142,
+     "bh_q": 0.378667,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": true
+   },
+   {
+    "model_label": "scGPT_encoder",
+    "rho_fm": 0.012407,
+    "audit_rho": 0.012407,
+    "rho_fm_matches_audit": true,
+    "delta": 0.009624449796986987,
+    "p": 0.001,
+    "q": 0.008,
+    "shared_sig": true,
+    "rho_gt_base": true,
+    "frozen": {
+     "rho_fm_full": 0.012377,
+     "delta_rho": 0.00961751502741947,
+     "p_mc": 0.001,
+     "bh_q": 0.008,
+     "shared_null_significant": true
+    },
+    "frozen_rho_gt_base": true
+   },
+   {
+    "model_label": "geneformer_attn",
+    "rho_fm": -0.003616,
+    "audit_rho": -0.003616,
+    "rho_fm_matches_audit": true,
+    "delta": -0.006398253401539977,
+    "p": 1.0,
+    "q": 1.0,
+    "shared_sig": false,
+    "rho_gt_base": false,
+    "frozen": {
+     "rho_fm_full": -0.003529,
+     "delta_rho": -0.006288843299809714,
+     "p_mc": 1.0,
+     "bh_q": 1.0,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": false
+   },
+   {
+    "model_label": "random_init_floor",
+    "rho_fm": 0.001873,
+    "audit_rho": 0.001873,
+    "rho_fm_matches_audit": true,
+    "delta": -0.0009097619939383802,
+    "p": 0.695,
+    "q": 1.0,
+    "shared_sig": false,
+    "rho_gt_base": false,
+    "frozen": {
+     "rho_fm_full": 0.001884,
+     "delta_rho": -0.0008753019489643199,
+     "p_mc": 0.688,
+     "bh_q": 1.0,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": false
+   },
+   {
+    "model_label": "geneformer_ko_raw",
+    "rho_fm": -0.000933,
+    "audit_rho": -0.000933,
+    "rho_fm_matches_audit": true,
+    "delta": -0.0037158899035256822,
+    "p": 0.991,
+    "q": 1.0,
+    "shared_sig": false,
+    "rho_gt_base": false,
+    "frozen": {
+     "rho_fm_full": -0.001096,
+     "delta_rho": -0.0038556883050994972,
+     "p_mc": 0.994,
+     "bh_q": 1.0,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": false
+   },
+   {
+    "model_label": "geneformer_ko_posctrl",
+    "rho_fm": -0.001887,
+    "audit_rho": -0.001887,
+    "rho_fm_matches_audit": true,
+    "delta": -0.004669432090638414,
+    "p": 0.998,
+    "q": 1.0,
+    "shared_sig": false,
+    "rho_gt_base": false,
+    "frozen": {
+     "rho_fm_full": -0.001971,
+     "delta_rho": -0.004730383446288082,
+     "p_mc": 0.998,
+     "bh_q": 1.0,
+     "shared_null_significant": false
+    },
+    "frozen_rho_gt_base": false
+   }
+  ],
+  "n_shared_sig": 1,
+  "n_beats_observed": 3
+ },
+ "gate_changes": [],
+ "inputs": {
+  "fixed_panel_audit_v2_sha256": "442e0d877f5665ed6345106f46e9397e2a8fd448d85c5307e2b98ec5db57774a"
+ }
+}

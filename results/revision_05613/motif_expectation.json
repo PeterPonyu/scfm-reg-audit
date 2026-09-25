@@ -1,0 +1,43 @@
+{
+ "schema_version": 1,
+ "analysis": "motif_hit_expectation",
+ "jaspar_motifs_total": 879,
+ "motifs_used": 554,
+ "panel_tfs_with_motif": 446,
+ "tfs_with_multiple_motifs": 68,
+ "max_motifs_per_tf": 12,
+ "heterodimer_motifs_used": 73,
+ "motif_width_bp": {
+  "min": 5,
+  "median": 10.0,
+  "max": 33
+ },
+ "window_bp": 500,
+ "p_threshold": 1e-05,
+ "background": "uniform (0.25 each base)",
+ "expected_first_order": 5.54,
+ "expected_hit_positions": 5.432820000000001,
+ "expected_distinct_motifs_per_peak": 5.406293812810204,
+ "expected_distinct_tfs_per_peak": 5.825962079282488,
+ "observed": {
+  "brain": {
+   "linked_peaks": 8823,
+   "distinct_motif_hits": 180578,
+   "per_peak": 20.466734670746913,
+   "ratio_to_expected": 3.785723710067518
+  },
+  "pbmc": {
+   "linked_peaks": 6609,
+   "distinct_motif_hits": 153207,
+   "per_peak": 23.18157058556514,
+   "ratio_to_expected": 4.28788582126936
+  },
+  "fibroblast_mix": {
+   "linked_peaks": 11614,
+   "distinct_motif_hits": 252128,
+   "per_peak": 21.708971930428792,
+   "ratio_to_expected": 4.01549983816814
+  }
+ },
+ "counting_rule": "distinct motifs per peak (any position, either strand); a TF counts once per peak after an OR over its motifs; heterodimers count for both"
+}

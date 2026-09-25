@@ -1,0 +1,49 @@
+{
+ "schema_version": 1,
+ "analysis": "panel_filter_cascade",
+ "source_rules": "src/v2/freeze_gene_manifest.py (re-applied read-only)",
+ "coordinate_records": 62700,
+ "jaspar_tf_symbols": 754,
+ "brain_atac_peaks": 219070,
+ "rna_cells": 12000,
+ "steps": [
+  {
+   "step": "GENCODE v44 basic symbols with coordinates (first record per symbol)",
+   "genes": 61228,
+   "tfs": 745
+  },
+  {
+   "step": "Geneformer token with a median (gc104M dictionaries)",
+   "genes": 19951,
+   "tfs": 745
+  },
+  {
+   "step": "in the scGPT whole-human vocabulary",
+   "genes": 19151,
+   "tfs": 745
+  },
+  {
+   "step": ">=1 GSE174367 snATAC peak midpoint in [TSS-2 kb, TES] (strand-aware)",
+   "genes": 16523,
+   "tfs": 638
+  },
+  {
+   "step": "RNA detection >= 1% of cells in the brain RNA reference",
+   "genes": 12382,
+   "tfs": 446
+  },
+  {
+   "step": "cap to 1200: all TFs kept, remaining slots by RNA detection (descending)",
+   "genes": 1200,
+   "tfs": 446
+  }
+ ],
+ "universe_genes": 12382,
+ "universe_tfs": 446,
+ "non_tf_slots": 754,
+ "non_tf_detection_min_filled": 0.5333333333333333,
+ "manifest_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+ "reproduced_sha256": "6b203fcfab45dc600f84d2149c7f5f94e1a876f584529a0b465694e170b4f848",
+ "reproduces_frozen_manifest": true,
+ "note": "The coordinate file covers all GENCODE v44 basic biotypes, not only protein-coding genes; the FM vocabularies do most of the narrowing."
+}

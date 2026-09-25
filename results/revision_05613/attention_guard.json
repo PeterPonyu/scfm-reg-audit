@@ -1,0 +1,172 @@
+{
+ "schema_version": 1,
+ "analysis": "attention_omission_guard_rerun",
+ "n_perm": 999,
+ "seeds": {
+  "mantel": 4295845598177160414,
+  "degree": 13235930371278327248
+ },
+ "seed_contract": "SeedSequence([20260924, 4]).spawn(2)",
+ "guards": {
+  "without_attention": {
+   "rows": [
+    {
+     "model_label": "geneformer_embed",
+     "pM": 0.001,
+     "pD": 0.001,
+     "qM": 0.0023333333333333335,
+     "qD": 0.0035,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "scFoundation_encoder",
+     "pM": 0.607,
+     "pD": 0.64,
+     "qM": 0.607,
+     "qD": 0.64,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "UCE_encoder",
+     "pM": 0.001,
+     "pD": 0.003,
+     "qM": 0.0023333333333333335,
+     "qD": 0.007,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "scGPT_encoder",
+     "pM": 0.001,
+     "pD": 0.001,
+     "qM": 0.0023333333333333335,
+     "qD": 0.0035,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "random_init_floor",
+     "pM": 0.177,
+     "pD": 0.169,
+     "qM": 0.24779999999999996,
+     "qD": 0.2366,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "geneformer_ko_raw",
+     "pM": 0.432,
+     "pD": 0.338,
+     "qM": 0.504,
+     "qD": 0.39433333333333337,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "geneformer_ko_posctrl",
+     "pM": 0.107,
+     "pD": 0.104,
+     "qM": 0.18725,
+     "qD": 0.182,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    }
+   ],
+   "all_agree": true
+  },
+  "all_eight": {
+   "rows": [
+    {
+     "model_label": "geneformer_embed",
+     "pM": 0.001,
+     "pD": 0.001,
+     "qM": 0.002,
+     "qD": 0.004,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "scFoundation_encoder",
+     "pM": 0.607,
+     "pD": 0.64,
+     "qM": 0.607,
+     "qD": 0.64,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "UCE_encoder",
+     "pM": 0.001,
+     "pD": 0.003,
+     "qM": 0.002,
+     "qD": 0.008,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "scGPT_encoder",
+     "pM": 0.001,
+     "pD": 0.001,
+     "qM": 0.002,
+     "qD": 0.004,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "geneformer_attn",
+     "pM": 0.001,
+     "pD": 0.004,
+     "qM": 0.002,
+     "qD": 0.008,
+     "support": true,
+     "audit_support": true,
+     "agrees": true
+    },
+    {
+     "model_label": "random_init_floor",
+     "pM": 0.177,
+     "pD": 0.169,
+     "qM": 0.236,
+     "qD": 0.22533333333333336,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "geneformer_ko_raw",
+     "pM": 0.432,
+     "pD": 0.338,
+     "qM": 0.4937142857142857,
+     "qD": 0.3862857142857143,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    },
+    {
+     "model_label": "geneformer_ko_posctrl",
+     "pM": 0.107,
+     "pD": 0.104,
+     "qM": 0.1712,
+     "qD": 0.1664,
+     "support": false,
+     "audit_support": false,
+     "agrees": true
+    }
+   ],
+   "all_agree": true
+  }
+ }
+}

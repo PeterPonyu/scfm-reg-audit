@@ -153,7 +153,13 @@ def tissue_peakcount(atac_file: str) -> np.ndarray:
 
 
 def load_gene_identity_confounds() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """genelen / detv / gc from PBMC confound cache (tissue-independent)."""
+    """genelen / detv / gc from the PBMC confound cache.
+
+    genelen and detv are gene-level and identical across tissues, but gc is computed from
+    each tissue's own linked peaks, so this cache is correct for PBMC only. The brain rows
+    of the submitted Table 5 used it; src/revision_05613/brain_baseline_fix.py recomputes
+    them with brain gc.
+    """
     conf_path = require_npz("pbmc_confounds_v2.npz")
     genes, _, man_sha = fpa.load_manifest()
     _pc, genelen, detv, gc = pbmc_cache.load_confound_cache(conf_path, genes, man_sha)

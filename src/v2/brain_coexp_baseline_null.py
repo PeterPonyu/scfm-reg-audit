@@ -59,6 +59,9 @@ def main():
     G = np.mean([Z[f"G_{t}"] for t in types], axis=0).astype(np.float32)
     F = np.load(f"{OUT}/fmgraphs_pooled_v2.npz")
     co = F["co"].astype(np.float32)
+    # genelen and detv are gene-level, but this gc is computed from PBMC peaks; the brain FM
+    # rows use brain-peak GC. src/revision_05613/brain_baseline_fix.py recomputes the
+    # baseline with brain gc (ARRAY-D-26-05613 revision).
     cache = np.load(f"{OUT}/pbmc_confounds_v2.npz", allow_pickle=False)
     gl, dv, gc = cache["genelen"], cache["detv"], cache["gc"]
     print("brain peakcount...", flush=True)

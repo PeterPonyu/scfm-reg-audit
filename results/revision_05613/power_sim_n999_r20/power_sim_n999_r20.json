@@ -1,0 +1,314 @@
+{
+ "schema_version": 1,
+ "analysis": "power_simulation_full_spec",
+ "design": "synth = a*z(proxy residual) + (1-a)*z(noise); same statistic and nulls as the audit rows; full specification; checks test sensitivity only",
+ "alpha_grid": [
+  0.0,
+  0.001,
+  0.002,
+  0.003,
+  0.004,
+  0.005,
+  0.006,
+  0.008,
+  0.01,
+  0.015
+ ],
+ "n_rep": 20,
+ "n_perm": 999,
+ "seed_contract": "SeedSequence([20260924, 2]).spawn(6): brain rows/mantel/degree, pbmc rows/mantel/degree",
+ "seeds": {
+  "brain": [
+   16300394472750697843,
+   7885553595559785150,
+   4421964152095797051
+  ],
+  "pbmc": [
+   15003701472531590885,
+   1192587193084404525,
+   12139476314199113959
+  ]
+ },
+ "tissues": {
+  "brain": {
+   "curve": [
+    {
+     "alpha_injected": 0.0,
+     "n": 20,
+     "mean_rho": -0.00021216517108413828,
+     "sd_rho": 0.00113083816721352,
+     "power_M_a05": 0.0,
+     "power_D_a05": 0.0,
+     "power_dual_a05": 0.0,
+     "power_M_a05m": 0.0,
+     "power_D_a05m": 0.0,
+     "power_dual_a05m": 0.0
+    },
+    {
+     "alpha_injected": 0.001,
+     "n": 20,
+     "mean_rho": 0.001205214628760214,
+     "sd_rho": 0.0011778583124958655,
+     "power_M_a05": 0.1,
+     "power_D_a05": 0.1,
+     "power_dual_a05": 0.1,
+     "power_M_a05m": 0.0,
+     "power_D_a05m": 0.0,
+     "power_dual_a05m": 0.0
+    },
+    {
+     "alpha_injected": 0.002,
+     "n": 20,
+     "mean_rho": 0.0013163304500313799,
+     "sd_rho": 0.0013505723666114113,
+     "power_M_a05": 0.1,
+     "power_D_a05": 0.1,
+     "power_dual_a05": 0.1,
+     "power_M_a05m": 0.05,
+     "power_D_a05m": 0.0,
+     "power_dual_a05m": 0.0
+    },
+    {
+     "alpha_injected": 0.003,
+     "n": 20,
+     "mean_rho": 0.0027685714234643504,
+     "sd_rho": 0.0013177497406190875,
+     "power_M_a05": 0.55,
+     "power_D_a05": 0.55,
+     "power_dual_a05": 0.55,
+     "power_M_a05m": 0.2,
+     "power_D_a05m": 0.25,
+     "power_dual_a05m": 0.2
+    },
+    {
+     "alpha_injected": 0.004,
+     "n": 20,
+     "mean_rho": 0.004578152398667841,
+     "sd_rho": 0.001283771305925124,
+     "power_M_a05": 0.9,
+     "power_D_a05": 0.9,
+     "power_dual_a05": 0.9,
+     "power_M_a05m": 0.75,
+     "power_D_a05m": 0.7,
+     "power_dual_a05m": 0.65
+    },
+    {
+     "alpha_injected": 0.005,
+     "n": 20,
+     "mean_rho": 0.004700836361142708,
+     "sd_rho": 0.0013466786958296194,
+     "power_M_a05": 0.9,
+     "power_D_a05": 0.9,
+     "power_dual_a05": 0.9,
+     "power_M_a05m": 0.75,
+     "power_D_a05m": 0.75,
+     "power_dual_a05m": 0.75
+    },
+    {
+     "alpha_injected": 0.006,
+     "n": 20,
+     "mean_rho": 0.006182378499267926,
+     "sd_rho": 0.001388651751413295,
+     "power_M_a05": 0.95,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 0.95,
+     "power_M_a05m": 0.95,
+     "power_D_a05m": 0.9,
+     "power_dual_a05m": 0.9
+    },
+    {
+     "alpha_injected": 0.008,
+     "n": 20,
+     "mean_rho": 0.008367061824442381,
+     "sd_rho": 0.0012034162818615943,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    },
+    {
+     "alpha_injected": 0.01,
+     "n": 20,
+     "mean_rho": 0.01006830470200407,
+     "sd_rho": 0.0011209119257532185,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    },
+    {
+     "alpha_injected": 0.015,
+     "n": 20,
+     "mean_rho": 0.014757087257307636,
+     "sd_rho": 0.0014705704448617352,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    }
+   ],
+   "empirical_mde_dual": {
+    "a05": 0.004061129262895416,
+    "a05m": 0.005194683740517781
+   },
+   "analytic_mde_dual": {
+    "a05": 0.0038812765465426904,
+    "a05m": 0.004954126009080347
+   },
+   "median_null_sd": {
+    "mantel": 0.0013687479893803728,
+    "degree": 0.0013696232485385451
+   },
+   "false_positive_rate_at_alpha0": {
+    "a05": 0.0,
+    "a05m": 0.0
+   }
+  },
+  "pbmc": {
+   "curve": [
+    {
+     "alpha_injected": 0.0,
+     "n": 20,
+     "mean_rho": -0.00010131301347558459,
+     "sd_rho": 0.0011467903105293043,
+     "power_M_a05": 0.0,
+     "power_D_a05": 0.0,
+     "power_dual_a05": 0.0,
+     "power_M_a05m": 0.0,
+     "power_D_a05m": 0.0,
+     "power_dual_a05m": 0.0
+    },
+    {
+     "alpha_injected": 0.001,
+     "n": 20,
+     "mean_rho": 0.0015086708875644839,
+     "sd_rho": 0.0012605560760709305,
+     "power_M_a05": 0.2,
+     "power_D_a05": 0.2,
+     "power_dual_a05": 0.2,
+     "power_M_a05m": 0.05,
+     "power_D_a05m": 0.05,
+     "power_dual_a05m": 0.05
+    },
+    {
+     "alpha_injected": 0.002,
+     "n": 20,
+     "mean_rho": 0.001491100809321594,
+     "sd_rho": 0.001316359614155751,
+     "power_M_a05": 0.15,
+     "power_D_a05": 0.15,
+     "power_dual_a05": 0.15,
+     "power_M_a05m": 0.0,
+     "power_D_a05m": 0.0,
+     "power_dual_a05m": 0.0
+    },
+    {
+     "alpha_injected": 0.003,
+     "n": 20,
+     "mean_rho": 0.0033134633621091833,
+     "sd_rho": 0.0014358513950003106,
+     "power_M_a05": 0.6,
+     "power_D_a05": 0.6,
+     "power_dual_a05": 0.6,
+     "power_M_a05m": 0.4,
+     "power_D_a05m": 0.4,
+     "power_dual_a05m": 0.4
+    },
+    {
+     "alpha_injected": 0.004,
+     "n": 20,
+     "mean_rho": 0.0037282006900128902,
+     "sd_rho": 0.001333935363554362,
+     "power_M_a05": 0.7,
+     "power_D_a05": 0.7,
+     "power_dual_a05": 0.7,
+     "power_M_a05m": 0.6,
+     "power_D_a05m": 0.5,
+     "power_dual_a05m": 0.5
+    },
+    {
+     "alpha_injected": 0.005,
+     "n": 20,
+     "mean_rho": 0.005207075109079519,
+     "sd_rho": 0.0018709434859118035,
+     "power_M_a05": 0.85,
+     "power_D_a05": 0.85,
+     "power_dual_a05": 0.85,
+     "power_M_a05m": 0.8,
+     "power_D_a05m": 0.8,
+     "power_dual_a05m": 0.8
+    },
+    {
+     "alpha_injected": 0.006,
+     "n": 20,
+     "mean_rho": 0.006190806585437179,
+     "sd_rho": 0.0010259546314385383,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    },
+    {
+     "alpha_injected": 0.008,
+     "n": 20,
+     "mean_rho": 0.008393881829474589,
+     "sd_rho": 0.0011433235964079086,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    },
+    {
+     "alpha_injected": 0.01,
+     "n": 20,
+     "mean_rho": 0.009843104903661908,
+     "sd_rho": 0.0011289194504371062,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    },
+    {
+     "alpha_injected": 0.015,
+     "n": 20,
+     "mean_rho": 0.014951578533407051,
+     "sd_rho": 0.0012816145335626606,
+     "power_M_a05": 1.0,
+     "power_D_a05": 1.0,
+     "power_dual_a05": 1.0,
+     "power_M_a05m": 1.0,
+     "power_D_a05m": 1.0,
+     "power_dual_a05m": 1.0
+    }
+   ],
+   "empirical_mde_dual": {
+    "a05": 0.004714116969390643,
+    "a05m": 0.005207075109079519
+   },
+   "analytic_mde_dual": {
+    "a05": 0.0038672139680629406,
+    "a05m": 0.004717333731944602
+   },
+   "median_null_sd": {
+    "mantel": 0.0013636133557187865,
+    "degree": 0.0013636317081081092
+   },
+   "false_positive_rate_at_alpha0": {
+    "a05": 0.0,
+    "a05m": 0.0
+   }
+  }
+ }
+}

@@ -9,7 +9,8 @@ with a SEQUENCE-GROUNDED, co-expression-orthogonal regulatory truth:
 
   i = TF gene (manifest gene with >=1 JASPAR motif), j = target gene, p = peak
   L[j,p] = 1 if peak p ∈ [TSS-2kb, gene-end] of gene j        (peak->gene link)
-  HT[p,i] = 1 if any motif of TF i scores a MOODS hit (p<1e-4, either strand) in peak p's hg38 sequence
+  HT[p,i] = 1 if any motif of TF i scores a MOODS hit (p < MOTIF_P, default 1e-5, either strand)
+              in the 500 bp window around peak p's midpoint (hg38); repeated hits count once
   a_T[p]  = mean peak count over cells of type T (log1p)       (cell-type accessibility gate)
 
 Edges come from DNA motif presence in accessible peaks, NOT from cross-cell covariation ->

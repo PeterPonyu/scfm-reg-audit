@@ -95,7 +95,9 @@ def main():
     graphs["geneformer_ko_raw"] = K["G_ko"].astype(np.float32)
     graphs["geneformer_ko_posctrl"] = K["G_ko_ctrl"].astype(np.float32)
 
-    # Gene-identity confounds from PBMC cache (tissue-independent); brain peakcount fresh.
+    # genelen/detv from the PBMC cache are tissue-independent, but gc is PBMC-peak-derived,
+    # so this harness does not use the audit's brain design; see
+    # src/revision_05613/attention_guard.py for the deterministic rerun with brain gc.
     cache = np.load(f"{OUT}/pbmc_confounds_v2.npz", allow_pickle=False)
     genelen = cache["genelen"].astype(np.float32)
     detv = cache["detv"].astype(np.float32)

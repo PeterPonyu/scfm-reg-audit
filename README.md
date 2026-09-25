@@ -8,8 +8,9 @@ single-cell RNA foundation-model gene graphs.
 
 ## What the protocol delivers
 
-- **A frozen audit panel.** 1,200 genes, including 446 in-range transcription factors, fixed
-  before any sweep and shipped as a manifest so a rerun uses the same edge set.
+- **A frozen audit panel.** 1,200 genes, including the 446 transcription factors with a JASPAR
+  motif that pass the panel filters, fixed before any sweep and shipped as a manifest so a rerun
+  uses the same edge set (filter cascade: `results/revision_05613/panel_cascade.json`).
 - **An expression-free reference.** Edge weights come from a sequence- and
   accessibility-derived regulatory-potential proxy, so the reference does not inherit
   co-expression structure from the models under audit.
@@ -26,14 +27,17 @@ single-cell RNA foundation-model gene graphs.
 - **Two worked instances**, brain snATAC+RNA and paired PBMC multiome, with the constants
   frozen before the sweep and the scripts that render every reported value.
 
-The same panel, randomizations, and gates attach to a new tissue, a new panel, or a new model
-without changing the protocol.
+The panel, randomizations and gates are specified so that a new tissue, panel or model can be
+scored without changing the protocol. So far the protocol has been run on one panel and two
+tissues.
 
 ## Contents
 
-- `src/` — audit implementations and automated tests.
+- `src/` — audit implementations and automated tests; `src/revision_05613/` holds the analyses
+  added in the first review round (see below).
 - `data/manifest/` — the frozen shared-gene panel.
-- `results/*.public.json` — public reference outputs used by validation and the examples.
+- `results/*.public.json` — public reference outputs used by validation and the examples;
+  `results/revision_05613/` holds the revision outputs.
 - `requirements.txt` — pinned Python versions of the reference environment.
 - `ENVIRONMENT.example` — optional runtime-path configuration.
 
@@ -52,6 +56,26 @@ python validate_artifacts.py
 
 `validate_artifacts.py` revalidates the capsule against the MANIFEST digests. Tests that need
 external data run when their documented inputs are present.
+
+## Revision analyses (ARRAY-D-26-05613, first review round)
+
+| Script in `src/revision_05613/` | Output in `results/revision_05613/` | What it answers |
+| --- | --- | --- |
+| `resolution_check.py` | `resolution_n9999/` | every test rerun at N = 9,999 with its own seed; the first 999 replicates reproduce all 67 published p-values |
+| `multiplicity.py` | `multiplicity_robustness.json` | dual-null Support under BH, Benjamini–Yekutieli, Holm, intersection–union and Westfall–Young |
+| `degree_grid.py` | `degree_grid_n999/` | the 13 rows under ten ways of controlling graph degree |
+| `mde.py`, `power_sim.py` | `mde.json`, `power_sim_n999_r20/` | minimum detectable effect of each test and a planted-signal check |
+| `panel_cascade.py` | `panel_cascade.json` | the filter cascade behind the 1,200-gene panel |
+| `motif_expectation.py` | `motif_expectation.json` | the expected number of random motif hits per peak |
+| `brain_baseline_fix.py` | `brain_baseline_fix.json` | brain co-expression baseline with GC from brain peaks |
+| `attention_guard.py` | `attention_guard.json` | deterministic rerun of the attention-omission guard |
+| `make_appendix_b.py` | `appendix_b_tables.tex` | the manuscript's Appendix B tables, written from the JSON files |
+
+Every audit test's seed, N, null mean, null standard deviation and exceedance count are in
+`results/fixed_panel_audit_v2.public.json`; the revision analyses draw from the
+`SeedSequence([20260924, k])` streams recorded in their outputs. The scripts read the cached gene
+graphs, proxy graphs and covariate inputs of the full pipeline (`results/v2/`), which are not
+redistributed here; the per-replicate null arrays of the revision runs are in the Zenodo archive.
 
 ## Citation
 
