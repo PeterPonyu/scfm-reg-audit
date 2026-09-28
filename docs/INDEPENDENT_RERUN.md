@@ -53,6 +53,14 @@ not independent validation of the biological interpretation or population power.
 
 ## PBMC 10x H5 conversion
 
+The PBMC input is the 10x 10k PBMC Multiome Chromium X reference processed with Cell Ranger
+ARC 2.0.0 against GRCh38. The [original filtered matrix](https://cf.10xgenomics.com/samples/cell-arc/2.0.0/10k_PBMC_Multiome_nextgem_Chromium_X/10k_PBMC_Multiome_nextgem_Chromium_X_filtered_feature_bc_matrix.h5)
+and [official summary](https://cf.10xgenomics.com/samples/cell-arc/2.0.0/10k_PBMC_Multiome_nextgem_Chromium_X/10k_PBMC_Multiome_nextgem_Chromium_X_summary.csv)
+identify 10,970 cells and 111,743 peaks. The retained matrix is 166,323,468 bytes, with SHA-256
+`3897be5c916a66def9273049f6c5418ae042111f1b64ce769198253f56bf356d`.
+On 28 September 2026, its byte count and locally recomputed multipart checksum matched the
+public object. This verifies the specific input object, not the downstream inference pipeline.
+
 For an already obtained 10x Cell Ranger ARC filtered feature-barcode H5 containing both
 `Gene Expression` and `Peaks` features:
 
