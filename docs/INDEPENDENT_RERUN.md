@@ -1,10 +1,10 @@
 # Independent rerun instructions
 
-This document describes the bounded independence patch for ARRAY-D-26-05613. It does not
-change or expand the immutable v0.5.1 archive. No other paper repository is an implicit input.
-External scientific inputs and their original citations/licenses remain necessary.
-Historical registry keys such as `peerj_freeze` remain for schema compatibility; they
-label the frozen panel and do not connect to another manuscript or repository.
+This repository contains the fixed-panel motif-accessibility audit and its public numerical
+summaries. Inputs are project-local or explicitly configured; no other research repository
+is discovered implicitly. The archived release and the subsequent manuscript supplements
+have separate contents. The instructions below distinguish calculations supported by the
+released summaries from reconstruction steps that still require verified upstream inputs.
 
 ## Validated public-summary layer
 
@@ -17,7 +17,7 @@ python src/revision_05613/mde.py --summary-only
 python -m unittest discover -s src/v2/tests -p test_independent_release.py -v
 ```
 
-The validation performed for this patch used an existing local environment, not a newly
+The validation performed for these commands used an existing local environment, not a newly
 installed environment. No dependency was added. Installation is a setup recipe, not a claim
 that a fresh environment installation was validated.
 
@@ -66,7 +66,7 @@ This writes `pbmc10k_rna.h5ad` and `pbmc10k_atac.h5ad`, retaining the same barco
 RNA uses gene symbols with duplicate names made unique; ATAC uses the peak feature IDs.
 Missing source files or a missing modality fail before output creation. A small 10x-format
 fixture verifies counts, barcodes and feature names. Full public PBMC source acquisition and
-model inference were not executed for this patch. Repeated successful conversion into the
+model inference were not executed in the summary verification. Repeated successful conversion into the
 same output directory replaces those two files; use a new directory to retain prior inputs.
 
 ## Configured inputs and fail-closed paths
@@ -98,33 +98,32 @@ META_FILE=/path/to/brain_cell_metadata.csv.gz \
 TAG=GSE174367 python src/v2/build_atac_graph_v2.py
 ```
 
-The historical `SCREG_MONOREPO_DATA` sibling fallback has been removed. Merely having a
-neighboring research workspace cannot satisfy missing PBMC or coordinates inputs.
+Missing PBMC or gene-coordinate inputs are reported explicitly; a neighbouring research
+workspace is never used to supply them.
 
 ## Remaining requirements for a full rerun
 
-The archived `docs/FULL_RERUN.md` supplies historical context but does not close all of these
-requirements. Do not infer a missing accession or a deterministic converter from a filename.
+The exact brain RNA accession, selected cells, donor mapping and deterministic preprocessing
+are still unverified. A surviving processed file and matching detection values establish
+file continuity, but do not supply those missing source records. Cell-type metadata, gene
+coordinates, motif profiles and the reference genome also require documented sources and
+matching digests before a raw-input reconstruction can be accepted.
 
-1. Supply the exact public brain RNA accession(s), subset and deterministic preprocessing
-   that produced the `ad_hm_prepped` input. This patch does not invent the missing provenance.
-2. Provide the cell-type metadata source/converter and digest; pin gene coordinates, JASPAR
-   motif file and the exact hg38 FASTA build/digest. Keep attribution and upstream licenses.
-3. Complete the ordered model-specific environment, checkpoint and input contracts. These
-   include PBMC conversion and `pbmc_eval_scf_v2.py` before consumers of
-   `G_scf_pbmc_pooled.npz`; optional model packages are not installed by this patch.
-4. Reconstruct and verify the graph/confound caches in `results/v2/`. The public JSON and
-   replicate-level null archive do not contain every input used by `common.load_groups()`.
-   Deep multiplicity currently reconstructs unrounded observed statistics from these caches;
-   the rounded public statistic is not an interchangeable substitute near a tail threshold.
-5. Validate resolution, degree-grid, power and other graph-dependent analyses separately.
-   Passing the public-summary fixture tests does not establish these stages ran.
-6. Close the data-to-figure chain. The frozen TikZ sources can be rendered; the historical
-   R figure driver still references a different path layout and is not a validated renderer
-   of the newly revised manuscript figures. Figure 1/14/15 and new IUT supplements belong
-   to the final accompanying manuscript package, not retrospectively to v0.5.1.
+Model inference requires checkpoint-specific environments, identities and input contracts.
+For PBMC, modality conversion and the scFoundation inference stage must finish before their
+graph consumers run. The public summaries and replicate-level null archive do not contain
+every upstream graph or confound cache. Deep randomization analyses use unrounded observed
+statistics from those inputs; substituting rounded public statistics can change an
+exceedance count near a tail threshold.
 
-A future full-run record should identify its code revision, pinned inputs and hashes, installed
-environment, use of precomputed caches, executed stages and exit status. Until that record
-exists, the supported wording is **validated public-summary recalculation with incomplete
-raw-to-model reconstruction**, not an independently reproduced full analysis.
+Resolution, degree-grid and injection analyses need verification at their own execution
+level. Successful summary calculations establish arithmetic consistency of the released
+records. They do not reproduce model inference, independent biological validation or
+population uncertainty. Historical figure sources can be rendered, while the current
+manuscript supplements supply the revised data-driven figures and the later statistical
+analyses separately from the immutable archive.
+
+A complete rerun record should identify the code revision, source inputs and digests,
+installed environment, precomputed inputs, executed stages and exit status. Until that
+record is available, the supported result is public-summary recalculation with an incomplete
+raw-to-model reconstruction.

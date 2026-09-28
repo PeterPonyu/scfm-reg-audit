@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use this protocol or software capsule, please cite the archived release."
-title: "scReg-Eval: a fixed-panel audit protocol for regulatory alignment of single-cell RNA foundation-model gene graphs"
+message: "If you use this protocol or software, please cite the archived release."
+title: "scReg-Eval: a fixed-panel audit of motif-accessibility alignment in single-cell RNA foundation-model gene graphs"
 type: software
 authors:
   - family-names: Fu
@@ -14,7 +14,7 @@ doi: "10.5281/zenodo.21724336"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.21724336"
-    description: "Zenodo archive of the audit capsule and numerical record"
+    description: "Zenodo archive of the software and numerical results"
 keywords:
   - single-cell RNA-seq
   - foundation models
