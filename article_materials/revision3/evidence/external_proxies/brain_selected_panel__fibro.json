@@ -1,0 +1,27 @@
+{
+ "tissue": "fibro",
+ "cells": 15259,
+ "types": [
+  "ALL"
+ ],
+ "linked_peaks": 33680,
+ "atac_source": "GSE206767_filtered_peak_bc_matrix.h5ad",
+ "arm": "brain_selected_panel",
+ "genes": 1200,
+ "tfs": 442,
+ "motif_parameters": {
+  "accessibility": "equal cell-type mean of log1p mean raw ATAC count over registered selected cells",
+  "background": [
+   0.25,
+   0.25,
+   0.25,
+   0.25
+  ],
+  "links": "peak midpoint in strand-aware promoter+gene-body; no distal enhancement or paired RNA correlation",
+  "motif_pvalue": 1e-05,
+  "peak_width_bp": 500,
+  "scope": "motif-accessibility potential, not causal truth; no biological success classes",
+  "self_edges": 0
+ },
+ "scope": "external degree source only; corrective construction; not a tested outcome"
+}

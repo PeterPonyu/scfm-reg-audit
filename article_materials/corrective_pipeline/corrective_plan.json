@@ -1,0 +1,150 @@
+{
+  "arms": {
+    "brain_selected_panel": {
+      "claim": "Distinct source-corrected panel case study; post-review design, not original endpoint or external population replication",
+      "panel": "new selection from genuine brain RNA under the original motif/token/locus/detection rules",
+      "tissues": [
+        "brain",
+        "pbmc"
+      ]
+    },
+    "historical_panel_corrected_source": {
+      "claim": "Correct-source check conditional on the unchanged aortic-selected historical panel; no independent-panel claim",
+      "panel": "original_panel",
+      "tissues": [
+        "brain"
+      ]
+    }
+  },
+  "brain": {
+    "cell_type_key": "Cell.Type",
+    "exclude_unannotated": true,
+    "feature_identity": "Preserve all official unique versioned ENSG IDs; symbols are uniquified in the exact official feature order by standard make_index_unique(join=\"-\") replay; no arbitrary suffix stripping or symbol aggregation. Normalize full universe before subsetting",
+    "max_cells_per_sample": 128,
+    "metadata_join": "exact complete Barcode",
+    "normalization": "CP10k and log1p over all gene-expression features BEFORE panel selection/subsetting",
+    "pairing": "sample-level matching of separate nuclei; no same-cell pairing or verified donor uncertainty",
+    "quota_rule": "Per-type q_t=min(floor(128/number_of_common_types),minimum n[sample,assay,type] across both assays and every shared sample); one q_t per type, not a global scalar",
+    "reference": "GRCh38.p12.premrna2",
+    "rna_accession": "GSE174367",
+    "rna_scale": "integer_counts",
+    "sample_key_atac": "Sample.ID",
+    "sample_key_rna": "SampleID",
+    "sample_rule": "all exact shared sample IDs; metadata-defined types with at least 1 cell in every shared sample in both assays",
+    "selection": "sha256(seed:assay:sample:type:barcode) ascending, before model outcomes"
+  },
+  "date": "2026-10-01",
+  "design": "Separately registered source correction and new-panel demonstration, never a silent rerun of the thirteen historical rows.",
+  "gpu": {
+    "index": 0,
+    "max_temperature_c": null,
+    "slowdown_margin_c": 5
+  },
+  "historical_plan_sha256": "d8401a5df02b97312c170594fbb34a2b10cd272fdcaedc8d3bb6d7d904123507",
+  "limits": "Retained panel/source case study does not close causal regulation, independent model-level gate validation, donor uncertainty, or unknown training overlap.",
+  "models": {
+    "batch": 2,
+    "budget_scope": "28800 seconds cumulative stage runtime across all contexts/readouts including resumes",
+    "device": "cuda",
+    "excluded_historical_readouts": [
+      "geneformer_ko_raw",
+      "geneformer_ko_posctrl"
+    ],
+    "exclusion_reason": "Historical source-invalid knockout graphs retained as historical evidence; fresh knockout inference has not been registered by this bounded six-readout correction and cannot be replaced by embedding results",
+    "inference_context": "frozen_panel",
+    "max_seconds": 28800,
+    "min_gene_coverage": 0.9,
+    "pair_coverage_required": 1.0,
+    "readouts": [
+      "geneformer_embed",
+      "geneformer_attention",
+      "random_init_geneformer",
+      "scgpt_encoder",
+      "scfoundation_encoder",
+      "uce_encoder"
+    ],
+    "registered_tasks": 18
+  },
+  "output_namespace": "source_correction_20261001",
+  "panel": {
+    "all_model_intersection": false,
+    "detection_floor": 0.01,
+    "detection_pool": "Registered metadata-balanced genuine brain RNA selected cell pool; same pool supplies model and coexpression, so panel selection is not independent or held out",
+    "max_genes": 1200,
+    "min_genes": 500,
+    "min_tfs": 100,
+    "overlap_reporting": "original historical panel overlap explicit; never call gene-disjoint",
+    "promoter_bp": 2000,
+    "selection": "coordinate first record; Geneformer token+positive median and scGPT vocabulary; at least one brain ATAC peak midpoint in half-open TSS-2kb through TES; genuine brain RNA detection>=.01; keep all passing JASPAR TFs then descending detection non-TFs with symbol tie-break; final sorted symbols"
+  },
+  "pbmc": {
+    "max_cells": 1854,
+    "metadata_na": "Exclude blank, NA, nan and NaN cell types before hash selection; equal-weight accessibility mean over all named types represented in the frozen selected pool. Save absent original types explicitly",
+    "pairing": "same-cell exact complete barcode only; library-level case study; donor-independent CI not estimable",
+    "rna_scale": "counts",
+    "selection": "SHA256(seed:pbmc:barcode) ascending among exact RNA/ATAC/metadata common cells; no outcome selection",
+    "source": "existing paired 10x PBMC multiome local H5ADs and exact cell metadata",
+    "source_identity_limit": "Exact local RNA/ATAC barcode order establishes local split pairing; primary upstream processing-chain verification is separately recorded. Do not claim external source validation from this check alone"
+  },
+  "pilot": {
+    "budget_scope": "3600 seconds cumulative across both panel pilots",
+    "cpu_cuda_atol": 0.02,
+    "cpu_cuda_rtol": 0.02,
+    "finite_mask_equal": true,
+    "first_tissue": "brain",
+    "max_batches_per_readout": 1,
+    "max_seconds": 3600,
+    "min_comparable_pairs": 1,
+    "panels": "One batch of exact selected brain cells for EACH registered panel and each of six readouts; full inference requires both panels pass actual saved CPU/CUDA comparison"
+  },
+  "proxy": {
+    "accessibility": "equal cell-type mean of log1p mean raw ATAC count over registered selected cells",
+    "background": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "links": "peak midpoint in strand-aware promoter+gene-body; no distal enhancement or paired RNA correlation",
+    "motif_pvalue": 1e-05,
+    "peak_width_bp": 500,
+    "scope": "motif-accessibility potential, not causal truth; no biological success classes",
+    "self_edges": 0
+  },
+  "reason": "Official GSM6593315 raw counts and complete candidate row naming replay reveal aortic RNA in the historical brain context. Withdraw biological interpretation of affected historical results; keep original files and multiplicity families intact.",
+  "registered_before_corrective_model_outcomes": true,
+  "registration_clarification": "Metadata and expression-only clarification completed before any corrective prepare or model outcomes; original replication plan unchanged",
+  "resources_sha256": "2d064d73220d32e3104b5cedb544203d153f964a55fb4722d95597071722dad7",
+  "schema": "screg-source-correction.v1",
+  "seed": 20261001,
+  "statistics": {
+    "backend": "cuda",
+    "baseline": "Coexpression is absolute Pearson over full-library log1pCP10k on the exact model cell pool. Zero-variance gene rows/columns remain NaN. Primary incremental and comparable contrast statistics require every frozen TF-target coexpression pair finite, besides model pair coverage",
+    "budget_scope": "28800 seconds cumulative across all contexts and specifications per stage, including authorized resumes; invocation runtime persisted in budget state. Budget stop preserves prior receipts",
+    "comparison": "same outcome,pairs and structural nuisance for FM and coexpression contrasts; incremental FM alignment additionally controls rank(coexpression)",
+    "degree_modes": [
+      "own",
+      "none"
+    ],
+    "donor_intervals": false,
+    "draw_policy": "Undefined draw stops, preserve checkpoint, never drop/redraw",
+    "family": "all registered arm x tissue x readout x degree x null slots pooled IUT BY and Holm; unavailable frozen-pair rows retained as correction_input_p=1 not measured MC p",
+    "max_seconds": 28800,
+    "null_modes": [
+      "restricted",
+      "unrestricted"
+    ],
+    "permutations": 999,
+    "randomization_scope": "Conditional diagnostics; empirical exchangeability remains unproven",
+    "registered_hypotheses": 72,
+    "restricted_rule": "TF status x target locus peak-count quintile x gene-linked peak sequence GC tertile, using fixed quantile cuts over the entire selected panel. Unique quantile cuts keep ties together; no brain neural marker mask in corrective family; exclude self edges only. M relabels genes within these groups; D shuffles nonself target assignments independently within each TF row and group",
+    "rng": "Same fixed seed across readouts in each context/specification; draws shared within exact job/degree/null; no adaptive changes or early significance stops",
+    "statistic": "incremental partial Spearman rho(FM, proxy | target locus peak count, gene length, tissue-specific RNA detection, gene-linked peak GC, rank(coexpression), optional own proxy outdegree/indegree). Own degree recomputed for every draw; none omits both degree columns"
+  },
+  "tasks": [
+    "prepare",
+    "pilot",
+    "infer",
+    "analyze"
+  ]
+}

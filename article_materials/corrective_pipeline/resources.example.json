@@ -1,0 +1,102 @@
+{
+ "gene_coordinates": {
+  "bytes": 2274068,
+  "path": "RESOURCE_ROOT/gene_coords_hg38.tsv",
+  "sha256": "7ba38f2e41bc242f3403f659a9c25f7eefe0e1d3b760dfd20bc719c25b7d8f18"
+ },
+ "genome_fai": {
+  "bytes": 19381,
+  "path": "RESOURCE_ROOT/hg38.fa.fai",
+  "sha256": "3b425de206296a5c8053023fa5ca61da43cfe78c1737c12e58c83367c7e83c21"
+ },
+ "genome_fasta": {
+  "bytes": 3273481150,
+  "path": "RESOURCE_ROOT/hg38.fa",
+  "sha256": "5be01555d98347fdb3714dc84c6f77c9d8bc774adcf32c6f7a8fa06f5baf5e51"
+ },
+ "gf_checkpoint": {
+  "bytes": 417571156,
+  "path": "RESOURCE_ROOT/model.safetensors",
+  "sha256": "fff5cba29ddd8792991fa77b4872246fbe548a178cebda3775cdc72b67780e7f"
+ },
+ "gf_config": {
+  "bytes": 590,
+  "path": "RESOURCE_ROOT/config.json",
+  "sha256": "467d4492f0dd53b4d60afffe20812db484ca1cf9fdbeb6a6e060e93564f70859"
+ },
+ "gf_medians": {
+  "bytes": 1512661,
+  "path": "RESOURCE_ROOT/gene_median_dictionary_gc104M.pkl",
+  "sha256": "a51c53f6a771d64508dfaf61529df70e394c53bd20856926117ae5d641a24bf5"
+ },
+ "gf_name_ids": {
+  "bytes": 1660882,
+  "path": "RESOURCE_ROOT/gene_name_id_dict_gc104M.pkl",
+  "sha256": "fabfa0c2f49c598c59ae432a32c3499a5908c033756c663b5e0cddf58deea8e1"
+ },
+ "gf_tokens": {
+  "bytes": 425590,
+  "path": "RESOURCE_ROOT/token_dictionary_gc104M.pkl",
+  "sha256": "67c445f4385127adfc48dcc072320cd65d6822829bf27dd38070e6e787bc597f"
+ },
+ "meme": {
+  "bytes": 469100,
+  "path": "RESOURCE_ROOT/JASPAR2024_CORE_vertebrates.meme",
+  "sha256": "dd494278d356a4e170908c74d6d8eb746a2c7504d6210cd51017141f21a65b18"
+ },
+ "multiome": {
+  "bytes": 3116868580,
+  "path": "RESOURCE_ROOT/GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad",
+  "sha256": "d2f772176cd34e9b69fb72259240c14513be277eea75ebe35c764b739f4f3e29"
+ },
+ "original_panel": {
+  "bytes": 64799,
+  "path": "RESOURCE_ROOT/shared_genes.v2.json",
+  "sha256": "6bea3f873e71ea98c9c9bf6f6499c688ccb2f268275f682125d583595c067a9d"
+ },
+ "scf_checkpoint": {
+  "bytes": 477485967,
+  "path": "RESOURCE_ROOT/model.pt",
+  "sha256": "2446c2fb99a0e183cdc9872b7e9e55ac74f7ec82db7ba0799c83be75cde66dc6"
+ },
+ "scf_gene_index": {
+  "bytes": 228232,
+  "path": "RESOURCE_ROOT/scf_gene_index.tsv",
+  "sha256": "bb337ea195d94e7b033543abc02a42e7060d6562eba97deb077f7dcecec62661"
+ },
+ "scgpt_args": {
+  "bytes": 1300,
+  "path": "RESOURCE_ROOT/args.json",
+  "sha256": "c18e075e018140cb8b2d9029387b9de26607a5ce6a8ccabd6ead70cd76b95d60"
+ },
+ "scgpt_checkpoint": {
+  "bytes": 205385258,
+  "path": "RESOURCE_ROOT/best_model.pt",
+  "sha256": "6cb5d451ab5c4b33eb673adbe4fddc61d2389df1b89b7651a9fe2e557572b922"
+ },
+ "scgpt_vocab": {
+  "bytes": 1317639,
+  "path": "RESOURCE_ROOT/vocab.json",
+  "sha256": "acca93d114ca62c3f0f50debbd23e8c87f0714f4737764454f6b2b13f2e8580f"
+ },
+ "uce_checkpoint": {
+  "bytes": 3403514339,
+  "path": "RESOURCE_ROOT/4layer_model.torch",
+  "sha256": "acb28f3f0a1d803e4a4ffe891b9bab38bf93c84762dc06b2452f0d515da91560"
+ },
+ "uce_chrom": {
+  "bytes": 4097781,
+  "path": "RESOURCE_ROOT/species_chrom.csv",
+  "sha256": "a9e801829ffaf05b5d7e6c6ef12404326cf6796ad561ad62ce701884f07969f5"
+ },
+ "uce_esm2": {
+  "bytes": 410886729,
+  "path": "RESOURCE_ROOT/human_esm2.pt",
+  "sha256": "a210e1cc7901513999b2bca3836ba9e2f203cd008be4e9a9d6412a2267de9748"
+ },
+ "uce_offsets": {
+  "bytes": 139,
+  "path": "RESOURCE_ROOT/species_offsets.pkl",
+  "sha256": "abda5b2bc4018187e408623b292686a061912f449daceb4c9c9603caf0d62538"
+ }
+}

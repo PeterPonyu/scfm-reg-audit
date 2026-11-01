@@ -1,0 +1,17 @@
+job,readout,degree_mode,null_mode,observed,tail_M_9999,tail_D_9999,registered_pIUT_999,pM,pD,pIUT,q_IUT_BY,p_IUT_Holm,q_IUT_BY_measured16,p_IUT_Holm_measured16
+brain_selected_panel-brain,geneformer_embed,own,restricted,0.00027218123855949315,8805,8317,0.881,0.8806,0.8318,0.8806,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,random_init_geneformer,own,restricted,-0.00031166613649981714,8154,8003,0.808,0.8155,0.8004,0.8155,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,scgpt_encoder,own,restricted,0.0018669572891956466,3800,318,0.425,0.3801,0.0319,0.3801,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,uce_encoder,own,restricted,0.0031930869125453387,1320,1437,0.138,0.1321,0.1438,0.1438,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,geneformer_embed,own,unrestricted,0.00027218123855949315,8469,8387,0.853,0.847,0.8388,0.847,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,random_init_geneformer,own,unrestricted,-0.00031166613649981714,8205,8179,0.829,0.8206,0.818,0.8206,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,scgpt_encoder,own,unrestricted,0.0018669572891956466,1571,3287,0.339,0.1572,0.3288,0.3288,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,uce_encoder,own,unrestricted,0.0031930869125453387,205,160,0.027,0.0206,0.0161,0.0206,1.0,1.0,1.0,0.3296
+brain_selected_panel-brain,geneformer_embed,none,restricted,-0.007603771164351958,1810,3343,0.311,0.1811,0.3344,0.3344,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,random_init_geneformer,none,restricted,0.0007091315101839901,7285,5373,0.744,0.7286,0.5374,0.7286,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,scgpt_encoder,none,restricted,-0.002821619947621624,7914,5683,0.785,0.7915,0.5684,0.7915,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,uce_encoder,none,restricted,-0.007545703952070881,2938,6887,0.709,0.2939,0.6888,0.6888,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,geneformer_embed,none,unrestricted,-0.007603771164351958,2885,2897,0.303,0.2886,0.2898,0.2898,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,random_init_geneformer,none,unrestricted,0.0007091315101839901,6883,6668,0.665,0.6884,0.6669,0.6884,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,scgpt_encoder,none,unrestricted,-0.002821619947621624,8313,760,0.854,0.8314,0.0761,0.8314,1.0,1.0,1.0,1.0
+brain_selected_panel-brain,uce_encoder,none,unrestricted,-0.007545703952070881,2182,319,0.238,0.2183,0.032,0.2183,1.0,1.0,1.0,1.0

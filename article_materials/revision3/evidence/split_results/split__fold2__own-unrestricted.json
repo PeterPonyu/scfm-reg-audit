@@ -1,0 +1,72 @@
+{
+ "fold": 2,
+ "degree_mode": "own",
+ "null_mode": "unrestricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 438,
+  "genes_S": 1199,
+  "tfs_S": 438,
+  "pairs_registered": 525162,
+  "pairs_S": 524724,
+  "pairs_E": 515541,
+  "fraction_registered_pairs_retained": 0.9816799387617535,
+  "excluded_genes": {
+   "zero_rna_variance": [],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [],
+   "missing_scfoundation_encoder": [
+    "NBAS"
+   ]
+  }
+ },
+ "rows": [
+  {
+   "readout": "geneformer_embed",
+   "observed": -1.7421625504773714e-05,
+   "pM": 0.9901,
+   "pD": 0.991,
+   "pIUT": 0.991
+  },
+  {
+   "readout": "random_init_geneformer",
+   "observed": -0.00027835641380090256,
+   "pM": 0.8437,
+   "pD": 0.8469,
+   "pIUT": 0.8469
+  },
+  {
+   "readout": "geneformer_attention",
+   "observed": -0.0041482687965114185,
+   "pM": 0.0018,
+   "pD": 0.0001,
+   "pIUT": 0.0018
+  },
+  {
+   "readout": "scgpt_encoder",
+   "observed": 0.0006271983265221255,
+   "pM": 0.6268,
+   "pD": 0.7659,
+   "pIUT": 0.7659
+  },
+  {
+   "readout": "uce_encoder",
+   "observed": 0.0013312799503080155,
+   "pM": 0.3352,
+   "pD": 0.3405,
+   "pIUT": 0.3405
+  },
+  {
+   "readout": "scfoundation_encoder",
+   "observed": -0.00016621309926524564,
+   "pM": 0.898,
+   "pD": 0.9275,
+   "pIUT": 0.9275
+  }
+ ],
+ "seconds": 7777.1
+}

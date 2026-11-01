@@ -1,0 +1,62 @@
+[
+  {
+    "backend": "cpu",
+    "degree_mode": "none",
+    "null_mode": "unrestricted",
+    "observed": -0.007603771164351958,
+    "pD": 0.2898,
+    "pIUT": 0.2898,
+    "pM": 0.2886,
+    "permutations": 9999,
+    "readout": "geneformer_embed",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cpu",
+    "degree_mode": "none",
+    "null_mode": "unrestricted",
+    "observed": 0.0007091315101839901,
+    "pD": 0.6669,
+    "pIUT": 0.6884,
+    "pM": 0.6884,
+    "permutations": 9999,
+    "readout": "random_init_geneformer",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cpu",
+    "degree_mode": "none",
+    "null_mode": "unrestricted",
+    "observed": -0.002821619947621624,
+    "pD": 0.0761,
+    "pIUT": 0.8314,
+    "pM": 0.8314,
+    "permutations": 9999,
+    "readout": "scgpt_encoder",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cpu",
+    "degree_mode": "none",
+    "null_mode": "unrestricted",
+    "observed": -0.007545703952070881,
+    "pD": 0.032,
+    "pIUT": 0.2183,
+    "pM": 0.2183,
+    "permutations": 9999,
+    "readout": "uce_encoder",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  }
+]

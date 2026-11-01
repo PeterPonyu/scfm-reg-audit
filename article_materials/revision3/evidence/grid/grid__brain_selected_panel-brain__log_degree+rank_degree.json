@@ -1,0 +1,161 @@
+{
+ "job": "brain_selected_panel-brain",
+ "context": "Brain panel / brain",
+ "designs": [
+  "log_degree",
+  "rank_degree"
+ ],
+ "null_mode": "unrestricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 442,
+  "genes_S": 1199,
+  "tfs_S": 442,
+  "pairs_registered": 529958,
+  "pairs_S": 529516,
+  "pairs_E": 524977,
+  "fraction_registered_pairs_retained": 0.9906011419772888,
+  "excluded_genes": {
+   "zero_rna_variance": [],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [],
+   "missing_scfoundation_encoder": [
+    "NBAS"
+   ]
+  }
+ },
+ "external_degree_sources": {
+  "external_fibro": "brain_selected_panel__fibro",
+  "external_other": "brain_selected_panel-pbmc"
+ },
+ "rows": [
+  {
+   "design": "log_degree",
+   "readout": "geneformer_embed",
+   "observed": -0.0014895765535573777,
+   "pM": 0.7587,
+   "pD": 0.8895,
+   "pIUT": 0.8895,
+   "nullM_sd": 0.004755617418479753,
+   "nullD_sd": 0.0012502026866855742
+  },
+  {
+   "design": "log_degree",
+   "readout": "random_init_geneformer",
+   "observed": -0.0003341056502936827,
+   "pM": 0.8301,
+   "pD": 0.8047,
+   "pIUT": 0.8301,
+   "nullM_sd": 0.0015495563136862676,
+   "nullD_sd": 0.0013133849217268968
+  },
+  {
+   "design": "log_degree",
+   "readout": "geneformer_attention",
+   "observed": 0.0048432412127925786,
+   "pM": 0.7251,
+   "pD": 0.0857,
+   "pIUT": 0.7251,
+   "nullM_sd": 0.013730902746460005,
+   "nullD_sd": 0.0006903559836916585
+  },
+  {
+   "design": "log_degree",
+   "readout": "scgpt_encoder",
+   "observed": 0.0038108274819819636,
+   "pM": 0.6632,
+   "pD": 0.081,
+   "pIUT": 0.6632,
+   "nullM_sd": 0.00864010861282738,
+   "nullD_sd": 0.0009821473481302098
+  },
+  {
+   "design": "log_degree",
+   "readout": "uce_encoder",
+   "observed": -0.00421547658102269,
+   "pM": 0.2974,
+   "pD": 0.8071,
+   "pIUT": 0.8071,
+   "nullM_sd": 0.004051351113146353,
+   "nullD_sd": 0.0012620449487056365
+  },
+  {
+   "design": "log_degree",
+   "readout": "scfoundation_encoder",
+   "observed": 0.0041856397133483245,
+   "pM": 0.685,
+   "pD": 0.0143,
+   "pIUT": 0.685,
+   "nullM_sd": 0.010157501080310537,
+   "nullD_sd": 0.0008785093271760291
+  },
+  {
+   "design": "rank_degree",
+   "readout": "geneformer_embed",
+   "observed": -0.0009160644600225325,
+   "pM": 0.828,
+   "pD": 0.7096,
+   "pIUT": 0.828,
+   "nullM_sd": 0.004161895331249698,
+   "nullD_sd": 0.0012820700005991615
+  },
+  {
+   "design": "rank_degree",
+   "readout": "random_init_geneformer",
+   "observed": -0.0005266282842383973,
+   "pM": 0.7268,
+   "pD": 0.7189,
+   "pIUT": 0.7268,
+   "nullM_sd": 0.0015022778575527382,
+   "nullD_sd": 0.0013456400479655909
+  },
+  {
+   "design": "rank_degree",
+   "readout": "geneformer_attention",
+   "observed": 0.001308042546586151,
+   "pM": 0.9086,
+   "pD": 0.9921,
+   "pIUT": 0.9921,
+   "nullM_sd": 0.011904825923512621,
+   "nullD_sd": 0.0007209515777477841
+  },
+  {
+   "design": "rank_degree",
+   "readout": "scgpt_encoder",
+   "observed": 0.0023898797850378604,
+   "pM": 0.747,
+   "pD": 0.0191,
+   "pIUT": 0.747,
+   "nullM_sd": 0.007423252996861858,
+   "nullD_sd": 0.001015132069440029
+  },
+  {
+   "design": "rank_degree",
+   "readout": "uce_encoder",
+   "observed": 0.0024509108597117303,
+   "pM": 0.4932,
+   "pD": 0.0783,
+   "pIUT": 0.4932,
+   "nullM_sd": 0.0035377443008143047,
+   "nullD_sd": 0.0012955817829884999
+  },
+  {
+   "design": "rank_degree",
+   "readout": "scfoundation_encoder",
+   "observed": -0.00015075462514360023,
+   "pM": 0.9881,
+   "pD": 0.9729,
+   "pIUT": 0.9881,
+   "nullM_sd": 0.008767327566343066,
+   "nullD_sd": 0.0009103815514015497
+  }
+ ],
+ "basis_impl": "svd",
+ "backend": "cuda",
+ "seconds": 5062.3,
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

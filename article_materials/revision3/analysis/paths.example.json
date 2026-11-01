@@ -1,0 +1,10 @@
+{
+ "corrective_run": "/path/to/output/of/corrective_pipeline/run",
+ "validation": "/path/to/corrective_pipeline",
+ "evidence_workspace": "/path/to/earlier/version/of/the/archive",
+ "historical_inputs": "/path/to/earlier/version/build/scientific_extension/inputs",
+ "historical_stress": "/path/to/earlier/version/build/scientific_extension/stress",
+ "fibroblast_atac": "/path/to/GSE206767_filtered_peak_bc_matrix.h5ad",
+ "scfoundation_weights": "/path/to/scfoundation-cell/model.pt",
+ "font_dir": "/path/to/folder/with/Arial.ttf"
+}

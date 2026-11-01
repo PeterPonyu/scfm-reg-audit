@@ -1,0 +1,14 @@
+{
+ "local_file": "model.pt",
+ "local_bytes": 477485967,
+ "local_sha256": "2446c2fb99a0e183cdc9872b7e9e55ac74f7ec82db7ba0799c83be75cde66dc6",
+ "mirror": {
+  "repo": "perturblab/scfoundation-cell",
+  "commit": "7b06458e108e0690fdd7f2ece61a4658069b801a",
+  "file": "model.pt",
+  "bytes": 477485967,
+  "lfs_sha256": "2446c2fb99a0e183cdc9872b7e9e55ac74f7ec82db7ba0799c83be75cde66dc6"
+ },
+ "local_equals_mirror_file": true,
+ "local_tensors": 265
+}

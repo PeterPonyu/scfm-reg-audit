@@ -1,0 +1,124 @@
+{
+ "corrective_pipeline/INPUT_CONTRACTS.md": {
+  "original_sha256": "b08dfdd9acb4669a5d8fc484b77d2312f76ca950ed5032adce01002f98194ccc",
+  "published_sha256": "e5638ac28d40238de1dc1bc7762ecbcbb0b38d8fb0268a1408a200ad3d7f60f8",
+  "changes": [
+   "run-record and download documentation in plain terms"
+  ]
+ },
+ "corrective_pipeline/authorization.example.json": {
+  "original_sha256": "8ba3feda3538436065f89e1d5a2437b8759c49e0afc78b9e5538b8cfa248c5d2",
+  "published_sha256": "2eaea9a1a57806d3f4f071a4e917d87369983065ad49025d932d52a6bd2dec7a",
+  "changes": [
+   "schema description in plain terms"
+  ],
+  "original_digest": "9bb309aa8920691443194a4e8e7029eac4180caedb5f1e6d339c085fbc728f4c"
+ },
+ "corrective_pipeline/resources.example.json": {
+  "original_sha256": "e63f18602ff3244e7d8bda8f01bb79a5ea51955f172419ebfc60cb1c3d54a2d9",
+  "published_sha256": "e3a5105707cc3502cc31d78b6fe7a7b1ced411c46d285322230c566059179b25",
+  "changes": [
+   "fields removed: workspace_fetch_gate"
+  ],
+  "original_digest": "f7026f69e46b04d61a0e6379a5be5599855785d73cfabc98c40346c527881dfa"
+ },
+ "corrective_pipeline/run.py": {
+  "original_sha256": "f765455df644a684936dd95c0b0e44e05c832ac0ff4ced096d0113af8bbd932b",
+  "published_sha256": "fd08fefe242c21530b06822e9cbc7c41eb7314c96ede3867ec9a4169ff17a0e3",
+  "changes": [
+   "optional download gate; message in plain terms"
+  ]
+ },
+ "corrective_pipeline/screg_validation/common.py": {
+  "original_sha256": "036fe02930d5673afb07d66fbb4f8a41420ce337e898aa52e2639814d4a12870",
+  "published_sha256": "e8f0ab3a52f6cb2b5f1a8902b2be7bc6c2519609019f033809ca6bdf5d7c07e6",
+  "changes": [
+   "run-record check: docstring and message in plain terms (logic unchanged)"
+  ]
+ },
+ "corrective_pipeline/screg_validation/fetch.py": {
+  "original_sha256": "c9518881d3c093f65d8fc28b045454ac749f17a3c5183f2564c4c2b933b0d9e0",
+  "published_sha256": "15e89f617c19cf6d6a8d7c44a7ee78386e861d2be415ee478c2d8caae590a3be",
+  "changes": [
+   "standard-library download transport when no local gate is registered"
+  ]
+ },
+ "corrective_pipeline/screg_validation/vendor/fm_readout.py": {
+  "original_sha256": "01b3f951b0e22a66234ce4b3bf37696a69c0d3f116eb61d371fd147e989814e3",
+  "published_sha256": "f1099ce2717e1c8c068bc3a7fca2a3c3002372e6b1be9b3dcb972604e68e8de2",
+  "changes": [
+   "comment in plain terms"
+  ]
+ },
+ "corrective_pipeline/screg_validation/vendor/fm_readout_uce.py": {
+  "original_sha256": "9df70d6f1e161be91cb2579d6a1bdc99e36256317376fefe6c5695fee780c439",
+  "published_sha256": "bd1f36a04bb7d04a95e9df06cc50f59ac199d940003e66f967c7632715ee3ee3",
+  "changes": [
+   "comments in plain terms"
+  ]
+ },
+ "resolution_9999/results/original/posthoc-plan.json": {
+  "original_sha256": "73ca640fbb5173aba9bc163b74a4332c7d5efb7ea833606e378a6b73f0919cf7",
+  "published_sha256": "1df1a51a14df05ca365dfda48c913d854fd104f46cf514b0a1fc2b1124d72286",
+  "changes": [
+   "fields removed: user_authorization",
+   "machine names replaced"
+  ],
+  "original_digest": "199b9b9684b12f712e08b378d61aa2ff6584dab19dff2fc39869571cc9508ece"
+ },
+ "resolution_9999/results/pilot.json": {
+  "original_sha256": "e94885d0e16e9c9c07a6d105368ba892a21c7310edff460a19203b9d9eebe1f5",
+  "published_sha256": "c16bd33c7575a736f92dd7d3a3f3551f36be5f02c56310d200e072c512760148",
+  "changes": [
+   "machine names replaced"
+  ],
+  "original_digest": "94acb017362043333b022e094662c4a9fd8d415ad1bbca47150e1137f28ff739"
+ },
+ "resolution_9999/results/results.json": {
+  "original_sha256": "d6ce7a4d30355b3d43b2ea3c5abec61269854b34dd24b86e34fb6911de128c10",
+  "published_sha256": "6b9ece37fa6af1b6b19caa9a149faf1ad7a715e8c6c2f22b705a1543037a249d",
+  "changes": [
+   "machine names replaced"
+  ],
+  "original_digest": "110901dfe8c5fcc1d442651895a4d87d120c93c4073d27e394631d5af8e24226"
+ },
+ "resolution_9999/scripts/verify_resolution.py": {
+  "original_sha256": "e0ce3ba8f75257935d63daa5711a5b4b3574f4e5b6f6fd867987235c8ff4e01d",
+  "published_sha256": "031ec426dbac4de1562fa0182ab04a37ed31fb75e19a8a192508e482f1e794df",
+  "changes": [
+   "accepts the run-time digests of files edited for publication"
+  ]
+ },
+ "revision3/evidence/external_proxies/brain_selected_panel__fibro.json": {
+  "original_sha256": "993499c8ed19d550cd48bc43aca5227d55bedb546254c23cd0ffb66b892fb6a2",
+  "published_sha256": "f2f8dfda08a733845b3647b23b64c1d44369ffeaa3b1322b67a472bfd4b1c133",
+  "changes": [
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "0d205c22d6e75e716c0f640f0a166d88ce8120cc87643340fa38c68d0458a5f5"
+ },
+ "revision3/evidence/external_proxies/historical_panel_corrected_source__fibro.json": {
+  "original_sha256": "4943c6ae31355ce4365a4d01439bbcb7cca037f8e45bcb6372923524a813d8fb",
+  "published_sha256": "fc53e4beef796c49ff42ed11e8f9d0fb114aa1f02199eb0a273f1c11badf6134",
+  "changes": [
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "285f32b86f4489928126ea8289c403d60879876040c429b0d38f55abca4a57c1"
+ },
+ "revision3/evidence/external_proxies/historical_panel_corrected_source__pbmc.json": {
+  "original_sha256": "8a2b85f5cae0b61319e401c2a9c38080b659df55f4ec2b16bfd9a5386fcae3a3",
+  "published_sha256": "634c8b3a643f235a30262cd63023911594edc637a2b490f5e76d3d8f18132d07",
+  "changes": [
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "b0d9a239a9e64cb994df3858f4ed45d51da1c2478901f325bd9093bde73796a6"
+ },
+ "revision3/evidence/scfoundation_verification.json": {
+  "original_sha256": "3277c2e77432792bbc24cb09ed13f6eee0372deb6e068d0010fa84445caddbbd",
+  "published_sha256": "7dab09eed93f42a7ada7a03113460ec29d0b6e6df057e39c54a2663f34e70a17",
+  "changes": [
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "cfa032a5cb53e6d7dda266683a1f7fba329e8a5dfb78271dc9d19e92b6c0f46f"
+ }
+}

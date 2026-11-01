@@ -9,6 +9,10 @@ This project uses two licenses, decided by the project owner on 2026-07-31:
   [Creative Commons Attribution 4.0 International](LICENSE-CONTENT.md)
   (CC BY 4.0, <https://creativecommons.org/licenses/by/4.0/>).
 
+- **Article materials**: `article_materials/` follows the same split; its own
+  [Licensing](article_materials/LICENSING.md) note lists which parts are code, which are results, and
+  the vendored model code it carries.
+
 Third-party components are not relicensed by this project:
 
 - Vendored model code keeps its upstream license: scFoundation (`src/v2/scf_vendor/`,

@@ -1,0 +1,53 @@
+{
+  "files": {
+    "LICENSE": {
+      "adapted_sha256": "10ef938551816fda8e6981789fd207e905524d51abd3023de441f7aac6dedfd1",
+      "source_sha256": "10ef938551816fda8e6981789fd207e905524d51abd3023de441f7aac6dedfd1"
+    },
+    "__init__.py": {
+      "adapted_sha256": "9c91681c704f307c86153777a04a0489ac4b056e9401af4414dbbc3f45857909",
+      "source_role": "generated package marker"
+    },
+    "fm_readout.py": {
+      "adapted_sha256": "01b3f951b0e22a66234ce4b3bf37696a69c0d3f116eb61d371fd147e989814e3",
+      "source_sha256": "3b72f891b87233e569de78bd660a4cfac0199d51a258b69ec7421f5566e3f809"
+    },
+    "fm_readout_scf.py": {
+      "adapted_sha256": "e73a0f8d934320640e2d4516451f477a4a2d2096a8576130f29b620c38aca485",
+      "source_sha256": "6cb8243b811afc7243268ab215e5f6f8c347d79aa539dc24283815f149947b7c"
+    },
+    "fm_readout_uce.py": {
+      "adapted_sha256": "9df70d6f1e161be91cb2579d6a1bdc99e36256317376fefe6c5695fee780c439",
+      "source_sha256": "77b654f47d87dd34dbce60a241c47e26e82dca6cd9a9b9e5cffa1df0ad9b9e02"
+    },
+    "scf_vendor/LICENSE": {
+      "adapted_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "source_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "scf_vendor/__init__.py": {
+      "adapted_sha256": "9c91681c704f307c86153777a04a0489ac4b056e9401af4414dbbc3f45857909",
+      "source_role": "generated package marker"
+    },
+    "scf_vendor/mae_autobin.py": {
+      "adapted_sha256": "4ab52860262e65bcbb948852fac89ca8961245b137a4abe2f6677deffd717ba7",
+      "source_sha256": "b68161adf0f6b5be8a0353f8d6f3c00519689498e5cf7a62e4e762a67854ca8f"
+    },
+    "scf_vendor/transformer.py": {
+      "adapted_sha256": "513482c40fc71a042cd8eb06f125d819ee82edd2426379d5ed2e1544f46e7061",
+      "source_sha256": "dfa1b30e6da09bb25f7c1c05c9d5f41a4a26799f8b250b87f0d187c4373b286c"
+    },
+    "uce_vendor/LICENSE": {
+      "adapted_sha256": "bf068012efcf3a796af03889d4214df435bc1220ac97981c77a14f14c5070cde",
+      "source_sha256": "bf068012efcf3a796af03889d4214df435bc1220ac97981c77a14f14c5070cde"
+    },
+    "uce_vendor/__init__.py": {
+      "adapted_sha256": "9c91681c704f307c86153777a04a0489ac4b056e9401af4414dbbc3f45857909",
+      "source_role": "generated package marker"
+    },
+    "uce_vendor/model.py": {
+      "adapted_sha256": "e47a3ecd2442c5e58838ac189ccebf488fbe8a68d4ab73a445ac090176e5afc3",
+      "source_sha256": "4c0e8509bcca1055dc16396676900c6d4a019cda71815f87be36e7846dc715d8"
+    }
+  },
+  "source_role": "independent public regulatory audit code release"
+}

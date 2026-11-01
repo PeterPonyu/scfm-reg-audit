@@ -1,0 +1,46 @@
+{
+  "finish_unix": 1792235667.1598508,
+  "groups": [
+    {
+      "all_preexisting_draws_preserved_exactly": true,
+      "backend": "cuda",
+      "end_draw": 9999,
+      "final_checkpoint_sha256": "039b396a82c2be4fd56a671e9de2a7c99056a7a130e2d4a033305695cf0f52d0",
+      "group": "own-unrestricted",
+      "pid": 286044,
+      "seconds": 1025.4622357100016,
+      "start_draw": 2663,
+      "starting_checkpoint_sha256": "7feaf9c7bdc000913239b56baa2a4b5cb6711ce5a8dc1cb9ec98fa143f7324f1"
+    },
+    {
+      "all_preexisting_draws_preserved_exactly": true,
+      "backend": "cpu",
+      "end_draw": 9999,
+      "final_checkpoint_sha256": "dde3af2768a464daf0bded6fd07c0ec2927a3c3fbf8e497657d1f09a42293ffb",
+      "group": "none-restricted",
+      "pid": 286045,
+      "seconds": 1061.5285612230073,
+      "start_draw": 999,
+      "starting_checkpoint_sha256": "98eef8893fe82e0d4183218753bd2663602cde489d3d6a69fc8946f4c9b90714"
+    },
+    {
+      "all_preexisting_draws_preserved_exactly": true,
+      "backend": "cpu",
+      "end_draw": 9999,
+      "final_checkpoint_sha256": "a002752bc05d92c0a1dd6e5dc85000842bcc9206fc0c77285abfbdd412556e52",
+      "group": "none-unrestricted",
+      "pid": 286046,
+      "seconds": 611.2715185709967,
+      "start_draw": 999,
+      "starting_checkpoint_sha256": "21f34b016e7d4d2a82416ae21d1263a1be4b8834a820151cdf1bda7884185e9d"
+    }
+  ],
+  "no_adaptive_draw_count_or_data_dependent_stopping": true,
+  "original_runner_sha256": "8327f5e830ae5478b25ac4b8482e7ffcb84cf6d3403684778357a1dd6a02f85b",
+  "plan_sha256": "199b9b9684b12f712e08b378d61aa2ff6584dab19dff2fc39869571cc9508ece",
+  "reason": "CPU-dominated execution. The existing one-GPU-process guard is retained: the own-degree continuation uses CUDA, and degree-free continuations use the CPU backend validated by the original portability pilot.",
+  "scheduler_sha256": "b9bbcbee7684639332bf115b145db407f8673018133964269a5d456a05506a18",
+  "scheduling_only_change": true,
+  "start_unix": 1792234605.472999,
+  "statistical_implementation_unchanged": true
+}

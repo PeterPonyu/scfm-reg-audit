@@ -1,0 +1,102 @@
+[
+  {
+    "backend": "cuda",
+    "comparable_marginal_baseline": 0.013945769353729525,
+    "comparable_marginal_fm": -0.003226402076652777,
+    "comparable_rho_difference": -0.017172171430382303,
+    "concordance": -0.03991614716829357,
+    "degree_mode": "own",
+    "donor": "16710",
+    "null_mode": "unrestricted",
+    "observed": 0.005215748653824114,
+    "pD": 0.0005,
+    "pIUT": 0.0006,
+    "pM": 0.0006,
+    "permutations": 9999,
+    "readout": "geneformer_embed",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cuda",
+    "comparable_marginal_baseline": 0.013945769353729525,
+    "comparable_marginal_fm": 0.00025479105462641454,
+    "comparable_rho_difference": -0.01369097829910311,
+    "concordance": -0.0039682380212409055,
+    "degree_mode": "own",
+    "donor": "16710",
+    "null_mode": "unrestricted",
+    "observed": 0.0004285952244680482,
+    "pD": 0.7804,
+    "pIUT": 0.7804,
+    "pM": 0.7742,
+    "permutations": 9999,
+    "readout": "random_init_geneformer",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cuda",
+    "comparable_marginal_baseline": 0.013945769353729525,
+    "comparable_marginal_fm": -0.014474510670463039,
+    "comparable_rho_difference": -0.028420280024192564,
+    "concordance": -0.02043374870930107,
+    "degree_mode": "own",
+    "donor": "16710",
+    "null_mode": "unrestricted",
+    "observed": 0.003515750830868195,
+    "pD": 0.013,
+    "pIUT": 0.0176,
+    "pM": 0.0176,
+    "permutations": 9999,
+    "readout": "scgpt_encoder",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cuda",
+    "comparable_marginal_baseline": 0.013945769353729525,
+    "comparable_marginal_fm": 0.00993519186562232,
+    "comparable_rho_difference": -0.004010577488107205,
+    "concordance": 0.07592329015211927,
+    "degree_mode": "own",
+    "donor": "16710",
+    "null_mode": "unrestricted",
+    "observed": 7.523916714575969e-05,
+    "pD": 0.9489,
+    "pIUT": 0.9521,
+    "pM": 0.9521,
+    "permutations": 9999,
+    "readout": "scfoundation_encoder",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  },
+  {
+    "backend": "cuda",
+    "comparable_marginal_baseline": 0.013945769353729525,
+    "comparable_marginal_fm": -0.0003943216347496199,
+    "comparable_rho_difference": -0.014340090988479146,
+    "concordance": -0.012057834779068004,
+    "degree_mode": "own",
+    "donor": "16710",
+    "null_mode": "unrestricted",
+    "observed": 0.0037859400874496528,
+    "pD": 0.0081,
+    "pIUT": 0.01,
+    "pM": 0.01,
+    "permutations": 9999,
+    "readout": "uce_encoder",
+    "scope": "shared conditional component reference distributions; strata exchangeability remains an assumption",
+    "stratum_sizes": [
+      1200
+    ]
+  }
+]

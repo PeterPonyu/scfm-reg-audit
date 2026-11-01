@@ -1,0 +1,129 @@
+{
+ "donor": "19593",
+ "degree_mode": "reference",
+ "null_mode": "restricted",
+ "permutations": 9999,
+ "seed": 20260930,
+ "genes_common": 1178,
+ "tfs_common": 328,
+ "pairs": 386056,
+ "genes_panel": 1200,
+ "tfs_panel": 350,
+ "excluded_by_donor": {
+  "19593": [
+   "DDIT3",
+   "FOSL1",
+   "HES6",
+   "HESX1",
+   "PRDM5",
+   "SNAI3",
+   "TFAP2E",
+   "TFE3",
+   "ZNF324",
+   "ZNF707",
+   "ZNF768"
+  ],
+  "15078": [
+   "ETV5",
+   "HESX1",
+   "PRDM5"
+  ],
+  "28483": [
+   "EGR2",
+   "NR1H3",
+   "PRDM5"
+  ],
+  "13272": [
+   "EGR2",
+   "EPAS1",
+   "ETV5",
+   "FOSL1",
+   "FOXP4",
+   "GLIS3",
+   "HOXA10",
+   "MAFF",
+   "TFAP2E",
+   "ZNF449",
+   "ZNF667",
+   "ZNF707",
+   "ZNF768",
+   "ZNF816"
+  ],
+  "16710": []
+ },
+ "rows": [
+  {
+   "donor": "19593",
+   "readout": "geneformer_embed",
+   "degree_mode": "reference",
+   "null_mode": "restricted",
+   "observed": -0.002482481131049557,
+   "pM": 0.8544,
+   "pD": 0.9975,
+   "pIUT": 0.9975,
+   "comparable_marginal_fm": -0.002663503573531112,
+   "comparable_marginal_baseline": 0.007869236046959358,
+   "comparable_rho_difference": -0.01053273962049047,
+   "concordance": -0.053528045318066216
+  },
+  {
+   "donor": "19593",
+   "readout": "random_init_geneformer",
+   "degree_mode": "reference",
+   "null_mode": "restricted",
+   "observed": -0.001888187161285954,
+   "pM": 0.2924,
+   "pD": 0.2109,
+   "pIUT": 0.2924,
+   "comparable_marginal_fm": -0.0018730609164524464,
+   "comparable_marginal_baseline": 0.007869236046959358,
+   "comparable_rho_difference": -0.009742296963411804,
+   "concordance": 0.0022497182352165866
+  },
+  {
+   "donor": "19593",
+   "readout": "scgpt_encoder",
+   "degree_mode": "reference",
+   "null_mode": "restricted",
+   "observed": -0.008953950697198487,
+   "pM": 0.1975,
+   "pD": 0.0001,
+   "pIUT": 0.1975,
+   "comparable_marginal_fm": -0.00895717299599571,
+   "comparable_marginal_baseline": 0.007869236046959358,
+   "comparable_rho_difference": -0.01682640904295507,
+   "concordance": -0.0035094829739361205
+  },
+  {
+   "donor": "19593",
+   "readout": "scfoundation_encoder",
+   "degree_mode": "reference",
+   "null_mode": "restricted",
+   "observed": 0.019057941727795673,
+   "pM": 0.0302,
+   "pD": 0.0001,
+   "pIUT": 0.0302,
+   "comparable_marginal_fm": 0.019437112845229178,
+   "comparable_marginal_baseline": 0.007869236046959358,
+   "comparable_rho_difference": 0.01156787679826982,
+   "concordance": 0.036623460191283805
+  },
+  {
+   "donor": "19593",
+   "readout": "uce_encoder",
+   "degree_mode": "reference",
+   "null_mode": "restricted",
+   "observed": -0.0010904652233397095,
+   "pM": 0.841,
+   "pD": 0.7203,
+   "pIUT": 0.841,
+   "comparable_marginal_fm": -0.0010529851173400142,
+   "comparable_marginal_baseline": 0.007869236046959358,
+   "comparable_rho_difference": -0.008922221164299372,
+   "concordance": -0.002947828030050515
+  }
+ ],
+ "seconds": 2525.2,
+ "basis_impl": "svd",
+ "backend": "cuda"
+}

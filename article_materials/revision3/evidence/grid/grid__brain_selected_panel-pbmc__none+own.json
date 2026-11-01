@@ -1,0 +1,207 @@
+{
+ "job": "brain_selected_panel-pbmc",
+ "context": "Brain panel / PBMC",
+ "designs": [
+  "none",
+  "own"
+ ],
+ "null_mode": "unrestricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 442,
+  "genes_S": 1153,
+  "tfs_S": 398,
+  "pairs_registered": 529958,
+  "pairs_S": 458496,
+  "pairs_E": 385253,
+  "fraction_registered_pairs_retained": 0.7269500601934493,
+  "excluded_genes": {
+   "zero_rna_variance": [
+    "ARX",
+    "ASCL1",
+    "BARX2",
+    "DLX1",
+    "EMX2",
+    "FEZF2",
+    "FUT9",
+    "GLIS2",
+    "HES5",
+    "HMX1",
+    "MEOX2",
+    "MSX1",
+    "MYCN",
+    "NFIB",
+    "NKX2-2",
+    "NKX6-2",
+    "NR2E1",
+    "NR2F2",
+    "OLIG2",
+    "ONECUT1",
+    "ONECUT2",
+    "OTX1",
+    "PHACTR3",
+    "PKNOX2",
+    "POU3F4",
+    "PRRX1",
+    "RHOXF1",
+    "SCRT1",
+    "SIX4",
+    "SOX1",
+    "SOX11",
+    "SOX21",
+    "SOX9",
+    "TBR1",
+    "TBX18",
+    "TWIST1",
+    "VAX1",
+    "VAX2",
+    "VSX1",
+    "ZIC1",
+    "ZIC2",
+    "ZIC4",
+    "ZIC5",
+    "ZNF214"
+   ],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [
+    "CREB3L1",
+    "EGR4"
+   ],
+   "missing_scfoundation_encoder": [
+    "NBAS"
+   ]
+  }
+ },
+ "external_degree_sources": {
+  "external_fibro": "brain_selected_panel__fibro",
+  "external_other": "brain_selected_panel-brain"
+ },
+ "rows": [
+  {
+   "design": "none",
+   "readout": "geneformer_embed",
+   "observed": -0.012069211649481812,
+   "pM": 0.1844,
+   "pD": 0.0001,
+   "pIUT": 0.1844,
+   "nullM_sd": 0.009036068223413088,
+   "nullD_sd": 0.001318068375622997
+  },
+  {
+   "design": "none",
+   "readout": "random_init_geneformer",
+   "observed": 0.0023645236942184994,
+   "pM": 0.231,
+   "pD": 0.1838,
+   "pIUT": 0.231,
+   "nullM_sd": 0.001993472987328389,
+   "nullD_sd": 0.001394436961328405
+  },
+  {
+   "design": "none",
+   "readout": "geneformer_attention",
+   "observed": 0.03191412777824543,
+   "pM": 0.1552,
+   "pD": 0.1248,
+   "pIUT": 0.1552,
+   "nullM_sd": 0.022386329864300333,
+   "nullD_sd": 0.001035592243785274
+  },
+  {
+   "design": "none",
+   "readout": "scgpt_encoder",
+   "observed": 0.002561125718757039,
+   "pM": 0.7048,
+   "pD": 0.2329,
+   "pIUT": 0.7048,
+   "nullM_sd": 0.006800022950444093,
+   "nullD_sd": 0.0013679621479904768
+  },
+  {
+   "design": "none",
+   "readout": "uce_encoder",
+   "observed": 0.007881818137162825,
+   "pM": 0.2242,
+   "pD": 0.0001,
+   "pIUT": 0.2242,
+   "nullM_sd": 0.006532583140514397,
+   "nullD_sd": 0.0013689238689729712
+  },
+  {
+   "design": "none",
+   "readout": "scfoundation_encoder",
+   "observed": 0.010901302941207511,
+   "pM": 0.4558,
+   "pD": 0.0064,
+   "pIUT": 0.4558,
+   "nullM_sd": 0.014745069584448526,
+   "nullD_sd": 0.0012785770489494727
+  },
+  {
+   "design": "own",
+   "readout": "geneformer_embed",
+   "observed": 0.0027341381420477244,
+   "pM": 0.0792,
+   "pD": 0.1051,
+   "pIUT": 0.1051,
+   "nullM_sd": 0.001563068536746941,
+   "nullD_sd": 0.001470186555732618
+  },
+  {
+   "design": "own",
+   "readout": "random_init_geneformer",
+   "observed": 0.001284041741726669,
+   "pM": 0.4208,
+   "pD": 0.4266,
+   "pIUT": 0.4266,
+   "nullM_sd": 0.0016148092681205792,
+   "nullD_sd": 0.0016131739221358346
+  },
+  {
+   "design": "own",
+   "readout": "geneformer_attention",
+   "observed": -0.00593314129522917,
+   "pM": 0.0002,
+   "pD": 0.0001,
+   "pIUT": 0.0002,
+   "nullM_sd": 0.001372304612104201,
+   "nullD_sd": 0.0009220265774510066
+  },
+  {
+   "design": "own",
+   "readout": "scgpt_encoder",
+   "observed": 0.008194752002958852,
+   "pM": 0.0001,
+   "pD": 0.0001,
+   "pIUT": 0.0001,
+   "nullM_sd": 0.0015805886308389778,
+   "nullD_sd": 0.0015061619708604825
+  },
+  {
+   "design": "own",
+   "readout": "uce_encoder",
+   "observed": 0.007924558863123583,
+   "pM": 0.0001,
+   "pD": 0.0001,
+   "pIUT": 0.0001,
+   "nullM_sd": 0.0015967137153538285,
+   "nullD_sd": 0.001549649814226206
+  },
+  {
+   "design": "own",
+   "readout": "scfoundation_encoder",
+   "observed": 0.0019714594853588495,
+   "pM": 0.1769,
+   "pD": 0.159,
+   "pIUT": 0.1769,
+   "nullM_sd": 0.0014766444456053485,
+   "nullD_sd": 0.0012676489622431987
+  }
+ ],
+ "seconds": 6404.5,
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

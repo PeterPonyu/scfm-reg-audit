@@ -1,0 +1,268 @@
+{
+  "context": "pbmc",
+  "stratifiers": "TF status x target sequence-opportunity quintile x sequence-GC tertile; excluded markers singleton",
+  "n_pairs": 534754,
+  "n_replicates_per_scenario": 200,
+  "n_permutations": 999,
+  "threshold": "raw p <= 0.05",
+  "nominal_rule": "Wilson 95% interval contains 0.05 and rate in [0.025, 0.075] (Bradley liberal criterion)",
+  "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370",
+  "published_observed_max_abs_error": 7.284275682639674e-10,
+  "published_mantel_null_max_abs_error": 1.068086320993658e-09,
+  "published_degree_null_max_abs_error": 1.2756136598401913e-09,
+  "published_pvalue_mismatches": 0,
+  "published_pvalues_reproduced_exactly": true,
+  "unrestricted": [
+    {
+      "scenario": "iid",
+      "n": 200,
+      "M": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "joint": {
+        "count": 8,
+        "rate": 0.04,
+        "wilson95": [
+          0.020405632066152306,
+          0.07693206820093293
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "shock_stratifier_scaled",
+      "n": 200,
+      "M": {
+        "count": 19,
+        "rate": 0.095,
+        "wilson95": [
+          0.06166310271738653,
+          0.1436016116481994
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 19,
+        "rate": 0.095,
+        "wilson95": [
+          0.06166310271738653,
+          0.1436016116481994
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 13,
+        "rate": 0.065,
+        "wilson95": [
+          0.03837635464915299,
+          0.10801907929906895
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "opportunity_mean_stress",
+      "n": 200,
+      "M": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      }
+    },
+    {
+      "scenario": "shock_detection_scaled",
+      "n": 200,
+      "M": {
+        "count": 20,
+        "rate": 0.1,
+        "wilson95": [
+          0.06567044866909588,
+          0.1494058124327174
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 14,
+        "rate": 0.07,
+        "wilson95": [
+          0.042152171828342806,
+          0.11405480885610647
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "joint": {
+        "count": 10,
+        "rate": 0.05,
+        "wilson95": [
+          0.02738264560076393,
+          0.08957814813877599
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    }
+  ],
+  "restricted": [
+    {
+      "scenario": "iid",
+      "n": 200,
+      "M": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "joint": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "shock_stratifier_scaled",
+      "n": 200,
+      "M": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 16,
+        "rate": 0.08,
+        "wilson95": [
+          0.049840585889759974,
+          0.12598948826714396
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 5,
+        "rate": 0.025,
+        "wilson95": [
+          0.010724719651761264,
+          0.05717834040664198
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "opportunity_mean_stress",
+      "n": 200,
+      "M": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 200,
+        "rate": 1.0,
+        "wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "nominal_bradley_and_wilson": false
+      }
+    },
+    {
+      "scenario": "shock_detection_scaled",
+      "n": 200,
+      "M": {
+        "count": 14,
+        "rate": 0.07,
+        "wilson95": [
+          0.042152171828342806,
+          0.11405480885610647
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 19,
+        "rate": 0.095,
+        "wilson95": [
+          0.06166310271738653,
+          0.1436016116481994
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 8,
+        "rate": 0.04,
+        "wilson95": [
+          0.020405632066152306,
+          0.07693206820093293
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    }
+  ],
+  "status": "complete"
+}

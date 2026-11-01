@@ -1,0 +1,201 @@
+{
+  "context": "bmmc_28483",
+  "stratifiers": "TF status x opportunity-degree quintile x GC tertile (registered bone-marrow rule) on the common gene set",
+  "n_pairs": 386056,
+  "n_replicates_per_scenario": 200,
+  "n_permutations": 999,
+  "threshold": "raw p <= 0.05",
+  "nominal_rule": "Wilson 95% interval contains 0.05 and rate in [0.025, 0.075] (Bradley liberal criterion)",
+  "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370",
+  "unrestricted": [
+    {
+      "scenario": "iid",
+      "n": 200,
+      "M": {
+        "count": 12,
+        "rate": 0.06,
+        "wilson95": [
+          0.03465219425433187,
+          0.1019316929576627
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 13,
+        "rate": 0.065,
+        "wilson95": [
+          0.03837635464915299,
+          0.10801907929906895
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "joint": {
+        "count": 11,
+        "rate": 0.055,
+        "wilson95": [
+          0.03098534170345884,
+          0.0957869987723084
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "shock_stratifier_scaled",
+      "n": 200,
+      "M": {
+        "count": 32,
+        "rate": 0.16,
+        "wilson95": [
+          0.1156741203158702,
+          0.21714070162067106
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 38,
+        "rate": 0.19,
+        "wilson95": [
+          0.14167171527790676,
+          0.25001238707599854
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 32,
+        "rate": 0.16,
+        "wilson95": [
+          0.1156741203158702,
+          0.21714070162067106
+        ],
+        "nominal_bradley_and_wilson": false
+      }
+    },
+    {
+      "scenario": "shock_detection_scaled",
+      "n": 200,
+      "M": {
+        "count": 14,
+        "rate": 0.07,
+        "wilson95": [
+          0.042152171828342806,
+          0.11405480885610647
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 24,
+        "rate": 0.12,
+        "wilson95": [
+          0.08197992706375512,
+          0.17234252098296743
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 14,
+        "rate": 0.07,
+        "wilson95": [
+          0.042152171828342806,
+          0.11405480885610647
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    }
+  ],
+  "restricted": [
+    {
+      "scenario": "iid",
+      "n": 200,
+      "M": {
+        "count": 12,
+        "rate": 0.06,
+        "wilson95": [
+          0.03465219425433187,
+          0.1019316929576627
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 11,
+        "rate": 0.055,
+        "wilson95": [
+          0.03098534170345884,
+          0.0957869987723084
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "joint": {
+        "count": 10,
+        "rate": 0.05,
+        "wilson95": [
+          0.02738264560076393,
+          0.08957814813877599
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    },
+    {
+      "scenario": "shock_stratifier_scaled",
+      "n": 200,
+      "M": {
+        "count": 16,
+        "rate": 0.08,
+        "wilson95": [
+          0.049840585889759974,
+          0.12598948826714396
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "D": {
+        "count": 38,
+        "rate": 0.19,
+        "wilson95": [
+          0.14167171527790676,
+          0.25001238707599854
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 16,
+        "rate": 0.08,
+        "wilson95": [
+          0.049840585889759974,
+          0.12598948826714396
+        ],
+        "nominal_bradley_and_wilson": false
+      }
+    },
+    {
+      "scenario": "shock_detection_scaled",
+      "n": 200,
+      "M": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      },
+      "D": {
+        "count": 22,
+        "rate": 0.11,
+        "wilson95": [
+          0.07377244460125303,
+          0.1609269099730149
+        ],
+        "nominal_bradley_and_wilson": false
+      },
+      "joint": {
+        "count": 9,
+        "rate": 0.045,
+        "wilson95": [
+          0.023852543001492997,
+          0.0832967040018196
+        ],
+        "nominal_bradley_and_wilson": true
+      }
+    }
+  ],
+  "status": "complete"
+}

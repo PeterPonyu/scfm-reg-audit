@@ -1,0 +1,124 @@
+{
+ "job": "historical_panel_corrected_source-brain",
+ "context": "Historical panel / brain",
+ "variant": "six",
+ "degree_mode": "own",
+ "null_mode": "unrestricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 446,
+  "genes_S": 1161,
+  "tfs_S": 428,
+  "pairs_registered": 534754,
+  "pairs_S": 496480,
+  "pairs_E": 462002,
+  "fraction_registered_pairs_retained": 0.8639523968030159,
+  "excluded_genes": {
+   "zero_rna_variance": [
+    "ATP5MF",
+    "ATP5MG",
+    "ATP5PO",
+    "BLOC1S1",
+    "C11orf96",
+    "CD99",
+    "CDC42",
+    "CEBPE",
+    "CTSD",
+    "ERF",
+    "ETV2",
+    "GFI1",
+    "HNRNPA1",
+    "HOXA3",
+    "HOXA4",
+    "IRF6",
+    "IRF9",
+    "MAFA",
+    "MT1X",
+    "NDUFB8",
+    "NDUFC2",
+    "OAZ1",
+    "OSR2",
+    "RAB5C",
+    "RPL26",
+    "RPS10",
+    "SATB1",
+    "SIX2",
+    "SLC25A6",
+    "TCF21",
+    "TGIF2",
+    "TMBIM4",
+    "VAMP2",
+    "ZBED1",
+    "ZNF547",
+    "ZNF8",
+    "ZNF816"
+   ],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [
+    "COX6A1",
+    "FKBP1A"
+   ],
+   "missing_scfoundation_encoder": []
+  }
+ },
+ "stratum_sizes": [
+  1161
+ ],
+ "controls": [
+  "peak_count",
+  "gene_length",
+  "detection",
+  "gc",
+  "ranked co-expression"
+ ],
+ "rows": [
+  {
+   "readout": "geneformer_embed",
+   "observed": 0.005808262631697285,
+   "pM": 0.0001,
+   "pD": 0.0001,
+   "pIUT": 0.0001
+  },
+  {
+   "readout": "random_init_geneformer",
+   "observed": 0.000909390043852953,
+   "pM": 0.5367,
+   "pD": 0.5347,
+   "pIUT": 0.5367
+  },
+  {
+   "readout": "geneformer_attention",
+   "observed": -0.0025061572116218647,
+   "pM": 0.0136,
+   "pD": 0.0088,
+   "pIUT": 0.0136
+  },
+  {
+   "readout": "scgpt_encoder",
+   "observed": 0.0037006314821338483,
+   "pM": 0.0073,
+   "pD": 0.0059,
+   "pIUT": 0.0073
+  },
+  {
+   "readout": "uce_encoder",
+   "observed": 0.003778299955048726,
+   "pM": 0.0088,
+   "pD": 0.0071,
+   "pIUT": 0.0088
+  },
+  {
+   "readout": "scfoundation_encoder",
+   "observed": -0.0021261825788714338,
+   "pM": 0.1038,
+   "pD": 0.1013,
+   "pIUT": 0.1038
+  }
+ ],
+ "seconds": 5813.3,
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

@@ -1,0 +1,46 @@
+{
+ "job": "brain_selected_panel-brain",
+ "degree": "none",
+ "null": "restricted",
+ "permutations": 999,
+ "seed": 20261001,
+ "rows": [
+  {
+   "readout": "geneformer_embed",
+   "observed_registered": -0.007603771164351828,
+   "observed_r3": -0.007603771164351885,
+   "pM_registered": 0.18,
+   "pM_r3": 0.18,
+   "pD_registered": 0.311,
+   "pD_r3": 0.311
+  },
+  {
+   "readout": "random_init_geneformer",
+   "observed_registered": 0.0007091315101840215,
+   "observed_r3": 0.0007091315101840248,
+   "pM_registered": 0.744,
+   "pM_r3": 0.744,
+   "pD_registered": 0.513,
+   "pD_r3": 0.513
+  },
+  {
+   "readout": "scgpt_encoder",
+   "observed_registered": -0.0028216199476215607,
+   "observed_r3": -0.002821619947621622,
+   "pM_registered": 0.785,
+   "pM_r3": 0.785,
+   "pD_registered": 0.594,
+   "pD_r3": 0.594
+  },
+  {
+   "readout": "uce_encoder",
+   "observed_registered": -0.007545703952070897,
+   "observed_r3": -0.007545703952070844,
+   "pM_registered": 0.288,
+   "pM_r3": 0.288,
+   "pD_registered": 0.709,
+   "pD_r3": 0.709
+  }
+ ],
+ "reproduced_exactly": true
+}

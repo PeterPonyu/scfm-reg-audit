@@ -1,0 +1,9 @@
+{
+  "approved": false,
+  "approved_by": null,
+  "instruction": "",
+  "plan_sha256": null,
+  "actions": {"experiment": [], "download": []},
+  "download_limits": {},
+  "description": "Schema example of the local run record. It permits nothing until approved is true and the permitted actions are listed."
+}

@@ -1,0 +1,140 @@
+{
+ "fold": 1,
+ "discovery_samples": [
+  "Sample-100",
+  "Sample-17",
+  "Sample-22",
+  "Sample-37",
+  "Sample-45",
+  "Sample-46",
+  "Sample-52",
+  "Sample-82",
+  "Sample-90"
+ ],
+ "evaluation_samples": [
+  "Sample-19",
+  "Sample-27",
+  "Sample-33",
+  "Sample-43",
+  "Sample-47",
+  "Sample-50",
+  "Sample-58",
+  "Sample-66",
+  "Sample-96"
+ ],
+ "split": {
+  "half_A": [
+   "Sample-100",
+   "Sample-17",
+   "Sample-22",
+   "Sample-37",
+   "Sample-45",
+   "Sample-46",
+   "Sample-52",
+   "Sample-82",
+   "Sample-90"
+  ],
+  "half_B": [
+   "Sample-19",
+   "Sample-27",
+   "Sample-33",
+   "Sample-43",
+   "Sample-47",
+   "Sample-50",
+   "Sample-58",
+   "Sample-66",
+   "Sample-96"
+  ],
+  "strata": {
+   "Control|batch1": [
+    "Sample-100",
+    "Sample-96"
+   ],
+   "AD|batch3": [
+    "Sample-17",
+    "Sample-19",
+    "Sample-33",
+    "Sample-37",
+    "Sample-47"
+   ],
+   "AD|batch2": [
+    "Sample-22",
+    "Sample-27",
+    "Sample-46",
+    "Sample-50"
+   ],
+   "AD|batch1": [
+    "Sample-43",
+    "Sample-45"
+   ],
+   "Control|batch3": [
+    "Sample-52",
+    "Sample-58",
+    "Sample-90"
+   ],
+   "Control|batch2": [
+    "Sample-66",
+    "Sample-82"
+   ]
+  },
+  "diagnosis": {
+   "Sample-100": "Control",
+   "Sample-17": "AD",
+   "Sample-19": "AD",
+   "Sample-22": "AD",
+   "Sample-27": "AD",
+   "Sample-33": "AD",
+   "Sample-37": "AD",
+   "Sample-43": "AD",
+   "Sample-45": "AD",
+   "Sample-46": "AD",
+   "Sample-47": "AD",
+   "Sample-50": "AD",
+   "Sample-52": "Control",
+   "Sample-58": "Control",
+   "Sample-66": "Control",
+   "Sample-82": "Control",
+   "Sample-90": "Control",
+   "Sample-96": "Control"
+  },
+  "batch": {
+   "Sample-100": "1",
+   "Sample-17": "3",
+   "Sample-19": "3",
+   "Sample-22": "2",
+   "Sample-27": "2",
+   "Sample-33": "3",
+   "Sample-37": "3",
+   "Sample-43": "1",
+   "Sample-45": "1",
+   "Sample-46": "2",
+   "Sample-47": "3",
+   "Sample-50": "2",
+   "Sample-52": "3",
+   "Sample-58": "3",
+   "Sample-66": "2",
+   "Sample-82": "2",
+   "Sample-90": "3",
+   "Sample-96": "1"
+  }
+ },
+ "discovery_rna_nuclei": 927,
+ "evaluation_rna_nuclei": 927,
+ "evaluation_atac_nuclei": 927,
+ "atac_types": [
+  "ASC",
+  "EX",
+  "INH",
+  "MG",
+  "ODC",
+  "OPC",
+  "PER.END"
+ ],
+ "linked_peaks": 30384,
+ "panel_genes": 1200,
+ "panel_tfs": 441,
+ "overlap_with_registered_brain_panel": 1174,
+ "undefined_coexpression_genes": [],
+ "selection_rule": "coordinate first record; Geneformer token+positive median and scGPT vocabulary; at least one brain ATAC peak midpoint in half-open TSS-2kb through TES; discovery-half genuine brain RNA detection>=.01; keep all passing JASPAR TFs then descending detection non-TFs with symbol tie-break; final sorted symbols",
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

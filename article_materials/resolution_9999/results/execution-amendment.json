@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-17",
+  "scope": "Execution scheduling and validated numerical backend only",
+  "reason": "Existing hardware guard refuses concurrent CUDA workers; guard retained unchanged. CPU/CUDA portability for every group passed before any extension.",
+  "unchanged": [
+    "9999 total draws",
+    "original 999 prefixes",
+    "seed and generator state",
+    "score direction",
+    "graphs and covariates",
+    "randomization transformations",
+    "family definitions",
+    "float64 precision"
+  ],
+  "continuations": {
+    "own-unrestricted": "cuda",
+    "none-restricted": "cpu",
+    "none-unrestricted": "cpu"
+  },
+  "no_data_dependent_draw_count_or_seed_choice": true,
+  "recorded_unix": 1792234593.3227077
+}

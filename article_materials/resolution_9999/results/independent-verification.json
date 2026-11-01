@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "verification": "Independent standard-library tail recount and ordered correction definitions",
+  "groups": [
+    {
+      "group": "own-restricted",
+      "draws_per_component": 9999,
+      "readouts": 4,
+      "original_prefix_exact": true,
+      "continuation_backends": [
+        "cuda"
+      ]
+    },
+    {
+      "group": "own-unrestricted",
+      "draws_per_component": 9999,
+      "readouts": 4,
+      "original_prefix_exact": true,
+      "continuation_backends": [
+        "cuda"
+      ]
+    },
+    {
+      "group": "none-restricted",
+      "draws_per_component": 9999,
+      "readouts": 4,
+      "original_prefix_exact": true,
+      "continuation_backends": [
+        "cpu"
+      ]
+    },
+    {
+      "group": "none-unrestricted",
+      "draws_per_component": 9999,
+      "readouts": 4,
+      "original_prefix_exact": true,
+      "continuation_backends": [
+        "cpu"
+      ]
+    }
+  ],
+  "component_probabilities_recounted": 32,
+  "registered_slots": 72,
+  "measured_slots": 16,
+  "unavailable_rows_unchanged": 56,
+  "total_saved_component_statistics": 319968,
+  "minimum_IUT_9999": 0.0206,
+  "adjustments": {
+    "registered72": {
+      "BY": {
+        "minimum": 1.0,
+        "selected_below_0_05": 0,
+        "independent_max_abs_difference": 0.0
+      },
+      "Holm": {
+        "minimum": 1.0,
+        "selected_below_0_05": 0,
+        "independent_max_abs_difference": 0.0
+      }
+    },
+    "measured16": {
+      "BY": {
+        "minimum": 1.0,
+        "selected_below_0_05": 0,
+        "independent_max_abs_difference": 0.0
+      },
+      "Holm": {
+        "minimum": 0.3296,
+        "selected_below_0_05": 0,
+        "independent_max_abs_difference": 0.0
+      }
+    }
+  },
+  "registered_999_measured_only_minima": {
+    "BY": 1.0,
+    "Holm": 0.432
+  },
+  "observed_max_abs_difference": 1.3010426069826053e-16,
+  "observed_absolute_max": 0.007603771164351958,
+  "minimum_distance_from_any_tail_boundary": 9.389174766502324e-09,
+  "portability_pilot_max_abs_error": 1.6219664500383146e-16,
+  "results_sha256": "d6ce7a4d30355b3d43b2ea3c5abec61269854b34dd24b86e34fb6911de128c10"
+}

@@ -1,0 +1,200 @@
+{
+ "job": "historical_panel_corrected_source-brain",
+ "context": "Historical panel / brain",
+ "designs": [
+  "outdeg_only",
+  "indeg_only"
+ ],
+ "null_mode": "unrestricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 446,
+  "genes_S": 1161,
+  "tfs_S": 428,
+  "pairs_registered": 534754,
+  "pairs_S": 496480,
+  "pairs_E": 462002,
+  "fraction_registered_pairs_retained": 0.8639523968030159,
+  "excluded_genes": {
+   "zero_rna_variance": [
+    "ATP5MF",
+    "ATP5MG",
+    "ATP5PO",
+    "BLOC1S1",
+    "C11orf96",
+    "CD99",
+    "CDC42",
+    "CEBPE",
+    "CTSD",
+    "ERF",
+    "ETV2",
+    "GFI1",
+    "HNRNPA1",
+    "HOXA3",
+    "HOXA4",
+    "IRF6",
+    "IRF9",
+    "MAFA",
+    "MT1X",
+    "NDUFB8",
+    "NDUFC2",
+    "OAZ1",
+    "OSR2",
+    "RAB5C",
+    "RPL26",
+    "RPS10",
+    "SATB1",
+    "SIX2",
+    "SLC25A6",
+    "TCF21",
+    "TGIF2",
+    "TMBIM4",
+    "VAMP2",
+    "ZBED1",
+    "ZNF547",
+    "ZNF8",
+    "ZNF816"
+   ],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [
+    "COX6A1",
+    "FKBP1A"
+   ],
+   "missing_scfoundation_encoder": []
+  }
+ },
+ "external_degree_sources": {
+  "external_fibro": "historical_panel_corrected_source__fibro",
+  "external_other": "historical_panel_corrected_source__pbmc"
+ },
+ "rows": [
+  {
+   "design": "outdeg_only",
+   "readout": "geneformer_embed",
+   "observed": 0.0043308242307198265,
+   "pM": 0.2305,
+   "pD": 0.0025,
+   "pIUT": 0.2305,
+   "nullM_sd": 0.0036627453438501383,
+   "nullD_sd": 0.0014011372638766102
+  },
+  {
+   "design": "outdeg_only",
+   "readout": "random_init_geneformer",
+   "observed": 0.0010826493365901435,
+   "pM": 0.4704,
+   "pD": 0.4597,
+   "pIUT": 0.4704,
+   "nullM_sd": 0.0014998691018131031,
+   "nullD_sd": 0.0014623295957658588
+  },
+  {
+   "design": "outdeg_only",
+   "readout": "geneformer_attention",
+   "observed": 0.005812578935631948,
+   "pM": 0.1961,
+   "pD": 0.0001,
+   "pIUT": 0.1961,
+   "nullM_sd": 0.004502860513182627,
+   "nullD_sd": 0.0011171228419612328
+  },
+  {
+   "design": "outdeg_only",
+   "readout": "scgpt_encoder",
+   "observed": -0.008937205405595786,
+   "pM": 0.0045,
+   "pD": 0.0001,
+   "pIUT": 0.0045,
+   "nullM_sd": 0.0031467729992199307,
+   "nullD_sd": 0.0014202944952058888
+  },
+  {
+   "design": "outdeg_only",
+   "readout": "uce_encoder",
+   "observed": 0.00759583361176584,
+   "pM": 0.002,
+   "pD": 0.0001,
+   "pIUT": 0.002,
+   "nullM_sd": 0.002507709316812609,
+   "nullD_sd": 0.0014539497053384772
+  },
+  {
+   "design": "outdeg_only",
+   "readout": "scfoundation_encoder",
+   "observed": -0.004674227199330814,
+   "pM": 0.2097,
+   "pD": 0.0008,
+   "pIUT": 0.2097,
+   "nullM_sd": 0.0037291647428587373,
+   "nullD_sd": 0.0013801363560143705
+  },
+  {
+   "design": "indeg_only",
+   "readout": "geneformer_embed",
+   "observed": 0.0024095445656989716,
+   "pM": 0.7648,
+   "pD": 0.5188,
+   "pIUT": 0.7648,
+   "nullM_sd": 0.008120099499233766,
+   "nullD_sd": 0.0011464559828087144
+  },
+  {
+   "design": "indeg_only",
+   "readout": "random_init_geneformer",
+   "observed": 0.0004822736328969709,
+   "pM": 0.7881,
+   "pD": 0.7324,
+   "pIUT": 0.7881,
+   "nullM_sd": 0.0017684518918095113,
+   "nullD_sd": 0.0013309536865673116
+  },
+  {
+   "design": "indeg_only",
+   "readout": "geneformer_attention",
+   "observed": 0.016740545398314332,
+   "pM": 0.321,
+   "pD": 0.5073,
+   "pIUT": 0.5073,
+   "nullM_sd": 0.0168422911864901,
+   "nullD_sd": 0.000713159365254243
+  },
+  {
+   "design": "indeg_only",
+   "readout": "scgpt_encoder",
+   "observed": 0.013812534876074438,
+   "pM": 0.0644,
+   "pD": 0.0008,
+   "pIUT": 0.0644,
+   "nullM_sd": 0.0074070105599046915,
+   "nullD_sd": 0.0012074725643905538
+  },
+  {
+   "design": "indeg_only",
+   "readout": "uce_encoder",
+   "observed": 0.0142504510216631,
+   "pM": 0.0071,
+   "pD": 0.0007,
+   "pIUT": 0.0071,
+   "nullM_sd": 0.005345831676809262,
+   "nullD_sd": 0.0012657067028933426
+  },
+  {
+   "design": "indeg_only",
+   "readout": "scfoundation_encoder",
+   "observed": -0.01170104550316293,
+   "pM": 0.1968,
+   "pD": 0.0029,
+   "pIUT": 0.1968,
+   "nullM_sd": 0.009039429102062313,
+   "nullD_sd": 0.0011368278264350358
+  }
+ ],
+ "basis_impl": "svd",
+ "backend": "cuda",
+ "seconds": 3688.1,
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

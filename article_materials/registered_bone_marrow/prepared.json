@@ -1,0 +1,75 @@
+{
+  "cell_composition_rule": "identical metadata-only per-type quotas in every discovery/reference/evaluation donor",
+  "cells_per_donor": {
+    "10886": 332,
+    "11466": 332,
+    "12710": 332,
+    "13272": 332,
+    "15078": 332,
+    "16710": 332,
+    "18303": 332,
+    "19593": 332,
+    "28045": 332,
+    "28483": 332
+  },
+  "common_cell_types": [
+    "CD16+ Mono",
+    "CD4+ T activated",
+    "CD4+ T naive",
+    "CD8+ T",
+    "Erythroblast",
+    "HSC",
+    "NK",
+    "Naive CD20+ B",
+    "Proerythroblast",
+    "cDC2",
+    "pDC"
+  ],
+  "donor_stems": {
+    "12710": "266d48ff4e501e69",
+    "13272": "0cb18131c4d05306",
+    "15078": "e0b48ed8ddd55389",
+    "16710": "4f7e850f3d0095e0",
+    "18303": "7c29d63e49b7ab3d",
+    "19593": "f5ea652cc392ff1b",
+    "28483": "92c372dc41ebdd54"
+  },
+  "genes": 1200,
+  "genome_evidence": {
+    "expected_value": "GRCh38",
+    "kind": "hash_bound_h5ad_metadata",
+    "metadata_path": "uns/genome",
+    "metadata_verified": true,
+    "observed_value": "GRCh38",
+    "resource": "multiome",
+    "scope": "Processed file explicitly declares its reference; resource hash binds this metadata. Original processing commands and independent upstream confirmation remain separate."
+  },
+  "panel_sha256": "dc795ecf489b7bda9db08c61e69d80b52208a624dd01f878124b4fcb6e650626",
+  "peaks_scanned": 14356,
+  "scope": "new discovery-selected panel, separate degree-reference donors and held-out evaluation donors; RNA/ATAC proxy remains operational",
+  "source_context": {
+    "code": "1522a3aa21878661ae5b39dab26b1ada0be56a84a8fc047cf92f951f370d57dd",
+    "plan": "e4e55b4262bb55ac43dabdd13d9af9cb582fefabad5b05ed134ae3ee859df51b",
+    "resources": "0b6f01bd59f5355fce6fec9fd6f59da9a61616d3b901c65b710b3e9308ae673d"
+  },
+  "split": {
+    "degree_reference": [
+      "18303",
+      "12710"
+    ],
+    "discovery": [
+      "11466",
+      "28045",
+      "10886"
+    ],
+    "evaluation": [
+      "19593",
+      "15078",
+      "28483",
+      "13272",
+      "16710"
+    ]
+  },
+  "status": "prepared",
+  "tfs": 350
+}

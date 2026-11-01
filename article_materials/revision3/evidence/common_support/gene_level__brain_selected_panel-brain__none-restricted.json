@@ -1,0 +1,109 @@
+{
+ "job": "brain_selected_panel-brain",
+ "context": "Brain panel / brain",
+ "variant": "gene_level",
+ "degree_mode": "none",
+ "null_mode": "restricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 442,
+  "genes_S": 1199,
+  "tfs_S": 442,
+  "pairs_registered": 529958,
+  "pairs_S": 529516,
+  "pairs_E": 529516,
+  "fraction_registered_pairs_retained": 0.9991659716430359,
+  "excluded_genes": {
+   "zero_rna_variance": [],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [],
+   "missing_scfoundation_encoder": [
+    "NBAS"
+   ]
+  }
+ },
+ "stratum_sizes": [
+  3,
+  4,
+  41,
+  13,
+  62,
+  27,
+  76,
+  101,
+  16,
+  113,
+  74,
+  14,
+  123,
+  74,
+  16,
+  11,
+  15,
+  143,
+  10,
+  25,
+  109,
+  12,
+  16,
+  20,
+  19,
+  19,
+  9,
+  20,
+  9,
+  5
+ ],
+ "controls": [
+  "peak_count",
+  "gene_length",
+  "detection",
+  "gc",
+  "ranked co-expression"
+ ],
+ "rows": [
+  {
+   "readout": "geneformer_embed",
+   "observed": -0.007630650836607977,
+   "pM": 0.1727,
+   "pD": 0.2714,
+   "pIUT": 0.2714
+  },
+  {
+   "readout": "random_init_geneformer",
+   "observed": 0.0007056331866720585,
+   "pM": 0.7231,
+   "pD": 0.5524,
+   "pIUT": 0.7231
+  },
+  {
+   "readout": "scgpt_encoder",
+   "observed": -0.0027933359015305317,
+   "pM": 0.7862,
+   "pD": 0.1861,
+   "pIUT": 0.7862
+  },
+  {
+   "readout": "uce_encoder",
+   "observed": -0.007615782229016133,
+   "pM": 0.3276,
+   "pD": 0.8378,
+   "pIUT": 0.8378
+  },
+  {
+   "readout": "scfoundation_encoder",
+   "observed": 0.0007617592678442483,
+   "pM": 0.9605,
+   "pD": 0.8144,
+   "pIUT": 0.9605
+  }
+ ],
+ "seconds": 3788.8,
+ "basis_impl": "svd",
+ "backend": "cuda",
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

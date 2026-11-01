@@ -1,0 +1,120 @@
+{
+ "job": "brain_selected_panel-brain",
+ "context": "Brain panel / brain",
+ "variant": "symmetric",
+ "degree_mode": "own",
+ "null_mode": "restricted",
+ "permutations": 9999,
+ "seed": 20261001,
+ "support": {
+  "genes_panel": 1200,
+  "tfs_panel": 442,
+  "genes_S": 1199,
+  "tfs_S": 442,
+  "pairs_registered": 529958,
+  "pairs_S": 529516,
+  "pairs_E": 524977,
+  "fraction_registered_pairs_retained": 0.9906011419772888,
+  "excluded_genes": {
+   "zero_rna_variance": [],
+   "missing_geneformer_embed": [],
+   "missing_random_init_geneformer": [],
+   "missing_scgpt_encoder": [],
+   "missing_uce_encoder": [],
+   "missing_scfoundation_encoder": [
+    "NBAS"
+   ]
+  }
+ },
+ "stratum_sizes": [
+  3,
+  4,
+  41,
+  13,
+  62,
+  27,
+  76,
+  101,
+  16,
+  113,
+  74,
+  14,
+  123,
+  74,
+  16,
+  11,
+  15,
+  143,
+  10,
+  25,
+  109,
+  12,
+  16,
+  20,
+  19,
+  19,
+  9,
+  20,
+  9,
+  5
+ ],
+ "controls": [
+  "peak_count",
+  "gene_length",
+  "detection",
+  "gc"
+ ],
+ "rows": [
+  {
+   "readout": "geneformer_embed",
+   "observed": 2.0870525535359064e-05,
+   "pM": 0.9902,
+   "pD": 0.987,
+   "pIUT": 0.9902
+  },
+  {
+   "readout": "random_init_geneformer",
+   "observed": -0.00016509718098233002,
+   "pM": 0.9049,
+   "pD": 0.8963,
+   "pIUT": 0.9049
+  },
+  {
+   "readout": "geneformer_attention",
+   "observed": -0.0034517270398455513,
+   "pM": 0.3652,
+   "pD": 0.7844,
+   "pIUT": 0.7844
+  },
+  {
+   "readout": "scgpt_encoder",
+   "observed": 0.0008704344922990595,
+   "pM": 0.6814,
+   "pD": 0.2964,
+   "pIUT": 0.6814
+  },
+  {
+   "readout": "uce_encoder",
+   "observed": 0.0032163149937461254,
+   "pM": 0.1332,
+   "pD": 0.1507,
+   "pIUT": 0.1507
+  },
+  {
+   "readout": "scfoundation_encoder",
+   "observed": 0.0002471395800788489,
+   "pM": 0.903,
+   "pD": 0.7969,
+   "pIUT": 0.903
+  },
+  {
+   "readout": "coexpression",
+   "observed": 0.004009232275163273,
+   "pM": 0.0456,
+   "pD": 0.1923,
+   "pIUT": 0.1923
+  }
+ ],
+ "seconds": 8738.6,
+ "plan_sha256": "d1b17ac8b011936e2de973dcb21d4e1115ab3ddb7c472bfe6f494dd709bbd370"
+}

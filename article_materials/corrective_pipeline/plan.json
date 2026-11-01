@@ -1,0 +1,93 @@
+{
+  "schema": "screg-validation.v1",
+  "date": "2026-09-30",
+  "registered_before_new_scientific_outcomes": true,
+  "authorization": "No new download or real-data experiment approved this round",
+  "seed": 20260930,
+  "tasks": ["source-match", "training-overlap", "external-reference", "gate-validation", "randomization-stress", "replication-prepare", "replication-infer", "replication-analyze"],
+  "primary_contract": "Separate post-review extension; never replace the frozen 13 rows, original panel or five gates",
+  "replication": {
+    "dataset": {
+      "accession": "GSE194122",
+      "matrix": "layers/counts",
+      "scale": "counts",
+      "donor_key": "DonorID",
+      "cell_type_key": "cell_type",
+      "modality_key": "Modality",
+      "paired_modality": "multiome",
+      "feature_type_key": "feature_types",
+      "rna_value": "GEX",
+      "atac_value": "ATAC",
+      "genome_build": "GRCh38",
+      "genome_evidence": {
+        "kind": "hash_bound_h5ad_metadata",
+        "resource": "multiome",
+        "metadata_path": "uns/genome",
+        "expected_value": "GRCh38",
+        "scope": "Processed file explicitly declares its reference; resource hash binds this metadata. Original processing commands and independent upstream confirmation remain separate."
+      },
+      "genome_evidence_requirement": "Reference must be explicit in hash-bound input metadata or a verified processing record; peak syntax alone is insufficient"
+    },
+    "split": {"seed": 20260930, "discovery_count": 3, "reference_count": 2, "min_evaluation": 3},
+    "cells": {"max_cells_per_donor": 512, "min_cells_per_donor": 100, "min_cells_per_type": 10, "cell_types": [], "composition": "identical per-type metadata quotas across every frozen donor"},
+    "panel": {"max_genes": 1200, "min_genes": 500, "min_tfs": 100, "detection_floor": 0.01, "gene_disjoint": false},
+    "promoter_bp": 2000,
+    "motif_pvalue": 0.0001,
+    "accessibility_floor": 0.01,
+    "linkage": "paired_correlation",
+    "link_correlation_floor": 0.1,
+    "linkage_scope": "New donor-specific motif/accessibility plus paired RNA association proxy; exploratory, not original causal truth or original frozen graph",
+    "models": {
+      "readouts": ["geneformer_embed", "geneformer_attention", "random_init_geneformer", "scgpt_encoder", "scfoundation_encoder", "uce_encoder"],
+      "device": "cuda",
+      "batch": 2,
+      "inference_context": "frozen_panel",
+      "min_gene_coverage": 0.90,
+      "max_seconds": 28800
+    },
+    "statistics": {
+      "permutations": 9999,
+      "resamples": 2000,
+      "degree_modes": ["reference", "own", "none"],
+      "null_modes": ["restricted", "unrestricted"],
+      "max_seconds": 28800,
+      "backend": "cuda",
+      "degenerate_draw_policy": "Stop and preserve prior draw checkpoints; never silently redraw or drop an undefined statistic",
+      "primary_extension_estimand": "partial rank alignment with separate reference-donor degree; other specifications reported as registered sensitivity",
+      "family": "pooled donor x readout x degree-mode x null-mode IUT-BY and Holm; paired identical-estimand baseline contrasts Holm across readouts",
+      "prediction_claim": "Correlation contrast is not held-out predictive loss; no predictive-superiority claim permitted"
+    }
+  },
+  "gpu": {"index": 0, "slowdown_margin_c": 5, "max_temperature_c": null},
+  "source_match": {"atol": 0.000002, "rtol": 0.0},
+  "source_h5ad_match": {"max_cells": 128, "max_genes": 512, "seed": 20260930, "atol": 0.000002, "rtol": 0.0},
+  "external_reference": {"expected_tissue": "bone_marrow", "min_each": 5, "score_replication_graphs": true},
+  "randomization_stress": {"replicates": 200, "permutations": 999, "seed": 20260930, "alpha": 0.05, "backend": "cpu", "max_seconds": 28800},
+  "downloads": [
+    {
+      "id": "brain_atac_metadata",
+      "filename": "GSE174367_snATAC-seq_cell_meta.csv.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE174nnn/GSE174367/suppl/GSE174367_snATAC-seq_cell_meta.csv.gz",
+      "max_bytes": 1073741824,
+      "source_evidence": "Existing GEO SOFT: build/scientific_extension/sources/brain_atac_geo.txt line 255",
+      "role": "recover recorded ATAC donor metadata; not automatic RNA source attribution"
+    },
+    {
+      "id": "brain_rna_candidate_metadata",
+      "filename": "GSE174367_snRNA-seq_cell_meta.csv.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE174nnn/GSE174367/suppl/GSE174367_snRNA-seq_cell_meta.csv.gz",
+      "max_bytes": 1073741824,
+      "source_evidence": "Existing GEO SOFT: build/scientific_extension/sources/brain_atac_geo.txt line 257",
+      "role": "candidate-source barcode/donor comparison only"
+    },
+    {
+      "id": "multiome_source_recovery",
+      "filename": "GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE194nnn/GSE194122/suppl/GSE194122_openproblems_neurips2021_multiome_BMMC_processed.h5ad.gz",
+      "expected_bytes": 2917117242,
+      "sha256": "53b516e7a35518e7678f90a2f27867ae2a0054dba6ac0c52fafb67b5a80f415a",
+      "max_bytes": 5368709120,
+      "role": "recovery only if verified existing local file becomes unavailable; do not download a duplicate"
+    }
+  ]
+}

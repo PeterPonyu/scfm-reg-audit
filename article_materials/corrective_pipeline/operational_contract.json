@@ -1,0 +1,17 @@
+{
+  "schema": "screg-operational.v1",
+  "scientific_plan_changed": false,
+  "extra_tasks": [
+    "replication-pilot"
+  ],
+  "pilot": {
+    "max_batches_per_readout": 1,
+    "cells": "first frozen batch of first frozen evaluation donor",
+    "max_seconds": 1800,
+    "compare_real_cpu_forward": true,
+    "cpu_cuda_atol": 0.02,
+    "cpu_cuda_rtol": 0.02,
+    "min_comparable_pairs": 1
+  },
+  "full_inference_requires": "verified current pilot receipt for every registered readout"
+}

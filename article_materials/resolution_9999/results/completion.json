@@ -1,0 +1,27 @@
+{
+  "all_four_groups_complete": true,
+  "outputs": {
+    "execution-amendment.json": "5aa639385895c7bc682956fe3ee9edf802c9033c9629ab5b0bbe50e07cb89f1f",
+    "execution-history/concurrent-gpu-attempt/none-restricted-start.json": "98eef8893fe82e0d4183218753bd2663602cde489d3d6a69fc8946f4c9b90714",
+    "execution-history/concurrent-gpu-attempt/none-unrestricted-start.json": "21f34b016e7d4d2a82416ae21d1263a1be4b8834a820151cdf1bda7884185e9d",
+    "execution-history/concurrent-gpu-attempt/own-unrestricted-start.json": "7feaf9c7bdc000913239b56baa2a4b5cb6711ce5a8dc1cb9ec98fa143f7324f1",
+    "none-restricted/draw-progress.json": "dde3af2768a464daf0bded6fd07c0ec2927a3c3fbf8e497657d1f09a42293ffb",
+    "none-restricted/parallel-start-checkpoint.json": "98eef8893fe82e0d4183218753bd2663602cde489d3d6a69fc8946f4c9b90714",
+    "none-restricted/rows.json": "a7b04975a6493a4428213ad6a829837aeecdd0026fb5bbb52c84c070531c8809",
+    "none-unrestricted/draw-progress.json": "a002752bc05d92c0a1dd6e5dc85000842bcc9206fc0c77285abfbdd412556e52",
+    "none-unrestricted/parallel-start-checkpoint.json": "21f34b016e7d4d2a82416ae21d1263a1be4b8834a820151cdf1bda7884185e9d",
+    "none-unrestricted/rows.json": "1767e123ef810dc2e57b9c1276fc1610fbe047f8556a348fdacd7739929f2110",
+    "own-restricted/draw-progress.json": "0945ac6d5cc64fea8c86019263faa9056cc74b7b4c023bcc0d5b60d15665974f",
+    "own-restricted/rows.json": "9203105b06eac84918dc22f7c7c371f96f2be354a0b57fc258fb5f5fd3a1f38e",
+    "own-unrestricted/draw-progress.json": "039b396a82c2be4fd56a671e9de2a7c99056a7a130e2d4a033305695cf0f52d0",
+    "own-unrestricted/parallel-start-checkpoint.json": "7feaf9c7bdc000913239b56baa2a4b5cb6711ce5a8dc1cb9ec98fa143f7324f1",
+    "own-unrestricted/rows.json": "d0ab656a509fc9d09d754d0bc4733640e556f2ee70cfa8d0bee532ead721b3d5",
+    "parallel-execution.json": "8be32d6867ecf12cc41d3d3f88468ca2be13bc75ccd2f00a81db00a3e000f109",
+    "pilot.json": "e94885d0e16e9c9c07a6d105368ba892a21c7310edff460a19203b9d9eebe1f5",
+    "results.json": "d6ce7a4d30355b3d43b2ea3c5abec61269854b34dd24b86e34fb6911de128c10",
+    "runtime-versions.json": "e3ef4b3d303f6e6f8e3535458d41a4b1c8546186f4cd75b942809b5ab56b6ddc"
+  },
+  "plan_sha256": "199b9b9684b12f712e08b378d61aa2ff6584dab19dff2fc39869571cc9508ece",
+  "prefix_preserved": true,
+  "results_sha256": "d6ce7a4d30355b3d43b2ea3c5abec61269854b34dd24b86e34fb6911de128c10"
+}

@@ -1,0 +1,14 @@
+{
+ "reference-restricted": {
+  "observed_max_abs_error": 4.0332320816460765e-17,
+  "nullM_max_abs_error": 5.238864897449957e-16,
+  "nullD_max_abs_error": 2.953366717850514e-16,
+  "draws_compared": 256
+ },
+ "own-unrestricted": {
+  "observed_max_abs_error": 2.6020852139652106e-18,
+  "nullM_max_abs_error": 1.474514954580286e-17,
+  "nullD_max_abs_error": 2.5153490401663703e-17,
+  "draws_compared": 256
+ }
+}
