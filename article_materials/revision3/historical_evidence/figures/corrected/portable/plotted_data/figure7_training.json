@@ -1,0 +1,364 @@
+{
+  "schema": "array05613.portable-plotted-data.v1",
+  "figure": "figure7_training",
+  "token": "7",
+  "scope": "Frozen display values and labels, not raw-data/model/statistical replay",
+  "payload": {
+    "published_brain_rows": [
+      {
+        "excel_row": 8622,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292838",
+        "cell_number_reserved": 3634,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292838",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-100",
+        "current_rna_metadata_cells": 4575,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292838"
+      },
+      {
+        "excel_row": 8623,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292839",
+        "cell_number_reserved": 1662,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292839",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-101",
+        "current_rna_metadata_cells": 0,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292839"
+      },
+      {
+        "excel_row": 8624,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292840",
+        "cell_number_reserved": 2190,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292840",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-17",
+        "current_rna_metadata_cells": 3797,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292840"
+      },
+      {
+        "excel_row": 8625,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292841",
+        "cell_number_reserved": 2169,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292841",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-19",
+        "current_rna_metadata_cells": 3049,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292841"
+      },
+      {
+        "excel_row": 8626,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292842",
+        "cell_number_reserved": 2361,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292842",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-22",
+        "current_rna_metadata_cells": 2863,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292842"
+      },
+      {
+        "excel_row": 8627,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292843",
+        "cell_number_reserved": 2710,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292843",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-27",
+        "current_rna_metadata_cells": 3737,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292843"
+      },
+      {
+        "excel_row": 8628,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292844",
+        "cell_number_reserved": 1923,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292844",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-33",
+        "current_rna_metadata_cells": 2674,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292844"
+      },
+      {
+        "excel_row": 8629,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292845",
+        "cell_number_reserved": 2719,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292845",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-37",
+        "current_rna_metadata_cells": 3874,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292845"
+      },
+      {
+        "excel_row": 8630,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292846",
+        "cell_number_reserved": 3258,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292846",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-43",
+        "current_rna_metadata_cells": 4835,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292846"
+      },
+      {
+        "excel_row": 8631,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292847",
+        "cell_number_reserved": 3476,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292847",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-45",
+        "current_rna_metadata_cells": 4717,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292847"
+      },
+      {
+        "excel_row": 8632,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292848",
+        "cell_number_reserved": 2025,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292848",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-46",
+        "current_rna_metadata_cells": 3451,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292848"
+      },
+      {
+        "excel_row": 8633,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292849",
+        "cell_number_reserved": 1779,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292849",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-47",
+        "current_rna_metadata_cells": 3023,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292849"
+      },
+      {
+        "excel_row": 8634,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292850",
+        "cell_number_reserved": 2077,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292850",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-50",
+        "current_rna_metadata_cells": 2656,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292850"
+      },
+      {
+        "excel_row": 8635,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292851",
+        "cell_number_reserved": 1702,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292851",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-52",
+        "current_rna_metadata_cells": 2915,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292851"
+      },
+      {
+        "excel_row": 8636,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292852",
+        "cell_number_reserved": 2258,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292852",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-58",
+        "current_rna_metadata_cells": 2813,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292852"
+      },
+      {
+        "excel_row": 8637,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292853",
+        "cell_number_reserved": 2034,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292853",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-66",
+        "current_rna_metadata_cells": 2866,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292853"
+      },
+      {
+        "excel_row": 8638,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292854",
+        "cell_number_reserved": 1916,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292854",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-82",
+        "current_rna_metadata_cells": 2544,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292854"
+      },
+      {
+        "excel_row": 8639,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292855",
+        "cell_number_reserved": 2125,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292855",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-90",
+        "current_rna_metadata_cells": 2612,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292855"
+      },
+      {
+        "excel_row": 8640,
+        "project_ID": "DISCO-GSE174367",
+        "sample_ID": "DISCO-GSM5292856",
+        "cell_number_reserved": 3490,
+        "canonical_gse": "GSE174367",
+        "canonical_gsm": "GSM5292856",
+        "source_namespace": "DISCO",
+        "official_sample_id": "Sample-96",
+        "current_rna_metadata_cells": 4471,
+        "official_gsm_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5292856"
+      }
+    ],
+    "selected_sample_ids": [
+      "Sample-100",
+      "Sample-17",
+      "Sample-19",
+      "Sample-22",
+      "Sample-27",
+      "Sample-33",
+      "Sample-37",
+      "Sample-43",
+      "Sample-45",
+      "Sample-46",
+      "Sample-47",
+      "Sample-50",
+      "Sample-52",
+      "Sample-58",
+      "Sample-66",
+      "Sample-82",
+      "Sample-90",
+      "Sample-96"
+    ],
+    "geneformer_source_rows": [
+      {
+        "excel_row": 319,
+        "raw_source_DOI": "https://doi.org/10.1038/s41588-021-00894-z",
+        "canonical_doi": "10.1038/s41588-021-00894-z",
+        "cells": 61770,
+        "organ": "brain"
+      }
+    ],
+    "geneformer_inventory": {
+      "data_rows": 2903,
+      "non_DOI_row_count": 44,
+      "distinct_normalized_DOIs": 549
+    },
+    "study_coverage": {
+      "training_project_count": 656,
+      "study_project_count": 522,
+      "training_projects_absent_in_study_table": 134,
+      "study_extra_projects": 0,
+      "gse174367_present_in_study_table": false,
+      "absence_does_not_override_training_hits": true
+    },
+    "checkpoint_resolution": [
+      {
+        "resource": "gf_checkpoint",
+        "sha256": "fff5cba29ddd8792991fa77b4872246fbe548a178cebda3775cdc72b67780e7f",
+        "exact_cell_ledger_available": false,
+        "never_pretrained_claim_allowed": false
+      },
+      {
+        "resource": "scgpt_checkpoint",
+        "sha256": "6cb5d451ab5c4b33eb673adbe4fddc61d2389df1b89b7651a9fe2e557572b922",
+        "exact_cell_ledger_available": false,
+        "never_pretrained_claim_allowed": false
+      },
+      {
+        "resource": "scf_checkpoint",
+        "sha256": "2446c2fb99a0e183cdc9872b7e9e55ac74f7ec82db7ba0799c83be75cde66dc6",
+        "exact_cell_ledger_available": false,
+        "never_pretrained_claim_allowed": false
+      },
+      {
+        "resource": "uce_checkpoint",
+        "sha256": "acb28f3f0a1d803e4a4ffe891b9bab38bf93c84762dc06b2452f0d515da91560",
+        "exact_cell_ledger_available": false,
+        "never_pretrained_claim_allowed": false
+      }
+    ]
+  },
+  "companion": {
+    "schema": "array05613.corrected-caption.v1",
+    "figure": "figure7_training",
+    "title": "Training source audit",
+    "caption": "A, The actual 2026 Geneformer V2 Genecorpus-104M source inventory, genecorpus_104m Excel row 319 including header, lists DOI 10.1038/s41588-021-00894-z (GSE174367) and 61,770 brain cells passed filtering. The published scFoundation training table, Sheet1 rows 8622-8640, lists DISCO-GSE174367 and all 19/19 official snRNA GSM5292838-GSM5292856 accessions, totalling 45,508 reserved cells. These are published study/sample inventory quantities, not exact evaluated-cell intersections. B, Evidence layers are distinct: study source, RNA GSM accession, actual weight/corpus applicability and exact evaluated cells. Green is positive observed source or model-version evidence; orange marks the unclosed original BioMap-to-cell-mirror bridge; question marks are unresolved. Geneformer local V2-104M weights and gc104M dictionaries are bound to the same official Hugging Face revision 04c2b2e84da7c0f385c3f9ad8f3ec24bab6650e5; the actual checkpoint SHA256 is fff5cba29ddd8792991fa77b4872246fbe548a178cebda3775cdc72b67780e7f. The 104M source inventory applies at published source resolution, not the V1 30M inventory. It has 2,903 data rows, 549 normalized distinct DOIs and 44 non-DOI rows, including generic portals; absence of GSE strings or DOI hits is not training exclusion. Its 103,568,569 listed cells differ from the corpus card's 103,877,737 by 309,168, reinforcing version/snapshot limits. C, The 19 scFoundation GSM entries map to all 18 corrective selected sample IDs plus Sample-101. Sample-101 lists 1,662 reserved cells but is absent from current RNA metadata; no cell overlap or donor identity is imputed. D, The scFoundation study-name table describes 522 of 656 training-project IDs; 134 training projects are absent, including the GSE174367 project, so absence from that shorter table cannot erase positive training-table evidence. All plotted source rows were reread from hash-bound local downloaded workbooks. The local scFoundation checkpoint is bound to the perturblab/scfoundation-cell mirror, but original BioMap checksum or state-dict conversion equivalence is unclosed. Actual scGPT whole-human and UCE 4-layer training membership remain unresolved; a 33-layer UCE publication inventory cannot stand in for the 4-layer ledger. Exact training/evaluation cell and person identity is unknown for every model. GSE194122, GSE213740 and the distinct historical 10x PBMC object are not certified never-pretrained from identifier absence.",
+    "panels": {
+      "A": "Published source inventory",
+      "B": "Evidence resolution",
+      "C": "Sample identifiers",
+      "D": "Study catalogue"
+    },
+    "scope": "Confirmed GF V2 source-DOI inclusion and published scFoundation 19/19 RNA GSM inclusion; scFoundation original-to-mirror bridge unresolved, exact evaluated cells/persons unknown.",
+    "status": "verified",
+    "font_family": [
+      "TeX Gyre TermesX"
+    ],
+    "separate_panel_titles": true,
+    "descriptive_footnotes_in_figure": false,
+    "evidence": [
+      {
+        "source_name": "blue_evidence_training_overlap.json",
+        "sha256": "d3d1e1e51a84b3f8118a449e10de397126bf4a322cbf06487e6309e158005e5e",
+        "bytes": 103263
+      },
+      {
+        "source_name": "blue_evidence_checkpoint_versions.json",
+        "sha256": "23b94854ed8dd600567a16b89f08dfdd9dbb275671189847c84df7d9df7bec52",
+        "bytes": 15042
+      },
+      {
+        "source_name": "blue_evidence_early.json",
+        "sha256": "247e8739e0dfff1fb00934a5ab77ff4525b61c71b820c1ea279885dd153a1a87",
+        "bytes": 15098
+      },
+      {
+        "source_name": "blue_evidence_training_tables_raw.json",
+        "sha256": "701e9f44f83e6acde324abf606db8599bedc2b4abcda5fa2b19ebf53733056df",
+        "bytes": 3842516
+      },
+      {
+        "source_name": "blue_evidence_checkpoint_hashes.json",
+        "sha256": "a0ed5ce815026141b719eb9de0344564dc80323248c200fff47cd5b3579abca3",
+        "bytes": 1392
+      },
+      {
+        "source_name": "selection.json",
+        "sha256": "39f1d1525ef55745b3785e9770e17a2d61fe9efc06a2ce1d400576db7a8d7157",
+        "bytes": 1346889
+      }
+    ]
+  },
+  "reference_sha256": {
+    "pdf": "f79c55d72e77399650e1418a5a887fb01d994827f07e7b131db9e74b63a9dc48",
+    "svg": "ec553a6f000727ae62d255f171da6455c1f88d2fdf67912bd995b0b567fd6952",
+    "jpg": "cf49c27d7f6f0ed21a23301c7ec7ccaa9bdf7266a8ecf5e6e845d311c13f0e82",
+    "png": "7c88511c80a768f223e17170cf672857191d5ca8a229edca319faa4b8d14344f"
+  },
+  "reference_companion_sha256": "d8ebf15ddf0502ff3f4d1553835ed1ed34b41515ec7e22b4bb6b7fa18fee7c54"
+}

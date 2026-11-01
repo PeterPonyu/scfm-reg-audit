@@ -10,6 +10,7 @@ from pathlib import Path
 W = Path(__file__).resolve().parents[1]
 R = json.loads((W / 'evidence/R3_RESULTS.json').read_text())
 OUT = W / 'source/parts'
+OUT.mkdir(parents=True, exist_ok=True)
 JOBS = ['brain_selected_panel-brain', 'brain_selected_panel-pbmc', 'historical_panel_corrected_source-brain']
 CTX = {'brain_selected_panel-brain': 'New / brain', 'brain_selected_panel-pbmc': 'New / PBMC',
        'historical_panel_corrected_source-brain': 'Old / brain'}
@@ -97,7 +98,7 @@ if all(c in cal for c, _ in CAL_CTX):
         lines.append(' & '.join(cells) + r' \\')
     write('t_calibration.tex', r"""\begin{table}[!htbp]
 \centering\small
-\caption{Synthetic calibration of the component tests: rejections out of 200 synthetic readouts at raw $p\leq0.05$ with 999 transformations per component, in two historical contexts and five analysis contexts. The two historical contexts and genuine brain with the new panel were specified before the analyses; the new panel in PBMC, the old panel in brain and bone-marrow donors 13272 and 28483 were added after the family results. Joint: intersection--union test with unrestricted (U) or restricted (R) transformations under independent noise (Ind.), shocks scaled by the stratifying variables (Strata) and shocks scaled by RNA detection (Det.). The last four columns give the restricted gene-label (M) and target-shuffle (D) components under the two shock scenarios. A dagger marks rates above the nominal rule (Wilson 95\% interval containing 0.05 and rate between 0.025 and 0.075) and an asterisk conservative rates below 0.025. The historical contexts use the published synthetic seeds, and their unrestricted counts reproduce the published values exactly.}\label{tab:calibration}
+\caption{Synthetic calibration of the component tests: rejections out of 200 synthetic readouts at raw $p\leq0.05$ with 999 transformations per component, in two historical contexts and five analysis contexts. The two historical contexts and genuine brain with the new panel were specified before the analyses; the new panel in PBMC, the old panel in brain and bone-marrow donors 13272 and 28483 were added after the family results. All runs use the incremental statistic with own degree. Joint: intersection--union test with unrestricted (U) or restricted (R) transformations under independent noise (Ind.), shocks scaled by the stratifying variables (Strata) and shocks scaled by RNA detection (Det.). The last four columns give the restricted gene-label (M) and target-shuffle (D) components under the two shock scenarios. A dagger marks rates above the nominal rule (Wilson 95\% interval containing 0.05 and rate between 0.025 and 0.075) and an asterisk conservative rates below 0.025. The historical contexts use the published synthetic seeds, and their unrestricted counts reproduce the published values exactly.}\label{tab:calibration}
 \setlength{\tabcolsep}{2.6pt}
 \begin{tabular}{@{}lrrrrrrrrrr@{}}\toprule
  & \multicolumn{6}{c}{Joint test} & \multicolumn{2}{c}{M, restricted} & \multicolumn{2}{c}{D, restricted} \\\cmidrule(lr){2-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}

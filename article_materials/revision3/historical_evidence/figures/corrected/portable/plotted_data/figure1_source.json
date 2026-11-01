@@ -1,0 +1,250 @@
+{
+  "schema": "array05613.portable-plotted-data.v1",
+  "figure": "figure1_source",
+  "token": "1",
+  "scope": "Frozen display values and labels, not raw-data/model/statistical replay",
+  "payload": {
+    "prep": {
+      "selection": {
+        "brain": {
+          "types": [
+            "ASC",
+            "EX",
+            "INH",
+            "MG",
+            "ODC",
+            "OPC",
+            "PER.END"
+          ],
+          "samples": [
+            "Sample-100",
+            "Sample-17",
+            "Sample-19",
+            "Sample-22",
+            "Sample-27",
+            "Sample-33",
+            "Sample-37",
+            "Sample-43",
+            "Sample-45",
+            "Sample-46",
+            "Sample-47",
+            "Sample-50",
+            "Sample-52",
+            "Sample-58",
+            "Sample-66",
+            "Sample-82",
+            "Sample-90",
+            "Sample-96"
+          ],
+          "per_type_quota": {
+            "ASC": 18,
+            "EX": 18,
+            "INH": 9,
+            "MG": 18,
+            "ODC": 18,
+            "OPC": 18,
+            "PER.END": 4
+          }
+        }
+      },
+      "jobs": {
+        "brain_selected_panel-brain": {
+          "undefined_coexpression_genes": []
+        },
+        "brain_selected_panel-pbmc": {
+          "undefined_coexpression_genes": [
+            "ARX",
+            "ASCL1",
+            "BARX2",
+            "DLX1",
+            "EMX2",
+            "FEZF2",
+            "FUT9",
+            "GLIS2",
+            "HES5",
+            "HMX1",
+            "MEOX2",
+            "MSX1",
+            "MYCN",
+            "NFIB",
+            "NKX2-2",
+            "NKX6-2",
+            "NR2E1",
+            "NR2F2",
+            "OLIG2",
+            "ONECUT1",
+            "ONECUT2",
+            "OTX1",
+            "PHACTR3",
+            "PKNOX2",
+            "POU3F4",
+            "PRRX1",
+            "RHOXF1",
+            "SCRT1",
+            "SIX4",
+            "SOX1",
+            "SOX11",
+            "SOX21",
+            "SOX9",
+            "TBR1",
+            "TBX18",
+            "TWIST1",
+            "VAX1",
+            "VAX2",
+            "VSX1",
+            "ZIC1",
+            "ZIC2",
+            "ZIC4",
+            "ZIC5",
+            "ZNF214"
+          ]
+        },
+        "historical_panel_corrected_source-brain": {
+          "undefined_coexpression_genes": [
+            "ATP5MF",
+            "ATP5MG",
+            "ATP5PO",
+            "BLOC1S1",
+            "C11orf96",
+            "CD99",
+            "CDC42",
+            "CEBPE",
+            "CTSD",
+            "ERF",
+            "ETV2",
+            "GFI1",
+            "HNRNPA1",
+            "HOXA3",
+            "HOXA4",
+            "IRF6",
+            "IRF9",
+            "MAFA",
+            "MT1X",
+            "NDUFB8",
+            "NDUFC2",
+            "OAZ1",
+            "OSR2",
+            "RAB5C",
+            "RPL26",
+            "RPS10",
+            "SATB1",
+            "SIX2",
+            "SLC25A6",
+            "TCF21",
+            "TGIF2",
+            "TMBIM4",
+            "VAMP2",
+            "ZBED1",
+            "ZNF547",
+            "ZNF8",
+            "ZNF816"
+          ]
+        }
+      }
+    },
+    "local_numeric": {
+      "cells_checked": 12000,
+      "features_per_cell": 58825,
+      "support_equal_cells": 12000,
+      "raw_nonzero_values_checked": 32116769,
+      "raw_nonnegative_integer": true,
+      "max_abs_error_log1p_cp10k": 4.968006095396049e-07,
+      "cells_with_abs_error_above_2e_6": 0,
+      "matching_condition_labels": 12000,
+      "local_order_row_map_sha256_le_int64": "5536cc69a1145b7ef1587353fb6340f1dc3746afeeb950439326a00760d3236d",
+      "elapsed_seconds": 1.4736559110001508
+    },
+    "audit_layers": [
+      {
+        "label": "Local transform",
+        "matched_cells": 12000,
+        "audited_cells": 12000,
+        "features": 58825,
+        "maximum_absolute_difference": 4.968006095396049e-07,
+        "measurement": "Local historical count-to-log1p-CP10k relation; full 12,000-cell check"
+      },
+      {
+        "label": "Official AD1",
+        "matched_cells": 128,
+        "audited_cells": 128,
+        "features": 58825,
+        "maximum_absolute_difference": 0.0,
+        "measurement": "Bounded official raw-count equality",
+        "sample": "GSM6593315"
+      },
+      {
+        "label": "Official Normal1",
+        "matched_cells": 128,
+        "audited_cells": 128,
+        "features": 58825,
+        "maximum_absolute_difference": 0.0,
+        "measurement": "Separately registered and independently replayed bounded official raw-count equality",
+        "sample": "GSM6593321"
+      }
+    ],
+    "official_raw_counts_scope": "AD1 and Normal1 each 128 bounded cells over all 58,825 features; not all-cell official equality"
+  },
+  "companion": {
+    "schema": "array05613.corrected-caption.v1",
+    "figure": "figure1_source",
+    "title": "Source correction",
+    "caption": "A, Historical RNA is numerically related to the local GSE213740 aortic matrix. Official AD1 (GSM6593315; type A aortic dissection) and Normal1 (GSM6593321; normal) identify ascending aortic wall, not Alzheimer disease. B, The three audit layers have distinct scopes. All 12,000 historical cells and all 58,825 features were checked against the local count-to-log1p-CP10k transformation (maximum absolute error 4.9680061e-07). Separate bounded official integer raw-count comparisons gave exact equality for 128/128 AD1 cells and 128/128 Normal1 cells, each across all 58,825 ordered features, with maximum absolute difference 0 in each audit. Normal1 used the registered seed 20261001 and SHA-ordered sample/barcode selection; an independent read-only replay checked its terminal result, official matrix stream and complete composite naming. These bounded checks do not establish all-cell official raw-count equality, the upstream preprocessing-command chain, reference-build validity or biological donor identities. C, The historical aortic-RNA/brain-ATAC combination is withdrawn. Corrective snRNA and snATAC are matched at shared biological sample identifiers, with nuclei selected separately within each assay. They measure different nuclei; same-cell pairing and a unique-person donor crosswalk are not verified. D, Each of 18 shared biological sample IDs contributes 103 nuclei per assay with the shown fixed type quotas, giving 1,854 RNA and 1,854 ATAC nuclei. Type quotas and source selection were independently replayed; they are not outcome-derived biological results.",
+    "panels": {
+      "A": "Source identity",
+      "B": "Numerical identity",
+      "C": "Assay correction",
+      "D": "Sample composition"
+    },
+    "scope": "Source attribution and independently verified preparation only; historical brain biological conclusions withdrawn.",
+    "status": "verified",
+    "font_family": [
+      "TeX Gyre TermesX"
+    ],
+    "separate_panel_titles": true,
+    "descriptive_footnotes_in_figure": false,
+    "evidence": [
+      {
+        "source_name": "official_aorta_counts_source_identity.json",
+        "sha256": "41750f483c26de30ceac9a99249e94571f3004391bec8bac35e51efd48621f0a",
+        "bytes": 31968
+      },
+      {
+        "source_name": "blue_evidence_official_geo.json",
+        "sha256": "bdce61c2a6c92eba28b3584a76a78658c4d592a52a812cad7a69e26b7efa9c18",
+        "bytes": 26118
+      },
+      {
+        "source_name": "blue_evidence_prior_numeric.json",
+        "sha256": "143c29dc6fd8d32a9515ea70cf12066fa6cfcabf3652170fadef3b0e55567094",
+        "bytes": 21982
+      },
+      {
+        "source_name": "plan.json",
+        "sha256": "071d1ea2335220960d530e92be15d2fa5ab46be0e7de5e5564ee0d5927ebcf8d",
+        "bytes": 1258
+      },
+      {
+        "source_name": "normal1_counts_identity.json",
+        "sha256": "2c1dc9b26bc4ab8b13853d6a20528611b48a83646a20d411931d10d8fbdbdbc6",
+        "bytes": 31811
+      },
+      {
+        "source_name": "blue_receipts_normal1_actual_exact_replay_20261001T1012.json",
+        "sha256": "c0ee01d063e00a742c42235d1dec5ccfac73f9ee0c4741a5046eb6b30a08a6ab",
+        "bytes": 77394
+      },
+      {
+        "source_name": "selection.json",
+        "sha256": "39f1d1525ef55745b3785e9770e17a2d61fe9efc06a2ce1d400576db7a8d7157",
+        "bytes": 1346889
+      }
+    ]
+  },
+  "reference_sha256": {
+    "pdf": "280998ad8104066bfcde2b6299cf703edaa011006aab03dea6a90102941fb29f",
+    "svg": "b476887a6c4c8f62760ef596070b6b8143d43c84ed8def3194870f357fd6cc0c",
+    "jpg": "59febb625e6acb892a7aa0103348ba12ab42670f37744b74512a1737407b99a4",
+    "png": "0270cbaa59c613291783c2db640976c27e08d9c92e183b191c35dd2cd92b1afc"
+  },
+  "reference_companion_sha256": "a666008dd017ff9da9268fd8c243d81050e9aa175733453dd93e74ee73cf2c4e"
+}

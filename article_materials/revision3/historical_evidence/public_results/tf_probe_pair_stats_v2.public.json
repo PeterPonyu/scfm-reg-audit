@@ -1,0 +1,121 @@
+{
+  "arm": "edge_only",
+  "arm_features": [
+    "w",
+    "w_rev",
+    "rank_g"
+  ],
+  "contrasts_vs_baseline": {
+    "UCE_encoder": {
+      "n_tf": 135,
+      "paired_delta_mean": 0.012360037852906946,
+      "paired_delta_std": 0.05400109712397361,
+      "signflip_p": 0.013,
+      "signflip_q": 0.0325,
+      "significant_q05": true
+    },
+    "geneformer_attn": {
+      "n_tf": 135,
+      "paired_delta_mean": 0.0018541228410832488,
+      "paired_delta_std": 0.04820060118023012,
+      "signflip_p": 0.65,
+      "signflip_q": 0.65,
+      "significant_q05": false
+    },
+    "geneformer_embed": {
+      "n_tf": 135,
+      "paired_delta_mean": -0.004225067491687817,
+      "paired_delta_std": 0.05681685888539718,
+      "signflip_p": 0.41,
+      "signflip_q": 0.5125,
+      "significant_q05": false
+    },
+    "random_floor": {
+      "n_tf": 135,
+      "paired_delta_mean": 0.01436088178353416,
+      "paired_delta_std": 0.05549007751028787,
+      "signflip_p": 0.006,
+      "signflip_q": 0.03,
+      "significant_q05": true
+    },
+    "scGPT_encoder": {
+      "n_tf": 135,
+      "paired_delta_mean": -0.007101996495728019,
+      "paired_delta_std": 0.056104370503258304,
+      "signflip_p": 0.153,
+      "signflip_q": 0.255,
+      "significant_q05": false
+    }
+  },
+  "design": "pair-level (TF, gene) probe; TF-disjoint train/test",
+  "families": {
+    "UCE_encoder": {
+      "adjusted_rho_mean": 0.0003176554675076546,
+      "mantel_p": 0.88,
+      "mantel_q": 0.88,
+      "mantel_seed": 20260730000,
+      "null_abs_p95": 0.004274043878579851,
+      "null_mean": -1.0092712883427278e-06,
+      "null_std": 0.002180402294940245,
+      "significant_q05": false
+    },
+    "co_expression": {
+      "adjusted_rho_mean": -0.01204238238539929,
+      "mantel_p": 0.001,
+      "mantel_q": 0.0015,
+      "mantel_seed": 20260730001,
+      "null_abs_p95": 0.004334899383803584,
+      "null_mean": -5.768829513737981e-05,
+      "null_std": 0.0021977549492412907,
+      "significant_q05": true
+    },
+    "geneformer_attn": {
+      "adjusted_rho_mean": -0.010188259544316043,
+      "mantel_p": 0.001,
+      "mantel_q": 0.0015,
+      "mantel_seed": 20260730002,
+      "null_abs_p95": 0.004378827114926237,
+      "null_mean": -1.405764548439568e-05,
+      "null_std": 0.002231545495310916,
+      "significant_q05": true
+    },
+    "geneformer_embed": {
+      "adjusted_rho_mean": -0.016267449877087108,
+      "mantel_p": 0.001,
+      "mantel_q": 0.0015,
+      "mantel_seed": 20260730003,
+      "null_abs_p95": 0.004225134451610858,
+      "null_mean": 3.049345421810551e-05,
+      "null_std": 0.002156312099157353,
+      "significant_q05": true
+    },
+    "random_floor": {
+      "adjusted_rho_mean": 0.0023184993981348696,
+      "mantel_p": 0.285,
+      "mantel_q": 0.34199999999999997,
+      "mantel_seed": 20260730004,
+      "null_abs_p95": 0.00448523176186362,
+      "null_mean": -5.850108724850947e-05,
+      "null_std": 0.0021903144586728576,
+      "significant_q05": false
+    },
+    "scGPT_encoder": {
+      "adjusted_rho_mean": -0.019144378881127307,
+      "mantel_p": 0.001,
+      "mantel_q": 0.0015,
+      "mantel_seed": 20260730005,
+      "null_abs_p95": 0.0042629403729267,
+      "null_mean": 3.228679041365432e-05,
+      "null_std": 0.0021744680542138714,
+      "significant_q05": true
+    }
+  },
+  "n_perm": 999,
+  "n_test_tfs": 135,
+  "n_train_tfs": 311,
+  "null": "within-TF gene-label permutation of probe predictions",
+  "readout": "confound-adjusted per-TF Spearman, averaged over held-out TFs",
+  "schema_version": 2,
+  "seed_contract": "per_family_seed = seed_root*1000 + sorted_family_index; signflip_seed = seed_root+1",
+  "seed_root": 20260730
+}

@@ -1,0 +1,1347 @@
+{
+  "seed": [
+    20260927,
+    5613,
+    53
+  ],
+  "scope": "Disjoint cells within the same PBMC donor and same fixed motif/peak universe; target-half proxy tested against frozen whole-sample FM and coexpression. Descriptive degree sensitivity, not independent FM validation, donor uncertainty, or cross-fitting of model inference.",
+  "proxy_reconstruction_max_abs_error_by_type": {
+    "MonoCD14": 0.0,
+    "CD4T": 0.0,
+    "CD8T": 0.0,
+    "NK": 0.0,
+    "B": 0.0,
+    "DC": 0.0,
+    "MonoCD16": 0.0
+  },
+  "n_cells": 10970,
+  "rows": [
+    {
+      "rep": 0,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004253879732966341,
+      "opposite_half_degree_rho": 0.004253879732966341,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.000190711652847773,
+      "opposite_half_degree_rho": -0.000190711652847773,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0010890162255855543,
+      "opposite_half_degree_rho": 0.0010890162255855543,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010989080447703988,
+      "opposite_half_degree_rho": 0.010989080447703988,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005922408667306548,
+      "opposite_half_degree_rho": 0.005922408667306548,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004255579420195716,
+      "opposite_half_degree_rho": 0.004255579420195716,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016449863530636633,
+      "opposite_half_degree_rho": -0.00016449863530636633,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011413796991937004,
+      "opposite_half_degree_rho": 0.0011413796991937004,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010977301558583117,
+      "opposite_half_degree_rho": 0.010977301558583117,
+      "difference": 0.0
+    },
+    {
+      "rep": 0,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005929849844401959,
+      "opposite_half_degree_rho": 0.005929849844401959,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.0042572517311097735,
+      "opposite_half_degree_rho": 0.0042572517311097735,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018267173822614536,
+      "opposite_half_degree_rho": -0.00018267173822614536,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011116456013892492,
+      "opposite_half_degree_rho": 0.0011116456013892492,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010985530033946301,
+      "opposite_half_degree_rho": 0.010985530033946301,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005947902462207602,
+      "opposite_half_degree_rho": 0.005947902462207602,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004250853569628774,
+      "opposite_half_degree_rho": 0.004250853569628774,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.0001763310794471044,
+      "opposite_half_degree_rho": -0.0001763310794471044,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011184208370714108,
+      "opposite_half_degree_rho": 0.0011184208370714108,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.01097695462810211,
+      "opposite_half_degree_rho": 0.01097695462810211,
+      "difference": 0.0
+    },
+    {
+      "rep": 1,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005904505226464641,
+      "opposite_half_degree_rho": 0.005904505226464641,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004256516651253007,
+      "opposite_half_degree_rho": 0.004256516651253007,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.0001904748566150419,
+      "opposite_half_degree_rho": -0.0001904748566150419,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011074770257433065,
+      "opposite_half_degree_rho": 0.0011074770257433065,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.01098950516511993,
+      "opposite_half_degree_rho": 0.01098950516511993,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005910120301796824,
+      "opposite_half_degree_rho": 0.005910120301796824,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004252812855543565,
+      "opposite_half_degree_rho": 0.004252812855543565,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016563715624118224,
+      "opposite_half_degree_rho": -0.00016563715624118224,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.001124720927035569,
+      "opposite_half_degree_rho": 0.001124720927035569,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010975297633142356,
+      "opposite_half_degree_rho": 0.010975297633142356,
+      "difference": 0.0
+    },
+    {
+      "rep": 2,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005942480138225639,
+      "opposite_half_degree_rho": 0.005942480138225639,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004245066859531993,
+      "opposite_half_degree_rho": 0.004245066859531993,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016963687917715033,
+      "opposite_half_degree_rho": -0.00016963687917715033,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011064957516870768,
+      "opposite_half_degree_rho": 0.0011064957516870768,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010979462919141435,
+      "opposite_half_degree_rho": 0.010979462919141435,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005933569924950424,
+      "opposite_half_degree_rho": 0.005933569924950424,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004264080765748142,
+      "opposite_half_degree_rho": 0.004264080765748142,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018516099763896614,
+      "opposite_half_degree_rho": -0.00018516099763896614,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.001125628599306156,
+      "opposite_half_degree_rho": 0.001125628599306156,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010984625802146243,
+      "opposite_half_degree_rho": 0.010984625802146243,
+      "difference": 0.0
+    },
+    {
+      "rep": 3,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005919655813321878,
+      "opposite_half_degree_rho": 0.005919655813321878,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004251639104406675,
+      "opposite_half_degree_rho": 0.004251639104406675,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018703867818123244,
+      "opposite_half_degree_rho": -0.00018703867818123244,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011103763127899065,
+      "opposite_half_degree_rho": 0.0011103763127899065,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010995523016207572,
+      "opposite_half_degree_rho": 0.010995523016207572,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005921533265612537,
+      "opposite_half_degree_rho": 0.005921533265612537,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004257093926831115,
+      "opposite_half_degree_rho": 0.004257093926831115,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016936940729310264,
+      "opposite_half_degree_rho": -0.00016936940729310264,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011182261422135243,
+      "opposite_half_degree_rho": 0.0011182261422135243,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010967178212259229,
+      "opposite_half_degree_rho": 0.010967178212259229,
+      "difference": 0.0
+    },
+    {
+      "rep": 4,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005928372877192852,
+      "opposite_half_degree_rho": 0.005928372877192852,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004265493920911961,
+      "opposite_half_degree_rho": 0.004265493920911961,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00017073989717349543,
+      "opposite_half_degree_rho": -0.00017073989717349543,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0010923899666240122,
+      "opposite_half_degree_rho": 0.0010923899666240122,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010978435990654635,
+      "opposite_half_degree_rho": 0.010978435990654635,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.0059281141150432344,
+      "opposite_half_degree_rho": 0.0059281141150432344,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004243171679710852,
+      "opposite_half_degree_rho": 0.004243171679710852,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018348608719505325,
+      "opposite_half_degree_rho": -0.00018348608719505325,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.001139578412968082,
+      "opposite_half_degree_rho": 0.001139578412968082,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010985046532662864,
+      "opposite_half_degree_rho": 0.010985046532662864,
+      "difference": 0.0
+    },
+    {
+      "rep": 5,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005925179526535906,
+      "opposite_half_degree_rho": 0.005925179526535906,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004250181791483093,
+      "opposite_half_degree_rho": 0.004250181791483093,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016384647863911902,
+      "opposite_half_degree_rho": -0.00016384647863911902,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0010955901815520547,
+      "opposite_half_degree_rho": 0.0010955901815520547,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010965619665191832,
+      "opposite_half_degree_rho": 0.010965619665191832,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.0059080063256799495,
+      "opposite_half_degree_rho": 0.0059080063256799495,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.0042601793611237665,
+      "opposite_half_degree_rho": 0.0042601793611237665,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018957797657706468,
+      "opposite_half_degree_rho": -0.00018957797657706468,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011352698966896804,
+      "opposite_half_degree_rho": 0.0011352698966896804,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.01099961023542811,
+      "opposite_half_degree_rho": 0.01099961023542811,
+      "difference": 0.0
+    },
+    {
+      "rep": 6,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005941376670067186,
+      "opposite_half_degree_rho": 0.005941376670067186,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.00425281656797186,
+      "opposite_half_degree_rho": 0.00425281656797186,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00015644611770406202,
+      "opposite_half_degree_rho": -0.00015644611770406202,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011134464108146444,
+      "opposite_half_degree_rho": 0.0011134464108146444,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010958262108986074,
+      "opposite_half_degree_rho": 0.010958262108986074,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.0059304958485225335,
+      "opposite_half_degree_rho": 0.0059304958485225335,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004255631895742425,
+      "opposite_half_degree_rho": 0.004255631895742425,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.0001965430829440928,
+      "opposite_half_degree_rho": -0.0001965430829440928,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.001117800862085089,
+      "opposite_half_degree_rho": 0.001117800862085089,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.011004089832965374,
+      "opposite_half_degree_rho": 0.011004089832965374,
+      "difference": 0.0
+    },
+    {
+      "rep": 7,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005922432814119728,
+      "opposite_half_degree_rho": 0.005922432814119728,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004247401006933647,
+      "opposite_half_degree_rho": 0.004247401006933647,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.000173322635747125,
+      "opposite_half_degree_rho": -0.000173322635747125,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011061623207039377,
+      "opposite_half_degree_rho": 0.0011061623207039377,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010974135052385316,
+      "opposite_half_degree_rho": 0.010974135052385316,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005923099024203653,
+      "opposite_half_degree_rho": 0.005923099024203653,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004260686394756562,
+      "opposite_half_degree_rho": 0.004260686394756562,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00018430832153786534,
+      "opposite_half_degree_rho": -0.00018430832153786534,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011257257710029396,
+      "opposite_half_degree_rho": 0.0011257257710029396,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010988589914400817,
+      "opposite_half_degree_rho": 0.010988589914400817,
+      "difference": 0.0
+    },
+    {
+      "rep": 8,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005931386044198853,
+      "opposite_half_degree_rho": 0.005931386044198853,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "A",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004247592964394117,
+      "opposite_half_degree_rho": 0.004247592964394117,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "A",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00016254761379678824,
+      "opposite_half_degree_rho": -0.00016254761379678824,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "A",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011030602561912187,
+      "opposite_half_degree_rho": 0.0011030602561912187,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "A",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010992852181637112,
+      "opposite_half_degree_rho": 0.010992852181637112,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "A",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005930295326144389,
+      "opposite_half_degree_rho": 0.005930295326144389,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "B",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004261495846578257,
+      "opposite_half_degree_rho": 0.004261495846578257,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "B",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00019478976141899562,
+      "opposite_half_degree_rho": -0.00019478976141899562,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "B",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011284736251997898,
+      "opposite_half_degree_rho": 0.0011284736251997898,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "B",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010969529723879577,
+      "opposite_half_degree_rho": 0.010969529723879577,
+      "difference": 0.0
+    },
+    {
+      "rep": 9,
+      "target_half": "B",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005921578369343936,
+      "opposite_half_degree_rho": 0.005921578369343936,
+      "difference": 0.0
+    }
+  ],
+  "splits": [
+    {
+      "rep": 0,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 1,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 2,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 3,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 4,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 5,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 6,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 7,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 8,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    },
+    {
+      "rep": 9,
+      "counts": [
+        [
+          "MonoCD14",
+          567,
+          567
+        ],
+        [
+          "CD4T",
+          542,
+          543
+        ],
+        [
+          "CD8T",
+          434,
+          434
+        ],
+        [
+          "NK",
+          389,
+          389
+        ],
+        [
+          "B",
+          313,
+          313
+        ],
+        [
+          "DC",
+          306,
+          307
+        ],
+        [
+          "MonoCD16",
+          221,
+          221
+        ]
+      ],
+      "tf_outdegree_equal_fraction": 1.0,
+      "target_indegree_equal_fraction": 1.0,
+      "edge_support_equal_fraction": 1.0
+    }
+  ],
+  "leave_edge_out": [
+    {
+      "tissue": "brain",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004420305527053352,
+      "leave_edge_out_rho": 0.0042076565710202265,
+      "difference": -0.00021264895603312524
+    },
+    {
+      "tissue": "brain",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.012406854383952542,
+      "leave_edge_out_rho": 0.011952415725645099,
+      "difference": -0.000454438658307443
+    },
+    {
+      "tissue": "brain",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0006187018977738768,
+      "leave_edge_out_rho": 0.0005491706535159893,
+      "difference": -6.953124425788742e-05
+    },
+    {
+      "tissue": "brain",
+      "readout": "UCE_encoder",
+      "own_rho": 0.004611579288292131,
+      "leave_edge_out_rho": 0.004741693818864083,
+      "difference": 0.00013011453057195244
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_attn",
+      "own_rho": -0.0036158488145744297,
+      "leave_edge_out_rho": -0.0038631943649123017,
+      "difference": -0.000247345550337872
+    },
+    {
+      "tissue": "brain",
+      "readout": "random_init_floor",
+      "own_rho": 0.0018726425930271726,
+      "leave_edge_out_rho": 0.0019244873395753135,
+      "difference": 5.1844746548140907e-05
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_ko_raw",
+      "own_rho": -0.0009334853165601357,
+      "leave_edge_out_rho": -0.000490234808245469,
+      "difference": 0.0004432505083146667
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_ko_posctrl",
+      "own_rho": -0.001887027503672869,
+      "leave_edge_out_rho": -0.001449050301932761,
+      "difference": 0.0004379772017401079
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "geneformer_embed",
+      "own_rho": 0.004254433575920221,
+      "leave_edge_out_rho": 0.003557031566592443,
+      "difference": -0.0006974020093277783
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "geneformer_attn",
+      "own_rho": -0.00017567385030396412,
+      "leave_edge_out_rho": 0.0007031334993485958,
+      "difference": 0.0008788073496525598
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "scFoundation_encoder",
+      "own_rho": 0.0011146709638893903,
+      "leave_edge_out_rho": 0.0012658319208316549,
+      "difference": 0.0001511609569422646
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "scGPT_encoder",
+      "own_rho": 0.010981275611533546,
+      "leave_edge_out_rho": 0.010574249329913849,
+      "difference": -0.0004070262816196976
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "UCE_encoder",
+      "own_rho": 0.005926657223989328,
+      "leave_edge_out_rho": 0.0059958882563153374,
+      "difference": 6.923103232600938e-05
+    }
+  ],
+  "status": "complete",
+  "motif_cache_sha256": "11716d9ce18dad078a48c095f861b5df54b4aaabcf825586d88149808e57c97a"
+}

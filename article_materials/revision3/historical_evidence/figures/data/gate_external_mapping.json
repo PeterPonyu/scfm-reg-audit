@@ -1,0 +1,225 @@
+{
+  "rows": [
+    {
+      "tissue": "brain",
+      "readout": "geneformer_embed",
+      "gate_pass": [
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "auc_delta_vs_co": -0.06066407373885161,
+      "ap_delta_vs_co": -0.026369434084181024,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "scFoundation_encoder",
+      "gate_pass": [
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "auc_delta_vs_co": -0.045285946645977515,
+      "ap_delta_vs_co": -0.01980202947841726,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "UCE_encoder",
+      "gate_pass": [
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "auc_delta_vs_co": -0.022671671372588104,
+      "ap_delta_vs_co": -0.007583246050036316,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "scGPT_encoder",
+      "gate_pass": [
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "auc_delta_vs_co": -0.020939839926774433,
+      "ap_delta_vs_co": -0.009760340374912543,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_attn",
+      "gate_pass": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "auc_delta_vs_co": -0.06256084957413986,
+      "ap_delta_vs_co": -0.030314205162943454,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "random_init_floor",
+      "gate_pass": [
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "auc_delta_vs_co": -0.03188775232616156,
+      "ap_delta_vs_co": -0.014887625760011184,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_ko_raw",
+      "gate_pass": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "auc_delta_vs_co": -0.05087668511248775,
+      "ap_delta_vs_co": -0.03013894645932413,
+      "all_five": false
+    },
+    {
+      "tissue": "brain",
+      "readout": "geneformer_ko_posctrl",
+      "gate_pass": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "auc_delta_vs_co": -0.044702210106814334,
+      "ap_delta_vs_co": -0.02428516230695408,
+      "all_five": false
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "geneformer_embed",
+      "gate_pass": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "auc_delta_vs_co": -0.08810969944277551,
+      "ap_delta_vs_co": -0.0346413317662077,
+      "all_five": false
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "geneformer_attn",
+      "gate_pass": [
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "auc_delta_vs_co": -0.017335769080318985,
+      "ap_delta_vs_co": -0.015387261985876017,
+      "all_five": false
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "scFoundation_encoder",
+      "gate_pass": [
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "auc_delta_vs_co": -0.05951289648512144,
+      "ap_delta_vs_co": -0.02261182757768146,
+      "all_five": false
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "scGPT_encoder",
+      "gate_pass": [
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "auc_delta_vs_co": -0.05365366061352171,
+      "ap_delta_vs_co": -0.01848583038618164,
+      "all_five": false
+    },
+    {
+      "tissue": "pbmc",
+      "readout": "UCE_encoder",
+      "gate_pass": [
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "auc_delta_vs_co": -0.05832788935197568,
+      "ap_delta_vs_co": -0.02000600441790902,
+      "all_five": false
+    }
+  ],
+  "gate_groups": [
+    {
+      "criterion": "dual_full",
+      "n_pass": 7,
+      "n_fail": 6,
+      "passing_mean_external_auc_delta": -0.052418240574375274,
+      "failing_mean_external_auc_delta": -0.041600209959480265
+    },
+    {
+      "criterion": "concordance",
+      "n_pass": 5,
+      "n_fail": 8,
+      "passing_mean_external_auc_delta": -0.0476698244798159,
+      "failing_mean_external_auc_delta": -0.04727247767230362
+    },
+    {
+      "criterion": "nondegree_sign",
+      "n_pass": 7,
+      "n_fail": 6,
+      "passing_mean_external_auc_delta": -0.043026692240391226,
+      "failing_mean_external_auc_delta": -0.05255701634912832
+    },
+    {
+      "criterion": "readout_sign",
+      "n_pass": 7,
+      "n_fail": 6,
+      "passing_mean_external_auc_delta": -0.04175423667458863,
+      "failing_mean_external_auc_delta": -0.05404154784256468
+    },
+    {
+      "criterion": "above_proxy_baseline",
+      "n_pass": 4,
+      "n_fail": 9,
+      "passing_mean_external_auc_delta": -0.039482311412933964,
+      "failing_mean_external_auc_delta": -0.050955522013974734
+    }
+  ],
+  "interpretation": "All13 FM/readout contrasts are below matched coexpression on the external occupancy task. Group averages are descriptive across dependent readouts; neither causal regulatory labels nor a representative set of biologically successful readouts exists, so sensitivity/specificity or necessity of the five gates cannot be estimated. The frozen endpoint remains unchanged.",
+  "status": "external_task_mapping_complete_biological_validity_unresolved"
+}

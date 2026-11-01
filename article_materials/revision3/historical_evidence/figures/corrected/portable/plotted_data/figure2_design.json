@@ -1,0 +1,210 @@
+{
+  "schema": "array05613.portable-plotted-data.v1",
+  "figure": "figure2_design",
+  "token": "2",
+  "scope": "Frozen display values and labels, not raw-data/model/statistical replay",
+  "payload": {
+    "prep": {
+      "selection": {
+        "brain": {
+          "types": [
+            "ASC",
+            "EX",
+            "INH",
+            "MG",
+            "ODC",
+            "OPC",
+            "PER.END"
+          ],
+          "samples": [
+            "Sample-100",
+            "Sample-17",
+            "Sample-19",
+            "Sample-22",
+            "Sample-27",
+            "Sample-33",
+            "Sample-37",
+            "Sample-43",
+            "Sample-45",
+            "Sample-46",
+            "Sample-47",
+            "Sample-50",
+            "Sample-52",
+            "Sample-58",
+            "Sample-66",
+            "Sample-82",
+            "Sample-90",
+            "Sample-96"
+          ],
+          "per_type_quota": {
+            "ASC": 18,
+            "EX": 18,
+            "INH": 9,
+            "MG": 18,
+            "ODC": 18,
+            "OPC": 18,
+            "PER.END": 4
+          }
+        }
+      },
+      "jobs": {
+        "brain_selected_panel-brain": {
+          "undefined_coexpression_genes": []
+        },
+        "brain_selected_panel-pbmc": {
+          "undefined_coexpression_genes": [
+            "ARX",
+            "ASCL1",
+            "BARX2",
+            "DLX1",
+            "EMX2",
+            "FEZF2",
+            "FUT9",
+            "GLIS2",
+            "HES5",
+            "HMX1",
+            "MEOX2",
+            "MSX1",
+            "MYCN",
+            "NFIB",
+            "NKX2-2",
+            "NKX6-2",
+            "NR2E1",
+            "NR2F2",
+            "OLIG2",
+            "ONECUT1",
+            "ONECUT2",
+            "OTX1",
+            "PHACTR3",
+            "PKNOX2",
+            "POU3F4",
+            "PRRX1",
+            "RHOXF1",
+            "SCRT1",
+            "SIX4",
+            "SOX1",
+            "SOX11",
+            "SOX21",
+            "SOX9",
+            "TBR1",
+            "TBX18",
+            "TWIST1",
+            "VAX1",
+            "VAX2",
+            "VSX1",
+            "ZIC1",
+            "ZIC2",
+            "ZIC4",
+            "ZIC5",
+            "ZNF214"
+          ]
+        },
+        "historical_panel_corrected_source-brain": {
+          "undefined_coexpression_genes": [
+            "ATP5MF",
+            "ATP5MG",
+            "ATP5PO",
+            "BLOC1S1",
+            "C11orf96",
+            "CD99",
+            "CDC42",
+            "CEBPE",
+            "CTSD",
+            "ERF",
+            "ETV2",
+            "GFI1",
+            "HNRNPA1",
+            "HOXA3",
+            "HOXA4",
+            "IRF6",
+            "IRF9",
+            "MAFA",
+            "MT1X",
+            "NDUFB8",
+            "NDUFC2",
+            "OAZ1",
+            "OSR2",
+            "RAB5C",
+            "RPL26",
+            "RPS10",
+            "SATB1",
+            "SIX2",
+            "SLC25A6",
+            "TCF21",
+            "TGIF2",
+            "TMBIM4",
+            "VAMP2",
+            "ZBED1",
+            "ZNF547",
+            "ZNF8",
+            "ZNF816"
+          ]
+        }
+      }
+    },
+    "frozen_genes": 1200,
+    "shared_genes": 460,
+    "panel_specific_genes": 740,
+    "tf_counts": [
+      442,
+      446
+    ],
+    "selected_cells": [
+      1854,
+      1854,
+      1854
+    ],
+    "normalization_features": [
+      58721,
+      36601
+    ],
+    "undefined_genes": [
+      0,
+      37,
+      44
+    ]
+  },
+  "companion": {
+    "schema": "array05613.corrected-caption.v1",
+    "figure": "figure2_design",
+    "title": "Corrective design",
+    "caption": "A, The genuine brain-selected panel contains 1,200 genes and 442 TFs; the fixed historical aorta-selected panel contains 1,200 genes and 446 TFs. Their exact gene intersection is 460, leaving 740 distinct genes in each panel. Panel selection is conditional on the corrective brain pool, not independently held out. B, The corrective preparation includes 1,854 brain RNA nuclei, 1,854 separate brain ATAC nuclei and 1,854 paired local PBMC cells. C, CP10k denominators are computed before panel slicing over all 58,721 brain or 36,601 PBMC features; log1p-CP10k is used for co-expression and model-specific input transforms are recorded separately. Counts and CP10k for all three jobs were independently replayed. D, Co-expression is undefined for zero-variance genes: 0 in the brain-selected brain job, 37 in the historical-panel brain job and 44 in the brain-panel PBMC job. Missing correlations are not imputed to zero. Complete frozen TF-target-pair coverage is required in addition to the 90% minimum gene-coverage gate; no thresholds are relaxed. Upstream local ATAC/PBMC processing and independent motif rescanning remain outside the prepare verification scope.",
+    "panels": {
+      "A": "Frozen panels",
+      "B": "Selected cells",
+      "C": "Normalization",
+      "D": "Undefined baseline"
+    },
+    "scope": "Corrective preparation; no inferred model performance or real corrective result.",
+    "status": "verified",
+    "font_family": [
+      "TeX Gyre TermesX"
+    ],
+    "separate_panel_titles": true,
+    "descriptive_footnotes_in_figure": false,
+    "evidence": [
+      {
+        "source_name": "prepared.json",
+        "sha256": "968b6f6f6dc3ad653ea0b55aae96b9199110be0cd858cec2ed9b1d718f5c4d11",
+        "bytes": 718
+      },
+      {
+        "source_name": "panels.json",
+        "sha256": "7cc8e623d12448d931c0002014e08fed31ecaaf9e097d674797c886c2cbde520",
+        "bytes": 49713
+      },
+      {
+        "source_name": "selection.json",
+        "sha256": "39f1d1525ef55745b3785e9770e17a2d61fe9efc06a2ce1d400576db7a8d7157",
+        "bytes": 1346889
+      }
+    ]
+  },
+  "reference_sha256": {
+    "pdf": "db8e443002a0dcd304dc59ce1311d5947c6ca390872e93372c0901f0637cb30e",
+    "svg": "8c38b34c36b138ce12f0d68d725f8692556191cb6b7bd40e1ed2ebb7f146a97e",
+    "jpg": "6c30228cfdec6335bfc25e61b5b354cd4e7e196aa491511c9a9b9d3d9f588349",
+    "png": "1ae9d7d9f2972c8a682b818b0d328383034d9c0adc34e80d7dd77c1cf84c91e9"
+  },
+  "reference_companion_sha256": "701f65acc72a4c7e7c187625844fd7aefaf95e0d10dc63fe3a9c090c33278b66"
+}

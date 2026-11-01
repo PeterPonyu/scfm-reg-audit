@@ -1,0 +1,25 @@
+{
+ "jobs": {
+  "brain_selected_panel-brain": {
+   "cells": 1854,
+   "genes": 1200,
+   "tfs": 442,
+   "linked_peaks": 31080,
+   "undefined_coexpression_genes": 0
+  },
+  "brain_selected_panel-pbmc": {
+   "cells": 1854,
+   "genes": 1200,
+   "tfs": 442,
+   "linked_peaks": 12843,
+   "undefined_coexpression_genes": 44
+  },
+  "historical_panel_corrected_source-brain": {
+   "cells": 1854,
+   "genes": 1200,
+   "tfs": 446,
+   "linked_peaks": 8823,
+   "undefined_coexpression_genes": 37
+  }
+ }
+}

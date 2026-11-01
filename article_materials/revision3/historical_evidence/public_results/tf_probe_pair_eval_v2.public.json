@@ -1,0 +1,312 @@
+{
+  "arms": {
+    "all": [
+      "w",
+      "w_rev",
+      "tf_deg",
+      "g_deg",
+      "rank_g"
+    ],
+    "edge_only": [
+      "w",
+      "w_rev",
+      "rank_g"
+    ]
+  },
+  "baseline": "co_expression",
+  "confounds": [
+    "peakcount",
+    "genelen",
+    "gc",
+    "detv"
+  ],
+  "design": "pair-level (TF, gene) probe; TF-disjoint train/test",
+  "n_genes": 1200,
+  "n_test_tfs": 135,
+  "n_train_tfs": 311,
+  "primary_arm": "edge_only",
+  "results": {
+    "all": {
+      "UCE_encoder": {
+        "adjusted_rho_mean": -0.00032748201754152507,
+        "adjusted_rho_median": -0.0014380079430610716,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.03613227029999817,
+        "alpha": 1000.0,
+        "coef": {
+          "g_deg": -0.0009337851094853682,
+          "rank_g": 0.0066606309746886135,
+          "tf_deg": -0.0011151823420851477,
+          "w": -0.0013418870505738627,
+          "w_rev": -0.0013418870505738627
+        },
+        "delta_adjusted_rho_vs_coexp": -0.00021150791437020785,
+        "delta_marginal_rho_vs_coexp": -0.06270655507793287,
+        "marginal_rho_mean": 0.014335529920158917,
+        "marginal_rho_median": 0.014599719681416596,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.036114535394812845,
+        "partial_rho_given_coexp_mean": 0.014430449218676155,
+        "partial_rho_given_coexp_median": 0.010397229442520447,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.027362673524567435,
+        "train_r2": 0.0002779875456617731
+      },
+      "co_expression": {
+        "adjusted_rho_mean": -0.00011597410317131723,
+        "adjusted_rho_median": -0.0017620776125538975,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.04804260196154433,
+        "alpha": 316.22776601683796,
+        "coef": {
+          "g_deg": 0.012994978890716328,
+          "rank_g": 0.007932606521489789,
+          "tf_deg": 0.01641343768291882,
+          "w": 9.971885978779862e-05,
+          "w_rev": 9.971885978779862e-05
+        },
+        "marginal_rho_mean": 0.07704208499809179,
+        "marginal_rho_median": 0.07106579627165126,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.05178691497996869,
+        "train_r2": 0.007099563108079798
+      },
+      "geneformer_attn": {
+        "adjusted_rho_mean": -0.01482658750817548,
+        "adjusted_rho_median": -0.010444444753086634,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.05186622548222884,
+        "alpha": 562.341325190349,
+        "coef": {
+          "g_deg": 0.011277483382090652,
+          "rank_g": 0.009546557201513829,
+          "tf_deg": 0.00633258942585823,
+          "w": -0.0012157219051332022,
+          "w_rev": -0.0012157219051332022
+        },
+        "delta_adjusted_rho_vs_coexp": -0.014710613405004163,
+        "delta_marginal_rho_vs_coexp": 0.00406847359810511,
+        "marginal_rho_mean": 0.0811105585961969,
+        "marginal_rho_median": 0.07566197999958779,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.051209222903064865,
+        "partial_rho_given_coexp_mean": 0.001149593596682798,
+        "partial_rho_given_coexp_median": -0.012672765744976212,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.05176156045344185,
+        "train_r2": 0.003778007381616044
+      },
+      "geneformer_embed": {
+        "adjusted_rho_mean": -0.04800559671170554,
+        "adjusted_rho_median": -0.0642587807352644,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.07158605862684736,
+        "alpha": 1000.0,
+        "coef": {
+          "g_deg": -0.01201089129055723,
+          "rank_g": -0.0020396947160483472,
+          "tf_deg": -0.0070541015373584495,
+          "w": 0.001046435466537956,
+          "w_rev": 0.001046435466537956
+        },
+        "delta_adjusted_rho_vs_coexp": -0.04788962260853422,
+        "delta_marginal_rho_vs_coexp": 0.035115881609182775,
+        "marginal_rho_mean": 0.11215796660727456,
+        "marginal_rho_median": 0.11126632609179934,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.06117285867436159,
+        "partial_rho_given_coexp_mean": 0.061552176077900055,
+        "partial_rho_given_coexp_median": 0.05068359769694285,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.05198250940983771,
+        "train_r2": 0.002243763897329276
+      },
+      "random_floor": {
+        "adjusted_rho_mean": -0.004507668768185616,
+        "adjusted_rho_median": -0.007472873245050865,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.022083418080514033,
+        "alpha": 1000.0,
+        "coef": {
+          "g_deg": 0.004758953726802722,
+          "rank_g": 0.003189341641257456,
+          "tf_deg": -0.0003704187200387829,
+          "w": -0.0017997442051465656,
+          "w_rev": -0.0017997442051465656
+        },
+        "delta_adjusted_rho_vs_coexp": -0.004391694665014299,
+        "delta_marginal_rho_vs_coexp": -0.06492917724423627,
+        "marginal_rho_mean": 0.012112907753855515,
+        "marginal_rho_median": 0.00962055369072443,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.025047235851012886,
+        "partial_rho_given_coexp_mean": 0.009549550561673486,
+        "partial_rho_given_coexp_median": 0.00570053868092964,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.01843101229998964,
+        "train_r2": 0.0003321433780884009
+      },
+      "scGPT_encoder": {
+        "adjusted_rho_mean": -0.04695884521318983,
+        "adjusted_rho_median": -0.05835108913270079,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.05940918221240182,
+        "alpha": 1000.0,
+        "coef": {
+          "g_deg": -0.0134814358928294,
+          "rank_g": -0.0006343498588206884,
+          "tf_deg": -0.000970945841810969,
+          "w": 0.0028680596806332607,
+          "w_rev": 0.0028680596806332607
+        },
+        "delta_adjusted_rho_vs_coexp": -0.046842871110018516,
+        "delta_marginal_rho_vs_coexp": 0.02060313232723017,
+        "marginal_rho_mean": 0.09764521732532196,
+        "marginal_rho_median": 0.09361038499862859,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.0580822405236513,
+        "partial_rho_given_coexp_mean": 0.0808782671222534,
+        "partial_rho_given_coexp_median": 0.07567904561044834,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.057970213049036365,
+        "train_r2": 0.0017279416084872157
+      }
+    },
+    "edge_only": {
+      "UCE_encoder": {
+        "adjusted_rho_mean": 0.0003176554675076546,
+        "adjusted_rho_median": -0.00027686824782517205,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.03435885325601937,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": 0.007486373655042003,
+          "w": -0.0020337109721876865,
+          "w_rev": -0.0020337109721876865
+        },
+        "delta_adjusted_rho_vs_coexp": 0.012360037852906944,
+        "delta_marginal_rho_vs_coexp": -0.050602083793425734,
+        "marginal_rho_mean": 0.00999061013940995,
+        "marginal_rho_median": 0.008330552801506517,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.03450985606678774,
+        "partial_rho_given_coexp_mean": 0.008014446203447725,
+        "partial_rho_given_coexp_median": 0.0042615307371741224,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.02488711489893125,
+        "train_r2": 0.00026084937307591094
+      },
+      "co_expression": {
+        "adjusted_rho_mean": -0.01204238238539929,
+        "adjusted_rho_median": -0.013215168899422845,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.047670202131956906,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": 0.008291019429116323,
+          "w": 0.004797457850115639,
+          "w_rev": 0.004797457850115639
+        },
+        "marginal_rho_mean": 0.06059269393283568,
+        "marginal_rho_median": 0.05744603654263046,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.06578336896601956,
+        "train_r2": 0.0028876445135266327
+      },
+      "geneformer_attn": {
+        "adjusted_rho_mean": -0.010188259544316043,
+        "adjusted_rho_median": -0.008031651410869036,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.05047733465386037,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": 0.010122013510950444,
+          "w": 0.0034234613174517446,
+          "w_rev": 0.0034234613174517446
+        },
+        "delta_adjusted_rho_vs_coexp": 0.0018541228410832462,
+        "delta_marginal_rho_vs_coexp": 0.009761636359381022,
+        "marginal_rho_mean": 0.0703543302922167,
+        "marginal_rho_median": 0.06460516408799268,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.05972449749147067,
+        "partial_rho_given_coexp_mean": 0.008160175074511665,
+        "partial_rho_given_coexp_median": 0.022105994518051748,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.13970708615852268,
+        "train_r2": 0.0028743202216557906
+      },
+      "geneformer_embed": {
+        "adjusted_rho_mean": -0.016267449877087108,
+        "adjusted_rho_median": -0.015772233175161927,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.04714608893478489,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": 8.010622418036344e-05,
+          "w": -0.0036477980119681876,
+          "w_rev": -0.0036477980119681876
+        },
+        "delta_adjusted_rho_vs_coexp": -0.004225067491687818,
+        "delta_marginal_rho_vs_coexp": -0.00805274029261592,
+        "marginal_rho_mean": 0.05253995364021976,
+        "marginal_rho_median": 0.0535663060455808,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.06688075487983845,
+        "partial_rho_given_coexp_mean": 0.02942924908924191,
+        "partial_rho_given_coexp_median": 0.02472828106130629,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.051369595644898486,
+        "train_r2": 0.0006369049054961717
+      },
+      "random_floor": {
+        "adjusted_rho_mean": 0.0023184993981348696,
+        "adjusted_rho_median": 0.00041988918047859757,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.026824974878211182,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": 0.00336519143130892,
+          "w": -0.0017648868708811897,
+          "w_rev": -0.0017648868708811897
+        },
+        "delta_adjusted_rho_vs_coexp": 0.01436088178353416,
+        "delta_marginal_rho_vs_coexp": -0.05595939726574132,
+        "marginal_rho_mean": 0.004633296667094361,
+        "marginal_rho_median": 0.005411529023792493,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.026953140549757334,
+        "partial_rho_given_coexp_mean": 0.001503968534134527,
+        "partial_rho_given_coexp_median": 0.0022180293180759153,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.020674821468810757,
+        "train_r2": 5.489295864780086e-05
+      },
+      "scGPT_encoder": {
+        "adjusted_rho_mean": -0.019144378881127307,
+        "adjusted_rho_median": -0.018513728134533426,
+        "adjusted_rho_n_ok": 135,
+        "adjusted_rho_std": 0.0407149651470724,
+        "alpha": 1000.0,
+        "coef": {
+          "rank_g": -0.001760145469696283,
+          "w": 4.530098729800189e-05,
+          "w_rev": 4.530098729800189e-05
+        },
+        "delta_adjusted_rho_vs_coexp": -0.007101996495728017,
+        "delta_marginal_rho_vs_coexp": -0.03244785681314702,
+        "marginal_rho_mean": 0.02814483711968866,
+        "marginal_rho_median": 0.033952171939711666,
+        "marginal_rho_n_ok": 135,
+        "marginal_rho_std": 0.07333194978066289,
+        "partial_rho_given_coexp_mean": 0.020110487473846753,
+        "partial_rho_given_coexp_median": 0.01796873470051021,
+        "partial_rho_given_coexp_n_ok": 135,
+        "partial_rho_given_coexp_std": 0.05466516660567936,
+        "train_r2": 3.455524683826372e-05
+      }
+    }
+  },
+  "schema_version": 1,
+  "split_seed": 20260730
+}

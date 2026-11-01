@@ -17,7 +17,7 @@ class Data:
         self.final = self.bmmc["final"]["rows"]
         self.prepared = self.bmmc["prepared"]
         self.donors = self.prepared["split"]["evaluation"]
-        pool = load(HIST / "validation/qa/team_20260930/red_donor_coverage_potential_fullpool.json")["donors"]
+        pool = load(HIST / "validation/donor_coverage_fullpool.json")["donors"]
         self.pool = [next(r for r in pool if r["donor"] == dn) for dn in self.donors]
         self.ctcf = load(ROOT / "inputs/ctcf-compact.json")
         self.external = load(FIGDATA / "external_occupancy.json")

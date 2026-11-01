@@ -89,6 +89,13 @@
    "accepts the run-time digests of files edited for publication"
   ]
  },
+ "revision3/analysis/viz/fig6.py": {
+  "original_sha256": "b642092e90b0b43f1247ba117f5628bc893f2e5dd8087c01dd1584b8a7ac8fad",
+  "published_sha256": "8acf68bcba00b7241aaec5e19286df11042ba34a0f634735b1a20e597bc15a68",
+  "changes": [
+   "neutral file name for the donor-coverage input"
+  ]
+ },
  "revision3/evidence/external_proxies/brain_selected_panel__fibro.json": {
   "original_sha256": "993499c8ed19d550cd48bc43aca5227d55bedb546254c23cd0ffb66b892fb6a2",
   "published_sha256": "f2f8dfda08a733845b3647b23b64c1d44369ffeaa3b1322b67a472bfd4b1c133",
@@ -120,5 +127,30 @@
    "home-directory paths shortened to their final component"
   ],
   "original_digest": "cfa032a5cb53e6d7dda266683a1f7fba329e8a5dfb78271dc9d19e92b6c0f46f"
+ },
+ "revision3/historical_evidence/validation/donor_coverage_fullpool.json": {
+  "original_sha256": "3118e528f7134085a51cb662fe0abca68d76ebe16f2fb65858dd51ae071e3ebe",
+  "published_sha256": "de2d8f32831504298e503aa4fe9000194b635245d711e88e79811acdb212dce0",
+  "changes": [
+   "fields removed: actual_files, all_five_pools_complete, completed_donors, elapsed_CPU_seconds, elapsed_wall_seconds, errors, exact_missing_attention_pairs, execution, feasibility, frozen_common_cell_types, frozen_eval_donors, full_atlas_dense_materialization, max_CPU_seconds, max_wall_seconds, metadata_pool_scope, ordered_TFs, ordered_panel_genes, original_registered_cells_per_donor, panel_sha256, peak_RSS_kib, recorded_at_utc, registered_TFs, registered_nonself_pairs, registered_panel_genes, runtime, source, source_context, status, unresolved_donors, validation",
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "15bd37886deb4558fefd2f535e41bdaf50cded01595213a0f193d10cba22d1ff"
+ },
+ "revision3/inputs/corrective-contexts.json": {
+  "original_sha256": "f50e8261f545c3b4f3091577c83dfefbf45be8bcbe84d2735cd936894b6a3127",
+  "published_sha256": "a5317388e650128d64dc2aedf8a337d52884460edd3453e83ba1b71a6a7fa06e",
+  "changes": [
+   "fields removed: provenance, source_stage"
+  ],
+  "original_digest": "3d0eca009e188bf75a9869af5769a7ee05256cde8f474ec25abbdf27ac06b9eb"
+ },
+ "revision3/inputs/ctcf-compact.json": {
+  "original_sha256": "ea3d721a79c8b47a498a3c99e25e055ffa70acf32c065a22666e3883e5e59197",
+  "published_sha256": "6a567d1d6278e884131578a5d5a96e8684c5f035ef937986b6e14b79961fbcda",
+  "changes": [
+   "home-directory paths shortened to their final component"
+  ],
+  "original_digest": "32204910ccf6f63ae94b6058aa22ac8bb5ec867cefc99795b13e289999515f2d"
  }
 }

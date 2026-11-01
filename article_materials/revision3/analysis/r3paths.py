@@ -35,6 +35,6 @@ def need(name):
 REV = where('revisions', W.parent)
 EXT = where('evidence_workspace', REV / 'earlier_version')
 VAL = where('validation', W.parent / 'corrective_pipeline' if _DEPOSIT else EXT / 'validation')
-CORR = where('corrective_run', VAL / 'corrective_run')
+CORR = where('corrective_run', W / 'corrective_run' if _DEPOSIT else VAL / 'corrective_run')
 HIST_INPUTS = where('historical_inputs', EXT / 'build/scientific_extension/inputs')
 HIST_STRESS = where('historical_stress', EXT / 'build/scientific_extension/stress')

@@ -1,0 +1,11 @@
+{
+ "scale": {"2": "verified at the named level", "1": "partial or source-level link", "0": "unresolved"},
+ "columns": ["Study", "Sample", "Weights", "Exact cells"],
+ "rows": {
+  "Geneformer V2": [2, 1, 2, 0],
+  "scFoundation": [2, 2, 0, 0],
+  "scGPT": [0, 0, 0, 0],
+  "UCE": [0, 0, 0, 0]
+ },
+ "basis": "Transcribed from the exposure table and training register of the manuscript (study/sample inventories, evaluated-weight linkage). The exact-cell column is additionally asserted equal to checkpoint_resolution.exact_cell_ledger_available in figure7_training.json (false for all four checkpoints)."
+}

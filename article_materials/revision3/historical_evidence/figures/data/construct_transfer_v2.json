@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "scope": "Construct/proxy transfer only; no foundation-model audit rows.",
+  "overlays": ["Spleen", "BMMC", "Treg"],
+  "references": ["Brain", "PBMC", "Fibro"],
+  "observed_rho": {
+    "Spleen": [0.434, 0.391, 0.493],
+    "BMMC": [0.529, 0.890, 0.473],
+    "Treg": [0.464, 0.506, 0.490]
+  },
+  "residual_rho": {
+    "Spleen": [0.340, 0.236, 0.383],
+    "BMMC": [0.515, 0.950, 0.414],
+    "Treg": [0.494, 0.525, 0.482]
+  },
+  "additive_fraction": {
+    "Spleen": [0.830, 0.846, 0.824],
+    "BMMC": [0.608, 0.460, 0.689],
+    "Treg": [0.742, 0.805, 0.766]
+  },
+  "collectri": {
+    "tf_hit": {"numerator": 327, "denominator": 446, "fraction": 0.733},
+    "gene_hit": {"numerator": 683, "denominator": 1200, "fraction": 0.569},
+    "edge_keep": {"numerator": 4592, "denominator": 43536, "fraction": 0.105},
+    "motif_binary_edges": 85809,
+    "collectri_panel_edges": 4592
+  },
+  "bmmc_coverage": {
+    "genes": {"numerator": 1076, "denominator": 1200, "fraction": 0.897},
+    "tf": {"numerator": 341, "denominator": 446, "fraction": 0.765},
+    "predeclared_gate": 0.90
+  },
+  "limits": {
+    "treg_metadata": "Filename-derived pilot; obs lacks cell-type columns.",
+    "tumor": "Blocked: fragment files only; no peak matrix.",
+    "adds_fm_rows": false
+  }
+}

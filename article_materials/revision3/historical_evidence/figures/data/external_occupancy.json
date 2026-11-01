@@ -1,0 +1,392 @@
+{
+  "scope": "External pan-biosample occupancy-reference transfer; frozen panel and readout caches reused. Unlabeled targets are not verified negatives. TF resampling is a descriptive sensitivity, not donor or population inference.",
+  "seed": [
+    20260927,
+    5613,
+    52
+  ],
+  "n_bootstrap": 2000,
+  "tissues": {
+    "brain": {
+      "n_tfs": 204,
+      "n_pairs": 244392,
+      "n_positive": 114248,
+      "rows": [
+        {
+          "readout": "geneformer_embed",
+          "mean_auc": 0.47283154896447954,
+          "mean_ap": 0.45820522514691336,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": -0.009273252053649643,
+          "auc_delta_vs_co": -0.06066407373885161,
+          "auc_delta_tf_resampling95": [
+            -0.06937377159548706,
+            -0.05149009441022123
+          ],
+          "auc_tf_fraction_above_co": 0.15196078431372548,
+          "ap_delta_vs_co": -0.026369434084181024,
+          "ap_delta_tf_resampling95": [
+            -0.03129868812541659,
+            -0.02158718355588758
+          ],
+          "ap_tf_fraction_above_co": 0.2107843137254902
+        },
+        {
+          "readout": "scGPT_encoder",
+          "mean_auc": 0.5125557827765568,
+          "mean_ap": 0.47481431885618186,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.007335841655618835,
+          "auc_delta_vs_co": -0.020939839926774433,
+          "auc_delta_tf_resampling95": [
+            -0.03090542360818036,
+            -0.01060821200942705
+          ],
+          "auc_tf_fraction_above_co": 0.3284313725490196,
+          "ap_delta_vs_co": -0.009760340374912543,
+          "ap_delta_tf_resampling95": [
+            -0.014637087660775313,
+            -0.0045537602658983515
+          ],
+          "ap_tf_fraction_above_co": 0.37745098039215685
+        },
+        {
+          "readout": "scFoundation_encoder",
+          "mean_auc": 0.4882096760573537,
+          "mean_ap": 0.46477262975267714,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": -0.0027058474478858802,
+          "auc_delta_vs_co": -0.045285946645977515,
+          "auc_delta_tf_resampling95": [
+            -0.054692954125255544,
+            -0.0362244451068857
+          ],
+          "auc_tf_fraction_above_co": 0.24019607843137256,
+          "ap_delta_vs_co": -0.01980202947841726,
+          "ap_delta_tf_resampling95": [
+            -0.025163591573681907,
+            -0.0147898427148263
+          ],
+          "ap_tf_fraction_above_co": 0.2647058823529412
+        },
+        {
+          "readout": "UCE_encoder",
+          "mean_auc": 0.5108239513307431,
+          "mean_ap": 0.4769914131810581,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.009512935980495064,
+          "auc_delta_vs_co": -0.022671671372588104,
+          "auc_delta_tf_resampling95": [
+            -0.03158875091592671,
+            -0.014045473392935302
+          ],
+          "auc_tf_fraction_above_co": 0.3284313725490196,
+          "ap_delta_vs_co": -0.007583246050036316,
+          "ap_delta_tf_resampling95": [
+            -0.012442853487974035,
+            -0.0026995105520816686
+          ],
+          "ap_tf_fraction_above_co": 0.37254901960784315
+        },
+        {
+          "readout": "geneformer_attn",
+          "mean_auc": 0.47093477312919135,
+          "mean_ap": 0.454260454068151,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": -0.013218023132412073,
+          "auc_delta_vs_co": -0.06256084957413986,
+          "auc_delta_tf_resampling95": [
+            -0.07224814544593383,
+            -0.053101746619638956
+          ],
+          "auc_tf_fraction_above_co": 0.14705882352941177,
+          "ap_delta_vs_co": -0.030314205162943454,
+          "ap_delta_tf_resampling95": [
+            -0.03466621010809174,
+            -0.025841048849984692
+          ],
+          "ap_tf_fraction_above_co": 0.15196078431372548
+        },
+        {
+          "readout": "random_init_floor",
+          "mean_auc": 0.5016078703771696,
+          "mean_ap": 0.4696870334710833,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.002208556270520197,
+          "auc_delta_vs_co": -0.03188775232616156,
+          "auc_delta_tf_resampling95": [
+            -0.04006584612131275,
+            -0.023065342573493353
+          ],
+          "auc_tf_fraction_above_co": 0.2549019607843137,
+          "ap_delta_vs_co": -0.014887625760011184,
+          "ap_delta_tf_resampling95": [
+            -0.018971385846555697,
+            -0.010729183261516572
+          ],
+          "ap_tf_fraction_above_co": 0.3235294117647059
+        },
+        {
+          "readout": "geneformer_ko_raw",
+          "mean_auc": 0.48261893759084346,
+          "mean_ap": 0.45443571277177025,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": -0.013042764428792748,
+          "auc_delta_vs_co": -0.05087668511248775,
+          "auc_delta_tf_resampling95": [
+            -0.06141245603026611,
+            -0.040367945251422475
+          ],
+          "auc_tf_fraction_above_co": 0.22058823529411764,
+          "ap_delta_vs_co": -0.03013894645932413,
+          "ap_delta_tf_resampling95": [
+            -0.03516290885833121,
+            -0.02506319282784985
+          ],
+          "ap_tf_fraction_above_co": 0.16666666666666666
+        },
+        {
+          "readout": "geneformer_ko_posctrl",
+          "mean_auc": 0.48879341259651693,
+          "mean_ap": 0.4602894969241403,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": -0.0071889802764227,
+          "auc_delta_vs_co": -0.044702210106814334,
+          "auc_delta_tf_resampling95": [
+            -0.05285749349874708,
+            -0.036718319069062075
+          ],
+          "auc_tf_fraction_above_co": 0.17647058823529413,
+          "ap_delta_vs_co": -0.02428516230695408,
+          "ap_delta_tf_resampling95": [
+            -0.028662635534805244,
+            -0.01992903568861797
+          ],
+          "ap_tf_fraction_above_co": 0.2107843137254902
+        },
+        {
+          "readout": "geneformer_embed__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "scGPT_encoder__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "scFoundation_encoder__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "UCE_encoder__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "geneformer_attn__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "random_init_floor__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "geneformer_ko_raw__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "geneformer_ko_posctrl__matched_co",
+          "mean_auc": 0.5334956227033312,
+          "mean_ap": 0.48457465923109444,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.017096182030531377
+        },
+        {
+          "readout": "proxy",
+          "mean_auc": 0.545104336252427,
+          "mean_ap": 0.49544523301496196,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.027966755814398968
+        },
+        {
+          "readout": "sequence_opportunity",
+          "mean_auc": 0.5911059343563173,
+          "mean_ap": 0.524600754517962,
+          "mean_prevalence": 0.467478477200563,
+          "mean_ap_minus_prevalence": 0.05712227731739897
+        }
+      ]
+    },
+    "pbmc": {
+      "n_tfs": 204,
+      "n_pairs": 244596,
+      "n_positive": 114330,
+      "rows": [
+        {
+          "readout": "geneformer_embed",
+          "mean_auc": 0.47331860265459813,
+          "mean_ap": 0.4598678212767623,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": -0.007556012310050224,
+          "auc_delta_vs_co": -0.08810969944277551,
+          "auc_delta_tf_resampling95": [
+            -0.09626534527668772,
+            -0.07923992606681433
+          ],
+          "auc_tf_fraction_above_co": 0.049019607843137254,
+          "ap_delta_vs_co": -0.0346413317662077,
+          "ap_delta_tf_resampling95": [
+            -0.03889342698012607,
+            -0.03031253836020453
+          ],
+          "ap_tf_fraction_above_co": 0.07352941176470588
+        },
+        {
+          "readout": "geneformer_attn",
+          "mean_auc": 0.5440925330170546,
+          "mean_ap": 0.479121891057094,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.01169805747028145,
+          "auc_delta_vs_co": -0.017335769080318985,
+          "auc_delta_tf_resampling95": [
+            -0.025339445867708192,
+            -0.009837288892436596
+          ],
+          "auc_tf_fraction_above_co": 0.3480392156862745,
+          "ap_delta_vs_co": -0.015387261985876017,
+          "ap_delta_tf_resampling95": [
+            -0.01864835823835486,
+            -0.01229040425522968
+          ],
+          "ap_tf_fraction_above_co": 0.2549019607843137
+        },
+        {
+          "readout": "scFoundation_encoder",
+          "mean_auc": 0.5019154056122522,
+          "mean_ap": 0.4718973254652885,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.004473491878476011,
+          "auc_delta_vs_co": -0.05951289648512144,
+          "auc_delta_tf_resampling95": [
+            -0.07176290423355022,
+            -0.04866807835348775
+          ],
+          "auc_tf_fraction_above_co": 0.18137254901960784,
+          "ap_delta_vs_co": -0.02261182757768146,
+          "ap_delta_tf_resampling95": [
+            -0.027131446835858997,
+            -0.018192513111093486
+          ],
+          "ap_tf_fraction_above_co": 0.20098039215686275
+        },
+        {
+          "readout": "scGPT_encoder",
+          "mean_auc": 0.507774641483852,
+          "mean_ap": 0.4760233226567884,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.008599489069975827,
+          "auc_delta_vs_co": -0.05365366061352171,
+          "auc_delta_tf_resampling95": [
+            -0.06186132786167393,
+            -0.04510284378391178
+          ],
+          "auc_tf_fraction_above_co": 0.16666666666666666,
+          "ap_delta_vs_co": -0.01848583038618164,
+          "ap_delta_tf_resampling95": [
+            -0.022350267132435007,
+            -0.014470480329990069
+          ],
+          "ap_tf_fraction_above_co": 0.2107843137254902
+        },
+        {
+          "readout": "UCE_encoder",
+          "mean_auc": 0.5109690805934858,
+          "mean_ap": 0.47810886954026943,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.010685035953456915,
+          "auc_delta_vs_co": -0.05832788935197568,
+          "auc_delta_tf_resampling95": [
+            -0.06600526675152799,
+            -0.05003182800055798
+          ],
+          "auc_tf_fraction_above_co": 0.09313725490196079,
+          "ap_delta_vs_co": -0.02000600441790902,
+          "ap_delta_tf_resampling95": [
+            -0.02430368071651082,
+            -0.015300068843180185
+          ],
+          "ap_tf_fraction_above_co": 0.1715686274509804
+        },
+        {
+          "readout": "geneformer_embed__matched_co",
+          "mean_auc": 0.5614283020973737,
+          "mean_ap": 0.49450915304297,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.02708531945615747
+        },
+        {
+          "readout": "geneformer_attn__matched_co",
+          "mean_auc": 0.5614283020973737,
+          "mean_ap": 0.49450915304297,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.02708531945615747
+        },
+        {
+          "readout": "scFoundation_encoder__matched_co",
+          "mean_auc": 0.5614283020973737,
+          "mean_ap": 0.49450915304297,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.02708531945615747
+        },
+        {
+          "readout": "scGPT_encoder__matched_co",
+          "mean_auc": 0.5614283020973737,
+          "mean_ap": 0.49450915304297,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.02708531945615747
+        },
+        {
+          "readout": "UCE_encoder__matched_co",
+          "mean_auc": 0.5692969699454615,
+          "mean_ap": 0.4981148739581785,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.030691040371365937
+        },
+        {
+          "readout": "proxy",
+          "mean_auc": 0.5637577415454372,
+          "mean_ap": 0.5080570988007921,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.040633265213979405
+        },
+        {
+          "readout": "sequence_opportunity",
+          "mean_auc": 0.590963619283149,
+          "mean_ap": 0.5244542770148903,
+          "mean_prevalence": 0.46742383358681255,
+          "mean_ap_minus_prevalence": 0.05703044342807775
+        }
+      ]
+    }
+  },
+  "status": "complete"
+}
