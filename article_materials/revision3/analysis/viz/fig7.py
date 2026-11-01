@@ -33,7 +33,7 @@ class Data:
         assert sorted(self.families) == sorted(present) and len(self.families) == 6
 
 
-def pertype_panel(d, tissue):
+def pertype_panel(d, tissue, col_rotation=90):
     def draw(ax):
         per = d.fixed["per_cell_type"][tissue]
         rows = [r for r in per["full_confound"]["rows"] if r["row_type"] == "pertype_fm"]
@@ -47,7 +47,7 @@ def pertype_panel(d, tissue):
         labels = [f"{ty} ({cells[ty]:,})" for ty in types]
         cols = [short(m) + (" O" if deg == "full_confound" else " N") for deg, m in columns]
         heat(ax, mat, cmap="RdBu_r", norm=TwoSlopeNorm(vmin=-0.06, vcenter=0, vmax=0.06), fmt=fmt_rho,
-             dark=lambda v: abs(v) > 0.03, row_labels=labels, col_labels=cols, col_rotation=90)
+             dark=lambda v: abs(v) > 0.03, row_labels=labels, col_labels=cols, col_rotation=col_rotation)
         for k in range(len(models), len(columns), len(models)):
             ax.axvline(k - 0.5, color=S.GRAY, lw=0.9)
         return {"cell_types": types, "cells": [cells[t] for t in types], "columns": cols, "partial_rho": mat.tolist()}

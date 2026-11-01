@@ -3,16 +3,8 @@
 Identical panels to the Revision 2 Figure 7 except that the mixed-source per-cell-type panel
 (aortic RNA cells stratified by brain cell-type labels) is removed.
 """
-import inspect
-
 from . import fig7 as old
 from .layout import Canvas, split
-
-# Same panel code as Revision 2, with horizontal column labels for the full-width layout.
-_src = inspect.getsource(old.pertype_panel).replace("col_rotation=90", "col_rotation=0")
-_ns = dict(vars(old))
-exec(compile(_src, "fig7_pertype_horizontal", "exec"), _ns)
-pertype_panel = _ns["pertype_panel"]
 
 
 def build(out_height=104.0):
@@ -22,7 +14,7 @@ def build(out_height=104.0):
     a_cell, _pad = split(r1, "h", [1.0, 0.0001])
     e_cell, f_cell, g_cell, h_cell = split(r2, "h", [1.0, 0.6, 1.0, 0.7])
     c_cell, i_cell, j_cell = split(r3, "h", [1.0, 1.0, 1.0])
-    c.panel(a_cell, "A", "PBMC per-type effects", pertype_panel(d, "pbmc"), align_y="r1")
+    c.panel(a_cell, "A", "PBMC per-type effects", old.pertype_panel(d, "pbmc", col_rotation=0), align_y="r1")
     c.panel(e_cell, "B", "Adjusted probe", old.panel_e(d), align_y="r2")
     c.panel(f_cell, "C", "Probe contrasts", old.panel_f(d), align_y="r2")
     c.panel(g_cell, "D", "Covariate sensitivity", old.panel_g(d), align_y="r2")
