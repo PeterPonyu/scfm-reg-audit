@@ -64,7 +64,8 @@ Python 3.12 or later with NumPy, SciPy, h5py, pandas, scikit-learn, PyTorch and 
 required. The public inputs are GSE174367 (snRNA-seq counts and metadata, snATAC-seq peak
 matrix and metadata), the 10x Genomics 10k PBMC multiome reference, GSE194122 (processed
 bone-marrow multiome), GSE206767 (scATAC peak matrix), the JASPAR 2024 CORE vertebrate motifs,
-the hg38 genome and the pretrained weights from the model developers. The corrective pipeline
+the hg38 genome and the pretrained model weights, including the scFoundation mirror identified
+below. The corrective pipeline
 turns these into the per-context panels, proxies and model scores that the new analyses read
 (`corrective_run`); the calibration of the two historical contexts and the appendix figures read
 the historical inputs of the earlier versions of the archive. The inputs can be obtained with
@@ -99,4 +100,6 @@ accepts these run-time digests (it prints its report; `--out` writes the report 
 
 Pretrained weights are not redistributed. The evaluated scFoundation file is identified by its
 SHA-256 in `revision3/evidence/scfoundation_verification.json`, which also records the published
-checksum of the mirror from which it was obtained.
+checksum of the mirror from which it was obtained. The separately hosted GenBio checkpoint is a
+candidate for tensor comparison; its identity with the BioMap-hosted developer distribution has
+not been established here.

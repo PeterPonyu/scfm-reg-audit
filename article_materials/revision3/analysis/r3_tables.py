@@ -373,12 +373,12 @@ scf_part = ('the cell-embedding sub-model' if scf_same and scf['local_identical_
 if scf_same:
     n = scf['comparisons'][scf['local_identical_to_official_submodel'][0]]['exactly_equal']
     scf_weight = (f"Evaluated file equals the published checksum of its source mirror; all {n} tensors equal "
-                  f"{scf_part} of the developers' published checkpoint, whose checksum was confirmed.")
-    scf_limit = 'Exact-cell membership is not verified.'
+                  f"{scf_part} of the GenBio-hosted checkpoint, whose checksum was confirmed.")
+    scf_limit = "Identity with the developers' own distribution and exact-cell membership are not verified."
 elif scf_official:
-    print('WARNING: the evaluated scFoundation weights are not tensor-identical to the developers\' checkpoint')
-    scf_weight = ("Evaluated file equals the published checksum of its source mirror; no sub-model of the developers' "
-                  "published checkpoint has identical tensors.")
+    print('WARNING: the evaluated scFoundation weights are not tensor-identical to the GenBio-hosted checkpoint')
+    scf_weight = ("Evaluated file equals the published checksum of its source mirror; no sub-model of the GenBio-hosted "
+                  "checkpoint has identical tensors.")
     scf_limit = "Identity with the developers' release is not established; exact-cell membership is not verified."
 elif scf.get('local_equals_mirror_file'):
     scf_weight = ("The evaluated file is byte-identical (SHA-256) to the published model file of a third-party mirror "
@@ -422,12 +422,13 @@ if all(k in macros for k in ('CSminHolm', 'GRminHolm', 'SPminHolm', 'BMminHolm')
               (str(len(positives)) + ' of them positive.' if positives else 'none of them positive.'))
 
 if scf_same:
-    macro('ScfDA', f"The evaluated scFoundation weights are tensor-identical to {scf_part} of the developers' published "
-          "checkpoint, and byte-identical to the model file of the third-party mirror from which they were obtained.")
+    macro('ScfDA', f"The evaluated scFoundation weights are tensor-identical to {scf_part} of the GenBio-hosted "
+          "checkpoint, and byte-identical to the model file of the third-party mirror from which they were obtained; "
+          "identity with the developers' own distribution remains unverified.")
 elif scf_official:
     macro('ScfDA', "The evaluated scFoundation weights are byte-identical to the model file of a third-party mirror "
           "distributed as the scFoundation cell-embedding model but are not tensor-identical to any sub-model of the "
-          "developers' published checkpoint.")
+          "GenBio-hosted checkpoint; identity with the developers' own distribution remains unverified.")
 else:
     macro('ScfDA', "The evaluated scFoundation weights are byte-identical to the model file of a third-party mirror distributed as the scFoundation cell-embedding model; tensor identity with the developers' own checkpoint has not been verified.")
 

@@ -27,7 +27,9 @@ class Data:
         rows = self.old.levels["rows"]
         key = next(k for k in rows if k.lower().startswith("scfoundation"))
         col = next(i for i, c in enumerate(self.old.levels["columns"]) if c.lower().startswith("weight"))
-        level = 2 if scf.get("local_identical_to_official_submodel") else (1 if scf.get("local_equals_mirror_file") else 0)
+        # A match to the GenBio-hosted bundle alone does not establish developer-release identity.
+        level = (2 if scf.get("developer_origin_verified") and scf.get("local_identical_to_official_submodel")
+                 else (1 if scf.get("local_equals_mirror_file") else 0))
         rows[key][col] = level
         self.scf_weight_level = level
 

@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""R3-7: verify the evaluated scFoundation weights against the developers' published checkpoint.
+"""R3-7: compare the evaluated scFoundation weights with the GenBio-hosted checkpoint.
 
 Step 1 (no download): the local file's SHA-256 equals the Hugging Face LFS SHA-256 of
 `perturblab/scfoundation-cell` model.pt at commit 7b06458e, the mirror it was obtained from.
-Step 2 (needs the official `models.ckpt`, 1,432,587,886 bytes, from `genbio-ai/scFoundation`,
-LFS SHA-256 9f40bf32...0ea9): hash the official file, then compare every tensor of each
+Step 2 (needs `models.ckpt`, 1,432,587,886 bytes, from `genbio-ai/scFoundation`,
+LFS SHA-256 9f40bf32...0ea9): hash that file, then compare every tensor of each
 sub-model (`cell`, `gene`, `rde`) with the local state dict by exact equality.
+The developers' repository points to a separate BioMap-hosted distribution; the provenance
+relationship between that distribution and the GenBio-hosted bundle is not verified here.
+Historical JSON fields retain the name `official` for compatibility.
 
 Usage: python r3_scf_verify.py [--official PATH_TO_models.ckpt]
 """
@@ -28,7 +31,7 @@ MIRROR = {'repo': 'perturblab/scfoundation-cell', 'commit': '7b06458e108e0690fdd
 OFFICIAL = {'repo': 'genbio-ai/scFoundation', 'commit': 'cb434153a1acfacd215eefc956ea445f7cc39cc3',
             'file': 'models.ckpt', 'bytes': 1432587886,
             'lfs_sha256': '9f40bf324d3d0084c4b288d06f5af4fddd12206e2a3f022551d12e89e33a0ea9',
-            'distributor': 'developers of scFoundation (BioMap); code at github.com/biomap-research/scFoundation'}
+            'distributor': 'GenBio AI; BioMap developer repository lists a separate distribution'}
 
 
 def sha256(path):
