@@ -1,12 +1,13 @@
-# Independent rerun instructions
+# Rechecking the historical numerical summaries
 
-This repository contains the fixed-panel motif-accessibility audit and its public numerical
-summaries. Inputs are project-local or explicitly configured; no other research repository
-is discovered implicitly. The archived release and the subsequent manuscript supplements
-have separate contents. The instructions below distinguish calculations supported by the
-released summaries from reconstruction steps that still require verified upstream inputs.
+These instructions cover the original fixed-panel analysis. Its brain-labelled RNA was later
+identified as ascending aorta, and its brain interpretation is withdrawn. The source-corrected
+pipeline and Revision 3 results are described in [article_materials](../article_materials/README.md).
 
-## Validated public-summary layer
+The commands below recalculate statistics from released summaries. A full reconstruction also
+requires the original upstream inputs, as described below.
+
+## Recalculate the published summaries
 
 Use the declared Python environment (`requirements.txt`; reference Python 3.13.7):
 
@@ -17,9 +18,8 @@ python src/revision_05613/mde.py --summary-only
 python -m unittest discover -s src/v2/tests -p test_independent_release.py -v
 ```
 
-The validation performed for these commands used an existing local environment, not a newly
-installed environment. No dependency was added. Installation is a setup recipe, not a claim
-that a fresh environment installation was validated.
+These commands were checked in an existing environment. Installation in a fresh environment
+was not tested.
 
 The summary commands write respectively:
 
@@ -29,8 +29,8 @@ The summary commands write respectively:
 Use `--output /path/to/check.json` to choose a separate output location. The frozen JSON in
 `results/revision_05613/` is not overwritten by default. Input selection is explicit configured
 file first, then `results/v2/<name>.json`, then `results/<name>.public.json`. An invalid
-explicit configuration fails instead of silently substituting another file. For a guaranteed
-public-only check, even in a development tree containing private/cache outputs, use:
+explicit configuration fails instead of silently substituting another file. To select the published
+inputs even when other cached outputs are present, use:
 
 ```bash
 SCREG_AUDIT_JSON="$PWD/results/fixed_panel_audit_v2.public.json" \
@@ -77,7 +77,7 @@ fixture verifies counts, barcodes and feature names. Full public PBMC source acq
 model inference were not executed in the summary verification. Repeated successful conversion into the
 same output directory replaces those two files; use a new directory to retain prior inputs.
 
-## Configured inputs and fail-closed paths
+## Input paths
 
 - `SCREG_DATA_ROOT`: explicit brain dataset root; otherwise the project's `data/`.
 - `SCFM_BRAIN_ATAC`: explicit brain ATAC H5AD for the audit/shared-null/revision drivers;
@@ -97,8 +97,8 @@ same output directory replaces those two files; use a new directory to retain pr
   Set both explicitly for each tissue. Its default data root is `SCREG_DATA_ROOT` or project
   `data/`. The builder continues to need local coordinates, motif MEME and hg38 FASTA inputs.
 
-For example, this selects supplied inputs for the brain proxy; it is not a validated full-run
-recipe or a guarantee that the supplied files match the original frozen inputs:
+This example selects inputs for the brain ATAC proxy. Check their identities against the
+recorded inputs before using it to reproduce the analysis:
 
 ```bash
 ATAC_FILE=/path/to/brain_atac.h5ad \
@@ -106,16 +106,16 @@ META_FILE=/path/to/brain_cell_metadata.csv.gz \
 TAG=GSE174367 python src/v2/build_atac_graph_v2.py
 ```
 
-Missing PBMC or gene-coordinate inputs are reported explicitly; a neighbouring research
-workspace is never used to supply them.
+Missing PBMC or gene-coordinate inputs produce an error. The scripts do not search other
+research directories for replacements.
 
 ## Remaining requirements for a full rerun
 
-The exact brain RNA accession, selected cells, donor mapping and deterministic preprocessing
-are still unverified. A surviving processed file and matching detection values establish
-file continuity, but do not supply those missing source records. Cell-type metadata, gene
-coordinates, motif profiles and the reference genome also require documented sources and
-matching digests before a raw-input reconstruction can be accepted.
+The original RNA source was identified as ascending aorta. The historical summary checks do
+not reconstruct the original cell selection, donor mapping or preprocessing. A full rerun also
+requires documented cell-type metadata, gene coordinates, motifs and reference-genome files
+with matching digests. The source-corrected pipeline has its own inputs and instructions in
+`article_materials/`.
 
 Model inference requires checkpoint-specific environments, identities and input contracts.
 For PBMC, modality conversion and the scFoundation inference stage must finish before their
@@ -132,6 +132,6 @@ manuscript supplements supply the revised data-driven figures and the later stat
 analyses separately from the immutable archive.
 
 A complete rerun record should identify the code revision, source inputs and digests,
-installed environment, precomputed inputs, executed stages and exit status. Until that
-record is available, the supported result is public-summary recalculation with an incomplete
-raw-to-model reconstruction.
+installed environment, precomputed inputs, executed stages and exit status. Without that
+record, these commands establish summary-level numerical agreement only.
+

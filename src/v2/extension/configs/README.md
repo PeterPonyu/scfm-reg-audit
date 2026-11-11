@@ -1,23 +1,26 @@
-# Extension registries (local compute overlay)
+# Extension configurations
 
-Config-driven tissue and method registries for **extension-lane** work that must
-not mutate the fixed-panel audit freeze (`brain` + `pbmc` FM audit, fibroblast construct,
-13 full-spec rows, 8 BH families). JSON is authoritative; YAML is a mirror.
+These configurations describe additional tissues and graph methods. They keep the original
+fixed-panel analysis separate. The original `brain` RNA label was later
+corrected to ascending aorta, as described in the repository README. The loader reads JSON; the YAML files are optional copies.
 
-| File | Role |
-|------|------|
-| `tissues.json` | Tissue ids, modality, lane (`construct` \| `audit`), panel policy, paths |
-| `methods.json` | Graph/method ids, BH membership, estimand notes |
-| `*.yaml` | Optional human-edit mirrors (loader uses JSON) |
+| File | Contents |
+|---|---|
+| `tissues.json` | Tissue identifiers, modalities, analysis roles, panel rules and input paths |
+| `methods.json` | Graph and method identifiers, BH-family membership and estimand descriptions |
+| `*.yaml` | Optional editable copies; the loader uses JSON |
 
-## Rules
+The original audit validators require the historical `brain` and `pbmc` contexts and thirteen
+full-specification rows. Additional outputs go to `results/v2/extension/`; summary tables go
+to `docs/reports/extension-claim-pack/`.
 
-1. fixed-panel audit validators continue to pin `tissues ∈ {brain, pbmc}`, `full_rows == 13`.
-2. Heavy extension artifacts write under `results/v2/extension/` (local overlay; MANIFEST-safe).
-3. SI claim-pack tables write under `docs/reports/extension-claim-pack/`.
-4. Role tag `out_of_scope` (Cancer/Dev RNA lakes 27/28) must never feed Support / `G_ATAC`.
-5. BMMC is `role=construct_candidate` (not `primary_audit`) until panel policy + re-SAP.
-6. Construct `--execute` = Mantel/decomp on existing local `G_ATAC` NPZ (not graph rebuild).
+Entries tagged `out_of_scope`, including the Cancer/Dev RNA collections, are excluded from
+Support and `G_ATAC` calculations. The historical BMMC entry remains `construct_candidate`.
+Changing it to `primary_audit` requires a panel rule and a new statistical analysis plan.
+This configuration is separate from the registered marrow analysis in `article_materials/`.
+
+The construct command's `--execute` option runs Mantel and decomposition calculations on existing
+`G_ATAC` NPZ files. It does not rebuild the graphs.
 
 ```bash
 python src/v2/extension/cli.py registry --json
